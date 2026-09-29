@@ -1,0 +1,102 @@
+[
+  {
+    "id": "met_42949",
+    "file": "met_42949.jpg",
+    "title": "Cicada",
+    "artist": "Unknown",
+    "date": "",
+    "source": "The Metropolitan Museum of Art",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/42949",
+    "license": "CC0 / Public Domain"
+  },
+  {
+    "id": "met_49449",
+    "file": "met_49449.jpg",
+    "title": "Cicada",
+    "artist": "Wu Xizai",
+    "date": "dated 1852",
+    "source": "The Metropolitan Museum of Art",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/49449",
+    "license": "CC0 / Public Domain"
+  },
+  {
+    "id": "cma_148241",
+    "file": "cma_148241.jpg",
+    "title": "Album of Miscellaneous Subjects, Leaf 6",
+    "artist": "Fan Qi (Chinese, 1616–after 1694)",
+    "date": "early 1650s",
+    "source": "Cleveland Museum of Art",
+    "pageUrl": "https://clevelandart.org/art/1975.22.6",
+    "license": "CC0"
+  },
+  {
+    "id": "met_451715",
+    "file": "met_451715.jpg",
+    "title": "Bowl Emulating Chinese Stoneware",
+    "artist": "Unknown",
+    "date": "9th century",
+    "source": "The Metropolitan Museum of Art",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/451715",
+    "license": "CC0 / Public Domain"
+  },
+  {
+    "id": "cma_140153",
+    "file": "cma_140153.jpg",
+    "title": "Bamboo and Insects",
+    "artist": "Wu Bing (Chinese, active 1190–1194)",
+    "date": "late 1100s",
+    "source": "Cleveland Museum of Art",
+    "pageUrl": "https://clevelandart.org/art/1964.154",
+    "license": "CC0"
+  },
+  {
+    "id": "cma_152548",
+    "file": "cma_152548.jpg",
+    "title": "Insects and Bamboo",
+    "artist": "Unknown",
+    "date": "1200s",
+    "source": "Cleveland Museum of Art",
+    "pageUrl": "https://clevelandart.org/art/1985.364",
+    "license": "CC0"
+  },
+  {
+    "id": "met_53549",
+    "file": "met_53549.jpg",
+    "title": "Album",
+    "artist": "Unidentified artist",
+    "date": "late 19th century",
+    "source": "The Metropolitan Museum of Art",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/53549",
+    "license": "CC0 / Public Domain"
+  },
+  {
+    "id": "met_43763",
+    "file": "met_43763.jpg",
+    "title": "Butterfly",
+    "artist": "Unknown",
+    "date": "17th century",
+    "source": "The Metropolitan Museum of Art",
+    "pageUrl": "https://www.metmuseum.org/art/collection/search/43763",
+    "license": "CC0 / Public Domain"
+  },
+  {
+    "id": "cma_152829",
+    "file": "cma_152829.jpg",
+    "title": "Cat and Butterfly",
+    "artist": "Min Zhen (Chinese, 1730–after 1788)",
+    "date": "1788",
+    "source": "Cleveland Museum of Art",
+    "pageUrl": "https://clevelandart.org/art/1985.71.5",
+    "license": "CC0"
+  },
+  {
+    "id": "cma_152824",
+    "file": "cma_152824.jpg",
+    "title": "Banana Plants",
+    "artist": "Min Zhen (Chinese, 1730–after 1788)",
+    "date": "1788",
+    "source": "Cleveland Museum of Art",
+    "pageUrl": "https://clevelandart.org/art/1985.71.11",
+    "license": "CC0"
+  }
+]

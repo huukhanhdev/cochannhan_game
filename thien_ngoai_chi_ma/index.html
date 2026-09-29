@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiên Ngoại Chi Ma - Cổ Giới Dị Hồn | Cổ Chân Nhân</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap&text=天外之魔方源白凝冰古月青书贾富斩雷冰血火剑光猪熊狼攻猛守晕技招走拳药石">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦗</text></svg>">
+  <style>
+  :root{
+    color-scheme:dark;
+    --ink:#080c10; --panel:#12181f; --panel2:#172028; --line:#25323d; --deep:#06080a;
+    --text:#dbe3e0; --dim:#889993; --moon:#f0ecd8; --jade:#2ecc71; --blood:#e74c3c;
+    --gold:#e0a840; --violet:#9b59b6; --cyan:#00cec9;
+    --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+    --brush:"Ma Shan Zheng","STKaiti","KaiTi","Kaiti SC",serif;
+    --body:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;background:var(--ink);color:var(--text);font:15px/1.55 var(--body);
+    padding-inline:16px;padding-block:20px 48px;
+    background-image:
+      radial-gradient(1000px 500px at 80% -10%,rgba(155,89,182,0.14),transparent 70%),
+      radial-gradient(800px 400px at 15% 100%,rgba(0,206,201,0.08),transparent 60%);
+  }
+  .wrap{max-width:1260px;margin:0 auto;display:grid;gap:14px}
+
+  /* Header */
+  .top{display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:14px}
+  .top-brand{display:grid;gap:2px}
+  .top-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .top h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.2vw,44px);line-height:1;margin:0;color:var(--moon);letter-spacing:0.02em}
+  .top .sub{color:var(--dim);font-size:13px;margin-top:4px}
+  .top-actions{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  
+  /* Moon phase clock */
+  .clock{display:flex;align-items:center;gap:12px;background:var(--deep);padding:5px 12px;border-radius:6px;border:1px solid var(--line)}
+  .clock .d{font-family:var(--display);font-size:26px;line-height:1;color:var(--moon);text-align:right}
+  .clock .c{font-size:11.5px;color:var(--dim);text-align:right;letter-spacing:.1em;text-transform:uppercase}
+  #moon{flex-shrink:0}
+
+  /* Future Timeline Bar */
+  .future{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:13px;color:var(--dim);padding:2px 4px}
+  .future .fut b{color:var(--gold);font-weight:500;margin-right:4px;font-variant-numeric:tabular-nums}
+  .future .fut.now{color:var(--cyan);font-weight:600}
+
+  /* Grid Layout */
+  .grid{display:grid;grid-template-columns:270px minmax(0,1fr) 310px;gap:14px;align-items:start}
+  @media (max-width:1080px){.grid{grid-template-columns:1fr 1fr}.main{grid-column:1/-1;order:-1}}
+  @media (max-width:680px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:16px;display:grid;gap:12px;align-content:start;min-width:0;transition:box-shadow .4s ease, border-color .4s ease}
+
+  /* Typography & Utilities */
+  h2{font-family:var(--display);font-size:22px;line-height:1.1;margin:0;font-weight:700;color:var(--moon)}
+  .label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+  .gold{color:var(--gold)} .good{color:var(--jade)} .danger{color:var(--blood)} .dimt{color:var(--dim)} .cyan{color:var(--cyan)}
+  .pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:99px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .pill.danger{border-color:#78281f;color:var(--blood)}
+  .pill.demon{border-color:#6c3483;color:#d2b4de}
+  .pill.canonp{border-color:#5b5a3e;color:var(--gold)}
+  .headrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+  /* Buttons */
+  .btn{all:unset;box-sizing:border-box;cursor:pointer;padding:7px 14px;border:1px solid var(--line);border-radius:5px;font-size:13px;background:var(--panel2);text-align:center;transition:border-color .18s,background-color .18s,transform .12s}
+  .btn:hover:not([disabled]){border-color:var(--gold);transform:translateY(-1px)}
+  .btn:active:not([disabled]){transform:translateY(0)}
+  .btn.warn{border-color:#6a261f;color:var(--blood)}
+  .btn.big{font-size:15px;padding:11px 20px;border-color:var(--gold);color:var(--gold)}
+  .btn.active{border-color:var(--cyan);color:var(--cyan);background:#0d2627}
+  .btn:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+  /* Stats Panel */
+  .stat{display:grid;gap:4px}
+  .rank{font-family:var(--display);font-size:26px;line-height:1.05;color:var(--moon)}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-variant-numeric:tabular-nums}
+  .attrs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .attrs div{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:7px 8px;display:grid}
+  .attrs b{font-family:var(--display);font-size:24px;line-height:1;color:var(--moon);font-variant-numeric:tabular-nums}
+  .kv{display:grid;gap:5px}
+
+  /* Aperture Canvas Visualizer */
+  .aperture-wrap{position:relative;width:100%;height:150px;border-radius:7px;overflow:hidden;background:radial-gradient(circle at 50% 50%,#0e171f,#05080b);border:1px solid var(--line);box-shadow:inset 0 0 20px rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center}
+  #apertureCanvas{position:absolute;inset:0;width:100%;height:100%}
+  .aperture-overlay{position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:11px;color:rgba(240,236,216,0.75);letter-spacing:0.08em;pointer-events:none}
+
+  /* Log */
+  .log{height:240px;overflow-y:auto;background:var(--deep);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-size:14px;line-height:1.55}
+  .log p{margin:0 0 7px}
+  .log .sys{color:var(--dim);font-style:italic}
+  .log .big{font-family:var(--display);font-size:19px;line-height:1.3;color:var(--moon);margin-top:6px}
+  .log .day{color:var(--gold);font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-top:1px solid var(--line);padding-top:6px;margin-top:10px}
+  .log .good{color:var(--jade)}
+  .log .danger{color:var(--blood)}
+  .log .choice{color:var(--moon);font-weight:500}
+  .log .roll{color:var(--dim);font-size:12.5px;font-variant-numeric:tabular-nums}
+
+  /* Stage & Actions */
+  #stage{display:grid;gap:12px}
+  .act-grid-rich{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .act-card-rich{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:grid;grid-template-columns:42px 1fr;gap:11px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);transition:border-color .18s,transform .15s,box-shadow .18s}
+  .act-card-rich:hover:not([disabled]){border-color:var(--cyan);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,206,201,0.15)}
+  .act-card-rich.active{border-color:var(--gold);background:linear-gradient(135deg,#241c10,var(--panel2));box-shadow:0 0 12px rgba(224,168,64,0.2)}
+  .act-card-rich:active:not([disabled]){transform:translateY(0)}
+  .act-card-rich[disabled]{opacity:.38;cursor:not-allowed}
+  .act-card-rich .act-icon{width:42px;height:42px;border-radius:6px;display:grid;place-items:center;font-size:24px;background:#141d24;border:1px solid var(--line);flex-shrink:0}
+  .act-card-rich.demon{border-color:#532321;background:linear-gradient(135deg,#241211,var(--panel2))}
+  .act-card-rich.demon:hover:not([disabled]){border-color:var(--blood);box-shadow:0 6px 18px rgba(231,76,60,0.2)}
+  .act-card-rich .act-text b{display:block;font-size:14px;font-weight:600;color:var(--moon)}
+  .act-card-rich .act-text small{display:block;font-size:12px;color:var(--dim);line-height:1.35;margin-top:2px}
+
+  /* Creation Screen */
+  .creation-box{display:grid;gap:12px;padding:6px 2px}
+  .name-input{width:100%;box-sizing:border-box;background:var(--deep);border:1px solid var(--line);border-radius:5px;padding:9px 12px;color:var(--moon);font:15px var(--body);outline:none;transition:border-color .18s}
+  .name-input:focus{border-color:var(--cyan)}
+
+  /* Events & Scenic Headers */
+  .event{position:relative;overflow:hidden;display:grid;gap:10px;padding:16px;border:1px solid var(--line);border-radius:6px;background:var(--panel2)}
+  .event.canonev{border-color:#6b5220;background:linear-gradient(160deg,#241b10,var(--panel2) 65%)}
+  .evart{margin:-16px -16px 4px;height:140px;background-size:cover;background-position:center 40%;-webkit-mask-image:linear-gradient(180deg,#000 60%,transparent);mask-image:linear-gradient(180deg,#000 60%,transparent);filter:saturate(.95)}
+  .event p{margin:0;max-width:68ch;line-height:1.6}
+  .choices{display:grid;gap:8px}
+
+  /* ===== Đấu trường PixiJS ===== */
+  .main{position:relative}
+  .main.in-combat .log{height:140px}
+  .arena{position:relative;height:350px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#0a1210;isolation:isolate}
+  .arena canvas.pixi{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+  .scene-name{position:absolute;z-index:2;top:10px;left:12px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(240,236,216,.75);text-shadow:0 1px 3px #000}
+  .seal{position:absolute;z-index:2;top:8px;right:10px;display:flex;align-items:center;gap:7px;background:rgba(9,13,15,.75);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:3px 10px 3px 3px;max-width:calc(100% - 180px)}
+  .seal span{flex:none;font-family:var(--brush);width:28px;height:28px;display:grid;place-items:center;border-radius:3px;background:#8e2f22;color:#f3e3c8;font-size:20px;line-height:1}
+  .seal.heavy span{background:#c2361f;animation:pulse .9s ease-in-out infinite}
+  .seal.guard span{background:#2f5b4a}
+  .seal small{font-size:12px;line-height:1.3;color:var(--text)}
+  .plate{position:absolute;z-index:2;bottom:10px;width:min(235px,calc(50% - 16px));display:grid;gap:4px;background:rgba(9,13,15,.76);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:7px 9px}
+  .plate.p{left:10px}
+  .plate.e{right:10px;text-align:right}
+  .plate b{font-weight:600;font-size:14px;line-height:1.2}
+  .plate .rk{font-size:11.5px;color:var(--dim)}
+  .mbar{position:relative;height:16px;background:rgba(0,0,0,.65);border-radius:3px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+  .mbar i{display:block;height:100%;transition:width .45s ease}
+  .mbar.hp i,.mbar.en i{background:linear-gradient(90deg,#962d22,var(--blood))}
+  .mbar.en i{margin-left:auto}
+  .mbar.es i{background:var(--c, #5fae8a)}
+  .mbar em{position:absolute;inset:0;font-style:normal;font-size:11px;line-height:16px;text-align:center;color:#f0ecd8;font-variant-numeric:tabular-nums;text-shadow:0 1px 2px #000}
+  .chips{display:flex;flex-wrap:wrap;gap:4px}
+  .plate.e .chips{justify-content:flex-end}
+  .chip{font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid}
+  .chip.bleed{color:#ff8a7a;border-color:#6a241f;background:#2a0f0d}
+  .chip.stun{color:#eed57c;border-color:#73541a;background:#2a200e}
+  .chip.shield{color:#86e0b0;border-color:#1f644e;background:#10261f}
+  .nofx{position:absolute;inset:0;display:flex;justify-content:space-around;align-items:center;padding-bottom:70px}
+  .nofx .gl{font-family:var(--brush);font-size:80px;line-height:1;color:var(--moon)}
+  .nofx .gl.v{writing-mode:vertical-rl;font-size:46px}
+  .nofx .gl.foe{color:var(--foe, #ff7675)}
+  @keyframes pulse{50%{transform:scale(1.15)}}
+
+  /* Skill Bar in Combat */
+  .skillbar{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+  .skill{all:unset;box-sizing:border-box;cursor:pointer;position:relative;display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);transition:border-color .15s,transform .12s}
+  .skill:hover:not([disabled]){border-color:var(--cyan);transform:translateY(-1px)}
+  .skill[disabled]{opacity:.38;cursor:not-allowed}
+  .skill .sg{width:40px;height:40px;display:grid;place-items:center;border-radius:5px;font-family:var(--brush);font-size:24px;line-height:1;background:#141c22;color:var(--moon);border:1px solid var(--line);background-size:cover;background-position:center}
+  .skill .sg.has-img{border-color:var(--gold)}
+  .skill.atk .sg{background-color:#172836;color:#85c1e9;border-color:#2e4960}
+  .skill.grd .sg{background-color:#112a20;color:#82e0aa;border-color:#1e523d}
+  .skill.heal .sg{background-color:#1a2b16;color:#abebc6;border-color:#2d5023}
+  .skill.combo{border-color:#7d591e;background:linear-gradient(135deg,#2b1d0a,var(--panel2))}
+  .skill.combo:hover:not([disabled]){border-color:var(--gold)}
+  .skill.combo .sg{background-color:#3d2c0d;color:var(--gold);border-color:#7d591e}
+  .skill.run .sg{color:var(--dim)}
+  .skill .st{display:grid;min-width:0}
+  .skill .st b{font-size:13.5px;font-weight:600;line-height:1.25;color:var(--moon)}
+  .skill .st small{font-size:11.5px;color:var(--dim);line-height:1.3}
+  .skill .sc{font-size:12px;color:var(--gold);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .skill kbd{position:absolute;bottom:3px;right:6px;font:10px var(--body);color:var(--dim);opacity:.6}
+
+  /* Gu Cards */
+  .gu{display:grid;gap:8px}
+  .gucard-rich{position:relative;border:1px solid var(--line);border-radius:6px;padding:9px 10px;display:grid;grid-template-columns:40px 1fr;gap:10px;background:var(--panel2);transition:transform .18s,border-color .18s}
+  .gucard-rich:hover{transform:translateY(-1px);border-color:var(--cyan)}
+  .gucard-rich .gu-emblem{width:40px;height:40px;border-radius:6px;display:grid;place-items:center;font-size:22px;background:#131c23;border:1px solid var(--line);flex-shrink:0;background-size:cover;background-position:center}
+  .gucard-rich .gu-body{display:grid;gap:2px;min-width:0}
+  .gucard-rich .gu-top{display:flex;justify-content:space-between;align-items:center;gap:4px}
+  .gucard-rich .gu-name{font-weight:600;font-size:13.5px;color:var(--moon);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .gucard-rich .gu-desc{font-size:12px;color:var(--dim);line-height:1.35;margin-top:2px}
+  .gucard-rich .gu-footer{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:4px}
+  .gucard-rich.rank-1{border-color:#3d5248}
+  .gucard-rich.rank-2{border-color:#6b3b33}
+  .gucard-rich.rank-3{border-color:#7a602a}
+  .hunger-pill{font-size:10.5px;padding:1px 6px;border-radius:3px;font-weight:500}
+  .hunger-ok{color:var(--jade);background:rgba(46,204,113,0.12)}
+  .hunger-bad{color:var(--blood);background:rgba(231,76,60,0.2);animation:pulse 1.2s infinite}
+
+  /* NPCs */
+  .npc-list{display:grid;gap:6px}
+  .npc-item{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:7px 9px;border:1px solid var(--line);border-radius:5px;background:var(--panel2)}
+  .npc-item .npc-ava{font-size:18px;display:grid;place-items:center}
+  .npc-item .npc-info b{font-size:13px;color:var(--moon)}
+  .npc-item .npc-info small{font-size:11.5px;color:var(--dim);display:block}
+
+  /* Shop & Refine */
+  .shop{display:grid;gap:6px}
+  .shop .item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border:1px solid var(--line);border-radius:5px;background:var(--panel2)}
+  .shop .item small{display:block;color:var(--dim);font-size:12px}
+  .refine-grid{display:grid;gap:10px}
+  .refine-card{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--panel2)}
+  .refine-card .formula{display:flex;align-items:center;gap:8px;font-size:13px;flex-wrap:wrap;color:var(--moon)}
+  .refine-card .f-box{padding:3px 8px;border-radius:4px;background:#151d24;border:1px solid var(--line);font-size:12px}
+
+  /* Over Screen */
+  .over{text-align:center;padding:28px 12px;display:grid;gap:12px;justify-items:center}
+  .over h3{font-family:var(--display);font-size:clamp(28px,4vw,40px);line-height:1.1;margin:0;color:var(--moon)}
+  .over p{max-width:62ch;margin:0;color:var(--dim);line-height:1.6}
+
+  /* Codex Modal */
+  .modal-overlay{position:fixed;inset:0;background:rgba(8,12,16,0.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+  .modal-box{background:var(--panel);border:1px solid var(--line);border-radius:8px;width:100%;max-width:800px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 12px 35px rgba(0,0,0,0.7)}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .modal-body{padding:16px 18px;overflow-y:auto;display:grid;gap:12px}
+  .codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .codex-card{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--panel2);display:grid;gap:4px}
+  .codex-card.locked{opacity:0.4;filter:grayscale(1)}
+
+  /* Toast */
+  .toast{position:absolute;left:50%;top:14px;z-index:20;display:flex;gap:12px;align-items:center;padding:10px 16px 10px 10px;border-radius:6px;background:rgba(20,27,31,.97);border:1px solid #5b5a3e;box-shadow:0 10px 30px rgba(0,0,0,.6);transform:translateX(-50%);max-width:calc(100% - 24px)}
+  .toast .tg{flex:none;font-family:var(--brush);font-size:32px;width:48px;height:48px;display:grid;place-items:center;border-radius:5px;background:#8e2f22;color:#f3e3c8}
+  .toast b{display:block;color:var(--moon)}
+  .toast small{color:var(--gold);font-size:12.5px}
+
+  /* Footer */
+  .foot{color:var(--dim);font-size:12.5px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px;margin-top:6px}
+
+  /* Shake Animation */
+  @keyframes shake{
+    0%{transform:translate(2px,1px) rotate(0deg)}
+    20%{transform:translate(-3px,0px) rotate(-0.5deg)}
+    40%{transform:translate(3px,-1px) rotate(0.5deg)}
+    60%{transform:translate(-2px,1px) rotate(0deg)}
+    80%{transform:translate(2px,-1px) rotate(0.5deg)}
+    100%{transform:translate(0,0) rotate(0deg)}
+  }
+  .shake{animation:shake .28s cubic-bezier(.36,.07,.19,.97) both}
+  </style>
+</head>
+<body>
+  <div class="wrap" id="appWrap">
+    <header class="top">
+      <div class="top-brand">
+        <div class="top-title">
+          <h1>Thiên Ngoại Chi Ma</h1>
+          <span class="pill demon">Cổ Giới Dị Hồn</span>
+        </div>
+        <div class="sub">Đạo hiệu: <b class="cyan" id="charName">Lâm Tiêu</b> · Thanh Mao Sơn Diễn Nghĩa · Quyển 1</div>
+      </div>
+      <div class="top-actions">
+        <a href="../" class="btn" style="text-decoration:none" title="Chuyển sang bản Phương Nguyên">🏯 Bản Phương Nguyên</a>
+        <button class="btn" id="soundBtn" title="Bật / Tắt âm thanh">🔊 Âm thanh</button>
+        <button class="btn" id="codexBtn" title="Mở Cổ Đồ Giám">📜 Cổ Đồ Giám</button>
+        <div class="clock">
+          <div><div class="d" id="dayLbl">Tháng 1</div><div class="c" id="canhLbl">Thượng tuần</div></div>
+          <svg id="moon" width="46" height="46" viewBox="0 0 46 46" aria-hidden="true"></svg>
+        </div>
+      </div>
+    </header>
+
+    <div class="future" id="future"></div>
+
+    <div class="grid">
+      <aside class="panel" id="stats"></aside>
+      <main class="panel main" id="mainPanel">
+        <div class="log" id="log" aria-live="polite"></div>
+        <div id="stage"></div>
+      </main>
+      <aside class="panel" id="side"></aside>
+    </div>
+
+    <div class="foot">
+      <span>Fan game sáng tạo dựa trên tiểu thuyết <i>Cổ Chân Nhân</i> của tác giả Cổ Chân. Góc nhìn Thiên Ngoại Chi Ma (Dị Hồn Xuyên Không).</span>
+      <button class="btn warn" id="resetBtn">Xóa dữ liệu, luân hồi lại</button>
+    </div>
+  </div>
+
+  <div id="modalContainer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/battle.js"></script>
+  <script src="js/aperture.js"></script>
+  <script src="js/engine.js"></script>
+</body>
+</html>

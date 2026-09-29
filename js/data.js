@@ -63,10 +63,11 @@ const COMBOS=[
 ];
 
 // Phường Đoán Thạch (Thương đội)
+const STONE_WEEKLY=2; // mỗi tuần quầy chỉ bán 2 khối đá
 const STONES_GAMBLE=[
-  {id:'thach_re',n:'Bình Nhược Thạch',price:15,dc:10,goodP:.45,d:'Đá sông nhẵn bóng, lớp ngoài bình thường. Rẻ nhưng rủi ro cao.'},
+  {id:'thach_re',n:'Bình Nhược Thạch',price:15,dc:10,goodP:.5,d:'Đá sông nhẵn bóng, lớp ngoài bình thường. Rẻ nhưng rủi ro cao.'},
   {id:'thach_truc',n:'Thanh Trúc Thạch',price:40,dc:13,goodP:.6,d:'Hóa thạch rễ trúc ngàn năm, tỏa ra linh khí thoang thoảng.'},
-  {id:'thach_huyet',n:'Huyết Tinh Cổ Thạch',price:85,dc:15,goodP:.75,d:'Đá cổ màu đỏ sẫm khai quật từ cổ mộ. Thường chứa cổ trùng quý hiếm.'},
+  {id:'thach_huyet',n:'Huyết Tinh Cổ Thạch',price:85,dc:15,goodP:.66,d:'Đá cổ màu đỏ sẫm khai quật từ cổ mộ. Thường chứa cổ trùng quý hiếm.'},
 ];
 
 const EN={
@@ -232,3 +233,127 @@ EN.tiexueleng={n:'Thiết Huyết Lãnh',hp:620,atk:[30,44],st:[0,0],bl:0,i:'Th�
 EN.nhatdai={n:'Huyết Cương · Cổ Nguyệt Nhất Đại',hp:520,atk:[26,38],st:[200,260],bl:10,i:'Thủy tổ Cổ Nguyệt bò ra khỏi hồ máu, da thịt đỏ au, hai mắt không có con ngươi.'};
 EAI.tiexueleng={def:8,sk:'suppress',boss:1};
 EAI.nhatdai={def:6,sk:'regen',regen:.08,boss:1,noflee:1};
+
+/* ================= Bản 13: mở rộng nội dung ================= */
+// Cổ trùng mới. Trường mới: stun (choáng địch), chill (giảm lực địch), heal (lượng hồi riêng), cure (giải độc hết)
+Object.assign(GU,{
+  thuytrao:{n:'Thủy Tráo Cổ',r:1,food:2,fn:'nước suối trong',t:'guard',cost:5,p:45,d:'Một màng nước bọc quanh thân: giảm 55% sát thương trong 2 lượt. Cổ phòng ngự thông dụng của Cổ Nguyệt.'},
+  sinhco:{n:'Sinh Cơ Diệp',r:1,food:1,fn:'sương sớm',t:'heal',cost:5,heal:[14,8],cure:1,p:30,d:'Chiếc lá xanh non, dán lên vết thương là lành. Hồi ít hơn Trị Liệu Cổ nhưng rẻ, giải độc hoàn toàn.'},
+  dangman:{n:'Đằng Mạn Cổ',r:1,food:2,fn:'mộc tinh',t:'attack',dmg:8,cost:7,stun:1,p:70,d:'Dây leo quấn chặt chân địch. Sát thương thấp nhưng làm choáng 1 lượt. Cổ quen tay của Thanh Thư.'},
+  kimcham:{n:'Kim Châm Cổ',r:1,food:2,fn:'kim loại vụn',t:'attack',dmg:9,cost:6,pierce:1,p:55,d:'Phóng một mũi kim vàng nhỏ như sợi tóc, xuyên qua mọi lớp giáp.'},
+  bangtien:{n:'Băng Tiễn Cổ',r:2,food:4,fn:'băng tuyết',t:'attack',dmg:30,cost:13,chill:.1,p:150,d:'Cổ tấn công sở trường của Bạch gia. Băng tiễn làm đông cứng gân cốt: mỗi phát giảm 10% lực đánh của địch (tối đa 30%).'},
+  langhao:{n:'Lang Hào Cổ',r:1,food:3,fn:'thịt sói',t:'passive',atk:2,wolfAtk:.15,p:80,d:'Móc từ họng một con Điện Lang đầu đàn. Mọi đòn +2, sát thương lên sói +15%.'},
+  thanhti:{n:'Thanh Ti Cổ',r:1,food:1,fn:'dầu hoa trà',t:'passive',p:25,danhWeek:1,d:'Cổ làm tóc đen mượt, vô dụng khi đánh nhau nhưng được thiếu nữ trong trại săn lùng. Mỗi tháng danh vọng +2.'},
+  tuunang:{n:'Tửu Nang Hoa',r:2,food:3,fn:'rượu',t:'passive',cult:.25,p:130,d:'Đóa hoa hình túi rượu trong động Hoa Tửu. Ủ chân nguyên như ủ rượu: tu luyện +25%, chân nguyên hồi đầu tuần +10%.'},
+  xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:420,d:'Dùng một lần: Tam chuyển tăng một tiểu cảnh giới.'},
+});
+SHOP.push('thuytrao','sinhco','kimcham','thanhti');
+CARAVAN.push('dangman','bangtien','xaloi3','tuunang');
+WILD.push('thuytrao','sinhco','kimcham');
+
+RECIPES.push(
+  {id:'bachngoc',from:'ngocbi',st:45,wine:0,bl:0,extraGu:'cuongnham',ch:.6,d:'Ngọc Bì Cổ + Cương Nham Cổ + 45 nguyên thạch'},
+  {id:'trilieu',from:'sinhco',st:10,wine:0,bl:0,hb:3,ch:.75,d:'Sinh Cơ Diệp + 3 linh dược + 10 nguyên thạch'},
+  {id:'bangtien',from:'kimcham',st:70,wine:0,bl:2,extraGu:'thuytrao',ch:.5,d:'Kim Châm Cổ + Thủy Tráo Cổ + 2 huyết khí + 70 nguyên thạch'},
+);
+
+COMBOS.push(
+  {id:'thuy_nguyet',n:'Thủy Nguyệt Hộ Trảm',req:['thuytrao','nguyetquang'],cost:13,dmg:26,shield:2,d:'Nguyệt nhận chém qua màn nước, vừa đánh vừa hộ thể 2 lượt.'},
+  {id:'dang_tram',n:'Đằng Mạn Trói Sát',req:['dangman','nguyetquang'],cost:15,dmg:30,stun:2,d:'Dây leo trói chặt, nguyệt nhận chém xuống: choáng 2 lượt.'},
+  {id:'bang_huyet',n:'Băng Huyết Liên Tiễn',req:['bangtien','huyetnguyet'],cost:24,dmg:62,bleed:2,chill:.2,d:'Băng tiễn và huyết nhận cùng bay ra: chảy máu 2 lượt, giảm 20% lực đánh của địch.'},
+  {id:'kim_xuyen',n:'Kim Châm Loạn Vũ',req:['kimcham','hungluc'],cost:14,dmg:36,pierce:1,d:'Sức gấu phóng cả trăm mũi kim vàng, xuyên giáp hoàn toàn.'},
+);
+Object.assign(CD,{thuytrao:3,sinhco:2,dangman:3,kimcham:1,bangtien:2});
+Object.assign(SHIELD_RED,{thuytrao:.45});
+STONES_GAMBLE.push({id:'thach_bang',n:'Hàn Ngọc Cổ Thạch',price:130,dc:17,goodP:.7,d:'Khối đá lạnh buốt đào từ sườn tuyết Bạch gia. Rủi ro cao, nhưng có thể chứa cổ Nhị chuyển.'});
+
+// Kẻ địch mới
+Object.assign(EN,{
+  docxa:{n:'Trúc Diệp Thanh',hp:38,atk:[5,9],st:[6,10],bl:1,i:'Con rắn xanh biếc như lá trúc lao ra từ bụi rậm, nanh nhỏ độc.'},
+  bao:{n:'Kim Tiền Báo',hp:70,atk:[8,14],st:[12,20],bl:2,i:'Kim Tiền Báo đốm vàng rình trên cành, lưng cong như dây cung.'},
+  hauquan:{n:'Bầy khỉ hầu nhi tửu',hp:60,atk:[5,10],st:[5,12],bl:1,i:'Mấy chục con khỉ say rượu ném đá, vừa kêu vừa nhe răng.'},
+  hunglam:{n:'Hùng Lâm',hp:200,atk:[13,20],st:[60,85],bl:3,drop:.6,i:'Hùng Lâm của Hùng gia xắn tay áo lộ bắp tay như thân cây: "Người Cổ Nguyệt các ngươi, ai đỡ nổi ta ba quyền?"'},
+  sontacvuong:{n:'Độc Nhãn sơn tặc vương',hp:170,atk:[12,18],st:[55,80],bl:3,drop:.5,i:'Tên sơn tặc một mắt cầm thanh đao mẻ, sau lưng là cả hang ổ.'},
+  bachmaon:{n:'Bạch Mao Hùng Vương',hp:230,atk:[14,22],st:[50,70],bl:4,i:'Con gấu lông trắng to như ngọn đồi nhỏ, mắt đỏ ngầu vì bị đánh thức giữa kỳ ngủ đông.'},
+  tramthuysat:{n:'Sát thủ Trầm Thúy thuê',hp:120,atk:[10,16],st:[30,45],bl:2,i:'Kẻ bịt mặt nhảy xuống từ mái tửu lâu. Trên chuôi đao buộc một sợi dây đỏ của Trầm Thúy.'},
+  macnhan:{n:'Cổ Nguyệt Mạc Nhan',hp:90,atk:[8,13],st:[15,25],bl:0,i:'Mạc Nhan vung roi, mắt tóe lửa: "Dám làm nhục Mạc gia, hôm nay ta dạy ngươi phép tắc."'},
+  phuongchinh:{n:'Phương Chính',hp:190,atk:[12,19],st:[0,0],bl:0,i:'Phương Chính rút Nguyệt Quang Cổ, tay run nhưng mắt không lùi: "Ca ca, đệ không để huynh đi tiếp con đường này."'},
+});
+Object.assign(EAI,{
+  docxa:{sk:'poison'},
+  bao:{sk:'charge'},
+  hauquan:{sk:'howl'},
+  hunglam:{def:3,sk:'rage',boss:1},
+  sontacvuong:{def:2,sk:'poison',boss:1},
+  bachmaon:{def:3,sk:'rage',boss:1},
+  tramthuysat:{def:1,sk:'poison',noflee:1},
+  phuongchinh:{def:2,sk:'drain',boss:1},
+  macnhan:{def:1,sk:'poison'},
+});
+// Kẻ địch rơi cổ theo loại (thay cho rơi ngẫu nhiên trong SHOP)
+const DROP_POOL={
+  baitrinhsat:['bangtien','thuytrao','kimcham'],baicosu:['bangtien','bangtien','thuytrao'],
+  hunggia:['hungluc','hungluc','bachthi'],hunglam:['hungluc','hacthi'],
+  dienlang:['langhao'],dlbay:['langhao'],loiquan:['langhao'],
+  tanbinh:['kimcham','sinhco','liemtuc'],sontacvuong:['kimcham','liemtuc','sinhco'],
+  giave:['liemtuc','thietbi','kimcham'],kimsinh:['kimcham','liemtuc'],
+};
+
+Object.assign(NPC,{
+  hunglam:{n:'Hùng Lâm',d:'Cổ sư trẻ nổi danh của Hùng gia'},
+  thuongtam:{n:'Lão Tam',d:'Lão thợ săn phàm nhân'},
+  macnhan:{n:'Cổ Nguyệt Mạc Nhan',d:'Cháu gái Mạc Trần, kiêu căng hiếu thắng'},
+  xichson:{n:'Cổ Nguyệt Xích Sơn',d:'Cổ sư Tam chuyển mạnh nhất Xích gia'},
+});
+
+Object.assign(MEM,{
+  hunglam:{n:'Quyền pháp Hùng Lâm',d:'Biết Hùng Lâm ra đòn thứ ba luôn hở sườn trái. Đánh hắn dễ hơn.'},
+  sontac:{n:'Hang ổ Độc Nhãn',d:'Biết lối tắt vào hang sơn tặc. Nhiệm vụ diệt sơn tặc dễ hơn.'},
+  tramthuy:{n:'Sợi dây đỏ của Trầm Thúy',d:'Biết Trầm Thúy có thể thuê sát thủ. Có thể ra tay trước.'},
+  hauquan:{n:'Rượu của bầy khỉ',d:'Biết hốc cây nơi bầy khỉ giấu hầu nhi tửu. Bắt Tửu Trùng dễ hơn.'},
+  bachmaon:{n:'Hang gấu ngủ đông',d:'Biết hang Bạch Mao Hùng Vương và mật gấu trăm năm bên trong.'},
+  nhuocnam:{n:'Lòng dạ Thiết Nhược Nam',d:'Biết cô gái này thẳng thắn, ghét dối trá, nhưng trọng ân tình.'},
+});
+
+// Mệnh cách mới
+Object.assign(TRAITS,{
+  thosan:{n:'Con nhà thợ săn',g:'猎',up:'Sát phạt +2, thắng trận thú rừng thêm huyết khí',down:'Tâm cơ −1',ap:()=>{S.satphat+=2;S.tamco=Math.max(0,S.tamco-1);S.f.hunter=1}},
+  tuulau:{n:'Lớn lên trong tửu lâu',g:'酒',up:'Khởi đầu có 1 vò tứ vị tửu, thám hiểm hậu sơn +2',down:'Danh vọng −5',ap:()=>{S.wine++;S.f.hsBonus=(S.f.hsBonus||0)+2;S.danh-=5}},
+  hieuhoc:{n:'Hiếu học',g:'学',up:'Học đường: 50% ngộ tính +1 (thay 30%)',down:'Khởi đầu ít hơn 10 nguyên thạch',ap:()=>{S.f.studious=1;S.stones=Math.max(0,S.stones-10)}},
+  kimthu:{n:'Bàn tay luyện cổ',g:'炼',up:'Luyện cổ +15%',down:'Khí huyết tối đa −10%',ap:()=>{S.f.refineBonus=(S.f.refineBonus||0)+15;S.mod.hp=(S.mod.hp||1)*.9}},
+  giangho:{n:'Lời lẽ giang hồ',g:'舌',up:'Tâm cơ +2',down:'Hiềm nghi khởi điểm 10',ap:()=>{S.tamco+=2;S.susp=Math.max(S.susp,10)}},
+});
+
+// Thiên cơ mới
+Object.assign(WORLD,{
+  daotac:{n:'Sơn tặc hoành hành',g:'贼',d:'Nhiệm vụ đường liên tục gặp sơn tặc. Thưởng nhiệm vụ +30%.'},
+  hanthu:{n:'Hàn khí sớm',g:'冰',d:'Bạch gia thời tiết lạnh bất thường. Cổ sư Bạch gia xuất hiện sớm, Băng Tiễn Cổ dễ kiếm hơn.'},
+  thuhoach:{n:'Được mùa nguyệt lan',g:'兰',d:'Nguyệt lan mọc đầy núi: Nguyệt Quang Cổ ăn miễn phí 1 tuần mỗi tháng. Chợ bán thêm một món.'},
+  hunglam:{n:'Hùng Lâm xuất sơn',g:'熊',d:'Hùng Lâm, Cổ sư trẻ nổi danh của Hùng gia, đi khắp núi tìm người so tài.'},
+});
+Object.assign(WORLD_WEIGHT,{
+  daotac:{r_sontacphuc:3,r_hotong:2},
+  hanthu:{r_baitrinhsat:2,r_bangtuyet:3},
+  hunglam:{r_hunglam:4},
+});
+
+Object.assign(CACHE,{
+  hauquan:{n:'Hốc rượu của bầy khỉ',rumor:'bầy khỉ trên núi giấu cả hốc cây đầy hầu nhi tửu'},
+  tocong:{n:'Tổ cổ hoang',rumor:'có một tổ cổ hoang đang nở trong vách đá'},
+});
+
+// Mở rộng hình minh họa và biểu tượng
+Object.assign(INJURY,{
+  mat:{n:'Mờ một mắt',d:'Ngộ tính −2'},
+});
+// Cổ trùng trong lòng đá theo loại đá
+const STONE_POOL={
+  thach_re:['nguyetquang','cuongnham','bachthi','thuytrao','sinhco'],
+  thach_truc:['uguang','tuutrung','cuongnham','bachthi','dangman','kimcham'],
+  thach_huyet:['huyetnguyet','thietbi','diathinh','langhao'],
+  thach_bang:['bangtien','bachngoc','thietbi','tuunang'],
+};
+// Nơi có thể giấu từng loại bí tàng (mặc định: bất kỳ)
+const CACHE_LOCS={hauquan:['nui','hauson'],tocong:['nui','hauson','nhiemvu']};
+// Thú rừng (mệnh cách Con nhà thợ săn nhận thêm huyết khí)
+const BEASTS=new Set(['heorung','dienlang','hachung','docxa','bao','bachmaon','dlbay','loiquan','langvuong','hauquan']);

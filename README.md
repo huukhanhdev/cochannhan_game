@@ -41,4 +41,4 @@ Sau đó mở trình duyệt và truy cập:
 ```bash
 node tools/sim.cjs 100 6
 ```
-Tỉ lệ thắng mục tiêu chuẩn nguyên tác: **17% – 25%**.
+Tỉ lệ thắng mục tiêu: **15% – 35%** (bản 13 đo được khoảng 33%).

@@ -204,6 +204,7 @@ c_final:{canon:1,title:'Thanh Mao Sơn diệt vong',hint:'Kết cục quyển m�
     ...(S.f.pcAlly?[{t:'Cùng Phương Chính phá vây, bảo vệ nhau rời núi',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_songhung',flee:false,mod:finalMod()*.98});return 'Hai huynh đệ Phương Nguyên - Phương Chính lưng tựa lưng, nguyệt nhận lam xích hòa quyện chém tan vòng vây!'}}]:[]),
     ...(S.f.qingshuAlive?[{t:'Cùng Thanh Thư bảo vệ tộc nhân thoát khỏi biển lửa và băng giá',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_thanhthu',flee:false,mod:finalMod()*.94});return 'Thanh Thư tung dây leo mở đường, ngươi bọc hậu. Tộc nhân hướng về hai người như hai vầng thái dương mới của bộ tộc!'}}]:[]),
     {t:'Tế Huyết Lô Cổ bằng máu tộc nhân, rồi mở đường máu',tag:'ma',canon:1,dao:40,req:()=>hasGu('huyetlo'),reqT:'Cần Huyết Lô Cổ',eff:()=>{S.tuchat=99;S.danh=0;S.ess=maxEss();S.hp=maxHp();fight('baitruonglao',{after:'end_huyetlo',flee:false,mod:finalMod()*.7});return 'Máu của cả tộc chảy vào lò. Không khiếu của ngươi rộng ra, chân nguyên cuồn cuộn: Bính đẳng 44% vọt lên Giáp đẳng 99%.'}},
+    ...(S.f.baiAlly&&!hasGu('huyetlo')?[{t:'Cùng Bạch Ngưng Băng xé vòng vây Bạch gia',tag:'ma',eff:()=>{fight('baitruonglao',{after:'end_bai',flee:false,mod:finalMod()*.9});return 'Bạch Ngưng Băng quay lưng với chính gia tộc mình. Băng tiễn và nguyệt nhận cùng mở một con đường.'}}]:[]),
     {t:'Mở đường máu thoát khỏi núi',tag:'ma',eff:()=>{fight('baitruonglao',{after:'end_ma',flee:false,mod:finalMod()});return 'Ngươi quay lưng với biển lửa và băng giá.'}},
     {t:'Dẫn tộc nhân còn sống thoát ra',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_chinh',flee:false,mod:finalMod()});return 'Ngươi dẫn mấy chục phụ nữ, trẻ em về phía con đường mòn phía đông.'}},
     {t:'Lẻn qua thông đạo ngầm ra khỏi núi',req:()=>S.f.huyethai,reqT:'Cần biết lối trong lăng mộ',check:['tamco',14],bonus:()=>S.f.hide?4:0,
@@ -426,6 +427,8 @@ x_cache:{title:'Kỳ ngộ',
     tinhthach:'Trận sạt lở đêm qua để lộ một mạch nguyên thạch lấp lánh trong vách đá. Chưa ai phát hiện.',
     linhduoc:'Sau bụi gai rậm là một vườn linh dược hoang, cây nào cũng đã trăm năm tuổi. Có dấu chân thú lớn quanh vườn.',
     bikip:'Trong hốc đá có một hộp gỗ mục, bên trong là bút ký luyện cổ của một tiền bối vô danh.',
+    hauquan:'Hốc cây cổ thụ sâu hoắm, bên trong xếp đầy vò rượu khỉ ủ. Bầy khỉ đang ngủ say trên cành.',
+    tocong:'Vách đá lỗ chỗ như tổ ong. Từ mỗi lỗ nhỏ vang ra tiếng rì rì: một tổ cổ hoang đang nở.',
   }[c.kind]},
   choices:()=>{const c=S.cache[S.curCache],done=()=>{c.done=1};return {
     dicot:[{t:'Lấy túi cổ',check:['ngo',11],ok:()=>{done();const k=pick(CARAVAN.filter(k=>k.indexOf('xaloi')<0));gainGu(k);S.stones+=40;return `Độc cổ trong túi đã chết từ lâu. Ngươi thu ${GU[k].n} và 40 nguyên thạch.`},fail:()=>{done();S.hp=Math.max(1,S.hp-25);S.stones+=40;return 'Độc cổ còn sống, cắn trúng tay ngươi (−25 khí huyết). Cổ trong túi bị nó ăn mất, chỉ còn 40 nguyên thạch.'}},
@@ -434,6 +437,10 @@ x_cache:{title:'Kỳ ngộ',
                {t:'Báo cho gia tộc',tag:'chinh',eff:()=>{done();S.danh+=12;S.stones+=25;return 'Gia tộc thưởng 25 nguyên thạch, danh vọng +12.'}}],
     linhduoc:[{t:'Hái sạch',eff:()=>{done();S.herbs+=4;fight('hachung',{scale:1});return 'Ngươi hái được 4 gốc linh dược thì chủ nhân của vườn trở về.'}},
               {t:'Hái vài gốc rồi rút',check:['tamco',11],ok:()=>{done();S.herbs+=2;return '+2 linh dược, lặng lẽ rời đi.'},fail:()=>{done();S.herbs+=2;fight('hachung',{scale:1});return 'Cành khô gãy dưới chân. Có tiếng gầm sau lưng.'}}],
+    hauquan:[{t:'Ôm hết rượu đi',eff:()=>{done();S.wine+=2;fight('hauquan',{scale:1});return '+2 tứ vị tửu. Bầy khỉ thức giấc.'}},
+             {t:'Lấy một vò rồi rút',check:['tamco',10],ok:()=>{done();S.wine++;S.f.hsBonus=(S.f.hsBonus||0)+2;return '+1 tứ vị tửu. Hậu sơn +2.'},fail:()=>{done();fight('hauquan',{scale:1});return 'Một con khỉ mở mắt.'}}],
+    tocong:[{t:'Luyện hóa con cổ mạnh nhất trong tổ',check:['ngo',12],ok:()=>{done();const k=pick(['dangman','kimcham','thuytrao','langhao']);gainGu(k);return `Luyện hóa thành công ${GU[k].n}.`},fail:()=>{done();S.hp=Math.max(1,S.hp-20);gainGu(pick(WILD));return 'Cả tổ nổi giận (−20 khí huyết). Ngươi chỉ kịp chộp một con.'}},
+            {t:'Hốt vài con nhỏ bán ở chợ',eff:()=>{done();S.stones+=35;return 'Bán cổ non được 35 nguyên thạch.'}}],
     bikip:[{t:'Nghiền ngẫm bút ký',check:['ngo',10],ok:()=>{done();S.ngo++;S.f.refineBonus=(S.f.refineBonus||0)+12;return 'Ngộ tính +1. Tỉ lệ luyện cổ +12%.'},fail:()=>{done();S.f.refineBonus=(S.f.refineBonus||0)+6;return 'Chữ viết quá khó hiểu, chỉ lĩnh hội được đôi phần (luyện cổ +6%).'}}],
   }[c.kind]}},
 r_tinbitang:{loc:'trai',w:3,cond:()=>(S.cache||[]).some(c=>!c.done&&!c.rumor&&S.turn<=c.to),title:'Tin đồn trong tửu quán',
@@ -573,7 +580,7 @@ npc_tt_1:{title:'Tiểu tổ Thanh Thư',hint:'Thanh Thư chiêu mộ',cond:()=>
   choices:()=>[
     {t:'Gia nhập tiểu tổ Thanh Thư',tag:'chinh',eff:()=>{
       S.f.team=1;rel('thanhthu',20);S.danh+=8;
-      return 'Ngươi gia nhập tiểu tổ mạnh nhất của thế hệ trẻ. Từ nay phần thưởng nhiệm vụ +20%, danh vọng +8.';
+      return 'Ngươi gia nhập tiểu tổ mạnh nhất của thế hệ trẻ. Từ nay phần thưởng nhiệm vụ +50%, danh vọng +8.';
     }},
     {t:'Từ chối, giữ vị thế độc hành ma tu',tag:'ma',eff:()=>{
       rel('thanhthu',10);S.tamco++;
@@ -682,8 +689,8 @@ npc_xm_2:{title:'Đêm đen truyền công',hint:'Bí mật của Xích Thành',
     return 'Nửa đêm trở về từ hậu sơn, ngươi vô tình nhìn thấy trong mật thất Xích gia: Gia lão Xích Luyện đang dùng chân nguyên Nhị chuyển truyền công ép khai khiếu cho Xích Thành! Tư chất Bính đẳng của Xích Thành thực chất là ngụy tạo!';
   },
   choices:()=>[
-    {t:'Tống tiền Xích Luyện: mỗi tháng 5 nguyên thạch',tag:'ma',check:['tamco',12],bonus:()=>mem('xichgia')?8:0,
-      ok:()=>{S.f.blackmailXich=1;learn('xichgia');rel('xichluyen',-15);return 'Xích Luyện cắn răng nộp 5 thạch mỗi tháng để ngươi giữ kín miệng (+5 thạch/tháng)!'},
+    {t:'Tống tiền Xích Luyện: mỗi tuần 10 nguyên thạch',tag:'ma',check:['tamco',12],bonus:()=>mem('xichgia')?8:0,
+      ok:()=>{S.f.blackmailXich=1;learn('xichgia');rel('xichluyen',-15);return 'Xích Luyện cắn răng nộp 10 thạch mỗi tuần để ngươi giữ kín miệng (+10 thạch/tuần)!'},
       fail:()=>{rel('xichluyen',-30);S.susp+=15;return 'Xích Luyện sát tâm nổi lên, cử tử sĩ cảnh cáo ngươi. Hiềm nghi +15.'}},
     {t:'Bán bí mật cho Mạc gia',check:['tamco',13],
       ok:()=>{S.stones+=20;rel('mactran',25);rel('xichluyen',-40);return 'Mạc Trần đại hỷ, thưởng 20 nguyên thạch (+20 thạch, Mạc gia +25, Xích gia thù địch).'},
@@ -773,7 +780,251 @@ npc_cm_3:{title:'Đoạn tuyệt ân oán',hint:'Thu hồi toàn bộ di sản',
     {t:'Để họ tự sinh tự diệt',eff:()=>'Ngươi không thèm bận tâm đến đám phàm nhân nhỏ nhen này nữa.'}
   ],
   post:()=>{S.f.npc_cm_3=1;}},
+
+/* ================= BẢN 13: HOÀN THIỆN TUYẾN NPC ================= */
+
+// --- Phương Chính: giai đoạn 4-5 ---
+npc_pc_4:{title:'Huynh đệ trước từ đường',hint:'Phương Chính chọn phe',cond:()=>S.turn>=24&&S.turn<=26&&(S.f.pcAlly||S.f.pcHate)&&!S.f.npc_pc_4,
+  text:()=>{
+    S.npcProg.phuongchinh=5;
+    return S.f.pcAlly
+      ?'Phương Chính tìm đến lúc nửa đêm, túi áo căng phồng: "Ca ca, gia lão đang gom chứng cứ về vụ Giả Kim Sinh. Đệ lấy được danh sách người làm chứng, và đệ trộm thêm ít linh dược trong kho." Ánh mắt hắn không còn ngây thơ như ngày khai khiếu.'
+      :'Phương Chính đứng giữa từ đường, cụt một tay áo, giọng lạnh như sắt: "Con xin làm chứng. Đêm lang triều, Phương Nguyên đứng nhìn con bị sói xé mà không nhúc nhích. Kẻ như vậy còn việc gì không dám làm?" Cả từ đường quay sang nhìn ngươi.';
+  },
+  choices:()=>S.f.pcAlly?[
+    {t:'Nhận danh sách, dặn hắn từ nay đứng ngoài chuyện này',tag:'chinh',eff:()=>{S.susp=Math.max(0,S.susp-15);S.f.pcSupply=1;rel('phuongchinh',10);return 'Hiềm nghi −15. Từ nay mỗi tháng Phương Chính lén gửi ngươi một gốc linh dược.'}},
+    {t:'Dạy hắn cách làm giả lời khai của từng nhân chứng',tag:'ma',dao:10,check:['tamco',13],
+      ok:()=>{S.susp=Math.max(0,S.susp-30);S.tamco++;return 'Hai anh em thức trắng đêm sửa từng câu chữ. Hiềm nghi −30. Phương Chính học rất nhanh, nhanh đến mức đáng sợ.'},
+      fail:()=>{S.susp+=10;return 'Một nhân chứng đổi lời hai lần, gia lão sinh nghi. Hiềm nghi +10.'}},
+  ]:[
+    {t:'Bình thản: "Đệ bị sói cắn nên hận ta. Lời người đang hận, gia lão tin được mấy phần?"',check:['tamco',15],
+      ok:()=>{S.susp=Math.max(0,S.susp-5);S.danh+=3;return 'Gia lão gật gù. Phương Chính nghiến răng tới bật máu.'},
+      fail:()=>{S.susp+=25;return 'Không ai tin một người anh bỏ mặc em mình. Hiềm nghi +25.'}},
+    {t:'Hẹn hắn ra sau núi giải quyết cho xong',tag:'ma',dao:15,eff:()=>{fight('phuongchinh',{after:'pcduel',flee:false});return 'Phương Chính đến một mình. Hắn cũng muốn kết thúc chuyện này.'}},
+    {t:'Im lặng chịu trận',eff:()=>{S.susp+=15;S.danh-=10;rel('phuongchinh',5);return 'Ngươi không nói một lời. Hiềm nghi +15, danh vọng −10. Phương Chính bối rối vì không được cãi lại.'}},
+  ],
+  post:()=>{S.f.npc_pc_4=1}},
+
+// --- Thanh Thư: nhánh u uất ---
+npc_tt_5:{title:'Mộc Mị Cổ trong tay áo',hint:'Thanh Thư do dự',cond:()=>S.turn>=18&&S.turn<=19&&S.f.npc_tt_3&&(S.var||{}).thanhthu_route==='u_uat'&&!S.f.npc_tt_5,
+  text:()=>'Thanh Thư mời ngươi ra bờ suối, lấy ra một con cổ màu xanh thẫm như rêu. "Mộc Mị Cổ. Phụ thân giao cho ta trước lang triều. Đổi sinh mệnh lấy sức mạnh. Phương Nguyên, nếu là ngươi, ngươi có dùng không?"',
+  choices:()=>[
+    {t:'"Không. Người chết thì không bảo vệ được ai."',tag:'chinh',eff:()=>{rel('thanhthu',20);S.f.ttDoubt=1;return 'Thanh Thư im lặng rất lâu rồi cất cổ đi. Nếu ngươi đứng cạnh hắn trong lang triều, hắn sẽ không dễ dàng liều mạng. Quan hệ +20.'}},
+    {t:'"Dùng. Nhưng hãy chọn đúng lúc, và đúng kẻ thù."',canon:1,eff:()=>{rel('thanhthu',10);S.tamco++;return 'Hắn cười buồn: "Ngươi luôn nói thật." Tâm cơ +1.'}},
+    {t:'Đề nghị hắn giao Mộc Mị Cổ cho ngươi giữ hộ',tag:'ma',dao:10,check:['tamco',16],
+      ok:()=>{rel('thanhthu',-5);S.stones+=30;return 'Thanh Thư do dự rồi từ chối, nhưng để lại túi 30 nguyên thạch "phòng khi ta không về". Ngươi cất đi mà không nói gì.'},
+      fail:()=>{rel('thanhthu',-20);return 'Ánh mắt Thanh Thư thoáng lạnh đi. Quan hệ −20.'}},
+  ],
+  post:()=>{S.f.npc_tt_5=1}},
+
+// --- Bạch Ngưng Băng: giai đoạn 3-4 ---
+npc_bai_3:{title:'Hẹn ước dưới tuyết',hint:'Bạch Ngưng Băng tìm đến',cond:()=>S.turn>=25&&S.turn<=26&&S.f.npc_bai_2&&!S.f.npc_bai_3,
+  text:()=>{
+    S.npcProg.bai=4;
+    const r=(S.var||{}).bai_route;
+    return r==='sat_y'
+      ?'Bạch Ngưng Băng xuất hiện trên mái tửu lâu, sau lưng là trăng non. "Bạch gia sắp đánh Cổ Nguyệt. Ta được lệnh dẫn đầu. Ta có thể giết ngươi trước, cho khỏi phiền." Hàn khí phủ trắng cả con phố.'
+      :'Bạch Ngưng Băng ngồi một mình bên bờ suối đã đóng băng. "Bạch gia sắp đánh Cổ Nguyệt. Còn ta thì sắp chết. Phương Nguyên, trước khi chết, ta muốn làm một chuyện theo ý mình."';
+  },
+  choices:()=>[
+    {t:'"Vậy thì đi cùng ta. Hôm đó, đừng đứng về phía nào cả."',canon:1,check:['tamco',17],bonus:()=>((S.rel.bai||0)>=40?6:0)+(mem('bai')?4:0),
+      ok:()=>{S.f.baiAlly=1;rel('bai',20);return 'Bạch Ngưng Băng bật cười: "Được. Hôm đó ta chỉ làm theo ý mình." (Bạch Ngưng Băng sẽ giúp ngươi trong trận cuối.)'},
+      fail:()=>{rel('bai',-10);return 'Hắn lắc đầu: "Ngươi vẫn chưa đủ thú vị để ta phản bội gia tộc." Rồi biến mất.'}},
+    {t:'Rút cổ: "Muốn giết ta thì làm ngay đi."',eff:()=>{fight('bai',{after:'bai3',mod:S.f.baiWeak?.7:.9});return 'Tuyết đổ xuống như trút.'}},
+    {t:'Báo tin Bạch gia sắp tập kích cho gia tộc',tag:'chinh',eff:()=>{S.danh+=15;rel('bai',-30);S.f.baiWarned=1;return 'Gia tộc kịp chuẩn bị. Danh vọng +15. Bạch Ngưng Băng biết chuyện, không bao giờ tìm ngươi nữa.'}},
+  ],
+  post:()=>{S.f.npc_bai_3=1}},
+
+// --- Mạc gia / Xích gia: nhánh theo kiếp ---
+npc_xm_5:{title:'Ghế gia lão bỏ trống',hint:'Mạc gia và Xích gia ra tay',cond:()=>S.turn>=19&&S.turn<=23&&S.f.tideDone&&S.f.npc_xm_3&&!S.f.npc_xm_5,
+  text:()=>{
+    meet('xichson');meet('macnhan');
+    const r=(S.var||{}).xich_mac_route;
+    if(r==='xich_the')return 'Một gia lão tử trận trong lang triều, ghế trống. Xích Luyện đẩy Xích Sơn, Cổ sư Tam chuyển mạnh nhất Xích gia, lên thay. Mạc Trần cần ai đó làm chuyện bẩn để lật ngược thế cờ.';
+    if(r==='mac_the')return 'Một gia lão tử trận trong lang triều, ghế trống. Mạc gia đã mua chuộc đủ phiếu. Xích Luyện ngồi uống trà một mình, cả buổi không nhấp một ngụm. Lão cần ai đó giúp.';
+    return 'Một gia lão tử trận trong lang triều. Ngay đêm đó hai nhà đã cho người canh cửa nhau. Chỉ cần một mồi lửa là cả hai sẽ lao vào xé xác nhau.';
+  },
+  choices:()=>{
+    const r=(S.var||{}).xich_mac_route,out=[];
+    if(r!=='mac_the')out.push({t:'Giúp Mạc gia: tung tin Xích Thành khai khiếu giả',req:()=>mem('xichgia')||S.f.blackmailXich,reqT:'Cần biết bí mật Xích Thành',eff:()=>{rel('mactran',30);rel('xichluyen',-50);S.f.phe='Mạc gia';S.stones+=40;S.susp+=5;return 'Cả trại xôn xao. Xích Sơn phải rút tên. Mạc Trần thưởng 40 nguyên thạch và nhận ngươi làm người của Mạc gia.'}});
+    if(r!=='xich_the')out.push({t:'Giúp Xích gia: làm chứng Mạc gia bỏ tường lúc lang triều',check:['tamco',14],
+      ok:()=>{rel('xichluyen',30);rel('mactran',-40);S.f.phe='Xích gia';gainGu('thietbi');return 'Lời chứng của ngươi khớp với vết sói trên tường. Xích Luyện tặng ngươi Thiết Bì Cổ.'},
+      fail:()=>{rel('mactran',-30);S.susp+=15;fight('macnhan',{after:'macnhan'});return 'Mạc Nhan chặn ngươi ngay ở cổng từ đường, roi đã rút khỏi thắt lưng.'}});
+    if(r==='tranh_doat')out.push({t:'Châm lửa cho hai nhà cắn nhau, đứng ngoài nhặt của rơi',tag:'ma',dao:15,check:['tamco',15],
+      ok:()=>{S.stones+=70;S.f.xmWar=1;rel('mactran',-10);rel('xichluyen',-10);return 'Đêm đó hai nhà đánh nhau trong hẻm. Sáng ra, túi thạch của những kẻ "mất tích" nằm trong tay ngươi (+70). Cả hai đều yếu đi trước ngày Bạch gia tới.'},
+      fail:()=>{S.susp+=30;return 'Có người thấy ngươi ra vào cả hai nhà. Hiềm nghi +30.'}});
+    out.push({t:'Đứng ngoài, chuyện của gia lão không phải chuyện của ngươi',eff:()=>{S.tamco++;return 'Tâm cơ +1.'}});
+    return out;
+  },
+  post:()=>{S.f.npc_xm_5=1}},
+
+// --- Cậu mợ và Trầm Thúy: kết tuyến ---
+npc_cm_4:{title:'Trầm Thúy',hint:'Trầm Thúy lựa chọn',cond:()=>S.turn>=20&&S.turn<=24&&S.f.npc_cm_2&&!S.f.npc_cm_4,
+  text:()=>{
+    meet('tramthuy');
+    return (S.var||{}).caumo_route==='phan_don'
+      ?'Cậu mợ mất trắng, Trầm Thúy mất chỗ dựa. Mấy hôm nay nàng hay đứng ở đầu hẻm sau tửu lâu, nói chuyện với một gã lạ mặt. Trên chuôi đao của gã có buộc một sợi dây đỏ.'+(mem('tramthuy')?' Ngươi nhớ sợi dây đỏ ấy. Kiếp trước nó xuất hiện ngay trước khi lưỡi đao cắm vào lưng ngươi.':'')
+      :'Cậu mợ túng quẫn, định bán Trầm Thúy cho thương đội làm nô tỳ. Nàng quỳ trước cửa tửu lâu từ sáng tới tối: "Thiếu gia, xin người mua nô tỳ. Nô tỳ biết hết chuyện nhà cậu, biết cả những ai hay lui tới."';
+  },
+  choices:()=>(S.var||{}).caumo_route==='phan_don'?[
+    {t:'Ra tay trước với gã lạ mặt',check:['satphat',12],bonus:()=>mem('tramthuy')?5:0,
+      ok:()=>{learn('tramthuy');fight('tramthuysat',{after:'tramthuy',mod:.75});return 'Ngươi chặn hắn trong hẻm trước khi hắn kịp ra tay.'},
+      fail:()=>{learn('tramthuy');fight('tramthuysat',{after:'tramthuy'});return 'Hắn nhanh hơn ngươi nghĩ.'}},
+    {t:'Trả gấp đôi để mua lại gã sát thủ',req:()=>S.stones>=40,reqT:'Cần 40 nguyên thạch',eff:()=>{S.stones-=40;learn('tramthuy');S.f.tramthuyGone=1;return 'Gã cầm tiền rồi đi. Hôm sau người ta vớt được xác Trầm Thúy dưới giếng. Ngươi không hỏi ai làm.'}},
+    {t:'Không để ý',eff:()=>{S.f.tramthuyAmbush=1;return 'Chuyện của một tỳ nữ thì có gì đáng bận tâm.'}},
+  ]:[
+    {t:'Mua nàng với giá 15 nguyên thạch, dùng làm tai mắt',req:()=>S.stones>=15,reqT:'Cần 15 nguyên thạch',eff:()=>{S.stones-=15;S.f.tramthuySpy=1;S.f.eyes=1;rel('tramthuy',30);return 'Trầm Thúy thành tai mắt của ngươi trong trại. Từ nay tin đồn tới tai ngươi sớm hơn.'}},
+    {t:'Mặc kệ nàng',canon:1,eff:()=>{rel('tramthuy',-20);return 'Thương đội mang nàng xuống núi. Ngươi không ngoái lại.'}},
+  ],
+  post:()=>{S.f.npc_cm_4=1}},
+
+x_tramthuy:{title:'Lưỡi đao sau lưng',
+  text:()=>'Đêm khuya, ngươi vừa khóa cửa tửu lâu thì nghe tiếng ngói khẽ động. Một bóng bịt mặt nhảy xuống, sợi dây đỏ bay phấp phới trên chuôi đao.',
+  choices:()=>[
+    {t:'Nghênh chiến',eff:()=>{learn('tramthuy');fight('tramthuysat',{after:'tramthuy',flee:false});return 'Không kịp nghĩ nữa.'}},
+  ]},
+
+// --- Thiết Nhược Nam ---
+npc_nn_1:{title:'Thiết Nhược Nam',hint:'Con gái thần bổ',cond:()=>S.turn>=23&&S.turn<=25&&S.met.nhuocnam&&!S.f.npc_nn_1,
+  text:()=>'Thiết Nhược Nam chặn ngươi ở bậc đá học đường. Nàng chưa tới mười sáu, áo bổ khoái sạch sẽ, lưng thẳng tắp. "Cha ta nói ai cũng có thể nói dối. Ta muốn tự mình nghe. Ngươi có giết Giả Kim Sinh không?"'+(mem('nhuocnam')?' Ngươi nhớ: nàng ghét dối trá, nhưng chưa từng quên một ân tình.':''),
+  choices:()=>[
+    {t:'Nhìn thẳng nàng: "Không."',check:['tamco',S.f.killedJKS?15:8],bonus:()=>mem('nhuocnam')?4:0,
+      ok:()=>{learn('nhuocnam');rel('nhuocnam',15);S.f.tieIntel=1;return 'Nhược Nam gật đầu chậm rãi. Nàng kể cha nàng đang chờ một nhân chứng từ thương đội. Ngươi nhớ kỹ cái tên đó.'},
+      fail:()=>{learn('nhuocnam');rel('nhuocnam',-20);S.susp+=15;return 'Nàng nhìn ngươi rất lâu rồi quay đi. Tối đó Thiết Huyết Lãnh ghé tửu lâu. Hiềm nghi +15.'}},
+    {t:'Giúp nàng tìm dấu vết một vụ khác trong trại',tag:'chinh',check:['ngo',12],
+      ok:()=>{learn('nhuocnam');rel('nhuocnam',25);S.danh+=5;S.f.nnDebt=1;return 'Hai người lần ra kẻ trộm kho thảo dược. Nhược Nam nói: "Ta nợ ngươi một lần." Danh vọng +5.'},
+      fail:()=>{rel('nhuocnam',5);return 'Manh mối dẫn vào ngõ cụt. Nhược Nam vẫn cảm ơn.'}},
+    {t:'Lờ nàng đi',eff:()=>{rel('nhuocnam',-5);return 'Nàng nhíu mày ghi gì đó vào sổ tay.'}},
+  ],
+  post:()=>{S.f.npc_nn_1=1}},
+
+// --- Hùng Lâm ---
+npc_hl_1:{title:'Hùng Lâm khiêu chiến',hint:'Hùng gia so tài',cond:()=>S.turn>=(W('hunglam')?6:10)&&S.turn<=18&&!S.f.npc_hl_1,
+  text:()=>{meet('hunglam');return 'Ở bãi đá ranh giới, một thanh niên vai rộng tay trần đang đấm nát từng tảng đá cho vui. Hùng Lâm của Hùng gia. Hắn ngoắc tay: "Cổ Nguyệt không còn ai sao? Cử một thằng nhóc Bính đẳng ra?"'+(mem('hunglam')?' Ngươi nhớ: quyền thứ ba của hắn luôn hở sườn trái.':'')},
+  choices:()=>[
+    {t:'Nhận lời so tài',eff:()=>{fight('hunglam',{after:'hunglam',mod:(S.chuyen<2?.75:1)*(mem('hunglam')?.8:1)});return 'Hùng Lâm cười ha hả, siết nắm đấm.'}},
+    {t:'Khích hắn đi đánh Bạch gia trước',check:['tamco',13],
+      ok:()=>{rel('hunglam',5);S.f.hlBai=1;S.tamco++;return 'Hùng Lâm nổi máu hiếu thắng, quay sang tìm Bạch Ngưng Băng. Nghe nói hắn thua thảm, nhưng Bạch gia cũng mất một con cổ. Tâm cơ +1.'},
+      fail:()=>{fight('hunglam',{after:'hunglam'});return '"Ngươi nói nhiều quá." Nắm đấm đã tới.'}},
+    {t:'Lui đi',eff:()=>{S.danh-=4;return 'Danh vọng −4.'}},
+  ],
+  post:()=>{S.f.npc_hl_1=1}},
+
+/* ================= BẢN 13: NGẪU NHIÊN THEO NƠI CHỐN ================= */
+
+// Học đường
+r_macnhan:{loc:'hocduong',w:2,cond:()=>S.turn>=3,title:'Mạc Nhan gây sự',
+  text:()=>{meet('macnhan');return 'Mạc Nhan, cháu gái gia lão Mạc Trần, đổ cả chén mực lên bàn của ngươi rồi cười với đám bạn: "Bính đẳng thì ngồi chỗ Bính đẳng."'+(S.f.macHate?' Từ khi Mạc gia ghi hận ngươi, nàng ta càng lấn tới.':'')},
+  choices:[
+    {t:'Lau mực, như chưa có gì',canon:1,eff:()=>{S.tamco++;return 'Tâm cơ +1. Mạc Nhan thấy chẳng vui, bỏ đi.'}},
+    {t:'Hắt ngược chén mực vào mặt nàng',tag:'ma',eff:()=>{rel('mactran',-10);fight('macnhan',{after:'macnhan'});return 'Cả lớp nín thở.'}},
+    {t:'Mỉm cười khen roi của nàng đẹp',check:['tamco',12],ok:()=>{rel('macnhan',15);S.stones+=5;return 'Mạc Nhan đỏ mặt, không hiểu sao lại ném cho ngươi 5 nguyên thạch rồi bỏ đi.'},fail:()=>{rel('macnhan',-10);return 'Mạc Nhan càng tức.'}},
+  ]},
+r_thiluyen:{loc:'hocduong',w:2,title:'Kiểm tra điều khiển cổ',
+  text:()=>'Gia lão đặt một hàng đèn dầu, bắt học trò dùng Nguyệt Quang Cổ cắt bấc mà không làm đổ đèn.',
+  choices:[
+    {t:'Cắt cả hàng trong một hơi',check:['satphat',11],ok:()=>{S.stones+=8;S.danh+=3;return 'Mười ngọn bấc rơi cùng lúc. Thưởng 8 nguyên thạch, danh vọng +3.'},fail:()=>{S.danh-=2;return 'Đổ ba cây đèn. Danh vọng −2.'}},
+    {t:'Cắt chậm, cẩn thận từng cây',check:['ngo',9],ok:()=>{S.prog+=12;return 'Tay vững, tâm tĩnh. Tu vi +12.'},fail:()=>'Không có gì đặc biệt.'},
+  ]},
+r_cothu:{loc:'hocduong',w:1,once:1,cond:()=>S.turn>=8,title:'Cổ thư bị cấm',
+  text:()=>'Góc sâu nhất tàng thư các có một ngăn khóa. Khóa đã gỉ, cửa ngăn hé mở.',
+  choices:[
+    {t:'Đọc lén',tag:'ma',check:['ngo',13],ok:()=>{S.ngo++;S.f.refineBonus=(S.f.refineBonus||0)+10;S.susp+=5;return 'Bút ký về sát chiêu và luyện cổ của một ma tu vô danh. Ngộ tính +1, luyện cổ +10%. Hiềm nghi +5.'},fail:()=>{S.susp+=15;return 'Gia lão coi thư các bắt gặp. Hiềm nghi +15.'}},
+    {t:'Báo cho gia lão ngăn khóa bị hỏng',tag:'chinh',eff:()=>{S.danh+=5;return 'Danh vọng +5.'}},
+  ]},
+
+// Sơn trại
+r_hoiho:{loc:'trai',w:2,title:'Hội đổi cổ',
+  text:()=>'Sân từ đường họp hội đổi cổ mỗi tháng. Học trò và Cổ sư trẻ bày cổ trùng ra trao đổi.',
+  choices:()=>{
+    const own=S.gu.filter(g=>GU[g.k].t!=='fate'&&GU[g.k].r===1).map(g=>g.k);
+    return [
+      {t:'Đổi một con cổ Nhất chuyển lấy con khác ngẫu nhiên',req:()=>own.length>0,reqT:'Cần một con cổ Nhất chuyển',eff:()=>{const k=own[0];S.gu.splice(S.gu.findIndex(g=>g.k===k),1);const n=pick(SHOP.filter(x=>x!==k));gainGu(n,true);return `Đổi ${GU[k].n} lấy ${GU[n].n}.`}},
+      {t:'Chỉ xem, ghi nhớ ai nuôi cổ gì',eff:()=>{S.tamco++;return 'Tâm cơ +1.'}},
+    ];
+  }},
+r_nguyentuyen:{loc:'trai',w:1,cond:()=>!S.f.tideDone,title:'Linh tuyền Cổ Nguyệt',
+  text:()=>'Linh tuyền dưới lòng núi là mạch sống của Cổ Nguyệt. Đêm nay người canh gác ngủ gật.',
+  choices:[
+    {t:'Lẻn xuống tu luyện bên linh tuyền',tag:'ma',check:['tamco',12],ok:()=>{S.prog+=35;S.susp+=5;return 'Linh khí dày đặc. Tu vi +35. Hiềm nghi +5.'},fail:()=>{S.susp+=20;S.danh-=5;return 'Bị bắt quả tang. Hiềm nghi +20, danh vọng −5.'}},
+    {t:'Đánh thức người gác',tag:'chinh',eff:()=>{S.danh+=3;return 'Danh vọng +3.'}},
+  ]},
+r_phamnhan:{loc:'trai',w:1,title:'Nợ của phàm nhân',
+  text:()=>'Một nông dân trồng trà quỳ trước tửu lâu, xin khất nợ thêm một tháng.',
+  choices:[
+    {t:'Cho khất nợ',tag:'chinh',eff:()=>{S.danh+=3;S.f.farmerDebt=1;return 'Danh vọng +3. Ông ta hứa sẽ trả ơn.'}},
+    {t:'Siết nợ bằng ruộng trà',tag:'ma',eff:()=>{S.stones+=10;S.danh-=4;return '+10 nguyên thạch, danh vọng −4.'}},
+  ]},
+r_tramthuytin:{loc:'trai',w:2,cond:()=>S.f.tramthuySpy,title:'Tin từ Trầm Thúy',
+  text:()=>'Trầm Thúy ghé tai ngươi thì thầm vài chuyện nghe được trong nhà người khác.',
+  choices:[
+    {t:'Nghe',eff:()=>{const r=rand(1,3);if(r===1){S.stones+=12;return 'Nàng chỉ chỗ một gã học trò giấu túi thạch. +12 nguyên thạch.'}if(r===2){S.susp=Math.max(0,S.susp-8);return 'Nàng kể ai đang dò la về ngươi. Ngươi xử lý trước. Hiềm nghi −8.'}S.f.hsBonus=(S.f.hsBonus||0)+1;return 'Nàng kể chuyện đám thợ săn thấy khỉ uống rượu ở hậu sơn. Thám hiểm hậu sơn +1.'}},
+  ]},
+
+// Núi Thanh Mao
+r_haunhi:{loc:'nui',w:2,cond:()=>!S.f.hs,title:'Bầy khỉ say',
+  text:()=>'Trên cây cổ thụ, một bầy khỉ đang tranh nhau vò rượu ủ trong hốc cây. Mùi hầu nhi tửu thơm nồng.'+(mem('hauquan')?' Ngươi biết hốc rượu chính của chúng ở đâu.':''),
+  choices:[
+    {t:'Đuổi bầy khỉ, lấy rượu',eff:()=>{learn('hauquan');fight('hauquan',{after:'hauquan'});return 'Bầy khỉ ném đá rào rào.'}},
+    {t:'Lặng lẽ theo dấu tới hốc rượu',check:['tamco',11],bonus:()=>mem('hauquan')?6:0,ok:()=>{learn('hauquan');S.f.hsBonus=(S.f.hsBonus||0)+4;S.wine++;return 'Ngươi lấy trộm một vò tứ vị tửu hảo hạng. Có rượu này, dụ Tửu Trùng dễ hơn nhiều (hậu sơn +4).'},fail:()=>{fight('hauquan',{after:'hauquan'});return 'Một con khỉ con thét lên.'}},
+  ]},
+r_bachmao:{loc:'nui',w:1,once:1,cond:()=>S.turn>=12,title:'Hang gấu ngủ đông',
+  text:()=>'Một hang đá lớn phả ra hơi ấm và mùi mật ong. Tiếng ngáy rung cả vách núi.'+(mem('bachmaon')?' Ngươi nhớ bên trong có mật gấu trăm năm, và cả chủ nhân của nó.':''),
+  choices:[
+    {t:'Vào hang',eff:()=>{learn('bachmaon');fight('bachmaon',{after:'bachmaon',mod:S.chuyen<2?.75:1});return 'Tiếng ngáy ngừng bặt.'}},
+    {t:'Lẻn lấy mật rồi chạy',check:['tamco',14],bonus:()=>mem('bachmaon')?5:0,ok:()=>{learn('bachmaon');S.herbs+=3;S.hp=maxHp();return 'Mật gấu trăm năm! Khí huyết hồi đầy, +3 linh dược.'},fail:()=>{learn('bachmaon');fight('bachmaon',{after:'bachmaon'});return 'Gấu mở mắt.'}},
+    {t:'Tránh xa',eff:()=>''},
+  ]},
+r_ranxanh:{loc:'nui',w:2,title:'Bụi trúc động đậy',
+  text:()=>'Bụi trúc bên đường động đậy dù không có gió.',
+  choices:[
+    {t:'Rút cổ đề phòng',eff:()=>{fight('docxa',{scale:1});return 'Một con rắn xanh lao ra.'}},
+    {t:'Ném đá thăm dò',check:['ngo',10],ok:()=>{S.f.freeMoon=(S.f.freeMoon||0)+1;return 'Chỉ là một con chồn. Nó chạy mất, để lộ một khóm nguyệt lan nhỏ.'},fail:()=>{S.hp-=8;return 'Rắn cắn trúng bắp chân. Khí huyết −8.'}},
+  ]},
+r_lao_tam:{loc:'nui',w:1,title:'Lão thợ săn',
+  text:()=>{meet('thuongtam');return 'Lão Tam, thợ săn phàm nhân, ngồi hút thuốc bên bẫy thú. "Cổ sư trẻ, trên núi này chỗ nào có cổ hoang, lão biết cả. Chỉ là lão già rồi."'},
+  choices:[
+    {t:'Trả 5 nguyên thạch mua tin',req:()=>S.stones>=5,reqT:'Cần 5 nguyên thạch',eff:()=>{S.stones-=5;rel('thuongtam',10);if(Math.random()<.5){gainGu(pick(WILD));return 'Lão dẫn ngươi tới một khe đá. Có cổ hoang thật.'}S.herbs+=2;return 'Lão chỉ một bãi linh dược. +2 linh dược.'}},
+    {t:'Giúp lão gỡ bẫy mang về',tag:'chinh',eff:()=>{rel('thuongtam',20);S.danh+=2;S.blood+=1;return 'Lão cảm ơn, chia ngươi phần huyết thú. +1 huyết khí.'}},
+  ]},
+r_bangtuyet:{loc:'nui',w:1,cond:()=>S.turn>=10,title:'Vết băng trên đá',
+  text:()=>'Một tảng đá bị đông cứng từ trong ra ngoài giữa trời nắng. Dấu chân người Bạch gia còn mới.',
+  choices:[
+    {t:'Lần theo dấu chân',eff:()=>{fight('baitrinhsat',{after:'baigia'});return 'Áo trắng thấp thoáng sau thân cây.'}},
+    {t:'Nhặt mảnh băng tinh còn sót',check:['ngo',12],ok:()=>{S.ess=maxEss();return 'Băng tinh tan vào không khiếu. Chân nguyên hồi đầy.'},fail:()=>{S.hp-=10;return 'Hàn khí cắn vào tay. Khí huyết −10.'}},
+  ]},
+r_hunglam:{loc:'nui',w:1,cond:()=>S.f.npc_hl_1&&!S.f.hlBeaten&&S.turn<=24,title:'Hùng Lâm tái chiến',
+  text:()=>'Hùng Lâm lại chặn đường, vết bầm lần trước còn chưa tan. "Lần này ta không nhường."',
+  choices:[
+    {t:'Đánh',eff:()=>{fight('hunglam',{after:'hunglam',mod:mem('hunglam')?.85:1});return ''}},
+    {t:'Bỏ chạy',check:['satphat',12],ok:()=>'Ngươi cắt đuôi được hắn.',fail:()=>{fight('hunglam',{after:'hunglam'});return 'Hắn nhanh hơn vẻ ngoài.'}},
+  ]},
+
+// Nhiệm vụ
+r_sontacphuc:{loc:'nhiemvu',w:1,cond:()=>S.turn>=8,title:'Hang ổ Độc Nhãn',
+  text:()=>'Nhiệm vụ đường treo thưởng lớn: diệt hang ổ của Độc Nhãn sơn tặc vương phía nam núi.'+(mem('sontac')?' Ngươi nhớ có lối tắt qua khe suối.':''),
+  choices:[
+    {t:'Đánh thẳng vào hang',eff:()=>{learn('sontac');fight('sontacvuong',{after:'sontacvuong'});return 'Tiếng tù và vang lên.'}},
+    {t:'Vòng qua khe suối đánh úp',check:['tamco',13],bonus:()=>mem('sontac')?6:0,ok:()=>{learn('sontac');fight('sontacvuong',{after:'sontacvuong',mod:.7});return 'Ngươi xuất hiện ngay sau lưng Độc Nhãn.'},fail:()=>{learn('sontac');fight('sontacvuong',{after:'sontacvuong',mod:1.15});return 'Khe suối có bẫy.'}},
+    {t:'Không nhận',eff:()=>''},
+  ]},
+r_tuanbien:{loc:'nhiemvu',w:2,title:'Tuần tra biên giới',
+  text:()=>'Tuần tra ranh giới giữa Cổ Nguyệt và Hùng gia. Cột mốc bị ai đó dời đi ba trượng.',
+  choices:[
+    {t:'Dời cột mốc về chỗ cũ',tag:'chinh',eff:()=>{S.danh+=4;AFTER.nv();return 'Danh vọng +4.'}},
+    {t:'Dời thêm ba trượng nữa về phía Hùng gia',tag:'ma',check:['tamco',12],ok:()=>{S.danh+=6;S.stones+=10;AFTER.nv();return 'Gia tộc được thêm một mảnh rừng. +10 nguyên thạch, danh vọng +6.'},fail:()=>{fight('hunggia',{scale:1,after:'nv'});return 'Cổ sư Hùng gia bắt quả tang.'}},
+  ]},
+r_chuyenhang:{loc:'nhiemvu',w:1,title:'Áp tải nguyên thạch',
+  text:()=>'Ngươi được giao áp tải một rương nguyên thạch từ mỏ về kho gia tộc.',
+  choices:[
+    {t:'Áp tải cẩn thận',tag:'chinh',eff:()=>{AFTER.nv();S.danh+=2;return ''}},
+    {t:'Rút bớt vài viên',tag:'ma',check:['tamco',12],ok:()=>{S.stones+=18;AFTER.nv();return '+18 nguyên thạch không ai hay biết.'},fail:()=>{S.susp+=15;S.danh-=6;return 'Kho gia tộc đếm thiếu. Hiềm nghi +15.'}},
+  ]},
 };
+
+// Thứ tự ưu tiên của tuyến NPC khi tuần đó không có mốc nguyên tác
+const NPC_POOL=['npc_pc_1','npc_pc_2','npc_pc_3','npc_pc_4','npc_tt_1','npc_tt_2','npc_tt_3','npc_tt_5','npc_tt_4','npc_bai_1','npc_bai_2','npc_bai_3',
+  'npc_xm_1','npc_xm_2','npc_xm_3','npc_xm_5','npc_xm_4','npc_cm_1','npc_cm_2','npc_cm_3','npc_cm_4','npc_nn_1','npc_hl_1'];
 
 // Sau khi thắng trận
 const AFTER={
@@ -799,7 +1050,7 @@ const AFTER={
   elder:()=>{S.susp=40;S.danh-=20;log('Gia lão ngã xuống. Trong trại không ai dám nhắc lại chuyện cũ, nhưng ánh mắt nhìn ngươi đã khác.','big')},
   thosan:()=>{S.danh+=8;log('Người thợ săn kể chuyện khắp trại. Danh vọng +8.','good')},
   bachthi:()=>{if(Math.random()<.6)gainGu('bachthi')},
-  nv:()=>{const n=Math.round(rand(8,14)*(S.f.team?1.5:1));S.stones+=n;S.danh+=3;log(`Gia tộc thưởng ${n} nguyên thạch.`,'gold')},
+  nv:()=>{const n=Math.round(rand(8,14)*(S.f.team?1.5:1)*(W('daotac')?1.3:1));S.stones+=n;S.danh+=3;log(`Gia tộc thưởng ${n} nguyên thạch.`,'gold')},
   tukiep:()=>{S.stones+=60;log('Huyết Thủ ma tu gục ngã. Ngươi vượt cấp giết một Tam chuyển. Trong túi hắn đầy nguyên thạch dính máu.','big')},
   jkstrap:()=>{S.f.jksEscaped=1;log('Hộ vệ ngã xuống, nhưng Giả Kim Sinh đã chạy thoát và sẽ kể lại với anh hắn.','danger');S.susp+=15},
   giave:()=>{S.f.giaveDone=1;S.susp=Math.max(0,S.susp-20);log('Hộ vệ Giả gia chết. Không ai còn đuổi theo chuyện của Giả Kim Sinh nữa.','big')},
@@ -811,6 +1062,15 @@ const AFTER={
     S.danh+=10;rel('thanhthu',15);
     log('Cổ sư Hùng gia ôm vết thương tháo chạy. Tiểu tổ Thanh Thư toàn thắng!','good');
   },
+  pcduel:()=>{S.f.pcBeaten=1;S.npcProg.phuongchinh=5;S.susp=Math.max(0,S.susp-10);rel('phuongchinh',-10);log('Phương Chính quỳ một gối, không cam lòng nhưng không nói thêm gì. Từ nay hắn không ra làm chứng nữa.','big')},
+  bai3:()=>{rel('bai',25);S.f.baiAlly=1;log('Bạch Ngưng Băng lau máu nơi khóe môi: "Được. Ngày đó ta sẽ đứng cạnh ngươi, để xem ngươi còn làm được gì nữa."','big')},
+  macnhan:()=>{S.danh+=4;rel('mactran',-10);rel('macnhan',-10);log('Mạc Nhan ôm tay chạy về mách ông. Danh vọng +4.','good')},
+  tramthuy:()=>{S.f.tramthuyGone=1;S.f.tramthuyAmbush=0;S.susp=Math.max(0,S.susp-5);log('Sát thủ khai ra Trầm Thúy. Sáng hôm sau nàng đã rời trại theo thương đội, không ai thấy nàng nữa.','big')},
+  hunglam:()=>{S.f.hlBeaten=1;learn('hunglam');rel('hunglam',15);S.danh+=12;log('Hùng Lâm ngã ngồi giữa bãi đá rồi bật cười: "Cổ Nguyệt có người rồi." Danh vọng +12.','big')},
+  hauquan:()=>{S.f.hsBonus=(S.f.hsBonus||0)+2;S.wine++;log('Bầy khỉ bỏ chạy, để lại một vò rượu. +1 tứ vị tửu, hậu sơn +2.','good')},
+  bachmaon:()=>{S.herbs+=3;S.stones+=20;S.hp=Math.min(maxHp(),S.hp+30);log('Trong hang có mật gấu trăm năm và bộ xương của một Cổ sư xấu số. +3 linh dược, +20 nguyên thạch.','big')},
+  sontacvuong:()=>{const n=Math.round(40*(W('daotac')?1.3:1));S.stones+=n;S.danh+=10;log(`Hang ổ Độc Nhãn bị san phẳng. Nhiệm vụ đường thưởng ${n} nguyên thạch, danh vọng +10.`,'big')},
+  end_bai:()=>{S.over='win';S.ending='bai_dong'},
   end_huyetlo:()=>{S.over='win';S.ending=(S.rel.bai||0)>=20||S.f.baiWeak?'huyetlo_bai':'huyetlo'},
   end_ma:()=>{S.over='win';S.ending='ma'},
   end_chinh:()=>{S.over='win';S.ending='chinh'},
@@ -826,5 +1086,6 @@ const ENDINGS={
   ma:{t:'Ma đạo độc hành',d:'Phương Nguyên đứng trên đỉnh núi phía đông nhìn Thanh Mao Sơn chìm trong biển băng và biển lửa. Tư chất vẫn là Bính đẳng, nhưng con đường trường sinh còn dài.'},
   chinh:{t:'Người giữ lửa Cổ Nguyệt',d:'Ngươi dẫn tàn dư Cổ Nguyệt thoát khỏi biển lửa. Mấy chục người sống sót nhìn ngươi như nhìn tộc trưởng mới. Câu chuyện này đã rẽ khỏi nguyên tác.'},
   thanhthu_chinh:{t:'Kế thừa Thanh Thư · Trụ cột Chính đạo',d:'Ngươi và Thanh Thư cùng cứu sống lẫn nhau giữa biển lửa và băng giá. Với uy vọng to lớn, ngươi kế thừa ý chí của Thanh Thư, bảo vệ huyết mạch Cổ Nguyệt dựng lại sơn trại mới, trở thành trụ cột trẻ tuổi nhất của tộc.'},
+  bai_dong:{t:'Băng và máu cùng xuống núi',d:'Bạch Ngưng Băng phản bội Bạch gia, cùng ngươi mở đường máu ra khỏi Thanh Mao Sơn. Hắn vẫn đang chết dần vì thể chất, ngươi vẫn chỉ là Bính đẳng. Hai kẻ không có gì để mất cùng đi về phương nam.'},
   song_hung:{t:'Song Hùng Cổ Nguyệt',d:'Phương Chính sát cánh bên Phương Nguyên, huynh đệ đồng tâm phá vỡ mưu đồ của Nhất Đại và thoát khỏi vòng vây của Thiết gia. Đôi mắt ngây thơ của Phương Chính đã trưởng thành, nhận ra bản chất tàn khốc của thế gian.'},
 };

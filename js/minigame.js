@@ -70,13 +70,23 @@ const STONE_CLUE={
   doc:['Có đốm tím li ti, mùi tanh nồng.','Lõi đá âm ấm bất thường.','Vân đá xoắn ốc, như có thứ gì từng cựa quậy.'],
 };
 function stoneAccuracy(){return clamp(.55+(S.ngo-6)*.05+(mem('doanthach')?.2:0),.4,.95)}
+// Người thu mua Giả gia định giá theo dấu hiệu đã lộ (họ cũng có thể nhìn nhầm như ngươi).
+// Họ là thương nhân: luôn ép giá dưới giá gốc, nên bán giữa chừng chỉ để cắt lỗ, không phải để kiếm lời.
+function stoneOffer(m,st){
+  const score=m.clues.reduce((s,c)=>s+({phe:-1,thach:1.2,co:1.6,doc:.2}[c.k]),0)/m.clues.length;
+  const sure=.6+.2*m.clues.length/m.max; // càng nhiều nhát cắt, họ càng dám trả
+  return Math.max(2,Math.round(st.price*clamp((.3+score*.3)*sure,.1,.9)));
+}
+function stonesLeft(){return S.stoneBuys&&S.stoneBuys.t===S.turn?STONE_WEEKLY-S.stoneBuys.n:STONE_WEEKLY}
 function startStone(id){
-  const st=STONES_GAMBLE.find(x=>x.id===id);if(!st||S.stones<st.price)return;
+  const st=STONES_GAMBLE.find(x=>x.id===id);if(!st||S.stones<st.price||stonesLeft()<=0)return;
+  S.stoneBuys={t:S.turn,n:stonesLeft()===STONE_WEEKLY?1:(S.stoneBuys.n+1)};
   S.stones-=st.price;if(window.SFX)SFX.crack();
-  const r=Math.random(),good=st.goodP;
+  // Ngộ tính và kinh nghiệm mổ thạch giúp chọn được khối đá tốt hơn ngay từ lúc mua
+  const r=Math.random(),good=Math.min(.92,st.goodP+(S.ngo-6)*.015+(mem('doanthach')?.08:0));
   const content=r<good*.55?'thach':r<good?'co':r<good+.1?'doc':'phe';
   S.panel=null;
-  S.mg={type:'stone',id,content,cuts:0,max:3,clues:[],offer:Math.round(st.price*.6)};
+  S.mg={type:'stone',id,content,cuts:0,max:3,clues:[],offer:Math.round(st.price*.4)};
   log(`Mua khối ${st.n} giá ${st.price} nguyên thạch.`,'gold');
   saveAll();render();
 }
@@ -88,9 +98,7 @@ function stoneAct(a){
     const truth=Math.random()<stoneAccuracy();
     const shown=truth?m.content:pick(['phe','thach','co','doc'].filter(k=>k!==m.content));
     m.clues.push({k:shown,t:pick(STONE_CLUE[shown])});
-    // Người thu mua định giá theo dấu hiệu đã lộ (họ cũng có thể nhìn nhầm như ngươi)
-    const score=m.clues.reduce((s,c)=>s+({phe:-1,thach:1.2,co:1.6,doc:.4}[c.k]),0)/m.clues.length;
-    m.offer=Math.max(3,Math.round(st.price*(.7+score*.55)));
+    m.offer=stoneOffer(m,st);
     if(m.cuts>=m.max)return stoneOpen();
   }else if(a==='sell'){
     S.stones+=m.offer;log(`Bán khối đá đang cắt dở cho Giả gia được ${m.offer} nguyên thạch.`,'gold');
@@ -100,10 +108,9 @@ function stoneAct(a){
 }
 function stoneOpen(){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);S.mg=null;S.panel='gamble';
-  if(m.content==='thach'){const v=Math.round(st.price*(1.6+Math.random()*1.4));S.stones+=v;learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
+  if(m.content==='thach'){const v=Math.round(st.price*(1.4+Math.random()*1.0));S.stones+=v;learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
   else if(m.content==='co'){
-    const pool=m.id==='thach_huyet'?['huyetnguyet','thietbi','diathinh']:m.id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi']:['nguyetquang','cuongnham','bachthi'];
-    const k=pick(pool);gainGu(k,true);learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
+    const k=pick(STONE_POOL[m.id]||STONE_POOL.thach_re);gainGu(k,true);learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
   }else if(m.content==='doc'){S.hp=Math.max(1,S.hp-20);log('Một con độc cổ ngủ đông trong đá cắn trúng tay ngươi. Khí huyết −20.','danger')}
   else log('Đá vỡ ra toàn vụn vôi. Mất trắng.','danger');
   saveAll();render();

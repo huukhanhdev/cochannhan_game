@@ -28,10 +28,20 @@ const ART={
   tiexueleng:{g:'铁',sc:'village',c:'#c9d3d6'},
   nhatdai:{g:'尸',sc:'blood',c:'#e8664f'},
   giave:{g:'卫',sc:'village',c:'#dcb466'},
+  docxa:{g:'蛇',sc:'forest',c:'#8fd07a'},
+  bao:{g:'豹',sc:'forest',c:'#e0b35a'},
+  hauquan:{g:'猴',sc:'wine',c:'#d9b27a'},
+  hunglam:{g:'熊',sc:'forest',c:'#c8915e'},
+  sontacvuong:{g:'匪',sc:'forest',c:'#b5ad9a'},
+  bachmaon:{g:'熊',sc:'snow',c:'#eef4f6'},
+  tramthuysat:{g:'刺',sc:'village',c:'#d86a6a'},
+  phuongchinh:{g:'正',sc:'village',c:'#9fd8ff'},
+  macnhan:{g:'莫',sc:'village',c:'#e7a0b0'},
 };
 const SCENE_NAME={forest:'Rừng trúc Thanh Mao',village:'Cổ Nguyệt sơn trại',tide:'Tường trại · Lang triều',wine:'Động phủ Hoa Tửu',blood:'Huyết động',snow:'Tuyết giữa mùa hạ',fire:'Thanh Mao Sơn bốc cháy'};
 const SKILL_GLYPH={strike:'拳',herb:'药',flee:'走',nguyetquang:'月',huyetnguyet:'血',nguyetmang:'芒',ngocbi:'玉',thietbi:'铁',cuongnham:'岩',thienbong:'蓬',trilieu:'愈',
-  huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护'};
+  huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护',
+  thuytrao:'水',sinhco:'叶',dangman:'藤',kimcham:'针',bangtien:'冰',thuy_nguyet:'澜',dang_tram:'缚',bang_huyet:'霜',kim_xuyen:'穿'};
 const INTENT_SEAL={atk:'攻',heavy:'猛',guard:'守'};
 const BRUSH='"Ma Shan Zheng", "STKaiti", "KaiTi", "Kaiti SC", serif';
 const DISPLAY='"Cormorant Garamond", Georgia, serif';
@@ -40,8 +50,9 @@ const DISPLAY='"Cormorant Garamond", Georgia, serif';
 const ART_DIR='assets/art/';
 const PORTRAIT={heorung:'p_boar',dienlang:'p_wolf',hachung:'p_bear',tanbinh:'p_cultivator',hoctro:'p_cultivator',macbac:'p_cultivator',
   cosusay:'p_cultivator',hunggia:'p_cultivator',sontac:'p_cultivator',baitrinhsat:'p_cultivator',kimsinh:'p_cultivator',tuukhoi:'p_jar',
-  dlbay:'p_wolf',loiquan:'p_wolf',langvuong:'p_wolfking',gialao:'p_gialao',bai:'p_bai',huyetkhoi:'p_blood',baicosu:'p_cultivator',baitruonglao:'p_baitruonglao',madutam:'p_madutam',giave:'p_giave',tiexueleng:'p_giave',nhatdai:'p_blood'};
-const PTINT={tiexueleng:0xd8dde2,nhatdai:0xff8a70,loiquan:0xcfe2ff,dlbay:0xdde6ee,kimsinh:0xf2e0b4,hunggia:0xeed0b0,baitrinhsat:0xe4edf4,baicosu:0xe4edf4,cosusay:0xf0dcc0,madutam:0xffc2b4};
+  dlbay:'p_wolf',loiquan:'p_wolf',langvuong:'p_wolfking',gialao:'p_gialao',bai:'p_bai',huyetkhoi:'p_blood',baicosu:'p_cultivator',baitruonglao:'p_baitruonglao',madutam:'p_madutam',giave:'p_giave',tiexueleng:'p_giave',nhatdai:'p_blood',
+  docxa:'p_boar',bao:'p_wolf',hauquan:'p_jar',hunglam:'p_cultivator',sontacvuong:'p_cultivator',bachmaon:'p_bear',tramthuysat:'p_giave',phuongchinh:'p_cultivator',macnhan:'p_cultivator'};
+const PTINT={docxa:0xa8f0a0,bao:0xffd890,bachmaon:0xf4fbff,hunglam:0xeed0b0,phuongchinh:0xcfe8ff,tramthuysat:0xffb0b0,tiexueleng:0xd8dde2,nhatdai:0xff8a70,loiquan:0xcfe2ff,dlbay:0xdde6ee,kimsinh:0xf2e0b4,hunggia:0xeed0b0,baitrinhsat:0xe4edf4,baicosu:0xe4edf4,cosusay:0xf0dcc0,madutam:0xffc2b4};
 const BGIMG={forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_wine',blood:'bg_blood',snow:'bg_snow',fire:'bg_fire'};
 // Tranh đầu thẻ sự kiện
 const EV_SCENE={c_lang1:'tide',c_lang2:'snow',c_lang3:'tide',c_luancong:'village',c_bai:'snow',c_huyetdong:'blood',c_nhatdai:'blood',c_thiet:'village',c_thietvay:'village',c_final:'fire',
@@ -102,10 +113,10 @@ function updateCombat(){
   const lock=key=>(c.frozen[key]||0)>0?`Bị băng phong ${c.frozen[key]-1||1} lượt`:(c.cd[key]||0)>0?`Hồi chiêu ${c.cd[key]} lượt`:'';
   const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:'Đánh tay',s:`${baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];
   uniq.forEach(x=>{
-    const cost=costOf(x.d.cost),lk=lock(x.k);
+    const cost=guCost(x.i),lk=lock(x.k),hungry=(S.gu[x.i].h||0)>0;
     const cdInfo=(CD[x.k]||0)>0?` · hồi ${CD[x.k]}`:'';
     sk.push({attr:`data-f="gu" data-i="${x.i}"`,g:SKILL_GLYPH[x.k]||'蛊',img:guImgUrl(x.k),n:x.d.n,cost,dis:!!lk||S.ess<cost,cdl:lk,
-      s:lk||(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${cdInfo}`:`Hồi ${22+12*S.chuyen} khí huyết${cdInfo}`),
+      s:lk||(hungry?'Đang đói · ':'')+(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${x.d.stun?' · choáng':''}${x.d.chill?' · giảm lực địch':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${cdInfo}`:`Hồi ${healAmt(x.k)} khí huyết${x.d.cure?' · giải độc':''}${cdInfo}`),
       cls:x.d.t==='attack'?'atk':x.d.t==='guard'?'grd':'heal'});
   });
   combos.forEach(cb=>{const cost=costOf(cb.cost),lk=lock(cb.id);sk.push({attr:`data-combo="${cb.id}"`,g:SKILL_GLYPH[cb.id]||'招',n:cb.n,cost,dis:!!lk||S.ess<cost,cdl:lk,s:lk||cb.d+` · hồi ${COMBO_CD}`,cls:'combo'})});

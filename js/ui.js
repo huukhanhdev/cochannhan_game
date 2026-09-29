@@ -10,11 +10,13 @@ const GU_META={
   thietbi:{icon:'铁',cls:'rank-2'},ngocbi:{icon:'玉',cls:'rank-1'},thienbong:{icon:'蓬',cls:'rank-3'},trilieu:{icon:'愈',cls:'rank-1'},
   huyetnguyet:{icon:'血',cls:'rank-2'},huyetlo:{icon:'炉',cls:'rank-3'},diathinh:{icon:'耳',cls:'rank-2'},cuongnham:{icon:'岩',cls:'rank-1'},
   uguang:{icon:'幽',cls:'rank-1'},bachngoc:{icon:'瓷',cls:'rank-2'},hungluc:{icon:'熊',cls:'rank-1'},liemtuc:{icon:'隐',cls:'rank-1'},
-  xaloi1:{icon:'舍',cls:'rank-1'},xaloi2:{icon:'利',cls:'rank-2'},
+  xaloi1:{icon:'舍',cls:'rank-1'},xaloi2:{icon:'利',cls:'rank-2'},xaloi3:{icon:'银',cls:'rank-3'},
+  thuytrao:{icon:'水',cls:'rank-1'},sinhco:{icon:'叶',cls:'rank-1'},dangman:{icon:'藤',cls:'rank-1'},kimcham:{icon:'针',cls:'rank-1'},
+  bangtien:{icon:'冰',cls:'rank-2'},langhao:{icon:'嚎',cls:'rank-1'},thanhti:{icon:'丝',cls:'rank-1'},tuunang:{icon:'囊',cls:'rank-2'},
 };
 // Chân dung NPC từ tranh cổ (Met Museum, phạm vi công cộng)
 const NPC_IMG={toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu'};
-const NPC_META={tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
+const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',
   c_dieutra:'查',c_thuongdoiroi:'商',c_baigia:'白',c_lang1:'狼',c_lang2:'木',c_lang3:'王',c_luancong:'荒',c_bai:'冰',c_thiet:'铁',c_huyetdong:'血',c_thietvay:'捕',c_nhatdai:'尸',c_final:'终'};
 
@@ -263,12 +265,12 @@ function renderStage(){
     return;
   }
   if(S.panel==='gamble'){
-    const icons=['石','竹','血'];
+    const icons=['石','竹','血','冰'];
     st.innerHTML=`<div class="paper">${head('Phường Đoán Thạch','Quầy mổ thạch của Giả gia')}
-      <p class="dimt">Chọn đá bằng mắt và trực giác. Có thể ra cổ trùng hiếm hoặc nguyên thạch tinh khiết, cũng có thể chỉ là vụn vôi.</p>
-      <div class="gamble-grid">${STONES_GAMBLE.map((x,i)=>`<button class="stone-card st-${i+1}" data-gamble="${x.id}" ${S.stones<x.price?'disabled':''}>
+      <p class="dimt">Chọn đá bằng mắt và trực giác. Có thể ra cổ trùng hiếm hoặc nguyên thạch tinh khiết, cũng có thể chỉ là vụn vôi. Người thu mua Giả gia luôn ép giá dưới giá gốc. Mỗi tuần quầy chỉ bán ${STONE_WEEKLY} khối, tuần này còn <b class="gold">${stonesLeft()}</b>.</p>
+      <div class="gamble-grid">${STONES_GAMBLE.map((x,i)=>`<button class="stone-card st-${i+1}" data-gamble="${x.id}" ${S.stones<x.price||stonesLeft()<=0?'disabled':''}>
         <div class="stone-visual">${icons[i]||'石'}</div><b>${x.n}</b><span class="stone-price">${x.price} nguyên thạch</span><small>${x.d}</small>
-        <span class="pill ${mem('doanthach')?'canonp':''}">${mem('doanthach')?'Soi thấu vân đá (+35%)':`Độ sâu: DC ${x.dc}`}</span></button>`).join('')}</div></div>`;
+        <span class="pill ${mem('doanthach')?'canonp':''}">${mem('doanthach')?'Soi vân đá chuẩn hơn':`Độ sâu: DC ${x.dc}`}</span></button>`).join('')}</div></div>`;
     return;
   }
   if(S.panel==='market'){
@@ -293,7 +295,7 @@ function renderStage(){
       <div class="refine-grid">${RECIPES.map((r,i)=>{
         const t=GU[r.id],src=GU[r.from],ex=r.extraGu?GU[r.extraGu]:null,ch=Math.round(refineChance(r)*100);
         return `<div class="refine-card"><div>
-            <div class="formula"><span class="f-box">${src.n}</span> + ${ex?`<span class="f-box">${ex.n}</span> + `:''}${r.st?`<span class="f-box">${r.st} thạch</span> + `:''}${r.bl?`<span class="f-box">${r.bl} huyết khí</span> + `:''}${r.wine?`<span class="f-box">${r.wine} tứ vị tửu</span> + `:''}<span class="gold">➔</span> <span class="f-box out">${t.n}</span></div>
+            <div class="formula"><span class="f-box">${src.n}</span> + ${ex?`<span class="f-box">${ex.n}</span> + `:''}${r.st?`<span class="f-box">${r.st} thạch</span> + `:''}${r.bl?`<span class="f-box">${r.bl} huyết khí</span> + `:''}${r.wine?`<span class="f-box">${r.wine} tứ vị tửu</span> + `:''}${r.hb?`<span class="f-box">${r.hb} linh dược</span> + `:''}<span class="gold">➔</span> <span class="f-box out">${t.n}</span></div>
             <small class="dimt">${t.d}</small></div>
           <div class="rc-side"><span class="pill ${ch>=70?'good':ch>=50?'gold':'danger'}">${ch}%</span><button class="btn" data-refine="${i}" ${canRefine(r)?'':'disabled'}>Luyện</button></div></div>`}).join('')}</div></div>`;
     return;

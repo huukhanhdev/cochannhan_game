@@ -1,219 +1,242 @@
-# Bàn giao 2: cánh bướm, hội thoại, cảnh nhiều bước, chống trùng sự kiện, Quyển 2 (Tam Vương truyền thừa)
+# Bàn giao 2: Thiên cơ lệch, dị số, cảnh nhiều bước, hội thoại, Quyển 2
 
-Tài liệu này nối tiếp `BAN_GIAO.md` (bước 1.2 Sổ ký ức). Các nguyên tắc chung, luật bản quyền, cách test, và các bẫy đã biết vẫn giữ nguyên như trong đó, nên đọc file đó trước.
+Tài liệu này là kế hoạch làm tiếp, viết sau khi gộp commit `ff0356e update UI` của main. Nguyên tắc chung, luật bản quyền và các bẫy đã biết vẫn như trong `BAN_GIAO.md`. Tiến độ của các giai đoạn 2–5 được ghi trong `TRIEN_KHAI.md`.
 
-**Thứ tự làm.** Làm theo thứ tự A → B → C → D → E. Bốn phần đầu là hạ tầng nhỏ, mỗi phần là một PR riêng. Phần E (Quyển 2) là phần lớn và cần A–D trước. Chỉ bắt đầu sau khi PR Sổ ký ức (1.2) đã gộp vào main, vì cả hai cùng sửa `choose()`, `choiceBtn()` và phần sự kiện trong `render()`.
+## 0. Hiện trạng (đo sau khi gộp main)
 
-**Kiểm tra bắt buộc sau mỗi PR:**
-- `node tools/sim.cjs 300 6`: tỉ lệ thắng 15–35%, không có "kẹt vòng lặp".
+- `node tools/check.cjs`: không lỗi dữ liệu.
+- `node tools/sim.cjs 200 6`:
+  - Thắng **35,0%** trong 6 lần chơi, **5%** ngay lần đầu. Con số 35% đã chạm trần mục tiêu.
+  - Chết nhiều nhất ở lang triều (Bầy Điện Lang) và dưới tay Giả Kim Sinh.
+- Những thứ đã có sẵn để dùng lại:
+  - `present.js`: người nói trong sự kiện (`evSpeaker`, `speakerHTML`) và chữ hiện dần (`typeStory`).
+  - `auto.js`: `autoAct()`, dùng chung cho tua nhanh, bot mô phỏng và nút Tự đánh.
+  - `S.var`: biến thể của 7 mốc nguyên tác, **hiện rút ngẫu nhiên** mỗi kiếp.
+  - `S.canon` và `buildCanon()`: lịch mốc nguyên tác riêng cho từng kiếp. Hiện đã có sẵn chức năng dời mốc theo thiên cơ.
+  - `S.canonHit`/`S.canonMiss`: đếm số lần chọn theo và không theo nguyên tác, hiện chỉ để hiển thị.
+- Bước 1.2 Sổ ký ức chưa làm vì bên kia hoãn giai đoạn 1.
+
+**Cổng kiểm tra cho mọi PR:**
+- `node tools/check.cjs`: không lỗi.
+- `node tools/sim.cjs 300 6`: thắng 15–35%, không kẹt vòng lặp.
 - `node tools/ff_test.cjs 100`: 0 lỗi.
-- Smoke test trình duyệt không có lỗi JS. Cách chạy xem README.
+- Chơi thử trong trình duyệt tới tuần 12: không lỗi JS.
+
+## Thứ tự
+
+| PR | Nội dung | Ước lượng |
+|---|---|---|
+| **1** | Chống trùng sự kiện ngẫu nhiên (A) | nửa buổi |
+| **2** | **Thiên cơ lệch và cánh bướm** (D): phần cốt lõi | 2 buổi |
+| **3** | **Sự kiện dị số và hậu quả trễ** (D) | 2 buổi |
+| 4 | Cảnh nhiều bước (C) | 1–2 buổi |
+| 5 | Hội thoại nhiều câu (B), xây trên `present.js` | 1 buổi |
+| 6+ | Quyển 2: Tam Vương truyền thừa (E1–E6) | nhiều buổi |
+
+PR 1 làm trước PR 2 và 3 vì pool dị số cần dùng hồi chiêu của PR 1.
 
 ---
 
-## A. Chống trùng sự kiện ngẫu nhiên
+## PR 1. Chống trùng sự kiện ngẫu nhiên
 
-**Hiện trạng.** Hàm `randomEvent(loc)` (`js/engine.js`) chọn theo trọng số `w` và thiên cơ. Sự kiện không có `once` có thể ra liên tiếp hai tuần liền, và cũng không có cách hiện câu chữ khác nhau cho cùng một sự kiện.
+Sửa hàm `randomEvent(loc)` trong `js/engine.js`:
+- **Hồi chiêu.** Lưu `S.evLast={id:tuần}`. Sự kiện vừa ra thì bị loại khỏi pool trong `e.cd||6` tuần.
+- **Giảm theo số lần gặp.** Lưu `S.evSeen={id:n}`. Trọng số nhân `1/(1+n)`.
+- **Ưu tiên sự kiện mới ở kiếp sau.** Sự kiện chưa có trong `META.seen` được trọng số ×1.5.
+- **Nhiều bản câu chữ.** `text` được phép là mảng hàm. Lần gặp thứ n dùng bản `n % độ dài`. Thêm helper `evText(id)` và dùng ở `ui.js`.
 
-**Làm.**
-1. **Hồi chiêu.** Thêm `S.evLast={id:turn}`. Một sự kiện vừa ra thì bị loại khỏi pool trong `e.cd||6` tuần.
-2. **Giảm dần theo số lần gặp.** Thêm `S.evSeen={id:n}`. Trọng số nhân thêm `1/(1+n)`, nên càng gặp nhiều trong kiếp càng hiếm.
-3. **Ưu tiên sự kiện mới ở kiếp sau.** Sự kiện chưa có trong `META.seen` được nhân trọng số ×1.5. Mục đích là để kiếp sau gặp được thứ mới.
-4. **Bài câu chữ.** Trường `text` được phép là mảng hàm. Chọn bản theo `(S.evSeen[id]||0) % text.length`, để lần gặp thứ hai đọc khác lần đầu.
-5. Nếu pool rỗng vì tất cả đều đang hồi chiêu, trả `false`. Các nhánh gọi `randomEvent` đã có câu dự phòng sẵn.
+**Nghiệm thu.** Mô phỏng 100 kiếp: không có sự kiện ngẫu nhiên nào lặp lại trong vòng 6 tuần.
 
-Phác thảo:
+---
+
+## PR 2. Thiên cơ lệch: cánh bướm cốt lõi
+
+**Tinh thần.** Ký ức kiếp trước là lợi thế lớn nhất của Phương Nguyên. Mỗi lần hắn làm khác đi, thế giới lệch khỏi ký ức một chút. Lệch càng nhiều thì ký ức càng không đáng tin, và thế giới sinh ra những chuyện hắn chưa từng thấy.
+
+**Thay đổi lớn nhất so với hiện tại:** biến thể không còn do tung xúc xắc, mà **do chính người chơi gây ra**.
+
+### 2.1 File mới `js/butterfly.js`
+Nạp sau `cicada.js`, trước `engine.js`. Nhớ thêm vào `index.html`, `tools/sim.cjs`, `tools/ff_test.cjs` và `tools/check.cjs`.
+
 ```js
-function randomEvent(loc){
-  S.evLast=S.evLast||{};S.evSeen=S.evSeen||{};
-  const pool=Object.entries(EV).filter(([id,e])=>e.loc===loc&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id])
-    &&!(S.evLast[id]!=null&&S.turn-S.evLast[id]<(e.cd||6)));
-  const wt=(id,e)=>(e.w||1)/(1+(S.evSeen[id]||0))*((META.seen||{})[id]?1:1.5)
-    *(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1);
-  // ...giống cũ; khi chọn được: S.evLast[id]=S.turn; S.evSeen[id]=(S.evSeen[id]||0)+1;
-}
+S.drift          // 0–100: thiên cơ lệch
+driftAdd(n, lý_do)  // cộng hoặc trừ, giới hạn 0–100, ghi log khi vượt ngưỡng 25/50/75
+memB(k, n)       // thay cho mem(k)?n:0 → Math.round(n*(1-S.drift/150)) nếu có ký ức
+memReliable()    // S.drift<60
 ```
-Trong `ui.js`, chỗ gọi `ev.text()` đổi thành một helper `evText(id)` dùng chung. `ff.js` hiện không đọc `text`, nên không cần sửa.
 
-**Nghiệm thu.** Chạy mô phỏng 1 kiếp và ghi log id sự kiện. Không có id nào (trừ mốc nguyên tác) lặp lại trong vòng 6 tuần.
+### 2.2 Nguồn làm lệch
 
----
-
-## B. Hội thoại trong sự kiện
-
-**Mục tiêu.** Sự kiện NPC có vài câu thoại qua lại có người nói, không chỉ một đoạn văn kể. Việc này chỉ thêm dữ liệu và giao diện, không đổi luật chơi.
-
-**Dữ liệu.** Thêm trường tùy chọn `talk`, là mảng hoặc hàm trả mảng:
-```js
-npc_pc_1:{title:'...',
-  talk:()=>[
-    ['phuongchinh','Ca ca... huynh thật sự chỉ đạt Bính đẳng sao?'],
-    ['hero','Ngươi hỏi thế để làm gì.'],
-    ['phuongchinh',S.rel.phuongchinh>20?'Đệ... chỉ muốn giúp.':'Không có gì.'],
-  ],
-  text:()=>'...', choices:[...]}
-```
-- Người nói là khóa trong `NPCS` (đã có tên và ảnh), `'hero'`, hoặc `null` cho lời dẫn truyện.
-- Mỗi câu thoại tối đa khoảng 120 ký tự. Phải là lời tự viết, không chép câu gốc trong truyện.
-
-**Giao diện** (`ui.js`, phần `S.evq.length` trong `render()`):
-- Hiện từng câu thoại theo kiểu bong bóng: avatar tròn nhỏ lấy từ ảnh NPC, tên, rồi câu thoại.
-- Có nút "Tiếp" để hiện câu kế. Bấm vào vùng thoại thì hiện hết ngay.
-- Các nút lựa chọn chỉ hiện sau khi thoại đã hiện hết.
-- Tiến độ lưu ở `S.talkI` (reset khi chuyển sự kiện) để render lại không mất chỗ đang đọc.
-- Khi tua nhanh (`S.ff`), bỏ qua thoại.
-
-**Phạm vi nội dung đợt đầu.** Viết thoại cho các tuyến NPC có sẵn: npc_pc_*, npc_tt_*, npc_bai_*, npc_xm_*, npc_cm_*. Mỗi sự kiện 2–5 câu.
-
----
-
-## C. Cảnh nhiều bước (một cảnh có nhiều lựa chọn nối tiếp)
-
-**Hiện trạng.** Mỗi sự kiện chỉ cho chọn đúng một lần rồi đóng lại.
-
-**Làm.** Thêm ba cơ chế nhỏ vào `choose()`. Cả ba có thể dùng cùng nhau.
-
-1. **`stay:1`: lựa chọn phụ không kết thúc cảnh.** Dùng cho các lựa chọn kiểu "hỏi thêm", "quan sát", "dò xét".
-   - Chọn xong, cảnh vẫn mở và lựa chọn đó biến mất. Danh sách đã chọn lưu ở `S.picked[id]=[i,...]`.
-   - Mỗi cảnh có ngân sách `ev.budget||2` lượt phụ. Hết ngân sách thì chỉ còn các lựa chọn kết thúc.
-   - Cài đặt: không gọi `S.evq.shift()` khi `c.stay`. `choicesOf` lọc bỏ các lựa chọn đã chọn trong `S.picked`.
-
-2. **`go:'id'`: nhảy sang một nút con.** Ví dụ: đàm phán → đòi giá → Giả Phú nổi giận → đánh hoặc lùi.
-   - Nút con là một mục `EV` bình thường. Nó không có `loc` và không có `canon`, nên không bị rút ngẫu nhiên.
-   - Nút con dùng chung ảnh và tiêu đề với cảnh gốc (trường `of:'id_gốc'`).
-   - Cài đặt: sau khi xử lý `eff`/`ok`/`fail`, nếu có `c.go` (hoặc `c.goOk`/`c.goFail` khi lựa chọn có tung xúc xắc) thì `S.evq.unshift(go)`.
-
-3. **`hidden` + `reveal`: lựa chọn ẩn.** Lựa chọn có `hidden:'flag'` chỉ hiện khi `S.f[flag]` đã được một lựa chọn `stay` bật lên.
-   - Ví dụ: quan sát kỹ thì phát hiện kẻ kia đang giấu thương, từ đó mở ra lựa chọn "Đánh vào chỗ bị thương".
-
-**Ảnh hưởng tới các hệ khác.**
-- `ffRememberChoice` phải ghi cả chuỗi lựa chọn. Đổi `META.choiceMem[id]` thành lưu lựa chọn cuối cùng, vẫn khớp theo văn bản `c.t`, nên khi tua nhanh vẫn chọn lại được từng nút.
-- Với `stay`, FF bỏ qua (không chọn lựa chọn phụ nào).
-- Trong `tools/sim.cjs`, bot đang chọn theo điểm cao nhất nên có thể kẹt vòng `stay`. Thêm một dòng: bỏ qua lựa chọn có `stay` nếu `Math.random()<.5` hoặc ngân sách đã hết.
-
-**Cảnh mẫu nên làm lại trước.** Mỗi cảnh cần ít nhất một `stay` và một `go`.
-- `c_kimsinh` (Giả Kim Sinh)
-- `c_bai` (Bạch Ngưng Băng)
-- `c_luancong` (luận công sau lang triều)
-- `r_choden` (chợ đen)
-
----
-
-## D. Hiệu ứng cánh bướm thật sự
-
-**Hiện trạng.** Hiện có ba thứ gọi là "cánh bướm", nhưng lựa chọn của người chơi chưa thật sự gây gợn sóng về sau:
-- `S.world` rút ngẫu nhiên 2 thiên cơ mỗi kiếp.
-- `S.var` quyết định biến thể của các mốc nguyên tác.
-- `FF_BUTTERFLY` dừng tua nhanh khi biến thể khác kiếp trước.
-
-**Ý tưởng cốt lõi, đúng tinh thần nguyên tác.** Ký ức kiếp trước của Phương Nguyên là lợi thế lớn nhất. Nhưng càng thay đổi thế giới, ký ức càng sai lệch.
-
-### D1. Hậu quả trễ (trong một kiếp)
-Lựa chọn có thể gieo một sự kiện sẽ xảy ra sau vài tuần:
-```js
-{t:'Tha cho tên thợ săn',eff:()=>{later('r_thosan_on',4,8);return '...'}}
-// later(id, minTuần, maxTuần) → S.later.push({t:S.turn+rand, id})
-```
-- Trong `startTurn()`, trước khi xét mốc nguyên tác, đẩy các mục `S.later` đã đến hạn vào `evq`.
-- Mỗi mục `later` có thể kèm `cond` để hủy nếu tình thế đã khác. Ví dụ: nếu NPC đã chết thì không xảy ra.
-- Đợt đầu viết khoảng 10 cặp nhân–quả. Ví dụ:
-  - Tha thợ săn → nhiều tuần sau họ báo tin chỗ có cổ hoang.
-  - Cướp ở cổng học đường → một bạn học tụ tập người phục kích ngươi.
-  - Giúp Phương Chính → hắn đỡ cho ngươi một lần khi bị thẩm vấn.
-
-### D2. Độ lệch nguyên tác (trong một kiếp)
-Đã có `S.canonHit` / `S.canonMiss`. Từ đó tính `drift = canonMiss*8 + số biến thể S.var khác mặc định*5`, giới hạn 0–100.
-- Mọi phần thưởng từ ký ức (`bonus:()=>mem(x)?N:0`) được nhân thêm `(1-drift/150)`. Lệch nhiều thì ký ức kém chính xác.
-- Khi `drift>=40`, có thể xuất hiện "sự kiện dị số": những chuyện không có trong ký ức, nằm trong một pool riêng `loc:'diso'`.
-- Chỉ số drift hiển thị ở HUD cạnh chip Xuân Thu Thiền, dạng "Thiên cơ lệch N%".
-
-### D3. Thế giới nhớ kiếp trước (xuyên kiếp)
-Có ở mức nhẹ để kiếp sau khác đi.
-- Lưu `META.lastEchoes`: các cờ đáng nhớ của kiếp trước, như giết ai, cứu ai, và kết cục.
-- Kiếp sau có tỉ lệ nhỏ sinh "dư âm". Ví dụ: kiếp trước giết Giả Kim Sinh ở tuần 12, kiếp này Giả Phú lên núi đã cảnh giác hơn (biến thể `S.var.kimsinh` nghiêng về bản khó).
-- Không được phá luật nguyên tác "chỉ Phương Nguyên nhớ". NPC không nhớ, chỉ xác suất thế giới nghiêng đi. Viết lời dẫn kiểu "Có điều gì đó khác với ký ức của ngươi".
-
-### D4. Tua nhanh
-- `FF_BUTTERFLY` thêm điều kiện dừng khi có mục `S.later` sắp nổ (còn ≤1 tuần), hoặc khi drift vượt ngưỡng 40.
-- Kiểm thử bằng `ff_test` rằng FF vẫn đi được hơn 40% số tuần mục tiêu.
-
----
-
-## E. Quyển 2: đến Tam Vương truyền thừa
-
-### Mốc nguyên tác
-Dựa theo tóm tắt công khai; không chép lời truyện. Sau khi rời Thanh Mao Sơn, Phương Nguyên đi cùng Bạch Ngưng Băng:
-1. Qua **Bạch Cốt Sơn**, gây họa rồi chạy.
-2. Đến **Thương gia thành**. Hai người hộ tống **Thương Tâm Từ** và nhờ đó có vốn liếng, căn cơ trong thành.
-3. Lên **Tam Xoa Sơn** dự **Tam Vương truyền thừa**. Ở đây có:
-   - Nhóm lão cổ sư Thiết gia (tứ lão).
-   - Bạch Ngưng Băng ngầm cấu kết Thiết gia, nhờ Tố Thủ Y Sư giải Độc Thệ Cổ, rồi phản bội.
-   - Phương Nguyên buộc phải dùng lại Xuân Thu Thiền.
-   - Tam Vương phúc địa bị hủy.
-
-Chi tiết từng chương cần được đối chiếu lại bởi người biết truyện, và ghi nguồn vào `CAP_NHAT_CO_TRUNG.md` hoặc một file `NGUYEN_TAC_Q2.md`. Nếu không chắc một chi tiết thì để nó thành sự kiện ngẫu nhiên, không đưa vào mốc nguyên tác.
-
-### Kiến trúc: "chương" thay vì nhồi thêm tuần
-Hiện toàn bộ game gắn cứng với 27 tuần ở Thanh Mao Sơn: `CANON`, `ACTS`, `loc`, và trận cuối. Không kéo dài 27 tuần. Thay vào đó:
-
-1. **`S.chap`.** Giá trị `1` là Thanh Mao Sơn, `2` là Quyển 2. Thêm bảng `CHAPTERS`:
-   ```js
-   const CHAPTERS={
-     1:{canon:CANON,acts:ACTS_Q1,end:27,unit:'tuần'},
-     2:{canon:CANON_Q2,acts:ACTS_Q2,end:30,unit:'tuần', start:q2Start},
-   };
-   ```
-   - `startTurn()` đọc `CHAPTERS[S.chap].canon`, không đọc thẳng `CANON` nữa.
-   - `ACTS` lọc theo chương.
-   - `month()` / `tuan()` hiển thị theo chương. Quyển 2 có thể hiện "Năm thứ N".
-
-2. **Chuyển chương.** Chỉ các kết cục rời núi (`ma`, `bai_dong`, `huyetlo_bai`) mới mở cửa Quyển 2.
-   - Màn thắng thêm nút "Tiếp tục: rời Thanh Mao Sơn".
-   - `q2Start()` giữ lại cảnh giới, cổ trùng và Bạch Ngưng Băng (nếu có). Nó reset `S.turn`, `S.susp`, nhiệm vụ gia tộc và trợ cấp; thay các nguồn thu bằng nguồn Quyển 2.
-   - Lưu mốc `META.q2Unlocked=1`. Từ đó màn tân kiếp cho chọn "Bắt đầu từ Quyển 2", dùng một bộ khởi đầu cố định để không phải chơi lại Quyển 1.
-
-3. **Xuân Thu Thiền ở Quyển 2** vẫn dùng đúng luật hiện tại trong `js/cicada.js`. Mốc Tam Vương có cảnh bắt buộc: Phương Nguyên phải dùng Thiền, nên cảnh này chỉ vào được khi `cicadaReady()`. Nếu Thiền chưa hồi phục thì đó là kết cục thua có chủ đích ("không kịp"). Đây là chỗ nối đẹp giữa luật chơi và nguyên tác.
-
-4. **Địa điểm Quyển 2.** Thêm `loc` mới:
-   - `duong` (đường lữ hành): sơn tặc, ma tu, cổ hoang.
-   - `thuongthanh` (Thương gia thành): chợ lớn, đấu trường, tin tức.
-   - `tamxoa` (Tam Xoa Sơn): các lượt vào truyền thừa.
-
-   Mỗi địa điểm cần 8–12 sự kiện ngẫu nhiên, dùng luôn hệ chống trùng ở phần A.
-
-5. **Cơ chế riêng của Tam Vương truyền thừa**, làm như một minigame mới trong `minigame.js`:
-   - Mỗi lượt vào có giới hạn số lượt.
-   - Mỗi lượt là thử thách chọn một trong ba ải: lực đạo, trí, hoặc ẩn.
-   - Gặp các cổ sư khác thì chọn liên minh, gài bẫy hoặc giết.
-   - Có "lệnh bài du hành" cho phép xem trước một ải (theo nguyên tác, Phương Nguyên dùng lệnh bài để thấy Bạch Ngưng Băng bị vây).
-   - Tuyến Bạch Ngưng Băng: dùng quan hệ `S.rel.bai` và cờ `S.f.docthe` quyết định thời điểm phản bội. Người chơi có thể thấy trước để đề phòng nếu có ký ức từ kiếp trước (`mem('bai_phanboi')`), nhưng không ngăn được hẳn vì là mốc nguyên tác.
-
-6. **Dữ liệu mới.**
-   - NPC: Thương Tâm Từ, Thiết gia tứ lão, Tố Thủ Y Sư, cổ sư lực đạo.
-   - Kẻ thù kèm `EAI`.
-   - Cổ trùng Quyển 2: chỉ dùng cổ có trong danh sách chuẩn của người dùng. Cổ nào chưa có thì bổ sung vào `CAP_NHAT_CO_TRUNG.md` trước.
-   - Kết cục Quyển 2.
-
-7. **Cân bằng.** Mở rộng `tools/sim.cjs` với cờ `--chap 2`: bắt đầu từ bộ khởi đầu Quyển 2. Mục tiêu thắng 15–35%.
-
-### Chia nhỏ Quyển 2
-| PR | Nội dung |
+| Hành động | Độ lệch |
 |---|---|
-| E1 | Khung chương: `S.chap`, `CHAPTERS`, chuyển chương, lưu và migrate save. Quyển 2 chỉ có 3 tuần trống. |
-| E2 | Đường lữ hành và Bạch Cốt Sơn: mốc và sự kiện ngẫu nhiên. |
-| E3 | Thương gia thành, tuyến Thương Tâm Từ. |
-| E4 | Minigame Tam Vương truyền thừa. |
-| E5 | Tuyến phản bội của Bạch Ngưng Băng và cảnh Xuân Thu Thiền. Các kết cục. |
-| E6 | Ảnh (tự thiết kế, không vẽ lại nhân vật manhua hay donghua), âm thanh, cân bằng. |
+| Chọn khác nguyên tác ở mốc có lựa chọn `canon` (chỗ `S.canonMiss++`) | +8 |
+| Lựa chọn có trường mới `drift:N` (giết hoặc cứu người mà nguyên tác không làm, đổi phe...) | +N |
+| Mỗi lần Xuân Thu Thiền quay ngược: quang âm bị khuấy động | +6 |
+| Một hậu quả trễ nổ ra (PR 3) | +2 |
+| Chọn đúng nguyên tác ở mốc có lựa chọn `canon` | −3 |
+
+Độ lệch không bao giờ âm. Mỗi kiếp mới reset về 0, vì thế giới lại đúng như ký ức.
+
+Việc gắn `drift:N` cho khoảng 15 lựa chọn "lệch lớn" trong `events.js` là việc chỉnh nội dung, làm trong PR này.
+
+### 2.3 Tác dụng của độ lệch
+
+1. **Ký ức phai.** Đổi 24 chỗ `bonus:()=>mem('x')?N:0` trong `events.js`, cùng các chỗ ở `engine.js:400`, `engine.js:476` và `minigame.js`, sang `memB('x',N)`.
+   - Lệch 0: ký ức giữ đủ sức.
+   - Lệch 100: ký ức chỉ còn khoảng 1/3 sức.
+   - Khi `!memReliable()`, các câu gợi nhắc ký ức trong `text` thêm đuôi "…nhưng lần này có gì đó không khớp."
+
+2. **Biến thể do người chơi gây ra.** Sửa `newLife()`:
+   - Đầu kiếp, mọi `S.var` lấy **bản mặc định theo nguyên tác** ('yeu', 'alone', 'thuong'...), đúng như ký ức.
+   - Mỗi khi độ lệch vượt một ngưỡng (25, 50, 75), rút một mốc **chưa diễn ra** và đổi biến thể của nó sang bản khác.
+   - Log kèm lời gợi ý mơ hồ, ví dụ: "Thiên cơ xoay chuyển. Ngươi có cảm giác chuyện của Giả gia sẽ không như ký ức." Người chơi có Tâm cơ ≥ 12 được nêu đích danh mốc bị đổi.
+   - Thiên cơ `S.world` vẫn rút 2 cái mỗi kiếp như cũ, vì đó là nhiễu loạn từ việc trùng sinh.
+
+3. **Lịch nguyên tác xê dịch.** Khi lệch ≥ 70, một mốc tương lai trong `S.canon` dời sớm hoặc muộn 1 tuần, và có log báo.
+   - Không dời lang triều trong 3 tuần trước khi nó tới.
+   - Không dời trận cuối (tuần 27).
+
+4. **Giao diện.**
+   - Thêm chip "Thiên cơ lệch N%" cạnh chip Xuân Thu Thiền trên HUD. Màu chuyển dần từ xanh ngọc sang đỏ son. Tooltip giải thích tác dụng.
+   - Trong tab Thân, thay dòng "lệch nguyên tác %" hiện có bằng `S.drift`.
+
+### 2.4 Tua nhanh
+- `FF_BUTTERFLY` vẫn dừng như cũ khi biến thể khác kiếp trước. Nay biến thể khác nhau là do người chơi, nên mỗi lần dừng đều có ý nghĩa.
+- Thêm điều kiện dừng khi thế giới vừa xoay chuyển (vượt ngưỡng) trong lúc đang tua.
+
+### 2.5 Cân bằng
+Ba điểm có thể đẩy tỉ lệ thắng lên:
+- Lần đầu ai cũng gặp bản mặc định, mà bản mặc định thường là bản dễ.
+- Người chơi bám nguyên tác sẽ được lợi.
+- Tỉ lệ thắng hiện đã ở 35%, sát trần.
+
+Nếu sau PR này vượt 35% thì tăng `DIFF` lên khoảng 0,02, hoặc cho biến thể "khó" ra với xác suất nền 20% ngay cả khi độ lệch bằng 0. Mô phỏng phải in thêm độ lệch trung bình lúc chết và lúc thắng.
+
+**Nghiệm thu.**
+- Bot chọn toàn nguyên tác cho độ lệch dưới 20 ở tuần 27.
+- Bot chọn ngược nguyên tác cho độ lệch trên 60, và thấy ít nhất 2 lần thế giới xoay chuyển.
 
 ---
 
-## Tóm tắt các file sẽ đụng
+## PR 3. Sự kiện dị số và hậu quả trễ
 
-| Phần | engine.js | events.js | ui.js | ff.js | data.js | sim.cjs | khác |
-|---|---|---|---|---|---|---|---|
-| A | `randomEvent` | thêm `cd`, mảng `text` | `evText` | | | | |
-| B | | thêm `talk` | bong bóng thoại, CSS | bỏ qua thoại | | | index.html (CSS) |
-| C | `choose`, `choicesOf` | cảnh mẫu | ẩn lựa chọn đã chọn | nhớ chuỗi | | bot né `stay` | |
-| D | `later`, drift, `startTurn` | cặp nhân–quả, pool `diso` | chip drift | điều kiện dừng | | | cicada không đổi |
-| E | chương | nội dung Q2 | màn chuyển chương | | NPC, kẻ thù, cổ | `--chap` | minigame.js |
+### 3.1 Hậu quả trễ (gợn sóng trong cùng một kiếp)
+Thêm hàm trong `butterfly.js`:
+```js
+later(id, min, max, cond)  // S.later.push({t:S.turn+rand(min,max), id, cond})
+```
+- Trong `startTurn()`, ngay trước khi xét mốc nguyên tác, đẩy vào `evq` các mục đã đến hạn mà `cond` còn đúng. Mỗi lần như vậy cộng 2 độ lệch.
+- `cond` lưu dưới dạng tên cờ, không phải hàm, để save được bằng JSON.
+- Đợt đầu viết khoảng 10 cặp nhân–quả, ví dụ:
+
+| Nhân | Quả (sau 3–8 tuần) |
+|---|---|
+| Tha thợ săn gặp nạn | Thợ săn báo chỗ có cổ hoang |
+| Chặn cổng cướp thạch | Bạn học tụ tập phục kích |
+| Chỉ điểm Phương Chính | Hắn đỡ cho ngươi một lần bị thẩm vấn |
+| Bán tin cho chợ đen | Người của Bạch gia tìm đến mua thêm |
+| Giết Giả Kim Sinh không sạch dấu | Giả gia gửi người điều tra sớm hơn |
+
+### 3.2 Sự kiện dị số
+Đây là những chuyện **không có trong ký ức kiếp trước**, chỉ xuất hiện khi thế giới đã lệch.
+- **Pool riêng.** Các sự kiện có `loc:'diso'`. Chúng không gắn với nơi chốn nào, và chen vào đầu tuần.
+- **Tần suất.** Trong `startTurn()`, nếu tuần đó chưa có sự kiện nào, `S.drift>=40`, và `Math.random()<S.drift/250`, thì rút một sự kiện từ pool dị số, dùng hồi chiêu và trọng số của PR 1.
+- **Giao diện.**
+  - Nhãn "Dị số" thay cho "Kỳ ngộ".
+  - Thẻ có viền mực tím, ảnh hơi nhòe.
+  - Lần đầu gặp một dị số có dòng log: "Kiếp trước chưa từng có chuyện này."
+- **Tua nhanh.** Luôn dừng khi gặp dị số (`ffMinor` trả `false`).
+- **Vòng lặp ký ức.** Đã gặp dị số rồi thì kiếp sau (nếu thế giới lại lệch mà nó xuất hiện lần nữa) có ký ức về nó, nhận `learn('ds_…')` và thưởng `memB`. "Điều mới" dần trở thành kiến thức.
+- **Đợt đầu 10 sự kiện**, cả họa lẫn cơ duyên. Tất cả là nhân vật và địa danh có sẵn trong nguyên tác, chỉ sự việc là mới.
+
+| Sự kiện | Loại |
+|---|---|
+| Thiết Huyết Lãnh đi ngang trại sớm hơn ký ức | họa hoặc tin tức |
+| Một thương nhân Giả gia không có trong ký ức, mang cổ lạ | cơ duyên |
+| Bạch gia đổi đường tuần tra | họa |
+| Trinh sát sói đầu đàn lảng vảng trước lang triều | họa |
+| Phương Chính bất ngờ khai ngộ và nghi ngờ ca ca | quan hệ |
+| Một hốc linh tuyền mới lộ ra sau sạt lở | cơ duyên |
+| Hùng gia ngỏ ý liên minh | lựa chọn phe |
+| Ma tu Huyết Thủ đổi mục tiêu | họa |
+| Gia lão lạ mặt thẩm tra lại lễ khai khiếu | hiềm nghi |
+| Tửu Trùng trong động phủ đã bị kẻ khác động vào | họa hoặc cơ duyên |
+
+### 3.3 Dư âm xuyên kiếp (nhẹ)
+- Lưu `META.lastEchoes` với vài cờ lớn của kiếp trước: giết ai, cứu ai, kết cục.
+- Kiếp sau, mỗi cờ có 20% cộng sẵn 5 độ lệch từ đầu kiếp, kèm log: "Có điều gì đó khác ký ức của ngươi."
+- **NPC không nhớ gì.** Chỉ Phương Nguyên nhớ, đúng nguyên tác.
+
+**Nghiệm thu.** Trong mô phỏng, bot lệch cao gặp trung bình 2–4 dị số mỗi kiếp, và bot bám nguyên tác gần như không gặp. `ff_test` vẫn tua được hơn 40% số tuần mục tiêu.
+
+---
+
+## PR 4. Cảnh nhiều bước
+
+Sửa `choose()` và `choicesOf()` trong `engine.js`:
+
+- **`stay:1`: lựa chọn phụ** như hỏi thêm, quan sát.
+  - Chọn xong, cảnh vẫn mở và lựa chọn đó biến mất. Lưu ở `S.picked[id]`.
+  - Mỗi cảnh có ngân sách `ev.budget||2` lượt phụ.
+  - Không gọi `evq.shift()` khi lựa chọn có `stay`.
+- **`go:'id'` / `goOk` / `goFail`: nhảy sang nút con.**
+  - Sau khi xử lý kết quả, `S.evq.unshift(go)`.
+  - Nút con là một mục `EV` không có `loc` hay `canon`. Trường `of:'id_gốc'` cho nó dùng chung ảnh, tiêu đề và người nói với cảnh gốc; sửa `evSpeaker` và `eventArt` để đọc trường này.
+- **`hidden:'cờ'`: lựa chọn ẩn.** Chỉ hiện khi một lựa chọn `stay` trước đó đã bật cờ.
+- **Các hệ khác.**
+  - Tua nhanh bỏ qua lựa chọn `stay`.
+  - `ffRememberChoice` hoạt động như cũ, vì mỗi nút con là một id riêng.
+  - Bot trong `sim.cjs` né `stay` với xác suất 50%.
+- **Làm lại 4 cảnh mẫu:** `c_kimsinh`, `c_bai`, `c_luancong`, `r_choden`.
+- **Kết hợp với PR 2.** Lựa chọn phụ kiểu "dò xét" trong một mốc nguyên tác có thể **lộ ra biến thể hiện tại**. Nhờ đó người chơi có cách chủ động kiểm tra xem thế giới đã lệch khỏi ký ức chưa.
+
+---
+
+## PR 5. Hội thoại nhiều câu
+
+`present.js` đã có người nói (mỗi thẻ một người) và chữ hiện dần. PR này mở rộng thành nhiều câu có người nói riêng:
+- Thêm trường `talk`, là mảng hoặc hàm trả mảng `[[người_nói, câu], ...]`. Người nói là khóa `NPC`, `'hero'`, hoặc `null` cho lời dẫn.
+- Hiện mỗi câu thành một bong bóng, dùng lại `speakerHTML` cho avatar.
+- Bấm để hiện câu kế. Lưu tiến độ ở `S.talkI` để render lại không mất chỗ đang đọc.
+- Các nút lựa chọn đang có lớp `.await` để ẩn trong lúc chữ chạy. Dùng lại lớp này cho tới khi hết thoại.
+- Tua nhanh và `RM` (chế độ giảm chuyển động) hiện hết ngay.
+- Mỗi câu thoại khoảng 120 ký tự trở xuống, tự viết, không chép truyện.
+- Đợt đầu: các tuyến NPC hiện có, và 10 dị số của PR 3.
+
+---
+
+## PR 6+. Quyển 2: Tam Vương truyền thừa
+
+Giữ nguyên thiết kế ở phiên bản trước của file này. Tóm tắt:
+
+- **Khung chương.**
+  - Thêm `S.chap` và bảng `CHAPTERS` chứa lịch nguyên tác, hành động và mốc kết thúc của từng chương.
+  - Các kết cục rời núi (`ma`, `bai_dong`, `huyetlo_bai`) mở cửa Quyển 2.
+  - Lưu `META.q2Unlocked` để lần sau bắt đầu thẳng từ Quyển 2.
+- **Tuyến nguyên tác.**
+  1. Bạch Cốt Sơn.
+  2. Thương gia thành: hộ tống Thương Tâm Từ.
+  3. Tam Xoa Sơn: Tam Vương truyền thừa, có Thiết gia tứ lão; Bạch Ngưng Băng nhờ Tố Thủ Y Sư giải Độc Thệ Cổ rồi phản bội; Phương Nguyên phải dùng lại Xuân Thu Thiền.
+- **Cảnh phản bội cần Thiền đã hồi phục.** Nếu Thiền chưa hồi phục thì đó là kết cục thua có chủ đích.
+- **Minigame truyền thừa.** Vào theo lượt, chọn ải, dùng lệnh bài du hành để xem trước một ải.
+- **Thiên cơ lệch ở Quyển 2.** Độ lệch mang sang từ Quyển 1, vì những gì làm ở Thanh Mao Sơn lan tới Quyển 2. Đây là chỗ cánh bướm có sức nặng lớn nhất.
+- **Các PR con.**
+  - E1: khung chương.
+  - E2: Bạch Cốt Sơn và đường lữ hành.
+  - E3: Thương gia thành.
+  - E4: minigame truyền thừa.
+  - E5: tuyến Bạch Ngưng Băng và kết cục.
+  - E6: ảnh, âm thanh, cân bằng.
+- **Nguồn nguyên tác.** Mới chỉ có tóm tắt trên mạng. Người biết truyện cần đối chiếu và ghi vào `NGUYEN_TAC_Q2.md` trước khi viết E2–E5.
+
+---
+
+## Cần chốt trước khi làm PR 2
+
+| # | Câu hỏi | Mặc định đề xuất |
+|---|---|---|
+| 1 | Công thức lệch | Như bảng ở 2.2 |
+| 2 | Lệch tối đa thì ký ức còn bao nhiêu | Khoảng 1/3 sức, không mất hẳn |
+| 3 | Dị số chỉ gây khó, hay có cả cơ duyên | Có cả hai, khoảng 60% họa và 40% cơ duyên |
+| 4 | Bám nguyên tác có kéo độ lệch giảm lại không | Có, −3 mỗi lần, để người chơi có lựa chọn "đi lại đúng truyện" |
+| 5 | Biến thể mặc định ở kiếp đầu hay vẫn ngẫu nhiên | Mặc định, kèm 20% nền nếu mô phỏng cho thấy quá dễ |

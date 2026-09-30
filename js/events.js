@@ -6,9 +6,9 @@
 // Mốc có cond là mốc nhân quả: thiếu nhân thì tuần đó không có mốc (xem KE_HOACH_PR5.md, phần D).
 // Đại sự bắt buộc (không cond): khai khiếu, khảo hạch, thương đội, Bạch gia tuần tra, gặp Bạch Ngưng Băng, lang triều, lăng mộ lộ ra, Huyết Cương, trận cuối.
 const CANON={1:'c_khaikhieu',3:'c_giasan',4:'c_conghocduong',6:'c_khaohach',8:'c_tramthuy',10:'c_thuongdoi',11:'c_kimsinh',
-  13:'c_dieutra',15:'c_thuongdoiroi',16:'c_baigia',17:'c_bai',19:'c_lang1',20:'c_lang2',22:'c_luancong',
-  23:'c_thiet',24:'c_huyetdong',25:'c_thietvay',26:'c_nhatdai',27:'c_final'};
-const FINAL_TURN=27;
+  13:'c_dieutra',15:'c_thuongdoiroi',16:'c_baigia',17:'c_bai',19:'c_lang1',20:'c_lang2',21:'c_bachngoc',22:'c_luancong',
+  23:'c_thiet',24:'c_huyetdong',25:'c_thietvay',26:'c_nhatdai',27:'c_final',28:'c_tienly'};
+const FINAL_TURN=28;
 
 function langMod(){
   let m=S.chuyen<2?1.3:1;
@@ -733,6 +733,18 @@ c_luancong:{canon:1,title:'Sơn trại hoang tàn',hint:'Sau lang triều',cond:
     ...(S.f.qingshuDead?[{t:'Đêm khuya, đào hạt cổ dưới gốc cây Thanh Thư hóa thành',tag:'ma',dao:10,drift:4,eff:()=>{S.susp+=12;later('q_tocnghi',2,4);gainGu('mokmi');return 'Giữa rễ cây còn một con cổ xanh thẫm đang ngủ: Mộc Mị Cổ, cấm cổ đã nuốt sinh mệnh Thanh Thư. Hiềm nghi +12.'}}]:[]),
   ]},
 
+// Chương 100: Hợp luyện Bạch Ngọc Cổ từ Bạch Thỉ + Ngọc Bì, săn Ngọc Nhãn Thạch Hầu
+c_bachngoc:{canon:1,title:'Bạch Ngọc Cổ',hint:'Hợp luyện Bạch Ngọc',cond:()=>!hasGu('bachngoc'),
+  post:()=>{S.f.bachngocDone=1},
+  text:()=>'Sau lang triều, ngươi có Ngọc Bì Cổ và Bạch Thỉ Cổ. Ký ức kiếp trước nhắc nhở: hai con này hợp luyện thành Bạch Ngọc Cổ — giáp hư ảo trắng ngọc, chỉ nhận 30% sát thương, tốn rất ít chân nguyên. Nhưng cần 60 nguyên thạch và nuôi bằng ngọc thạch.',
+  choices:()=>[
+    {t:'Hợp luyện ngay (cần 60 nguyên thạch, mất Bạch Thỉ + Ngọc Bì)',canon:1,req:()=>hasGu('ngocbi')&&hasGu('bachthi')&&S.stones>=60,reqT:'Cần Ngọc Bì, Bạch Thỉ và 60 nguyên thạch',eff:()=>{
+      loseGuQ1('ngocbi');loseGuQ1('bachthi');S.stones-=60;gainGu('bachngoc');
+      return 'Ngươi rót chân nguyên xích thiết vào hai con cổ. Chúng tan thành ánh sáng trắng ngọc, hội tụ thành một con cổ mới: Bạch Ngọc Cổ! Da hóa ngọc trắng, phòng ngự toàn diện. Từ nay nuôi bằng ngọc thạch: 8 lượng / 20 ngày.';}},
+    {t:'Chờ tích lũy thêm nguyên thạch',eff:()=>'Ngươi quyết định đợi. Bạch Thỉ và Ngọc Bì vẫn ở trong không khiếu.'},
+    {t:'Bán Bạch Thỉ đổi nguyên thạch',req:()=>hasGu('bachthi'),eff:()=>{loseGuQ1('bachthi');S.stones+=80;return 'Bán Bạch Thỉ: +80 nguyên thạch. Mất cơ hội hợp luyện Bạch Ngọc.'}},
+  ]},
+
 // Canon VN 162–189: dưới nguyên tuyền Cổ Nguyệt có một gốc Thiên Nguyên Bảo Liên chưa hiện thực thể. Phương Nguyên lén đổ nguyên thạch nuôi nó, đợi lúc sơn trại sụp đổ thì đoạt.
 c_baolien:{title:'Thiên Nguyên Bảo Liên',hint:'Bí mật nguyên tuyền',
   text:()=>'Nguyên tuyền cạn sau lang triều. Nhìn qua vách thủy tinh dưới đáy, ngươi thấy một bóng sen mờ nhạt đang ngủ: Thiên Nguyên Bảo Liên. Nó sinh ra nguyên thạch, lên Lục chuyển còn quý không kém Xuân Thu Thiền. Muốn nó hiện thực thể thì phải đổ nguyên thạch vào, và nếu phế nguyên tuyền thì không bao giờ trồng lại được.',
@@ -978,6 +990,16 @@ c_final:{canon:1,title:'Thanh Mao Sơn diệt vong',hint:'Kết cục quyển m�
       },
     }
   }},
+
+// Chương 190: Kinh Biến - Nhện Thiên Lý Địa Lang Ngũ Chuyển, thoát khỏi lăng mộ
+c_tienly:{canon:1,title:'Thiên Lý Địa Lang',hint:'Nhện Ngũ Chuyển',cond:()=>S.turn>=28,
+  text:()=>'Sau khi Huyết Cương bị giải quyết, ngươi tìm thấy một con nhện khổng lồ ngủ say trong thạch kén dưới lăng mộ: Thiên Lý Địa Lang, cổ Ngũ Chuyển của Hoa Tửu Hành Giả. Nó yếu đến mức có thể luyện hóa ngay.',
+  choices:()=>[
+    {t:'Luyện hóa Thiên Lý Địa Lang',canon:1,eff:()=>{gainGu('tienlydilang');S.f.tienly=1;return 'Ngươi rót chân nguyên tuyết ngân vào con nhện. Nó khôi phục nhanh chóng, ăn bùn đất xung quanh. Thiên Lý Địa Lang Ngũ Chuyển — dùng đất làm thức ăn, di chuyển cực nhanh, là phương tiện thoát thân tuyệt vời!'}},
+    {t:'Để nó ngủ tiếp',eff:()=>'Ngươi không chắc chắn có thể nuôi được cổ Ngũ Chuyển.'},
+  ],
+  post:()=>{if(S.f.tienly){S.over='win';S.ending='tienly';log('Ngươi cưỡi Thiên Lý Địa Lang thoát khỏi Thanh Mao Sơn, bắt đầu hành trình mới.','big');AFTER.end_tienly();saveAll();render();}},
+},
 
 x_thamvan:{title:'Thẩm vấn ở từ đường',
   text:()=>'Học đường gia lão triệu ngươi tới từ đường. "Quá nhiều chuyện mờ ám dính tới ngươi, Phương Nguyên."',
@@ -2524,6 +2546,7 @@ const AFTER={
   end_songhung:()=>{S.over='win';S.ending='song_hung'},
   end_tienlo:()=>{S.over='win';S.ending='tien_lo'},
   end_phantoc:()=>{S.over='win';S.ending='phan_toc'},
+  end_tienly:()=>{S.over='win';S.ending='tienly'},
 };
 
 function finalMod(){return (S.chuyen<3?1.3:1)*(S.f.baiAlly?.65:1)}
@@ -2572,6 +2595,7 @@ const ENDINGS={
   tien_lo:{t:'Kẻ luyện cả thủy tổ',d:'Ngươi biết trước ngày Huyết Cương tỉnh, và đã dùng chính máu thủy tổ nuôi lò. Không cần tế cả tộc, tư chất đã lên Ất đẳng. Cổ Nguyệt vẫn diệt vong, nhưng tay ngươi sạch hơn nguyên tác một chút. Chỉ người đã chết nhiều lần mới đi được con đường này.'},
   phan_toc:{t:'Cổng sau đêm tuyết',d:'Ngươi bán con đường vào trại cho Bạch gia để đổi lấy đường sống. Kiếp trước ngươi đã thấy Cổ Nguyệt diệt vong ra sao; kiếp này ngươi chỉ chọn đứng ở phía còn sống. Không ai trong tộc biết kẻ mở cổng là ai.'},
   song_hung:{t:'Song Hùng Cổ Nguyệt',d:'Phương Chính sát cánh bên Phương Nguyên. Hai huynh đệ lưng tựa lưng mở đường máu qua vòng vây Bạch gia, rời Thanh Mao Sơn đang đóng băng. Đôi mắt ngây thơ của Phương Chính đã trưởng thành, nhận ra bản chất tàn khốc của thế gian.'},
+  tienly:{t:'Thiên Lý Địa Lang · Con đường mới',d:'Ngươi cưỡi Thiên Lý Địa Lang Ngũ Chuyển thoát khỏi Thanh Mao Sơn trước khi băng giá và biển lửa nuốt chửng. Dưới đất, con đường thoát thân mở ra. Cổ Ngũ Chuyển dưới người, ngươi không nhìn lại. Câu chuyện của Phương Nguyên chưa kết thúc — chỉ mới bắt đầu ở một nơi nào đó ngoài Thanh Mao Sơn.'},
 };
 
 /* ================= Cánh bướm: hậu quả trễ (q_) và dị số (loc:'diso') ================= */

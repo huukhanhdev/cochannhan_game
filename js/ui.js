@@ -364,7 +364,8 @@ function renderStage(){
     </div>`;
     return;
   }
-  if(S.result&&!S.combat&&!S.mg&&!S.ff){st.innerHTML=resultHTML();return}
+  // Kết quả giờ hiện dưới dạng toast nhỏ, không chặn stage nữa
+  if(S.result){S.result=null}
   if(S.ffOffer){st.innerHTML=ffOfferHTML();return}
   if(S.mg){renderMG(st);return}
   if(S.evq.length){
@@ -489,6 +490,28 @@ const INTRO=[
 ];
 function toast(t,sub,g='!',cls=''){
   if(typeof FX!=='undefined'){FX.toastMsg={g,t,sub,cls};showToast()}
+}
+// Kết quả nhỏ gọn: hiện popup ở góc trên, tự tắt sau vài giây
+function showResultToast(r){
+  if(!r||(!r.chips.length&&!r.lines.length))return;
+  const host=$('mainPanel');if(!host)return;
+  // Xóa toast cũ nếu có
+  host.querySelectorAll('.res-toast').forEach(e=>e.remove());
+  const d=document.createElement('div');
+  d.className='res-toast';
+  // Lấy dòng nội dung quan trọng nhất (cuối cùng, không phải roll)
+  const mainLine=r.lines.filter(l=>l.c!=='roll'&&l.c!=='day'&&l.c!=='choice').slice(-2);
+  const chipsHtml=r.chips.map(c=>`<span class="rt-chip ${c.good?'good':'bad'}">${esc(c.t)}</span>`).join('');
+  const linesHtml=mainLine.map(l=>`<p class="rt-line ${l.c||''}">${esc(l.t)}</p>`).join('');
+  d.innerHTML=`<div class="rt-head"><span class="rt-title">${esc(r.title||'Kết quả')}</span></div>
+    ${linesHtml?`<div class="rt-lines">${linesHtml}</div>`:''}
+    ${chipsHtml?`<div class="rt-chips">${chipsHtml}</div>`:''}`;
+  // Click để tắt sớm
+  d.addEventListener('click',()=>{d.classList.add('rt-out');setTimeout(()=>d.remove(),300)});
+  host.appendChild(d);
+  // Tự tắt sau 4 giây
+  const dur=r.chips.length>4?5000:3500;
+  setTimeout(()=>{if(d.parentNode){d.classList.add('rt-out');setTimeout(()=>d.remove(),300)}},dur);
 }
 function hasActiveGame(){
   try{

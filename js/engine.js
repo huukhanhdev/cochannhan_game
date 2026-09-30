@@ -178,7 +178,10 @@ function resEnd(){
   Object.keys(S.mem||{}).filter(k=>!a.mem.includes(k)).forEach(k=>chips.push({t:`Ký ức: ${MEM[k]?MEM[k].n:k}`,good:true,mem:1}));
   for(const k in S.rel){const d=(S.rel[k]||0)-(a.rel[k]||0);if(d)chips.push({t:`${NPC[k]?NPC[k].n:k} ${d>0?'+':'−'}${Math.abs(d)}`,good:d>0,rel:1})}
   if(!lines.length&&!chips.length)return;
-  S.result={title:r.title,choice:choice[choice.length-1]||'',lines:lines.slice(-8),chips};
+  // Hiện kết quả dưới dạng toast nhỏ, không chặn stage
+  if(typeof showResultToast==='function'){
+    showResultToast({title:r.title,choice:choice[choice.length-1]||'',lines:lines.slice(-8),chips});
+  }
 }
 function log(t,c){if(!t)return;S.logSeq=(S.logSeq||0)+1;S.log.push({t,c:c||'',q:S.logSeq});if(S.log.length>160)S.log.splice(0,S.log.length-160)}
 function chance(a,dc,b){return clamp(Math.round((21-(dc-S[a]-(b||0)))/20*100),5,100)}
@@ -966,7 +969,8 @@ function playerAct(type,arg){
     log('Giữa trận, ngươi bóp nát 5 viên nguyên thạch. Chân nguyên +20.','sys');
   }else if(type==='flee'){
     if(!c.flee)return;
-    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0))return fleeSuccess(c);
+    const fleeBonus=(hasGu('anlan')?.2:0)+(hasGu('tienlydilang')?.5:0);
+    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+fleeBonus)return fleeSuccess(c);
     log('Chạy trốn thất bại!','danger');
   }
 
@@ -1146,7 +1150,7 @@ document.addEventListener('click',ev=>{
   if(d.a){
     switch(d.a){
       case 'close':S.panel=null;resEnd();saveAll();render();return;
-      case 'resok':S.result=null;saveAll();render();return;
+      case 'resok':return; // kết quả giờ dùng toast, giữ lại cho tương thích
       case 'market':S.panel='market';render();return;
       case 'gamble':S.panel='gamble';render();return;
       case 'refine':S.panel='refine';render();return;
@@ -1187,7 +1191,7 @@ document.addEventListener('click',ev=>{
   if(talkBox&&!ev.target.closest('button'))scNextTalk();
 });
 document.addEventListener('keydown',ev=>{
-  if((ev.key===' '||ev.key==='Enter')&&S&&S.result&&!S.combat){ev.preventDefault();S.result=null;saveAll();render();return}
+  // Kết quả giờ dùng toast tự tắt, không cần phím tắt
   if((ev.key===' '||ev.key==='Enter')&&S&&S.sc&&!S.combat&&!S.over){
     const scEv=EV[S.sc.id];
     if(scEv&&scEv.scene){

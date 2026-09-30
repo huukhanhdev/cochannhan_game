@@ -62,6 +62,7 @@ const GU={
   thachkhieu:{n:'Thạch Khiếu Cổ',r:3,food:0,fn:'không cần',t:'use',p:300,d:'Hình như viên xúc xắc, xám trắng, cực cứng. Dùng một lần: nổ thành bột đá tràn khắp biển chân nguyên, tu vi lập tức đầy. Không khiếu hóa vách đá, tiềm lực bị ép khô, về sau khó lên Tứ chuyển. Xung đột với Huyết Lô.'},
   amduong:{n:'Âm Dương Chuyển Thân Cổ',r:4,food:0,fn:'chân nguyên',t:'heal',healAmt:90,cure:1,cost:30,p:900,d:'Cổ trị liệu Tứ chuyển Cổ Nguyệt Nhất Đại mưu tính gần ngàn năm. Âm cổ từ dương sinh âm, khiến người chết thoát thai hoán cốt. Dương cổ giữ lại để khống chế kẻ được cứu.'},
   duongco:{n:'Dương cổ',r:4,food:0,fn:'không cần',t:'passive',p:0,d:'Nửa còn lại của Âm Dương Chuyển Thân. Âm cổ đã dùng lên Bạch Ngưng Băng. Một ý niệm của ngươi là Dương cổ tan, và nàng chết theo.'},
+  tienlydilang:{n:'Thiên Lý Địa Lang',r:5,food:10,fn:'đất bùn',t:'passive',move:1,fleeMod:0.5,p:1200,d:'Cổ Ngũ Chuyển của Hoa Tửu Hành Giả. Dùng đất làm thức ăn, di chuyển dưới đất cực nhanh. Cưỡi thoát thân: chạy trốn +50%, không bị tập kích. Nuôi: 10 đất / tuần.'},
 };
 
 const SHOP=['nguyetquang','tuutrung','bachthi','hacthi','ngocbi','trilieu','cuongnham','hungluc','tieuguang','toanphong','dongbi','thanhti'];

@@ -32,47 +32,60 @@ Link chơi: https://claude.ai/artifact/JCxtbEtAKCESDM5jjCa6xM
 
 ## Lộ trình tiếp theo (từ 30/09/2026)
 
-Hiện trạng: 38 cổ trùng, 98 sự kiện, 33 loại địch. Đấu trường đã có tranh sống (`js/living.js`), nhưng mới gắn xương cho 2 tranh (Phương Nguyên, Điện Lang). 25 cổ chưa có tranh, 22 cổ chưa gắn với sự kiện cốt truyện nào (chỉ có qua chợ, lò luyện, mổ đá), 12/17 NPC chưa có chân dung. Tỉ lệ thắng của người chơi máy 33–35%, sát mức trên của mục tiêu. Giả Kim Sinh và hộ vệ Giả gia là hai nguyên nhân chết nhiều nhất.
+> Lộ trình này thay cho các mục Đợt 5, Đợt 6, Đợt 7 và Kỹ thuật ở phía dưới. Các mục cũ giữ lại chỉ để tham khảo.
 
-Mỗi giai đoạn chỉ coi là xong khi: `node tools/sim.cjs 300 6` cho tỉ lệ thắng 15–35% và không có ca kẹt vòng lặp, chạy thử trong trình duyệt không có lỗi JS, đã đăng lên link chơi để test trên điện thoại.
+### Vấn đề gốc
 
-### Giai đoạn 1: Đồ họa đấu trường
-- [ ] Gắn xương cho các tranh địch quan trọng: Bạch Ngưng Băng, Lôi Quan Lang Vương, Hắc Hùng, heo rừng, gia lão, Huyết Thủ ma tu. Mỗi tranh cần dò tọa độ mắt, đầu, tay hoặc hàm một lần.
-- [ ] Hiệu ứng riêng theo nhóm cổ thay cho viên đạn chung: nguyệt (nguyệt nhận, Nguyệt Toàn bay vòng cung), băng (Băng Đao), huyết (Huyết Nguyệt, bầy dơi Đao Sí Huyết Bức), phong (Toàn Phong), kim (răng cưa Cứ Xỉ Kim Ngô), hộ thể (màn nước, tơ xanh, hỏa lô, thụ tinh Mộc Mị).
-- [ ] Sát chiêu có cảnh cắt: màn mực, chân dung trượt vào, tên chiêu viết từng nét (đã thử ở bản demo 1).
-- [ ] Địch chết tan thành mực thay cho mờ dần.
-- [ ] Chế độ đồ họa thấp tự bật trên máy yếu: lưới thưa hơn, ít hạt, tắt bộ lọc.
+Đây là game vòng lặp thời gian, nhưng vòng lặp đang là điểm yếu chứ chưa phải điểm mạnh.
 
-### Giai đoạn 2: Giao diện thế giới
-- [ ] Bản đồ sơn trại sống: ngày và đêm theo tuần, thời tiết theo thiên cơ (mưa dầm, hàn khí, đại hạn), trăng máu và mây đen trước lang triều.
-- [ ] Thẻ sự kiện: tiêu đề viết từng nét bút, tranh nền riêng cho các mốc nguyên tác lớn.
-- [ ] Cảnh chết và trùng sinh: con ve vàng vỗ cánh, màn hình tua ngược, nhật ký chạy lùi.
-- [ ] Bản điện thoại: bố cục một cột, thanh trạng thái gọn, nút bấm to hơn, vuốt để đổi tab.
+- **Người chơi phải chơi lại phần đầu quá nhiều.** Theo mô phỏng, trung bình chết ở tuần 13/27, kiếp đầu thắng khoảng 3%. Tháng 1–4 bị chơi lại 4–5 lần với cùng các lựa chọn.
+- **Ký ức chủ yếu là cộng chỉ số** (+25% sát thương lên sói, +35% mổ đá...). Game vòng lặp hay làm ngược lại: mỗi lần chết cho biết thêm một điều, và điều đó mở ra việc mới để làm. Với Phương Nguyên, cảm giác đúng là "lần này ta biết hắn sẽ đi đường nào, nên ta phục sẵn".
+- **Đầu tư đồ họa đang lệch chỗ.** Người chơi dành phần lớn thời gian đọc sự kiện và chọn trên bản đồ, nhưng thẻ sự kiện hiện chỉ là tranh nền và chữ.
 
-### Giai đoạn 3: Gameplay và cân bằng
-- [ ] Xem lại trận Giả Kim Sinh và hộ vệ Giả gia (đang giết người chơi nhiều nhất), kéo tỉ lệ thắng về khoảng 25–30%.
-- [ ] Cây ký ức: mỗi lần chết được điểm quang âm, dùng mở nhánh Biết trước, Đạo tâm, Nhãn lực, Tàng thạch (Đợt 5).
-- [ ] Chế độ khó: Cổ sư, Ma đầu, Nguyên tác (Đợt 5).
-- [ ] Thành tựu và bảng tổng kết kiếp; mệnh cách hiếm mở bằng thành tựu (Đợt 5).
-- [ ] Minigame bắt cổ hoang (kéo co ý niệm) thay cho tung xúc xắc (Đợt 5).
+Hiện trạng số liệu: 38 cổ trùng, 98 sự kiện, 33 loại địch. 22 cổ chưa gắn với sự kiện cốt truyện nào. 12/17 NPC chưa có chân dung. Đấu trường mới gắn xương cho 2 tranh (Phương Nguyên, Điện Lang).
 
-### Giai đoạn 4: Nội dung gắn với cổ trùng và nhân vật
-- [ ] Sự kiện cốt truyện cho các cổ mới, theo đúng chủ nhân trong nguyên tác: Cứ Xỉ Kim Ngô và Cửu Diệp Sinh Cơ Thảo ở tầng sâu động Hoa Tửu; Đao Sí Huyết Bức ở lăng mộ Nhất Đại; Nguyệt Toàn gắn với Thanh Thư; Hỏa Lô với Xích Sơn; Băng Đao và Ẩn Lân rơi từ Bạch gia; Mộc Mị Cổ gắn với cái chết của Thanh Thư.
-- [ ] Chân dung cho 12 NPC còn thiếu (Phương Chính, Thanh Thư, Trầm Thúy, Mạc Bắc, Mạc Nhan, Hùng Lâm, Thiết Huyết Lãnh, Thiết Nhược Nam...), vẽ bằng Canva AI theo thiết kế riêng, cùng phong cách thủy mặc với tranh hiện có.
-- [ ] Tranh cho 25 cổ chưa có tranh (Canva AI hoặc tranh thảo trùng cổ CC0 ở mục B).
+### Cách làm
 
-### Giai đoạn 5: Âm thanh
-- [ ] Nhạc nền tổng hợp bằng Web Audio theo cảnh: sơn trại, núi, chiến đấu, lang triều, trận cuối.
-- [ ] Âm hiệu ứng riêng theo nhóm cổ (nguyệt, băng, huyết, kim).
+- Mỗi giai đoạn chia thành bước nhỏ. Mỗi bước kết thúc bằng một bản chơi được trên link để test trên điện thoại.
+- Mỗi bước chỉ coi là xong khi: dữ liệu không tham chiếu tới cổ, địch, sự kiện không tồn tại; `node tools/sim.cjs 300 6` không có ca kẹt vòng lặp; chạy thử trong trình duyệt không có lỗi JS.
+- Cân bằng đo bằng số liệu người chơi cảm nhận được: số kiếp tới lần thắng đầu, số tuần phải chơi lại. Tỉ lệ thắng của người chơi máy (mục tiêu 15–35%) chỉ là số phụ.
 
-### Giai đoạn 6: Kỹ thuật
-- [ ] Biến `tools/sim.cjs` thành bộ kiểm tra tự động: báo lỗi khi tỉ lệ thắng ra ngoài 15–35%, khi có ca kẹt vòng lặp, hoặc khi dữ liệu tham chiếu tới cổ, địch, sự kiện không tồn tại.
+### Giai đoạn 1: Sửa vòng lặp (ưu tiên cao nhất)
+- [ ] **1.1 Tua nhanh bằng ký ức.** Đầu kiếp mới, cho chọn "đi lại con đường cũ": game tự áp lại các lựa chọn kiếp trước cho tới khi gặp điều khác đi (thiên cơ mới, cánh bướm, sự kiện chưa thấy). Người chơi dừng lại đúng chỗ muốn đổi.
+- [ ] **1.2 Sổ ký ức** thay cho tab Ký ức hiện tại. Tự ghi lại những gì đã thấy: sự kiện nào xảy ra tuần nào, NPC hay ở đâu, bí mật nào đã biết, chết vì ai và ở đâu.
+- [ ] **1.3 Ký ức mở lựa chọn mới thay vì cộng chỉ số.** Ví dụ: biết đường Giả Kim Sinh hay đi thì phục kích trước; biết ngày Bạch gia tập kích thì báo trước hoặc bán tin; biết lối vào động Hoa Tửu thì vào ngay tuần đầu. Lựa chọn mở nhờ ký ức có nhãn riêng.
+- [ ] **1.4 Tâm nguyện mỗi kiếp.** Đầu kiếp chọn một mục tiêu cụ thể (lấy truyền thừa Hoa Tửu trước tháng 5, cứu Thanh Thư, giết Giả Kim Sinh không để lộ). Làm được thì ghi thêm ký ức. Mỗi kiếp có hướng đi rõ, không chỉ là sống lâu hơn kiếp trước.
+
+### Giai đoạn 2: Chiến đấu có chiều sâu mà không kéo dài
+- [ ] **2.1 Đánh nhanh cho trận dễ.** Trận với thú rừng, sơn tặc cho tự đánh bằng AI có sẵn trong script mô phỏng. Người chơi chỉ tự đánh trận khó và trùm.
+- [ ] **2.2 Mỗi loại địch cần một cách đối phó riêng.** Giáp dày cần cổ xuyên giáp, Bạch gia phong ấn cổ thì cần cổ dự phòng, trùm hồi máu cần chảy máu. 38 cổ có vai trò khác nhau thay vì chỉ khác chỉ số, và việc chọn nuôi cổ nào có ý nghĩa.
+- [ ] **2.3 Cân lại độ khó** theo số kiếp tới lần thắng đầu và số tuần phải chơi lại. Xem lại trận Giả Kim Sinh và hộ vệ Giả gia (hai nguyên nhân chết nhiều nhất).
+
+### Giai đoạn 3: Trình bày ở chỗ người chơi nhìn nhiều nhất
+- [ ] **3.1 Sự kiện thành cảnh hội thoại:** chân dung người nói (tranh sống, chớp mắt, đổi nét mặt), chữ hiện dần. Chân dung NPC chính vẽ bằng Canva AI theo thiết kế riêng, cùng phong cách thủy mặc với tranh hiện có.
+- [ ] **3.2 Bản đồ sống:** ngày đêm theo tuần, thời tiết theo thiên cơ, trăng máu trước lang triều.
+- [ ] **3.3 Cảnh chết và trùng sinh:** con ve vàng vỗ cánh, thời gian tua ngược. Đây là khoảnh khắc lặp lại nhiều nhất trong game.
+- [ ] **3.4 Bố cục điện thoại** làm lại cho gọn.
+
+### Giai đoạn 4: Đấu trường
+- [ ] Gắn xương cho các trùm: Bạch Ngưng Băng, Lôi Quan Lang Vương, Hắc Hùng, gia lão, Huyết Thủ ma tu.
+- [ ] Hiệu ứng riêng theo nhóm cổ: nguyệt, băng, huyết, phong, kim, hộ thể.
+- [ ] Cảnh cắt khi tung sát chiêu; địch chết tan thành mực.
+
+### Giai đoạn 5: Nội dung
+- [ ] Gắn 22 cổ chưa có cốt truyện vào sự kiện theo đúng chủ nhân trong nguyên tác (Hoa Tửu, Nhất Đại, Thanh Thư, Xích Sơn, Bạch gia).
+- [ ] Thêm nhánh kết cục phụ thuộc vào những gì người chơi biết và đã làm qua nhiều kiếp.
+
+### Làm xen kẽ
+- [ ] Kiểm tra dữ liệu và mô phỏng tự động sau mỗi lần sửa.
 - [ ] Đánh số phiên bản save và viết hàm chuyển đổi khi đổi cấu trúc dữ liệu.
-- [ ] Tách CSS khỏi `index.html` ra `css/`.
-- [ ] Gỡ `assets/local/_scraped/` khỏi git và thêm vào `.gitignore` (ảnh tải từ mạng chỉ dùng trên máy).
+- [ ] Gỡ `assets/local/_scraped/` khỏi git và thêm vào `.gitignore`.
 
-### Sau đó
-Quyển hai, Thương gia thành (Đợt 7), khi quyển một đã ổn định.
+### Hoãn hoặc bỏ
+- **Quyển hai:** hoãn tới khi vòng lặp quyển một thật sự hay.
+- **Minigame bắt cổ hoang:** bỏ.
+- **Thành tựu:** bỏ, sổ ký ức làm tốt việc này hơn.
+- **Chế độ khó:** để sau cùng.
 
 ---
 

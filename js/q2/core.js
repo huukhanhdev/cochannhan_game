@@ -26,27 +26,41 @@ function hudTimeHTML(){
 /* ---------- vào Quyển 2 ---------- */
 // Trạng thái đầu Quyển 2 theo canon VN 207–210: vừa dùng Xuân Thu Thiền lần hai, tụt về Nhất chuyển sơ kỳ,
 // còn Thiên Nguyên Bảo Liên, Đâu Suất Hoa, Tửu trùng. Cổ khác từ Thanh Mao đi theo nhưng sẽ chết đói dần.
+// Cổ từ Quyển 1 theo sang Quyển 2 (canon VN 207: 12 con cổ + Thiên Nguyên Bảo Liên)
+const Q2_CORE=['thiennguyen','dausuat'],Q2_CARRY=['tuvi','tuutrung','thienbong','huyetnguyet','cuxikimngo','cuongthu','diathinh','anlan','huyetlo','duongco'];
+function q2Inherit(old,from){
+  if(!old){
+    const bai=['bai_dong','huyetlo_bai'].includes(from);
+    return {core:[...Q2_CORE,'tuutrung'],keep:['huyetnguyet','thienbong','cuxikimngo','cuongthu','diathinh',...(bai?['duongco']:[])].map(k=>({k,h:1})),miss:[]};
+  }
+  const has=k=>old.gu.some(g=>g.k===k);
+  const core=Q2_CORE.filter(has),miss=Q2_CORE.filter(k=>!has(k));
+  // Âm cổ chưa dùng: coi như đã dùng lên Bạch Ngưng Băng nếu kết cục có nàng
+  const carry=Q2_CARRY.filter(k=>has(k)||(k==='duongco'&&has('amduong')&&['bai_dong','huyetlo_bai'].includes(from)));
+  if(!carry.includes('tuvi')&&!carry.includes('tuutrung'))core.push('tuutrung');
+  const extra=[...new Set(old.gu.map(g=>g.k))].filter(k=>GU[k]&&!carry.includes(k)&&!Q2_CORE.includes(k)&&['attack','guard','heal'].includes(GU[k].t)).slice(0,2);
+  return {core,keep:[...carry,...extra].map(k=>({k,h:1})),miss};
+}
 function startQ2(ending){
   const from=ending||'ma';
   META.q2Unlocked=1;META.q2From=from;
   if(S&&S.over==='win'&&S.book!==2)META.wins.push(from);
-  const old=S&&S.book!==2?S:null;
+  const old=S&&S.book!==2&&S.over==='win'?S:null;
   const lo=['huyetlo','huyetlo_bai','tien_lo'].includes(from);
-  // Canon VN 207–213: còn Huyết Nguyệt, Thiên Bồng (đã yếu), Rết Vàng Răng Cưa, cộng tối đa 2 cổ chiến đấu khác từ Quyển 1
-  const base=['huyetnguyet','thienbong','cuxikimngo'];
-  const extra=old?old.gu.filter(g=>GU[g.k]&&!base.includes(g.k)&&['attack','guard','heal'].includes(GU[g.k].t)).slice(0,2).map(g=>g.k):[];
-  const keep=[...base,...extra].map(k=>({k,h:1}));
+  // Canon VN 207–213: kho cổ lấy từ Quyển 1 thật. Vào thẳng từ menu (không có Quyển 1) thì phát bộ nguyên tác.
+  const {core,keep,miss}=q2Inherit(old,from);
   S={v:2,book:2,chap:null,turn:0,chuyen:1,giai:0,prog:0,ess:20,hp:90,stones:40,blood:0,wine:0,herbs:2,
     tuchat:lo?90:Math.max(62,old?old.tuchat:62),
     tamco:Math.max(12,old?old.tamco:12),satphat:Math.max(8,old?old.satphat:8),ngo:Math.max(9,old?old.ngo:9),
     dao:Math.max(20,old?old.dao:30),danh:0,susp:0,canonHit:0,canonMiss:0,
-    gu:[{k:'xuanthu',h:0},{k:'thiennguyen',h:0},{k:'dausuat',h:0},{k:'tuutrung',h:0},...keep],
+    gu:[{k:'xuanthu',h:0},...core.map(k=>({k,h:0})),...keep],
     rel:{bainu:lo||from==='bai_dong'||from==='huyetlo_bai'?10:0},met:{},f:{q2From:from},shop:[],evq:[],combat:null,panel:null,
     over:null,ending:null,acted:false,refined:false,log:(old?old.log.slice(-6):[]),mod:old?old.mod||{}:{},inj:null,trait:old?old.trait:null,
     traitOpts:null,npcProg:{},var:{},world:[],cache:[],path:[],ffOffer:false,
     cicada:{charge:0},snaps:[],rewinds:0,drift:0,driftStep:0,later:[],evLast:{},evSeen:{}};
   S.hp=maxHp();S.ess=maxEss();
-  ['xuanthu','thiennguyen','dausuat'].forEach(discoverGu);
+  S.gu.forEach(g=>discoverGu(g.k));
+  if(miss.includes('thiennguyen')){S.stones+=120;log('Không có Thiên Nguyên Bảo Liên, ngươi chỉ còn túi nguyên thạch vét được lúc chạy khỏi núi (+120). Từ nay phải tự kiếm.','danger')}
   meet('bainu');
   log('Quyển hai · Xuân Thu Thiền đã dùng lần thứ hai. Tu vi tan gần hết, ngươi trở lại Nhất chuyển sơ kỳ.','big');
   if(keep.length)log(`Theo ngươi xuống núi còn ${keep.map(g=>GU[g.k].n).join(', ')}. Không có nguyên thạch nuôi, chúng sẽ chết đói.`,'danger');

@@ -19,6 +19,7 @@ vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/
 
 const run=code=>vm.runInContext(code,ctx);
 ctx.__lech=!!process.env.LECH;
+ctx.__q1min=process.env.Q1INV==='min';
 // Người chơi máy
 const bot=`
 function botCombat(){
@@ -77,7 +78,7 @@ run(`var __rep={n:0,gaps:{}};const __re=randomEvent;randomEvent=function(loc){co
 const N=+process.argv[2]||100,RETRY=+process.argv[3]||5;
 const res={end:{},reach:{},retries:{},cause:{},stuck:0,turns:0,rewinds:0,rank:{}};
 for(let n=0;n<N;n++){
-  run("META=freshMeta();newLife();S.traitOpts=null;S.tamco=14;S.satphat=10;S.ngo=10;S.tuchat=90;S.over='win';S.ending='huyetlo_bai';startQ2('huyetlo_bai')");
+  run("META=freshMeta();newLife();S.traitOpts=null;S.tamco=14;S.satphat=10;S.ngo=10;S.tuchat=90;S.gu=(__q1min?['xuanthu','nguyetquang']:['xuanthu','huyetnguyet','trilieu','cuongthu','huyetlo','thiennguyen','cuxikimngo','hacthi','dausuat','thienbong','diathinh','tuvi','amduong']).map(k=>({k,h:0}));S.over='win';S.ending='huyetlo_bai';startQ2('huyetlo_bai')");
   let steps=0,tries=0;const seen=new Set();
   while(steps<6000){
     const ch=run('S.chap');if(!seen.has(ch)){seen.add(ch);res.reach[ch]=(res.reach[ch]||0)+1;tries=0}

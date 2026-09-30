@@ -32,11 +32,11 @@ Nguyên tắc: không đổi số tuần (27) và bảng `CANON`. Chỉ sửa n�
 - [x] 4.3 Thạch Khiếu xung đột Huyết Lô: có cả hai thì mất Thạch Khiếu (ch 204).
 
 ## GĐ5. Nối sang Quyển 2
-- [ ] 5.1 `startQ2()`: bỏ phát sẵn. Lấy từ kho Quyển 1: Thiên Nguyên, Đâu Suất, Tửu Trùng/Tứ Vị, Thiên Bồng, Huyết Nguyệt, Rết Vàng, Âm Dương → Dương cổ, Cường Thủ, Địa Thính.
-- [ ] 5.2 Thiếu cổ nào: có nhánh bù (vào thẳng Quyển 2 từ menu vẫn được phát như cũ).
+- [x] 5.1 `startQ2()`: bỏ phát sẵn. Lấy từ kho Quyển 1: Thiên Nguyên, Đâu Suất, Tửu Trùng/Tứ Vị, Thiên Bồng, Huyết Nguyệt, Rết Vàng, Âm Dương → Dương cổ, Cường Thủ, Địa Thính.
+- [x] 5.2 Thiếu cổ nào: có nhánh bù (vào thẳng Quyển 2 từ menu vẫn được phát như cũ).
 
 ## GĐ6. Kiểm tra và phát hành
-- [ ] 6.1 `tools/check.cjs`, `tools/sim.cjs` (canon + LECH), `tools/sim2.cjs`.
-- [ ] 6.2 Thử trình duyệt (Playwright), không lỗi JS.
+- [x] 6.1 `tools/check.cjs`, `tools/sim.cjs` (canon + LECH), `tools/sim2.cjs`.
+- [x] 6.2 Thử trình duyệt (Playwright), không lỗi JS.
 - [ ] 6.3 Cập nhật bản test trên artifact.
 - [ ] 6.4 Commit, push nhánh, đưa lên `main`.

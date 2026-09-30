@@ -13,7 +13,7 @@ const GU_META={
   xaloi1:{icon:'舍',cls:'rank-1'},xaloi2:{icon:'利',cls:'rank-2'},xaloi3:{icon:'银',cls:'rank-3'},
   sinhco:{icon:'叶',cls:'rank-1'},tieuguang:{icon:'光',cls:'rank-1'},toanphong:{icon:'风',cls:'rank-1'},dongbi:{icon:'铜',cls:'rank-1'},thanhti:{icon:'丝',cls:'rank-1'},
   nguyettoan:{icon:'旋',cls:'rank-2'},nguyetngan:{icon:'银',cls:'rank-2'},nguyetnghe:{icon:'裳',cls:'rank-2'},bangdao:{icon:'刀',cls:'rank-2'},thuytrao:{icon:'水',cls:'rank-2'},
-  anlan:{icon:'鳞',cls:'rank-2'},hoalo:{icon:'炉',cls:'rank-2'},cuudiep:{icon:'草',cls:'rank-2'},cuxikimngo:{icon:'蜈',cls:'rank-3'},mokmi:{icon:'魅',cls:'rank-3'},daosihuyetbuc:{icon:'蝠',cls:'rank-3'},
+  anlan:{icon:'鳞',cls:'rank-2'},cuongthu:{icon:'钳',cls:'rank-3'},thachkhieu:{icon:'石',cls:'rank-3'},amduong:{icon:'阴',cls:'rank-4'},duongco:{icon:'阳',cls:'rank-4'},hoalo:{icon:'炉',cls:'rank-2'},cuudiep:{icon:'草',cls:'rank-2'},cuxikimngo:{icon:'蜈',cls:'rank-3'},mokmi:{icon:'魅',cls:'rank-3'},daosihuyetbuc:{icon:'蝠',cls:'rank-3'},
 };
 // Chân dung NPC từ tranh cổ (Met Museum, phạm vi công cộng)
 const NPC_IMG={toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu'};
@@ -285,8 +285,8 @@ function renderStage(){
   }
   if(S.panel==='gamble'){
     const icons=['石','竹','血','冰'];
-    st.innerHTML=`<div class="paper">${head('Phường Đoán Thạch','Quầy mổ thạch của Giả gia')}
-      <p class="dimt">Chọn đá bằng mắt và trực giác. Có thể ra cổ trùng hiếm hoặc nguyên thạch tinh khiết, cũng có thể chỉ là vụn vôi. Người thu mua Giả gia luôn ép giá dưới giá gốc. Mỗi tuần quầy chỉ bán ${STONE_WEEKLY} khối, tuần này còn <b class="gold">${stonesLeft()}</b>.</p>
+    st.innerHTML=`<div class="paper">${head('Phường Đoán Thạch','Quầy mổ thạch của Cổ gia')}
+      <p class="dimt">Chọn đá bằng mắt và trực giác. Có thể ra cổ trùng hiếm hoặc nguyên thạch tinh khiết, cũng có thể chỉ là vụn vôi. Người thu mua Cổ gia luôn ép giá dưới giá gốc. Mỗi tuần quầy chỉ bán ${STONE_WEEKLY} khối, tuần này còn <b class="gold">${stonesLeft()}</b>.</p>
       <div class="gamble-grid">${STONES_GAMBLE.map((x,i)=>`<button class="stone-card st-${i+1}" data-gamble="${x.id}" ${S.stones<x.price||stonesLeft()<=0?'disabled':''}>
         <div class="stone-visual">${icons[i]||'石'}</div><b>${x.n}</b><span class="stone-price">${x.price} nguyên thạch</span><small>${x.d}</small>
         <span class="pill ${mem('doanthach')?'canonp':''}">${mem('doanthach')?'Soi vân đá chuẩn hơn':`Độ sâu: DC ${x.dc}`}</span></button>`).join('')}</div></div>`;
@@ -294,7 +294,7 @@ function renderStage(){
   }
   if(S.panel==='market'){
     const item=(g,n,d,attr,price)=>`<div class="item"><div class="iinfo"><span class="glyph-ico">${g}</span><div><b>${n}</b><small>${d}</small></div></div><button class="btn" ${attr} ${S.stones<price?'disabled':''}>${price} thạch</button></div>`;
-    st.innerHTML=`<div class="paper">${head(S.f.caravan?'Chợ thương đội Giả gia':'Chợ sơn trại','Không tốn thời gian')}
+    st.innerHTML=`<div class="paper">${head(S.f.caravan?'Chợ thương đội Cổ gia':'Chợ sơn trại','Không tốn thời gian')}
       <div class="shop"><span class="label">Cổ trùng</span>
         ${S.shop.length?S.shop.map((k,i)=>`<div class="item"><div class="iinfo">${guEmblem(k,(GU_META[k]||{}).icon,'lg')}<div><b>${GU[k].n}</b><small>${GU[k].d} Ăn ${GU[k].fn}, ${GU[k].food} thạch/tuần.</small></div></div>
           <button class="btn" data-buy="${i}" ${S.stones<guPrice(k)?'disabled':''}>${guPrice(k)} thạch</button></div>`).join(''):'<span class="dimt">Hết hàng.</span>'}

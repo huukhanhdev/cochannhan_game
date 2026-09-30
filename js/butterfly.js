@@ -10,7 +10,7 @@
 const VARIANTS={
   giasan:{def:'yeu',alt:['manh'],ev:'c_giasan',n:'chuyện đòi gia sản'},
   gate:{def:'thuong',alt:['mac'],ev:'c_conghocduong',n:'chuyện ở cổng học đường'},
-  kimsinh:{def:'alone',alt:['guard','trap'],ev:'c_kimsinh',n:'chuyện của Giả Kim Sinh'},
+  kimsinh:{def:'alone',alt:['guard','trap'],ev:'c_kimsinh',n:'chuyện của Cổ Kim Sinh'},
   baigia:{def:'thuong',alt:['phuc'],ev:'c_baigia',n:'đường tuần của Bạch gia'},
   bai:{def:'tomo',alt:['satý'],ev:'c_bai',n:'lần gặp Bạch Ngưng Băng'},
   lang:{def:'bac',alt:['tay'],ev:'c_lang1',n:'hướng lang triều'},

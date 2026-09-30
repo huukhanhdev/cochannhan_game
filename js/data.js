@@ -58,6 +58,10 @@ const GU={
   mokmi:{n:'Mộc Mị Cổ',r:3,food:5,fn:'lá cổ thụ',reflect:0.3,turns:3,drainPct:0.15,t:'guard',cost:18,p:350,d:'Cấm cổ của Cổ Nguyệt tộc: hóa Thụ Tinh cổ đại. Chỉ nhận 10% sát thương, phản 30%, trong 3 lượt; mỗi lượt mất 15% khí huyết tối đa.'},
   daosihuyetbuc:{n:'Đao Sí Huyết Bức Cổ',r:3,food:6,fn:'máu tươi',t:'attack',dmg:52,cost:18,lifesteal:0.35,aoe:1,p:420,d:'Huyết Hải chân truyền của Cổ Nguyệt Nhất Đại. Đàn dơi cánh đao xé địch, hút 35% sát thương về cho chủ.'},
   xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:480,d:'Dùng một lần: Tam chuyển tăng một tiểu cảnh giới.'},
+  cuongthu:{n:'Cường Thủ Cổ',r:3,food:5,fn:'sắt vụn',t:'attack',dmg:18,cost:22,chill:.35,stun:1,p:400,d:'Bọ cánh cứng đen, đầu mọc càng sắt, lưng lốm đốm trắng. Của Hùng Chiên. Cưỡng ép bắt lấy cổ trùng sống nhờ trên người địch: tỷ lệ thành công thấp, nhưng trúng thì địch choáng 1 lượt và yếu đi 35%.'},
+  thachkhieu:{n:'Thạch Khiếu Cổ',r:3,food:0,fn:'không cần',t:'use',p:300,d:'Hình như viên xúc xắc, xám trắng, cực cứng. Dùng một lần: nổ thành bột đá tràn khắp biển chân nguyên, tu vi lập tức đầy. Không khiếu hóa vách đá, tiềm lực bị ép khô, về sau khó lên Tứ chuyển. Xung đột với Huyết Lô.'},
+  amduong:{n:'Âm Dương Chuyển Thân Cổ',r:4,food:0,fn:'chân nguyên',t:'heal',healAmt:90,cure:1,cost:30,p:900,d:'Cổ trị liệu Tứ chuyển Cổ Nguyệt Nhất Đại mưu tính gần ngàn năm. Âm cổ từ dương sinh âm, khiến người chết thoát thai hoán cốt. Dương cổ giữ lại để khống chế kẻ được cứu.'},
+  duongco:{n:'Dương cổ',r:4,food:0,fn:'không cần',t:'passive',p:0,d:'Nửa còn lại của Âm Dương Chuyển Thân. Âm cổ đã dùng lên Bạch Ngưng Băng. Một ý niệm của ngươi là Dương cổ tan, và nàng chết theo.'},
 };
 
 const SHOP=['nguyetquang','tuutrung','bachthi','hacthi','ngocbi','trilieu','cuongnham','hungluc','tieuguang','toanphong','dongbi','thanhti'];
@@ -113,7 +117,7 @@ const EN={
   hunggia:{n:'Cổ sư Hùng gia',hp:85,atk:[8,13],st:[20,30],bl:1,drop:.3,i:'Cổ sư Hùng gia lùi một bước, tay đặt lên túi cổ.'},
   sontac:{n:'Sơn tặc Cổ sư',hp:60,atk:[6,10],st:[10,18],bl:1,i:'Bọn sơn tặc từ hai bên vách núi nhảy xuống.'},
   baitrinhsat:{n:'Trinh sát Bạch gia',hp:110,atk:[10,15],st:[25,35],bl:1,i:'Trinh sát Bạch gia áo trắng đứng trên cành cây, cười lạnh.'},
-  kimsinh:{n:'Giả Kim Sinh',hp:80,atk:[8,13],st:[40,60],bl:2,drop:.6,i:'Giả Kim Sinh nhận ra có điều bất thường, quay phắt lại.'},
+  kimsinh:{n:'Cổ Kim Sinh',hp:80,atk:[8,13],st:[40,60],bl:2,drop:.6,i:'Cổ Kim Sinh nhận ra có điều bất thường, quay phắt lại.'},
   tuukhoi:{n:'Tửu Khôi thủ động',hp:100,atk:[9,15],st:[0,0],bl:0,i:'Con rối ghép từ những vò rượu vỡ tự đứng dậy canh cửa động.'},
   dlbay:{n:'Bầy Điện Lang',hp:140,atk:[9,14],st:[30,40],bl:2,wolf:1,i:'Hàng chục đôi mắt xanh lục tràn qua tường trại.'},
   loiquan:{n:'Lôi Quan Lang',hp:170,atk:[11,17],st:[40,55],bl:3,wolf:1,i:'Lôi Quan Lang, sừng lôi điện trên đầu, bước ra khỏi màn mưa.'},
@@ -132,8 +136,8 @@ const NPC={
   thanhthu:{n:'Cổ Nguyệt Thanh Thư',d:'Con nuôi tộc trưởng, tiểu tổ trưởng'},
   tiexueleng:{n:'Thiết Huyết Lãnh',d:'Thần bổ Thiết gia'},
   nhuocnam:{n:'Thiết Nhược Nam',d:'Con gái Thiết Huyết Lãnh'},
-  giaphu:{n:'Giả Phú',d:'Chủ thương đội'},
-  kimsinh:{n:'Giả Kim Sinh',d:'Em trai Giả Phú'},
+  giaphu:{n:'Cổ Phú',d:'Chủ thương đội'},
+  kimsinh:{n:'Cổ Kim Sinh',d:'Em trai Cổ Phú'},
   bai:{n:'Bạch Ngưng Băng',d:'Thiên tài Bạch gia'},
   toctruong:{n:'Cổ Nguyệt Bác',d:'Tộc trưởng'},
   xichluyen:{n:'Cổ Nguyệt Xích Luyện',d:'Gia lão Xích gia, quyền cao chức trọng'},
@@ -145,11 +149,11 @@ const NPC={
 const MEM={
   hoatuu:{n:'Đường vào động phủ Hoa Tửu',d:'Biết lối vào và cách giải trận pháp cửa động.'},
   giasan:{n:'Điểm yếu của cậu',d:'Biết cậu đã lén bán ruộng trà của cha mẹ. Đòi gia sản dễ hơn.'},
-  jks:{n:'Thói quen Giả Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, và có thể phục sẵn ở bờ sông, nếu hắn vẫn đi một mình như ký ức.'},
+  jks:{n:'Thói quen Cổ Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, và có thể phục sẵn ở bờ sông, nếu hắn vẫn đi một mình như ký ức.'},
   langtrieu:{n:'Nhịp lang triều',d:'Đã thấy sói tràn qua tường. Sát thương lên sói +25%, và biết cổng nào sói dồn tới, nếu lang triều không đổi hướng.'},
   bai:{n:'Nỗi lòng Bạch Ngưng Băng',d:'Biết hắn khao khát tự do và thể chất đang giết hắn.'},
   huyethai:{n:'Cửa sinh trong huyết động',d:'Biết điểm yếu của huyết khôi và lối cửa sinh, nếu cấm chế chưa bị ai đánh thức.'},
-  doanthach:{n:'Kinh nghiệm mổ thạch Giả gia',d:'Nhìn thấu vân đá cổ. Tỷ lệ đoán thạch thành công +35%.'},
+  doanthach:{n:'Kinh nghiệm mổ thạch Cổ gia',d:'Nhìn thấu vân đá cổ. Tỷ lệ đoán thạch thành công +35%.'},
   xichgia:{n:'Nắm thóp Cổ Nguyệt Xích Thành',d:'Biết rõ Xích Thành khai khiếu giả tạo nhờ ông nội truyền công. Dễ dàng tống tiền Xích Luyện.'},
   huyetlo:{n:'Bí mật lăng mộ Nhất Đại',d:'Biết thủy tổ Cổ Nguyệt nuôi con cháu làm nguyên liệu cho Huyết Lô Cổ.'},
   tiexue:{n:'Thủ đoạn của Thiết Huyết Lãnh',d:'Biết cách thần bổ truy án. Chối tội và đổ tội dễ hơn.'},
@@ -170,7 +174,7 @@ function guEmblem(k,glyph,cls){
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
 const DIFF={hp:1.7,atk:1.7,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
-const CD={nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
+const CD={cuongthu:4,amduong:4,nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;
 // Giảm sát thương khi hộ thể (tỉ lệ còn nhận)
 const SHIELD_RED={khieukhieu:.05,ngocbi:.5,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.4,bachngoc:.3,thuytrao:.5,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.1};
@@ -212,14 +216,14 @@ const SK={
   suppress:{n:'Uy áp',i:'Uy áp: cổ tốn gấp rưỡi chân nguyên 2 lượt'},
 };
 EN.madutam={n:'Huyết Thủ ma tu',hp:380,atk:[22,32],st:[150,200],bl:6,i:'Một ma tu Tam chuyển áo đỏ thẫm ngồi trên tảng đá, tay nhuộm máu tới khuỷu. Hắn liếc ngươi như nhìn một bữa ăn.'};
-EN.giave={n:'Hộ vệ Giả gia',hp:165,atk:[12,18],st:[70,100],bl:3,drop:.5,i:'Hộ vệ Nhị chuyển của Giả Phú chặn đường. "Thiếu gia nhà ta chết không nhắm mắt."'};
+EN.giave={n:'Hộ vệ Cổ gia',hp:165,atk:[12,18],st:[70,100],bl:3,drop:.5,i:'Hộ vệ Nhị chuyển của Cổ Phú chặn đường. "Thiếu gia nhà ta chết không nhắm mắt."'};
 MEM.gate={n:'Túi thạch ở cổng học đường',d:'Nhớ đứa nào giàu, đứa nào nhát trong đám bạn học. Mở lựa chọn chặn cổng gọn gàng, nếu cổng học đường vẫn như ký ức.'};
 MEM.baigia={n:'Đường tuần của Bạch gia',d:'Nhớ con đường trinh sát Bạch gia hay đi. Mở lựa chọn phục kích, nếu Bạch gia không đổi đường.'};
 // Chết dưới tay ai thì nhớ được điều gì (engine.js die())
 const DEATH_MEM={kimsinh:'jks',giave:'giave',dlbay:'langtrieu',loiquan:'langtrieu',langvuong:'langtrieu',huyetkhoi:'huyethai',bai:'bai',
   baitrinhsat:'baigia',hoctro:'gate',madutam:'tukiep',tiexueleng:'tiexue',hunglam:'hunglam',sontacvuong:'sontac',tramthuysat:'tramthuy',bachmaon:'bachmaon',nhatdai:'huyetlo'};
 MEM.tukiep={n:'Lộ trình Huyết Thủ ma tu',d:'Biết ma tu Tam chuyển ẩn trong núi và con đường hắn hay đi. Có thể tránh.'};
-MEM.giave={n:'Sát thủ Giả gia',d:'Biết Giả Phú sẽ phái hộ vệ trả thù. Có thể bày bẫy trước.'};
+MEM.giave={n:'Sát thủ Cổ gia',d:'Biết Cổ Phú sẽ phái hộ vệ trả thù. Có thể bày bẫy trước.'};
 
 /* ---------- Mệnh cách: chọn 1 trong 3 đầu mỗi kiếp ---------- */
 // ap(): áp dụng lên S mới. Mỗi mệnh cách có cả lợi lẫn hại.
@@ -246,7 +250,7 @@ const INJURY={
 const WORLD={
   dathan:{n:'Đại hạn',g:'旱',d:'Nguyệt lan khan hiếm: Nguyệt Quang Cổ ăn gấp đôi. Linh dược rẻ còn một nửa.'},
   muadam:{n:'Mưa dầm',g:'雨',d:'Hậu sơn trơn trượt, thám hiểm khó hơn. Cổ hoang bò ra nhiều hơn.'},
-  thuongsom:{n:'Thương đội đến sớm',g:'商',d:'Giả gia lên núi sớm 3 tuần so với ký ức.'},
+  thuongsom:{n:'Thương đội đến sớm',g:'商',d:'Cổ gia lên núi sớm 3 tuần so với ký ức.'},
   langsom:{n:'Lang triều đến sớm',g:'狼',d:'Sói tràn tới sớm 2 tuần so với ký ức.'},
   hunggia:{n:'Hùng gia gây hấn',g:'熊',d:'Cổ sư Hùng gia lảng vảng khắp núi. Đánh nhau nhiều, chiến lợi phẩm cũng nhiều.'},
   dichco:{n:'Dịch cổ',g:'疫',d:'Cổ trùng yếu ớt: mỗi con ăn thêm 1 thạch mỗi tuần. Chợ hạ giá 20%.'},

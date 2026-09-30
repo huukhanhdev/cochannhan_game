@@ -40,7 +40,7 @@ const ART={
 };
 const SCENE_NAME={forest:'Rừng trúc Thanh Mao',village:'Cổ Nguyệt sơn trại',tide:'Tường trại · Lang triều',wine:'Động phủ Hoa Tửu',blood:'Huyết động',snow:'Tuyết giữa mùa hạ',fire:'Thanh Mao Sơn bốc cháy'};
 const SKILL_GLYPH={strike:'拳',herb:'药',flee:'走',nguyetquang:'月',huyetnguyet:'血',nguyetmang:'芒',ngocbi:'玉',thietbi:'铁',cuongnham:'岩',thienbong:'蓬',trilieu:'愈',
-  tieuguang:'光',toanphong:'风',dongbi:'铜',thanhti:'丝',nguyettoan:'旋',nguyetngan:'银',nguyetnghe:'裳',bangdao:'刀',thuytrao:'水',anlan:'鳞',hoalo:'炉',cuudiep:'草',cuxikimngo:'蜈',mokmi:'魅',daosihuyetbuc:'蝠',sinhco:'叶',
+  cuongthu:'钳',thachkhieu:'石',amduong:'阴',duongco:'阳',tieuguang:'光',toanphong:'风',dongbi:'铜',thanhti:'丝',nguyettoan:'旋',nguyetngan:'银',nguyetnghe:'裳',bangdao:'刀',thuytrao:'水',anlan:'鳞',hoalo:'炉',cuudiep:'草',cuxikimngo:'蜈',mokmi:'魅',daosihuyetbuc:'蝠',sinhco:'叶',
   huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护',nguyet_toan_xa:'旋',bang_trao_ho:'盾',kim_ngo_tram:'齿',huyet_duc_phong:'吸',
   thuy_nguyet:'澜',bang_huyet:'霜'};
 const INTENT_SEAL={atk:'攻',heavy:'猛',guard:'守'};

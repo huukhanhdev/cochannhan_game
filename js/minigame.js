@@ -62,7 +62,7 @@ function refineEnd(ok,msg,boom){
 
 /* ================= MỔ THẠCH =================
    Nội dung đá quyết định ngay khi mua (ẩn). Mỗi nhát cắt lộ một dấu hiệu, có thể nhìn nhầm.
-   Sau mỗi nhát, người thu mua của Giả gia trả giá; bán ngay hoặc cắt tiếp. */
+   Sau mỗi nhát, người thu mua của Cổ gia trả giá; bán ngay hoặc cắt tiếp. */
 const STONE_CLUE={
   phe:['Mặt cắt xám đục, không chút linh khí.','Vân đá thô, có vết nứt rỗng bên trong.','Bụi vôi bay ra, mùi ẩm mốc.'],
   thach:['Có ánh lục nhạt lấp lánh như tinh thể.','Vân đá mịn, sờ vào thấy mát lạnh.','Lõi đá sáng lên khi hắt đèn.'],
@@ -70,7 +70,7 @@ const STONE_CLUE={
   doc:['Có đốm tím li ti, mùi tanh nồng.','Lõi đá âm ấm bất thường.','Vân đá xoắn ốc, như có thứ gì từng cựa quậy.'],
 };
 function stoneAccuracy(){return clamp(.55+(S.ngo-6)*.05+(mem('doanthach')?.2:0),.4,.95)}
-// Người thu mua Giả gia định giá theo dấu hiệu đã lộ (họ cũng có thể nhìn nhầm như ngươi).
+// Người thu mua Cổ gia định giá theo dấu hiệu đã lộ (họ cũng có thể nhìn nhầm như ngươi).
 // Họ là thương nhân: luôn ép giá dưới giá gốc, nên bán giữa chừng chỉ để cắt lỗ, không phải để kiếm lời.
 function stoneOffer(m,st){
   const score=m.clues.reduce((s,c)=>s+({phe:-1,thach:1.2,co:1.6,doc:.2}[c.k]),0)/m.clues.length;
@@ -101,7 +101,7 @@ function stoneAct(a){
     m.offer=stoneOffer(m,st);
     if(m.cuts>=m.max)return stoneOpen();
   }else if(a==='sell'){
-    S.stones+=m.offer;log(`Bán khối đá đang cắt dở cho Giả gia được ${m.offer} nguyên thạch.`,'gold');
+    S.stones+=m.offer;log(`Bán khối đá đang cắt dở cho Cổ gia được ${m.offer} nguyên thạch.`,'gold');
     S.mg=null;S.panel='gamble';saveAll();render();return;
   }else if(a==='open'){return stoneOpen()}
   saveAll();render();
@@ -190,7 +190,7 @@ function renderMG(st){
       <div class="clues">${m.clues.length?m.clues.map((c,i)=>`<p><b>Nhát ${i+1}.</b> ${c.t}</p>`).join(''):'<p class="dimt">Khối đá còn nguyên. Mắt ngươi nhìn trúng khoảng '+Math.round(stoneAccuracy()*100)+'% (ngộ tính, kinh nghiệm).</p>'}</div>
       <div class="mg-acts">
         <button class="choice" data-mg="cut" ${m.cuts>=m.max?'disabled':''}><span class="ct">${m.cuts?'Cắt nhát tiếp theo':'Cắt nhát đầu'}</span><span class="cmeta"><span class="odds m">Lộ thêm một dấu hiệu</span></span></button>
-        <button class="choice" data-mg="sell"><span class="ct">Bán cho người thu mua Giả gia</span><span class="cmeta"><span class="odds e">Trả ${m.offer} nguyên thạch</span></span></button>
+        <button class="choice" data-mg="sell"><span class="ct">Bán cho người thu mua Cổ gia</span><span class="cmeta"><span class="odds e">Trả ${m.offer} nguyên thạch</span></span></button>
         ${m.cuts?`<button class="choice" data-mg="open"><span class="ct">Bổ đôi, xem luôn lõi đá</span><span class="cmeta"><span class="odds h">Được ăn cả, ngã về không</span></span></button>`:''}
       </div></div>`;
   }else if(m.type==='break'){

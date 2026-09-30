@@ -394,6 +394,12 @@ function levelUp(){
 }
 function useGu(i){
   const g=S.gu[i];if(!g||GU[g.k].t!=='use'||S.combat)return;
+  if(g.k==='thachkhieu'){
+    S.gu.splice(i,1);S.prog=Math.max(S.prog,need());S.f.thachkhieu=1;
+    if(window.SFX) SFX.levelUp();
+    log('Thạch Khiếu Cổ nổ thành bột đá xám trắng, như sương như khói, tràn khắp biển chân nguyên. Tu vi đầy. Vách không khiếu hóa đá: về sau khó lên Tứ chuyển.','big');
+    saveAll();render();return;
+  }
   const need_={xaloi1:1,xaloi2:2,xaloi3:3,xaloi4:4}[g.k]||2;
   if(S.chuyen!==need_){log(`${GU[g.k].n} chỉ dùng được ở ${CH[need_]} chuyển.`,'danger');render();return}
   S.gu.splice(i,1);

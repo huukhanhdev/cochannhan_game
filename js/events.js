@@ -524,17 +524,50 @@ k_hd_sachcu:{loc:'hocduong',w:2,title:'Bút ký dưới gầm bàn',
     {t:'Nộp lên tàng thư các',tag:'chinh',eff:()=>{S.danh+=4;rel('toctruong',3);return 'Gia lão coi thư khen một câu. Danh vọng +4.'}},
   ]},
 k_hd_gialaosay:{loc:'hocduong',w:1,once:1,cond:()=>S.turn>=3,title:'Gia lão say rượu',
-  text:()=>'Tan học, gia lão dạy học ngồi một mình dưới hiên, vò rượu đã cạn quá nửa. "Tụi nhỏ bây giờ... chỉ biết bắn Nguyệt Nhận cho thẳng. Hồi ta còn trẻ..." Lão lắc đầu, không nói tiếp.',
-  choices:[
-    {t:'Rót thêm rượu, ngồi nghe lão kể',req:()=>S.stones>=5,reqT:'Cần 5 nguyên thạch mua rượu',eff:()=>{S.stones-=5;thenEv('k_hd_gialaosay2');return 'Ngươi mang tới một vò rượu gạo. Mắt lão sáng lên.'}},
-    {t:'Cúi chào rồi đi',eff:()=>'Lão chẳng buồn nhìn theo.'},
-  ]},
-k_hd_gialaosay2:{chain:1,loc:'hocduong',title:'Gia lão say rượu',
-  text:()=>'"Ngươi là đứa Bính đẳng hả?" Lão cười khà khà. "Tư chất kém thì phải biết tiết kiệm. Nguyệt Nhận không cần bắn mạnh, chỉ cần bắn đúng lúc địch vừa thở ra." Lão đập bàn: "Nhưng đời này ai còn nghe ta nói!"',
-  choices:[
-    {t:'Hỏi lão cách canh nhịp thở',check:['ngo',11],ok:()=>{S.prog+=35;S.ngo++;rel('toctruong',2);return 'Lão giảng say sưa tới nửa đêm. Nhiều chỗ còn tinh tế hơn trí nhớ của ngươi. Tu vi +35, ngộ tính +1.'},fail:()=>{S.prog+=15;return 'Lão lạc đề sang chuyện tình năm xưa, rồi ngủ gục. Tu vi +15.'}},
-    {t:'Dò hỏi chuyện nội bộ gia lão đoàn',check:['tamco',12],ok:()=>{S.tamco++;return 'Lão lè nhè kể phe Xích và phe Mạc đang ngấm ngầm tranh ghế trưởng lão. Tâm cơ +1.'},fail:()=>{S.danh-=2;return 'Lão chợt tỉnh rượu, nhìn ngươi đầy nghi ngờ. Danh vọng −2.'}},
-  ]},
+  who:'gialao',
+  scene:{
+    start:'hien',budget:2,
+    nodes:{
+      hien:{
+        talk:[
+          ['gialao','Tụi nhỏ bây giờ... chỉ biết bắn Nguyệt Nhận cho thẳng. Hồi ta còn trẻ...'],
+          ['','Lão lắc đầu quầy quậy, vò rượu đã cạn quá nửa, tỏa ra mùi men nồng nặc dưới bóng hiên giảng đường.']
+        ],
+        choices:[
+          {t:'Lắng nghe lão lẩm bẩm',stay:1,flag:'nghe_say',say:'Lão lè nhè về thời kỳ lang triều mấy chục năm trước, bàn tay đầy vết sẹo rung lên bần bật.'},
+          {t:'Rót thêm rượu, ngồi nghe lão kể',req:()=>S.stones>=5,reqT:'Cần 5 nguyên thạch mua rượu',eff:()=>{S.stones-=5;return 'Ngươi mang tới một vò rượu gạo. Mắt lão sáng rực lên.';},go:'uong_ruou'},
+          {t:'Cúi chào rồi đi',go:'ve'}
+        ]
+      },
+      uong_ruou:{
+        talk:[
+          ['gialao','Ngươi là đứa Bính đẳng Phương Nguyên hả? Khà khà, tư chất kém thì phải biết tiết kiệm chân nguyên!'],
+          ['gialao','Nguyệt Nhận không cần bắn mạnh, chỉ cần bắn đúng lúc địch vừa thở ra. Đời này chẳng đứa nào chịu nghe ta nói!']
+        ],
+        choices:[
+          {t:'Hỏi lão cách canh nhịp thở',check:['ngo',11],
+            ok:()=>{S.prog+=35;S.ngo++;rel('toctruong',2);return 'Lão giảng say sưa tới nửa đêm. Nhiều chỗ còn tinh tế hơn trí nhớ của ngươi. Tu vi +35, ngộ tính +1.'},
+            fail:()=>{S.prog+=15;return 'Lão lạc đề sang chuyện tình năm xưa, rồi ngủ gục. Tu vi +15.'},
+            go:'xong'},
+          {t:'Dò hỏi chuyện nội bộ gia lão đoàn',check:['tamco',12],
+            ok:()=>{S.tamco++;return 'Lão lè nhè kể phe Xích và phe Mạc đang ngấm ngầm tranh ghế trưởng lão. Tâm cơ +1.'},
+            fail:()=>{S.danh-=2;return 'Lão chợt tỉnh rượu, nhìn ngươi đầy nghi ngờ. Danh vọng −2.'},
+            go:'xong'}
+        ]
+      },
+      xong:{
+        talk:[
+          ['gialao','Uống... uống tiếp... mai còn lên lớp...'],
+          ['','Lão già gục xuống bàn đá ngáy khò khò. Ngươi thu dọn rồi rời khỏi học đường.']
+        ]
+      },
+      ve:{
+        talk:[
+          ['','Gia lão say khướt chẳng buồn ngẩng đầu nhìn theo, tiếp tục ngửa cổ dốc vò rượu cạn.']
+        ]
+      }
+    }
+  }},
 k_hd_detthi:{loc:'hocduong',w:1,once:1,cond:()=>S.turn>=3&&S.turn<6,title:'Tờ giấy rơi',
   text:()=>'Trên lối đi sau giảng đường có một tờ giấy bị gió thổi tới chân ngươi. Nét chữ của gia lão: danh sách đề mục cho kỳ khảo hạch sắp tới.',
   choices:[
@@ -679,17 +712,45 @@ k_nui_mach:{loc:'nui',w:1,title:'Mạch nguyên thạch lộ thiên',
     {t:'Đánh dấu, báo cho nhiệm vụ đường',tag:'chinh',eff:()=>{S.danh+=6;S.stones+=6;return 'Gia tộc thưởng công phát hiện mạch đá. Danh vọng +6, +6 nguyên thạch.'}},
   ]},
 k_nui_ansi:{loc:'nui',w:1,once:1,cond:()=>S.turn>=6,title:'Nhà tranh trong mây',
-  text:()=>'Lưng chừng núi có một túp lều tranh. Một ông lão tóc bạc ngồi đánh cờ một mình. Không khí quanh lều yên tĩnh đến lạ, cổ trùng trong không khiếu của ngươi cũng nằm im.',
-  choices:[
-    {t:'Ngồi xuống xem cờ',eff:()=>{thenEv('k_nui_ansi2');return 'Ông lão không ngẩng lên. "Ngồi đi."'}},
-    {t:'Lặng lẽ rời đi',eff:()=>'Ngươi có cảm giác đã bỏ lỡ gì đó.'},
-  ]},
-k_nui_ansi2:{chain:1,loc:'nui',title:'Nhà tranh trong mây',
-  text:()=>'"Quân đen bị vây, còn một nước sống," ông lão nói. "Người trẻ tuổi, nếu là ngươi, ngươi bỏ quân nào?"',
-  choices:[
-    {t:'"Bỏ con cờ đang được bảo vệ nhiều nhất."',check:['ngo',13],ok:()=>{gainGu(pick(['uguang','liemtuc']));S.ngo++;return 'Ông lão bật cười, đẩy về phía ngươi một chiếc hộp gỗ. "Ma đạo mà hiểu cờ." Trong hộp là một con cổ. Ngộ tính +1.'},fail:()=>{S.prog+=15;return '"Không sai, nhưng chưa đủ." Lão tiễn khách. Tu vi +15.'}},
-    {t:'"Không bỏ quân nào. Lật bàn."',tag:'ma',eff:()=>{S.tamco++;S.dao=clamp(S.dao+4,-100,100);return 'Ông lão nhìn ngươi rất lâu. "Năm trăm năm sau, ngươi cũng sẽ nói vậy." Khi ngươi chớp mắt, túp lều đã biến mất. Tâm cơ +1.'}},
-  ]},
+  scene:{
+    start:'leu',budget:2,
+    nodes:{
+      leu:{
+        talk:[
+          ['','Lưng chừng núi có một túp lều tranh mộc mạc ẩn trong màn sương mù.'],
+          ['','Một ông lão tóc bạc ngồi đánh cờ một mình. Quanh lều yên tĩnh đến lạ, cổ trùng trong không khiếu của ngươi cũng ngoan ngoãn nằm im.']
+        ],
+        choices:[
+          {t:'Đứng xa quan sát bàn cờ đá',stay:1,flag:'soi_co',say:'Thế cờ tàn khốc liệt, quân đen như rồng bị vây tứ phía, sát khí ẩn giấu tầng tầng.'},
+          {t:'Bước tới ngồi xuống xem cờ',go:'xem_co'},
+          {t:'Lặng lẽ quay lưng rời đi',go:'ve'}
+        ]
+      },
+      xem_co:{
+        talk:[
+          ['','Ông lão không ngẩng đầu lên, ngón tay gầy guộc khẽ gõ lên mặt bàn cờ đá.'],
+          ['','"Quân đen bị vây, chỉ còn một nước sống," ông lão cất giọng trầm đục. "Người trẻ tuổi, nếu là ngươi, ngươi bỏ quân nào?"']
+        ],
+        choices:[
+          {t:'"Bỏ con cờ đang được bảo vệ nhiều nhất."',check:['ngo',13],
+            ok:()=>{gainGu(pick(['uguang','liemtuc']));S.ngo++;return 'Ông lão bật cười sảng khoái, đẩy về phía ngươi chiếc hộp gỗ. "Ma đạo mà hiểu cờ." Trong hộp là một con cổ trùng. Ngộ tính +1.';},
+            fail:()=>{S.prog+=15;return '"Không sai, nhưng lòng tham chưa dứt." Lão phất tay tiễn khách. Tu vi +15.';},
+            go:'ket_co'},
+          {t:'"Không bỏ quân nào. Lật bàn."',tag:'ma',eff:()=>{S.tamco++;S.dao=clamp(S.dao+4,-100,100);return 'Ông lão nhìn ngươi rất lâu. "Năm trăm năm sau, ngươi cũng sẽ nói vậy." Khi ngươi chớp mắt, túp lều đã biến mất như sương khói. Tâm cơ +1.';},go:'ket_co'}
+        ]
+      },
+      ket_co:{
+        talk:[
+          ['','Gió núi Thanh Mao thổi qua ngọn trúc, trước mắt ngươi chỉ còn lại phiến đá phủ rêu xanh.']
+        ]
+      },
+      ve:{
+        talk:[
+          ['','Ngươi quay bước xuống núi, trong lòng thoảng qua cảm giác đã bỏ lỡ một cơ duyên.']
+        ]
+      }
+    }
+  }},
 k_nui_vaysuoi:{loc:'nui',w:1,cond:()=>S.turn>=10&&!hasGu('anlan'),title:'Vảy cá dưới khe',
   text:()=>'Dưới khe suối trong vắt có thứ gì đó lấp lánh như vảy cá, nhưng nhìn kỹ lại chẳng thấy gì. Ẩn Lân Cổ: loại cổ ẩn thân hiếm gặp.',
   choices:[

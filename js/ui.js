@@ -20,7 +20,7 @@ const GU_META={
 const NPC_IMG={
   toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
   phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_giave',nhatdai:'n_nhatdai',
-  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.q >= 2) ? 'n_bai_nu' : 'n_bai')
+  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai')
 };
 const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',
@@ -221,6 +221,76 @@ function choiceBtn(c,i,evId){
   return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${!ok&&c.reqT?`<small>${c.reqT}</small>`:''}</span></button>`;
 }
 
+function scChoiceBtn(c, i, sc){
+  let tags = '';
+  if(c.tag === 'ma') tags += `<span class="tag ma">Ma</span>`;
+  if(c.tag === 'chinh') tags += `<span class="tag chinh">Chính</span>`;
+  if(c.canon) tags += `<span class="tag canon">Nguyên tác</span>`;
+  if(c.mem) tags += `<span class="tag mem">Ký ức</span>`;
+  if(c.hidden) tags += `<span class="tag mem">Tâm cơ</span>`;
+  if(c.stay) tags += `<span class="tag stay">Dò xét</span>`;
+
+  let ok = true;
+  let chk = '';
+  if(c.req && !c.req()) ok = false;
+  if(c.stay && sc.budget <= 0) ok = false;
+  if(c.check){
+    const bonus = c.bonus ? c.bonus() : 0;
+    const rate = Math.round(chance(c.check[0], c.check[1], bonus) * 100);
+    chk = `<span class="pill ${rate >= 70 ? 'good' : rate >= 40 ? 'gold' : 'danger'}">${c.check[0].toUpperCase()} ${rate}%</span>`;
+  }
+  return `<button class="choice ${c.stay ? 'stay' : ''}" data-sc-ch="${i}" ${ok ? '' : 'disabled'}>
+    <span class="ct">${esc(c.t)}</span>
+    <span class="cmeta">${chk}${tags}${!ok && c.reqT ? `<small>${c.reqT}</small>` : ''}</span>
+  </button>`;
+}
+
+function renderScene(st, id, ev){
+  const sc = initScene(id);
+  const node = scCurrentNode(ev) || {};
+  const diso = ev.loc === 'diso';
+  const talk = sc.subTalk || node.talk || [];
+  const activeIdx = sc.subTalk ? (sc.subIdx || 0) : (sc.talkIdx || 0);
+  const isDoneTalk = activeIdx >= talk.length;
+
+  const currLine = talk[Math.min(activeIdx, Math.max(0, talk.length - 1))] || ['', ''];
+  const speakerKey = currLine[0] || (node.who || ev.who);
+  const tenseCls = sc.tense >= 3 ? 'tense-3' : sc.tense === 2 ? 'tense-2' : sc.tense === 1 ? 'tense-1' : '';
+
+  const historyLines = talk.slice(0, Math.min(activeIdx + 1, talk.length)).map(([spk, line]) => {
+    const spkName = spk && NPC[spk] ? NPC[spk].n : '';
+    return `<div class="talk-line ${spk ? 'has-spk' : 'narr'}">${spkName ? `<b class="talk-spk">${esc(spkName)}:</b> ` : ''}<span>${esc(line)}</span></div>`;
+  }).join('');
+
+  const chs = scChoices(ev);
+  const chsHtml = isDoneTalk ? (
+    chs.length ? chs.map((c, i) => scChoiceBtn(c, i, sc)).join('') :
+    `<button class="btn big active" data-sc-finish="1">Tiếp tục</button>`
+  ) : '';
+
+  st.innerHTML = `<article class="story scene ${ev.canon ? 'canon' : ''} ${diso ? 'diso' : ''} ${tenseCls}">
+    <div class="story-art" style="background-image:url('${eventArt(id)}')">
+      ${speakerHTML(speakerKey)}
+      <div class="story-cap">
+        <span class="label">${ev.canon ? 'Mốc nguyên tác' : diso ? 'Dị số' : 'Kỳ ngộ'} · ${timeLabel()} ${sc.budget !== undefined ? `· Dò xét: ${sc.budget}` : ''}</span>
+        <h2>${ev.title}</h2>
+      </div>
+    </div>
+    <div class="story-body">
+      <div class="talk-box" data-sc-next="1" title="Bấm để tiếp tục thoại">
+        ${historyLines}
+        ${!isDoneTalk ? `<div class="talk-prompt"><small class="dimt">Nhấn chuột hoặc phím Cách để tiếp tục thoại ▾</small></div>` : ''}
+      </div>
+      <div class="scene-actions">
+        ${!isDoneTalk ? `<button class="btn ghost small" data-sc-skip="1">Bỏ qua thoại ⏭️</button>` : ''}
+      </div>
+      <div class="choices ${isDoneTalk ? '' : 'await'}">
+        ${chsHtml}
+      </div>
+    </div>
+  </article>`;
+}
+
 function renderStage(){
   const st=$('stage');
   if(S.over==='win'&&S.book===2){st.innerHTML=q2WinHTML();return}
@@ -268,6 +338,10 @@ function renderStage(){
   if(S.mg){renderMG(st);return}
   if(S.evq.length){
     const id=S.evq[0],ev=EV[id];
+    if(ev&&ev.scene){
+      renderScene(st, id, ev);
+      return;
+    }
     const diso=ev.loc==='diso';
     st.innerHTML=`<article class="story ${ev.canon?'canon':''} ${diso?'diso':''}">
       <div class="story-art" style="background-image:url('${eventArt(id)}')">

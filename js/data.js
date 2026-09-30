@@ -143,6 +143,8 @@ const NPC={
   xichluyen:{n:'Cổ Nguyệt Xích Luyện',d:'Gia lão Xích gia, quyền cao chức trọng'},
   mactran:{n:'Cổ Nguyệt Mạc Trần',d:'Gia lão Mạc gia, tính khí nóng nảy'},
   xichthanh:{n:'Cổ Nguyệt Xích Thành',d:'Cháu Xích Luyện, tư chất giả mạo'},
+  gialao:{n:'Học đường gia lão',d:'Gia lão phụ trách học đường Cổ Nguyệt'},
+  nhatdai:{n:'Cổ Nguyệt Nhất Đại',d:'Thủy tổ khai sơn Cổ Nguyệt, Huyết Quỷ'},
 };
 
 // Ký ức mang qua các kiếp (nhận được khi đã trải qua sự kiện)

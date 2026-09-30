@@ -137,7 +137,7 @@ function newLife(){
   S={v:2,turn:0,chuyen:1,giai:0,prog:0,ess:25,hp:90,stones:20,blood:0,wine:0,herbs:1,
     tuchat:startTalent,tamco:8,satphat:3,ngo:6,dao:0,danh:10,susp:0,canonHit:0,canonMiss:0,
     gu:[{k:'xuanthu',h:0}],rel:{},met:{},f:{hs:0},shop:[],evq:[],combat:null,panel:null,
-    over:null,ending:null,ap:AP_WEEK,pend:null,refined:false,log:[],mod:{},inj:null,
+    over:null,ending:null,ap:AP_WEEK,pend:null,sc:null,refined:false,log:[],mod:{},inj:null,
     traitOpts:Object.keys(TRAITS).sort(()=>Math.random()-.5).slice(0,3),
     npcProg:{phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1},
     // Mốc nguyên tác: đúng ký ức trừ 1–2 mốc đã lệch (butterfly.js). Tuyến NPC vẫn rút ngẫu nhiên.
@@ -253,14 +253,177 @@ function endWeek(){
   ffRecord('skip',{});S.panel=null;S.ap=0;saveAll();advance();render();
 }
 
+/* ---------- máy cảnh hội thoại đa bước (Scene Engine) ---------- */
+function initScene(id){
+  const ev=EV[id];
+  if(!ev||!ev.scene)return null;
+  if(S.sc&&S.sc.id===id)return S.sc;
+  S.sc={
+    id,
+    node:ev.scene.start,
+    budget:ev.scene.budget!==undefined?ev.scene.budget:3,
+    tense:0,
+    flags:{},
+    talkIdx:0,
+    subTalk:null,
+    subIdx:0,
+    picked:{},
+    res:[]
+  };
+  return S.sc;
+}
+function scCurrentNode(ev){
+  if(!S.sc||!ev||!ev.scene||!ev.scene.nodes)return null;
+  return ev.scene.nodes[S.sc.node]||null;
+}
+function scChoices(ev){
+  const node=scCurrentNode(ev);
+  if(!node||!node.choices)return [];
+  const list=typeof node.choices==='function'?node.choices():node.choices;
+  return list.filter((c,i)=>{
+    if(c.hidden&&(!S.sc.flags||!S.sc.flags[c.hidden]))return false;
+    if(c.stay&&S.sc.picked&&S.sc.picked[S.sc.node+':'+i])return false;
+    if(c.mem&&!mem(c.mem))return false;
+    return true;
+  });
+}
+function scNextTalk(){
+  if(!S.sc)return;
+  const ev=EV[S.sc.id];if(!ev||!ev.scene)return;
+  const node=scCurrentNode(ev);if(!node)return;
+  if(S.sc.subTalk){
+    if(S.sc.subIdx<S.sc.subTalk.length-1){
+      S.sc.subIdx++;
+    }else{
+      S.sc.subTalk=null;S.sc.subIdx=0;
+    }
+    saveAll();render();return;
+  }
+  const talk=node.talk||[];
+  if(S.sc.talkIdx<talk.length){
+    S.sc.talkIdx++;
+  }
+  saveAll();render();
+}
+function scSkipTalk(){
+  if(!S.sc)return;
+  const ev=EV[S.sc.id];if(!ev||!ev.scene)return;
+  const node=scCurrentNode(ev);if(!node)return;
+  S.sc.subTalk=null;
+  S.sc.talkIdx=(node.talk||[]).length;
+  saveAll();render();
+}
+function scChoose(i){
+  if(S.traitOpts||!S.sc)return;
+  const id=S.sc.id,ev=EV[id];if(!ev||!ev.scene)return;
+  const node=scCurrentNode(ev);if(!node)return;
+  const chs=scChoices(ev);
+  if(!chs.length){scFinish();return}
+  const c=chs[i];
+  if(!c||(c.req&&!c.req()))return;
+
+  if(c.stay){
+    if(S.sc.budget<=0)return;
+    S.sc.budget--;
+    (S.sc.picked=S.sc.picked||{})[S.sc.node+':'+i]=1;
+    if(c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
+    if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
+    if(c.drift)driftAdd(c.drift);
+    log(`【${ev.title}】 ${c.t}.`,'choice');
+    if(c.check){
+      const r=roll(c.check[0],c.check[1],c.bonus?c.bonus():0);
+      log(r.text,'roll');
+      const txt=r.ok?(c.ok?c.ok():''):(c.fail?c.fail():'');
+      if(txt)log(txt);
+      if(r.ok&&c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
+    }else{
+      if(c.say)log(c.say);
+      if(c.eff){const txt=c.eff();if(txt)log(txt)}
+    }
+    if(c.talk){
+      S.sc.subTalk=c.talk;
+      S.sc.subIdx=0;
+    }
+    saveAll();render();
+    return;
+  }
+
+  log(`【${ev.title}】 ${c.t}.`,'choice');
+  if(c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
+  if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
+  if(c.tag==='ma')S.dao=clamp(S.dao+(c.dao||8),-100,100);
+  if(c.tag==='chinh')S.dao=clamp(S.dao-(c.dao||8),-100,100);
+  if(c.drift)driftAdd(c.drift);
+  if(c.canon)S.canonHit=(S.canonHit||0)+1;
+
+  let nextTarget=c.go;
+  if(c.check){
+    const r=roll(c.check[0],c.check[1],c.bonus?c.bonus():0);
+    log(r.text,'roll');
+    if(r.ok){
+      if(c.ok){const txt=c.ok();if(txt)log(txt)}
+      if(c.okGo)nextTarget=c.okGo;
+    }else{
+      if(c.fail){const txt=c.fail();if(txt)log(txt)}
+      if(c.failGo)nextTarget=c.failGo;
+    }
+  }else if(c.eff){
+    const txt=c.eff();if(txt)log(txt);
+  }
+
+  if(nextTarget&&ev.scene.nodes[nextTarget]){
+    S.sc.node=nextTarget;
+    S.sc.talkIdx=0;
+    S.sc.subTalk=null;
+    const nextNode=ev.scene.nodes[nextTarget];
+    if(nextNode&&nextNode.fight){
+      const f=nextNode.fight;
+      saveAll();
+      fight(f.foe,{
+        sceneWin:f.win,
+        sceneFlee:f.flee
+      });
+      render();
+      return;
+    }
+    saveAll();render();
+  }else{
+    scFinish();
+  }
+}
+function scFinish(){
+  if(!S.sc)return;
+  const id=S.sc.id,ev=EV[id];
+  const node=ev&&ev.scene&&ev.scene.nodes?ev.scene.nodes[S.sc.node]:null;
+  if(node&&node.eff){
+    const txt=node.eff();
+    if(txt)log(txt);
+  }
+  if(ev&&ev.post)ev.post();
+  S.evq.shift();
+  S.sc=null;
+  S.sceneN=(S.sceneN||0)+1;
+  S.stones=Math.max(0,S.stones);
+  if(S.hp<=0&&!S.combat){die(`${ev?ev.title:'Số mệnh'}`);return}
+  saveAll();advance();render();
+}
+
 /* ---------- sự kiện ---------- */
-function choicesOf(ev){let c=typeof ev.choices==='function'?ev.choices():ev.choices;c=typeof probeChoices==='function'?probeChoices(ev,c):c;
+function choicesOf(ev){
+  if(ev&&ev.scene){
+    initScene(S.evq[0]);
+    const chs=scChoices(ev);
+    if(!chs.length)return [{t:'Tiếp tục',go:null}];
+    return chs;
+  }
+  let c=typeof ev.choices==='function'?ev.choices():ev.choices;c=typeof probeChoices==='function'?probeChoices(ev,c):c;
   // Không lựa chọn nào làm được thì luôn có đường bỏ qua, tránh kẹt
   if(c.length&&c.every(x=>x.stay||(x.req&&!x.req())))c=[...c,{t:'Không làm được gì, đành bỏ qua',eff:()=>'Ngươi đành để cơ hội trôi qua.'}];
   return c}
 function choose(i){
   if(S.traitOpts)return;
   const id=S.evq[0],ev=EV[id];if(!ev)return;
+  if(ev.scene)return scChoose(i);
   (META.seen=META.seen||{})[id]=1;
   const chs=choicesOf(ev),c=chs[i];
   if(!c||(c.req&&!c.req()))return;
@@ -525,7 +688,7 @@ function fight(k,o){
     atk:[Math.round(e.atk[0]*f*DIFF.atk),Math.round(e.atk[1]*f*DIFF.atk)],
     def:Math.round((ai.def||0)*Math.sqrt(sc)*(elite?1.3:1)),sk:ai.sk||null,boss:!!ai.boss,tr:foeTraits(k),
     st:[Math.round(e.st[0]*sc*(elite?1.6:1)),Math.round(e.st[1]*sc*(elite?1.6:1))],
-    bl:e.bl+(elite?2:0),drop:(e.drop||0)+(elite?.3:0),after:o.after||null,spare:o.spare||0,spareT:o.spareT||'',spareAfter:o.spareAfter||null,flee:o.flee!==false&&(!ai.noflee||!!o.canFlee),
+    bl:e.bl+(elite?2:0),drop:(e.drop||0)+(elite?.3:0),after:o.after||null,sceneWin:o.sceneWin||null,sceneFlee:o.sceneFlee||null,spare:o.spare||0,spareT:o.spareT||'',spareAfter:o.spareAfter||null,flee:o.flee!==false&&(!ai.noflee||!!o.canFlee),
     shield:0,shieldRed:.4,bleed:0,stun:0,reflect:0,poison:0,suppress:0,atkBuff:0,turn:0,cd:{},frozen:{},phase2:false,intent:'atk'};
   S.panel=null;
   nextIntent();
@@ -698,6 +861,12 @@ function playerAct(type,arg){
     if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0)){
       log('Ngươi rút vào rừng trúc, cắt đuôi được đối thủ.','sys');
       FX.toastMsg={g:'走',t:'Thoát khỏi '+c.n,cls:'run'};
+      if(S.sc&&c.sceneFlee){
+        const scEv=EV[S.sc.id];
+        if(scEv&&scEv.scene&&scEv.scene.nodes&&scEv.scene.nodes[c.sceneFlee]){
+          S.sc.node=c.sceneFlee;S.sc.talkIdx=0;S.sc.subTalk=null;
+        }
+      }
       S.combat=null;checkInjury();saveAll();advance();render();return;
     }
     log('Chạy trốn thất bại!','danger');
@@ -760,6 +929,12 @@ function win(){
   // Cho đòn kết liễu diễn xong rồi mới rời đấu trường
   if(c&&!c.ko&&window.PIXI&&$('arena')&&!RM){c.ko=1;c.hp=Math.min(c.hp,0);FX.busy=true;FX.q({type:'ko'});saveAll();render();setTimeout(()=>{FX.busy=false;if(S.combat===c)win()},950);return}
   S.combat=null;
+  if(S.sc&&c.sceneWin){
+    const scEv=EV[S.sc.id];
+    if(scEv&&scEv.scene&&scEv.scene.nodes&&scEv.scene.nodes[c.sceneWin]){
+      S.sc.node=c.sceneWin;S.sc.talkIdx=0;S.sc.subTalk=null;
+    }
+  }
   const st=Math.round(rand(c.st[0],c.st[1])*((S.mod&&S.mod.win)||1)*(W('linhmach')?.8:1));
   const bl=c.bl+(S.f.hunter&&BEASTS.has(c.k)?1:0);
   S.stones+=st;S.blood+=bl;
@@ -889,6 +1064,10 @@ document.addEventListener('click',ev=>{
   }
   if(d.trait)return pickTrait(d.trait);
   if(d.ch!==undefined)return choose(+d.ch);
+  if(d.scCh!==undefined)return scChoose(+d.scCh);
+  if(d.scFinish!==undefined)return scFinish();
+  if(d.scNext!==undefined)return scNextTalk();
+  if(d.scSkip!==undefined)return scSkipTalk();
   if(d.f)return playerAct(d.f,+d.i);
   if(d.combo)return playerAct('combo',d.combo);
   if(d.gamble)return startStone(d.gamble);
@@ -898,6 +1077,24 @@ document.addEventListener('click',ev=>{
   if(d.item)return buyItem(d.item);
   if(d.refine!==undefined)return startRefine(+d.refine);
   if(d.use!==undefined)return useGu(+d.use);
+});
+document.addEventListener('click',ev=>{
+  const talkBox=ev.target.closest('[data-sc-next]');
+  if(talkBox&&!ev.target.closest('button'))scNextTalk();
+});
+document.addEventListener('keydown',ev=>{
+  if((ev.key===' '||ev.key==='Enter')&&S&&S.sc&&!S.combat&&!S.over){
+    const scEv=EV[S.sc.id];
+    if(scEv&&scEv.scene){
+      const node=scCurrentNode(scEv);
+      const talk=S.sc.subTalk||(node?node.talk:[])||[];
+      const activeIdx=S.sc.subTalk?S.sc.subIdx:S.sc.talkIdx;
+      if(activeIdx<talk.length){
+        ev.preventDefault();
+        scNextTalk();
+      }
+    }
+  }
 });
 
 function start(data){

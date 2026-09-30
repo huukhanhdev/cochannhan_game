@@ -56,6 +56,12 @@ const RIGS={
       {n:'hair',parent:'head',pivot:[.50,.20],caps:[[.55,.35,.80,.55,.05,.06]]},
     ],
     eyes:[[.312,.241,0xbfe8ff,.08],[.375,.237,0xbfe8ff,.08]]},
+  p_bai_female:{kind:'human',
+    bones:[
+      {n:'head',pivot:[.50,.30],caps:[[.50,.24,.50,.12,.075,.05]]},
+      {n:'hair',parent:'head',pivot:[.50,.20],caps:[[.50,.35,.75,.55,.05,.06]]},
+    ],
+    eyes:[[.42,.241,0xbfe8ff,.08],[.58,.237,0xbfe8ff,.08]]},
   p_gialao:{kind:'human',
     bones:[{n:'head',pivot:[.51,.29],caps:[[.51,.21,.51,.06,.09,.05]]}],
     eyes:[[.475,.197,0xffe0a0,.08],[.55,.197,0xffe0a0,.08]]},

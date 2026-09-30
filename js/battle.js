@@ -56,9 +56,12 @@ const DISPLAY='"Cormorant Garamond", Georgia, serif';
 // Tranh thủy mặc (tạo bằng Canva AI) trong assets/art/
 const ART_DIR='assets/art/';
 const PORTRAIT={heorung:'p_boar',dienlang:'p_wolf',hachung:'p_bear',tanbinh:'p_cultivator',hoctro:'p_cultivator',macbac:'p_cultivator',
-  cosusay:'p_cultivator',hunggia:'p_cultivator',sontac:'p_cultivator',baitrinhsat:'p_cultivator',kimsinh:'p_cultivator',tuukhoi:'p_jar',
-  dlbay:'p_wolf',loiquan:'p_wolf',langvuong:'p_wolfking',gialao:'p_gialao',bai:'p_bai',huyetkhoi:'p_blood',baicosu:'p_cultivator',baitruonglao:'p_baitruonglao',madutam:'p_madutam',giave:'p_giave',tiexueleng:'p_giave',nhatdai:'p_blood',
-  docxa:'p_boar',bao:'p_wolf',hauquan:'p_jar',hunglam:'p_cultivator',sontacvuong:'p_cultivator',bachmaon:'p_bear',tramthuysat:'p_giave',phuongchinh:'p_cultivator',macnhan:'p_cultivator'};
+  dlbay:'p_wolf',loiquan:'p_wolf',langvuong:'p_wolfking',gialao:'p_gialao',
+  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'p_bai_female' : 'p_bai'),
+  huyetkhoi:'p_blood',baicosu:'p_cultivator',baitruonglao:'p_baitruonglao',madutam:'p_madutam',giave:'p_giave',tiexueleng:'p_giave',
+  nhatdai:'p_nhatdai',
+  docxa:'p_boar',bao:'p_wolf',hauquan:'p_jar',hunglam:'p_cultivator',sontacvuong:'p_cultivator',bachmaon:'p_bear',tramthuysat:'p_giave',
+  phuongchinh:'p_phuongchinh',thanhthu:'p_thanhthu',nhuocnam:'p_thietnhuocnam',macnhan:'p_cultivator'};
 const PTINT={docxa:0xa8f0a0,bao:0xffd890,bachmaon:0xf4fbff,hunglam:0xeed0b0,phuongchinh:0xcfe8ff,tramthuysat:0xffb0b0,tiexueleng:0xd8dde2,nhatdai:0xff8a70,loiquan:0xcfe2ff,dlbay:0xdde6ee,kimsinh:0xf2e0b4,hunggia:0xeed0b0,baitrinhsat:0xe4edf4,baicosu:0xe4edf4,cosusay:0xf0dcc0,madutam:0xffc2b4};
 const BGIMG={forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_wine',blood:'bg_blood',snow:'bg_snow',fire:'bg_fire'};
 // Tranh đầu thẻ sự kiện
@@ -235,7 +238,8 @@ const Arena=(function(){
     el.prepend(app.view);
     app.start();
     makeTextures();
-    const want=[loadTex('p_hero',true),loadTex(PORTRAIT[art.k]||'p_cultivator',true),loadTex(BGIMG[art.sc]||'bg_forest',false)];
+    const foeName = typeof PORTRAIT[art.k] === 'function' ? PORTRAIT[art.k]() : (PORTRAIT[art.k] || 'p_cultivator');
+    const want=[loadTex('p_hero',true),loadTex(foeName,true),loadTex(BGIMG[art.sc]||'bg_forest',false)];
     const [hero,foe,bg]=await Promise.race([Promise.all([fontsReady().then(()=>0),...want]).then(r=>r.slice(1)),new Promise(r=>setTimeout(()=>r([null,null,null]),5000))]);
     TX={hero,foe,bg};
     if(host!==el||!el.isConnected)return;
@@ -322,7 +326,8 @@ const Arena=(function(){
     E.ring=brushRing(er,0xffffff);E.ring.tint=fc;E.ring.alpha=.8;
     if(TX.foe){
       const k=(H*.92)/TX.foe.height*(art.k==='langvuong'||art.k==='hachung'?1.08:1);
-      E.lv=makeLiving(TX.foe,PORTRAIT[art.k]||'p_cultivator',k);E.t=E.lv.c;E.lv.plane.tint=PTINT[art.k]||0xffffff;
+      const foeName = typeof PORTRAIT[art.k] === 'function' ? PORTRAIT[art.k]() : (PORTRAIT[art.k] || 'p_cultivator');
+      E.lv=makeLiving(TX.foe,foeName,k);E.t=E.lv.c;E.lv.plane.tint=PTINT[art.k]||0xffffff;
       E.flash=E.lv.add;E.flash.alpha=0;
       E.by=H*.5;E.c.y=E.by;E.r=Math.min(H*.3,110);E.ring.alpha=.3;E.ring.scale.set(1.5);
       E.seal=brushText(art.g,34,fc,{dropShadowBlur:8});E.seal.anchor.set(.5);E.seal.position.set(-TX.foe.width*k*.34,-TX.foe.height*k*.36);E.seal.alpha=.9;

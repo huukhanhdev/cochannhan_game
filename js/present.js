@@ -9,7 +9,13 @@ const EV_WHO={c_khaikhieu:'phuongchinh',c_giasan:'caumo',c_tramthuy:'tramthuy',c
   r_pctienbo:'phuongchinh',r_phephai:'mactran',x_tramthuy:'tramthuy'};
 const WHO_PREFIX={npc_pc_:'phuongchinh',npc_tt_:'thanhthu',npc_bai_:'bai',npc_cm_:'caumo',npc_nn_:'nhuocnam',npc_hl_:'hunglam'};
 // Tranh chân dung ngoài assets/npc
-const WHO_ART={bai:'art/p_bai.jpg'};
+const WHO_ART={
+  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'art/p_bai_female.jpg' : 'art/p_bai.jpg'),
+  phuongchinh: 'art/p_phuongchinh.jpg',
+  thanhthu: 'art/p_thanhthu.jpg',
+  nhuocnam: 'art/p_thietnhuocnam.jpg',
+  nhatdai: 'art/p_nhatdai.jpg'
+};
 function evSpeaker(id){
   const ev=EV[id]||{};
   if(ev.who)return ev.who;
@@ -20,7 +26,9 @@ function evSpeaker(id){
 }
 function speakerHTML(k){
   if(!k||!NPC[k])return '';
-  const img=NPC_IMG[k]?asset('npc/'+NPC_IMG[k]+'.jpg'):WHO_ART[k]?asset(WHO_ART[k]):'';
+  const imgName = typeof NPC_IMG[k]==='function' ? NPC_IMG[k]() : NPC_IMG[k];
+  const whoArt = typeof WHO_ART[k]==='function' ? WHO_ART[k]() : WHO_ART[k];
+  const img = imgName ? asset('npc/'+imgName+'.jpg') : whoArt ? asset(whoArt) : '';
   const v=S.rel[k]||0,mood=v>=20?'warm':v<=-20?'cold':'';
   return `<div class="speaker ${mood}" aria-label="${esc(NPC[k].n)}">
     <span class="spk-ava${img?' img':''}"${img?` style="background-image:url('${img}')"`:''}>${img?'':(NPC_META[k]||'人')}</span>

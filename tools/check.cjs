@@ -32,10 +32,71 @@ for(const c of run('COMBOS'))for(const k of c.req)if(!GU[k])errs.push('sát chi�
 for(const [e,ks] of Object.entries(run('DROP_POOL')))for(const k of ks)if(!GU[k])errs.push(`địch ${e} rơi cổ không có: ${k}`);
 for(const k of [...run('SHOP'),...run('CARAVAN'),...run('WILD')])if(!GU[k])errs.push('chợ bán cổ không có: '+k);
 for(const k of Object.keys(EN))if(!run('ART')[k])warn.push('địch chưa có ART: '+k);
-// Cổ chỉ lấy được ở chợ, lò luyện, mổ đá
-const story=new Set([...src.matchAll(/gainGu\('([a-z0-9_]+)'/g)].map(m=>m[1]));
-const noStory=Object.keys(GU).filter(k=>!story.has(k)&&GU[k].t!=='fate');
+
+// Kiểm tra máy cảnh (scene)
+for(const [evId, ev] of Object.entries(EV)){
+  if(ev.scene){
+    const sc=ev.scene;
+    if(!sc.nodes) errs.push(`sự kiện ${evId}: scene thiếu nodes`);
+    else {
+      if(!sc.start || !sc.nodes[sc.start]) errs.push(`sự kiện ${evId}: scene.start không có: ${sc.start}`);
+      const reachable = new Set();
+      const q = [sc.start];
+      while(q.length){
+        const curr = q.shift();
+        if(!curr || reachable.has(curr)) continue;
+        reachable.add(curr);
+        const node = sc.nodes[curr];
+        if(!node) continue;
+        if(node.choices){
+          for(const c of node.choices){
+            if(c.go){
+              if(!sc.nodes[c.go]) errs.push(`sự kiện ${evId}, nút ${curr}: go trỏ tới nút không có: ${c.go}`);
+              else if(!reachable.has(c.go)) q.push(c.go);
+            }
+            if(c.mem && !MEM[c.mem]) errs.push(`sự kiện ${evId}, nút ${curr}: mem trỏ tới ký ức không có: ${c.mem}`);
+            if(c.rel && (!NPC[c.rel[0]])) errs.push(`sự kiện ${evId}, nút ${curr}: rel trỏ tới NPC không có: ${c.rel[0]}`);
+          }
+        }
+        if(node.fight){
+          const f = node.fight;
+          if(!EN[f.foe]) errs.push(`sự kiện ${evId}, nút ${curr}: fight.foe không có: ${f.foe}`);
+          if(!sc.nodes[f.win]) errs.push(`sự kiện ${evId}, nút ${curr}: fight.win trỏ tới nút không có: ${f.win}`);
+          else if(!reachable.has(f.win)) q.push(f.win);
+          if(f.flee){
+            if(!sc.nodes[f.flee]) errs.push(`sự kiện ${evId}, nút ${curr}: fight.flee trỏ tới nút không có: ${f.flee}`);
+            else if(!reachable.has(f.flee)) q.push(f.flee);
+          }
+        }
+      }
+      for(const k of Object.keys(sc.nodes)){
+        if(!reachable.has(k)) warn.push(`sự kiện ${evId}: nút mồ côi (không đi tới được): ${k}`);
+      }
+    }
+  }
+}
+
+// Nguồn cổ trùng: tính từ sự kiện, công thức luyện, chợ, dã ngoại, rơi từ quái, Quyển 2
+const story=new Set([
+  ...src.matchAll(/gainGu\('([a-z0-9_]+)'/g),
+  ...src.matchAll(/pick\(\[([^\]]+)\]\)/g)
+].flatMap(m=>{
+  if(m[1].includes("'")) return [...m[1].matchAll(/'([a-z0-9_]+)'/g)].map(x=>x[1]);
+  return [m[1]];
+}));
+for(const r of run('RECIPES')) story.add(r.id);
+for(const k of [...run('SHOP'),...run('CARAVAN'),...run('WILD')]) story.add(k);
+for(const ks of Object.values(run('DROP_POOL'))) for(const k of ks) story.add(k);
+for(const ch of Object.values(run('CHAPTERS'))){
+  for(const g of ch.shop||[]) story.add(g);
+  for(const g of ch.rewards||[]) story.add(g);
+}
+// Các cổ để dành cho giai đoạn sau hoặc định mệnh
+for(const [k,g] of Object.entries(GU)){
+  if(g.later || g.t==='fate' || k==='nole') story.add(k);
+}
+const noStory=Object.keys(GU).filter(k=>!story.has(k));
 console.log(errs.length?errs.join('\n'):'Dữ liệu: không có lỗi.');
 if(warn.length)console.log('Cảnh báo:\n'+warn.join('\n'));
-console.log(`Cổ chưa gắn sự kiện cốt truyện (${noStory.length}): ${noStory.join(', ')}`);
+if(noStory.length)console.log(`Cổ chưa gắn sự kiện cốt truyện (${noStory.length}): ${noStory.join(', ')}`);
 process.exit(errs.length?1:0);

@@ -30,9 +30,14 @@ function varShifted(k){return !!(S.var&&VARIANTS[k]&&S.var[k]!==VARIANTS[k].def)
 function driftTier(){const d=S.drift||0;return d<25?0:d<60?1:2}
 const DRIFT_LABEL=['Ký ức khớp','Có chỗ lạ','Tương lai mờ mịt'];
 
-function driftAdd(n,why){
+// passive: lệch không do người chơi chọn (quay ngược, hậu quả trễ, dư âm) chỉ đẩy tới PASSIVE_CAP
+const PASSIVE_CAP=50;
+function driftAdd(n,why,passive){
   if(!S||!n)return;
-  const was=S.drift||0;S.drift=clamp(was+n,0,100);
+  const was=S.drift||0;
+  if(passive&&n>0)n=Math.min(n,Math.max(0,PASSIVE_CAP-was));
+  if(!n)return;
+  S.drift=clamp(was+n,0,100);
   S.driftStep=S.driftStep||0;
   while(S.driftStep<DRIFT_STEPS.length&&S.drift>=DRIFT_STEPS[S.driftStep]){
     S.driftStep++;
@@ -72,7 +77,7 @@ function laterTick(){
   if(!S.later||!S.later.length)return;
   const due=S.later.filter(x=>x.t<=S.turn);
   S.later=S.later.filter(x=>x.t>S.turn);
-  for(const x of due)if(EV[x.id]&&condOk(x.cond)&&(!EV[x.id].cond||EV[x.id].cond())){S.evq.push(x.id);driftAdd(2)}
+  for(const x of due)if(EV[x.id]&&condOk(x.cond)&&(!EV[x.id].cond||EV[x.id].cond())){S.evq.push(x.id);driftAdd(2,'',1)}
 }
 
 /* ---------- PR 3: dị số ---------- */
@@ -88,7 +93,7 @@ const ECHO_FLAGS=['killedJKS','qingshuAlive','qingshuDead','pcAlly','pcHate','ba
 function echoSave(){META.lastEchoes=ECHO_FLAGS.filter(k=>S.f[k])}
 function echoApply(){
   const n=(META.lastEchoes||[]).filter(()=>Math.random()<.2).length;
-  if(n){driftAdd(5*n);log('Có điều gì đó khác ký ức của ngươi. Những việc làm ở kiếp trước vẫn để lại gợn sóng.','mem')}
+  if(n){driftAdd(5*n,'',1);log('Có điều gì đó khác ký ức của ngươi. Những việc làm ở kiếp trước vẫn để lại gợn sóng.','mem')}
 }
 
 /* ---------- nối vào dữ liệu có sẵn ---------- */
@@ -103,4 +108,31 @@ function driftChip(){
   const t=driftTier();
   const tip=['Thế giới vẫn như ký ức kiếp trước. Lựa chọn ký ức đáng tin.','Có vài chỗ đã khác ký ức. Lựa chọn ký ức có thể phản tác dụng.','Thế giới đã lệch xa khỏi ký ức. Dị số xuất hiện, ký ức khó tin.'][t];
   return `<span class="drift-chip t${t}" title="${tip}"><i>憶</i>${DRIFT_LABEL[t]}</span>`;
+}
+
+/* ---------- Phần 0 (KE_HOACH_Q2): ký ức sai có dấu hiệu, và có thể dò trước ---------- */
+// Ký ức nào dẫn tới mốc nào
+const VAR_MEM={giasan:'giasan',gate:'gate',kimsinh:'jks',baigia:'baigia',bai:'bai',lang:'langtrieu',huyethai:'huyethai'};
+// Câu dẫn lạ khi mốc đã khác ký ức: người tinh ý còn kịp đổi ý
+const VAR_OMEN={
+  giasan:'Nhà cậu hôm nay đông khách lạ, trà trên bàn là loại đắt tiền.',
+  gate:'Đám học trò hôm nay túm tụm lại, không ai đi lẻ như ngươi nhớ.',
+  kimsinh:'Bờ sông yên tĩnh hơn ngươi nhớ. Yên tĩnh quá.',
+  baigia:'Khe suối không còn dấu chân mới. Người ta không đi lối này nữa.',
+  bai:'Hàn khí đến trước cả bóng người, lạnh hơn lần ngươi nhớ.',
+  lang:'Gió đêm đổi chiều. Mùi sói không tới từ phía bắc.',
+  huyethai:'Huyết văn trên cửa đá còn ướt, như vừa có ai chạm vào.',
+};
+function varOfEv(id){return Object.keys(VARIANTS).find(k=>VARIANTS[k].ev===id)}
+// Thêm vào lời dẫn của mốc
+function varOmen(id){const k=varOfEv(id);return k&&mem(VAR_MEM[k])&&varShifted(k)&&!(S.picked||{})[id+':probe']?' '+VAR_OMEN[k]:''}
+// Lựa chọn phụ "dò xét": tốn nguyên thạch mua tin, cho biết mốc còn như ký ức không
+const PROBE_COST=6;
+function probeChoices(ev,chs){
+  const id=Object.keys(EV).find(k=>EV[k]===ev),k=id&&varOfEv(id);
+  if(!k||!mem(VAR_MEM[k])||(S.picked||{})[id+':probe']||!chs.some(c=>c.mem))return chs;
+  return [{t:`Dò xét trước khi làm (${PROBE_COST} nguyên thạch)`,stay:'probe',req:()=>S.stones>=PROBE_COST,reqT:`Cần ${PROBE_COST} nguyên thạch`,
+    eff:()=>{S.stones-=PROBE_COST;
+      if(varShifted(k)){learn(VAR_MEM[k]);return `Ngươi bỏ thạch mua tin. Kết quả làm ngươi lạnh gáy: ${VARIANTS[k].n} kiếp này đã khác ký ức. Đừng làm theo ký ức.`}
+      return `Ngươi bỏ thạch mua tin. ${VARIANTS[k].n[0].toUpperCase()+VARIANTS[k].n.slice(1)} vẫn y như ký ức.`}},...chs];
 }

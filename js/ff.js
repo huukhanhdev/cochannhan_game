@@ -15,7 +15,7 @@ function ffMinor(id){const e=EV[id];return !!(e&&e.loc&&e.loc!=='diso'&&!e.canon
 // Chọn phương án an toàn: không cần điều kiện thì ưu tiên, có tung xúc xắc thì chọn tỉ lệ cao nhất
 function ffSafeChoice(chs){
   let best=-1,bs=-1;
-  chs.forEach((c,i)=>{if(c.req&&!c.req())return;const sc=c.check?chance(c.check[0],c.check[1],c.bonus?c.bonus():0):70;if(sc>bs){bs=sc;best=i}});
+  chs.forEach((c,i)=>{if(c.stay||(c.req&&!c.req()))return;const sc=c.check?chance(c.check[0],c.check[1],c.bonus?c.bonus():0):70;if(sc>bs){bs=sc;best=i}});
   return best;
 }
 

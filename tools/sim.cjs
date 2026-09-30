@@ -31,7 +31,7 @@ function botEvent(){
   const ok=chs.map((c,i)=>({c,i})).filter(x=>!x.c.req||x.c.req());
   // Ưu tiên lựa chọn có tỉ lệ cao; đôi khi theo nguyên tác
   // LECH=1: người chơi cố tình đi khác nguyên tác
-  const sc=x=>(x.c.check?chance(x.c.check[0],x.c.check[1],x.c.bonus?x.c.bonus():0):70)+(x.c.canon?(globalThis.__lech&&ev.canon?-40:15):0)+(globalThis.__lech&&x.c.drift?30:0)+Math.random()*25;
+  const sc=x=>(x.c.check?chance(x.c.check[0],x.c.check[1],x.c.bonus?x.c.bonus():0):70)+(x.c.canon?(globalThis.__lech&&ev.canon?-40:15):0)+(globalThis.__lech&&x.c.drift?30:0)+(x.c.mem&&(S.picked||{})[S.evq[0]+':probe']&&varShifted(varOfEv(S.evq[0]))?-80:0)+Math.random()*25;
   ok.sort((a,b)=>sc(b)-sc(a));
   choose(ok[0].i);
 }

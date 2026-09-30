@@ -339,7 +339,7 @@ function viewKey(){
   if(S.combat)return 'combat:'+(S.combat.id||S.combat.k);
   if(S.traitOpts)return 'trait';
   if(S.mg)return 'mg:'+S.mg.type;
-  if(S.evq.length)return 'ev:'+S.evq[0]+':'+S.turn+':'+S.log.length;
+  if(S.evq.length)return 'ev:'+S.evq[0]+':'+S.turn+':'+(S.sceneN||0);
   if(S.panel)return 'panel:'+S.panel;
   return 'map:'+S.turn;
 }

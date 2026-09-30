@@ -226,16 +226,18 @@ function advance(){
 }
 
 /* ---------- sự kiện ---------- */
-function choicesOf(ev){return typeof ev.choices==='function'?ev.choices():ev.choices}
+function choicesOf(ev){const c=typeof ev.choices==='function'?ev.choices():ev.choices;return typeof probeChoices==='function'?probeChoices(ev,c):c}
 function choose(i){
   if(S.traitOpts)return;
   const id=S.evq[0],ev=EV[id];if(!ev)return;
   (META.seen=META.seen||{})[id]=1;
   const chs=choicesOf(ev),c=chs[i];
   if(!c||(c.req&&!c.req()))return;
+  // Lựa chọn phụ (stay): cảnh vẫn mở, lựa chọn đó biến mất
+  if(c.stay){(S.picked=S.picked||{})[id+':'+c.stay]=1;log(`【${ev.title}】 ${c.t}.`,'choice');log(c.eff());saveAll();render();return}
   ffRememberChoice(id,c);
-  S.evq.shift();
-  if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else{S.canonMiss++;driftAdd(8)}}
+  S.evq.shift();S.sceneN=(S.sceneN||0)+1;
+  if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else S.canonMiss++}
   if(c.drift)driftAdd(c.drift);
   if(ev.loc==='diso'&&MEM['ds_'+id])learn('ds_'+id);
   if(c.tag==='ma')S.dao=clamp(S.dao+(c.dao||8),-100,100);
@@ -263,7 +265,7 @@ function randomEvent(loc){
   const all=Object.entries(EV).filter(([id,e])=>e.loc===loc&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id]));
   const cd=Math.min(6,Math.ceil(all.length/2));
   const pool=all.filter(([id,e])=>S.evLast[id]===undefined||S.turn-S.evLast[id]>=(e.cd||cd));
-  const wt=(id,e)=>(e.w||1)*(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1)
+  const wt=(id,e)=>(typeof e.w==='function'?e.w():(e.w||1))*(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1)
     /(1+(S.evSeen[id]||0))*((META.seen||{})[id]?1:1.5);
   const tot=pool.reduce((s,[id,e])=>s+wt(id,e),0);
   let r=Math.random()*tot;
@@ -280,9 +282,9 @@ function randomEvent(loc){
 }
 // Câu chữ của sự kiện. text có thể là mảng hàm: lần gặp thứ n dùng bản thứ n
 function evText(id){
-  const t=EV[id].text;
-  if(!Array.isArray(t))return t();
-  return t[Math.max(0,((S.evSeen||{})[id]||1)-1)%t.length]();
+  const t=EV[id].text,om=typeof varOmen==='function'?varOmen(id):'';
+  if(!Array.isArray(t))return t()+om;
+  return t[Math.max(0,((S.evSeen||{})[id]||1)-1)%t.length]()+om;
 }
 
 /* ---------- hành động ---------- */
@@ -475,7 +477,7 @@ function fight(k,o){
     atk:[Math.round(e.atk[0]*f*DIFF.atk),Math.round(e.atk[1]*f*DIFF.atk)],
     def:Math.round((ai.def||0)*Math.sqrt(sc)*(elite?1.3:1)),sk:ai.sk||null,boss:!!ai.boss,tr:foeTraits(k),
     st:[Math.round(e.st[0]*sc*(elite?1.6:1)),Math.round(e.st[1]*sc*(elite?1.6:1))],
-    bl:e.bl+(elite?2:0),drop:(e.drop||0)+(elite?.3:0),after:o.after||null,flee:o.flee!==false&&(!ai.noflee||!!o.canFlee),
+    bl:e.bl+(elite?2:0),drop:(e.drop||0)+(elite?.3:0),after:o.after||null,spare:o.spare||0,spareT:o.spareT||'',spareAfter:o.spareAfter||null,flee:o.flee!==false&&(!ai.noflee||!!o.canFlee),
     shield:0,shieldRed:.4,bleed:0,stun:0,reflect:0,poison:0,suppress:0,atkBuff:0,turn:0,cd:{},frozen:{},phase2:false,intent:'atk'};
   S.panel=null;
   nextIntent();
@@ -545,6 +547,13 @@ function enemySkill(c){
   }
 }
 
+// Địch chỉ thử tay (spare): khi khí huyết ngươi tụt dưới ngưỡng thì dừng, không giết
+function spared(c){
+  if(!c.spare||S.hp>maxHp()*c.spare)return false;
+  S.hp=Math.max(1,S.hp);log(c.spareT||`${c.n} thu tay, bỏ đi.`,'danger');
+  if(c.spareAfter&&AFTER[c.spareAfter])AFTER[c.spareAfter]();
+  S.combat=null;checkInjury();saveAll();advance();render();return true;
+}
 function playerAct(type,arg){
   const c=S.combat;if(!c||FX.busy||c.ko)return;
   const vary=()=>.85+Math.random()*.3;
@@ -644,6 +653,7 @@ function playerAct(type,arg){
   if(attacked&&c.intent==='guard'&&!(c.stun>0)&&c.hp>0){
     const d=enemyHit(c,.7,{counter:true});
     log(`${c.n} đang thủ thế, phản kích ngay. Khí huyết −${d}.`,'danger');
+    if(spared(c))return;
     if(S.hp<=0){die(c.n);return}
   }
   if(c.hp>0&&c.bleed>0){
@@ -675,6 +685,7 @@ function playerAct(type,arg){
     const p=Math.max(3,Math.round(maxHp()*.04));S.hp-=p;c.poison--;
     FX.q({type:'text',on:'p',t:'Độc −'+p});log(`Độc phát tác. Khí huyết −${p}.`,'danger');
   }
+  if(spared(c))return;
   if(S.hp<=0){die(c.n);return}
 
   // Cuối lượt

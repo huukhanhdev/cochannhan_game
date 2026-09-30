@@ -227,7 +227,10 @@ function advance(){
 }
 
 /* ---------- sự kiện ---------- */
-function choicesOf(ev){const c=typeof ev.choices==='function'?ev.choices():ev.choices;return typeof probeChoices==='function'?probeChoices(ev,c):c}
+function choicesOf(ev){let c=typeof ev.choices==='function'?ev.choices():ev.choices;c=typeof probeChoices==='function'?probeChoices(ev,c):c;
+  // Không lựa chọn nào làm được thì luôn có đường bỏ qua, tránh kẹt
+  if(c.length&&c.every(x=>x.stay||(x.req&&!x.req())))c=[...c,{t:'Không làm được gì, đành bỏ qua',eff:()=>'Ngươi đành để cơ hội trôi qua.'}];
+  return c}
 function choose(i){
   if(S.traitOpts)return;
   const id=S.evq[0],ev=EV[id];if(!ev)return;
@@ -235,7 +238,7 @@ function choose(i){
   const chs=choicesOf(ev),c=chs[i];
   if(!c||(c.req&&!c.req()))return;
   // Lựa chọn phụ (stay): cảnh vẫn mở, lựa chọn đó biến mất
-  if(c.stay){(S.picked=S.picked||{})[id+':'+c.stay]=1;log(`【${ev.title}】 ${c.t}.`,'choice');log(c.eff());saveAll();render();return}
+  if(c.stay){(S.picked=S.picked||{})[id+':'+c.stay]=1;log(`【${ev.title}】 ${c.t}.`,'choice');if(c.check){const r=roll(c.check[0],c.check[1],c.bonus?c.bonus():0);log(r.text,'roll');log(r.ok?c.ok():c.fail())}else log(c.eff());saveAll();render();return}
   ffRememberChoice(id,c);
   S.evq.shift();S.sceneN=(S.sceneN||0)+1;
   if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else S.canonMiss++}
@@ -302,7 +305,8 @@ const ACTS=[
 function act(id){
   if(S.combat||S.over||S.evq.length||S.acted||S.traitOpts||S.mg)return;
   ffRecord('act',{a:id});
-  if(S.book===2&&act2(id))return;
+  // Quyển 2 chỉ có hành động của chương, cộng bế quan và tĩnh dưỡng
+  if(S.book===2&&(act2(id)||!['tuluyen','nghi'].includes(id)))return;
   S.panel=null;
   const ci=(S.cache||[]).findIndex(c=>c.loc===id&&!c.done&&S.turn>=c.from&&S.turn<=c.to);
   if(ci>=0&&Math.random()<(S.cache[ci].rumor?.85:.4)){S.curCache=ci;S.evq.push('x_cache');S.acted=true;saveAll();advance();render();return}
@@ -388,7 +392,7 @@ function levelUp(){
 }
 function useGu(i){
   const g=S.gu[i];if(!g||GU[g.k].t!=='use'||S.combat)return;
-  const need_={xaloi1:1,xaloi2:2,xaloi3:3}[g.k]||2;
+  const need_={xaloi1:1,xaloi2:2,xaloi3:3,xaloi4:4}[g.k]||2;
   if(S.chuyen!==need_){log(`${GU[g.k].n} chỉ dùng được ở ${CH[need_]} chuyển.`,'danger');render();return}
   S.gu.splice(i,1);
   if(window.SFX) SFX.levelUp();
@@ -573,8 +577,9 @@ function playerAct(type,arg){
   };
   if(type==='strike'){
     if(window.SFX)SFX.blade();
-    const d=hitFoe(baseAtk()*vary(),false,{type:'patk',kind:'fist'});
-    if(d)log(`Ngươi xuất quyền. ${c.n} mất ${d}.`);
+    const lm=typeof lucStrike==='function'?lucStrike():{m:1};
+    const d=hitFoe(baseAtk()*vary()*lm.m,false,{type:'patk',kind:'fist'});
+    if(d)log(lm.t?`${lm.t} ${c.n} mất ${d}.`:`Ngươi xuất quyền. ${c.n} mất ${d}.`);
   }else if(type==='gu'){
     const key=S.gu[arg]&&S.gu[arg].k,g=GU[key];
     if(!g||!guReady(key))return;

@@ -119,7 +119,7 @@ function updateCombat(){
   const combos=COMBOS.filter(cb=>(META.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k)));
   // Lý do không dùng được: đang hồi chiêu, bị băng phong
   const lock=key=>(c.frozen[key]||0)>0?`Bị băng phong ${c.frozen[key]-1||1} lượt`:(c.cd[key]||0)>0?`Hồi chiêu ${c.cd[key]} lượt`:'';
-  const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:'Đánh tay',s:`${baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];
+  const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:typeof lucName==='function'?lucName():'Đánh tay',s:`${typeof lucShow==='function'?lucShow():baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];
   uniq.forEach(x=>{
     const cost=guCostIdx(x.i),lk=lock(x.k),hungry=(S.gu[x.i].h||0)>0;
     const cdInfo=(CD[x.k]||0)>0?` · hồi ${CD[x.k]}`:'';

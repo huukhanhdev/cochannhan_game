@@ -94,8 +94,8 @@ q2_td_cuongthi:{canon:1,title:'Đêm cương thi',hint:'Đinh Hạo',g:'尸',sc:
 q2_td_thuongluong:{canon:1,title:'Núi Thương Lượng',hint:'Tới Thương gia thành',g:'商',who:'tamtu',
   text:()=>'Qua núi Huyết Lệ, Thiên Quật, Cự Nhân, Lục Tảo, cuối cùng là núi Thương Lượng. Trước cổng thành, Tâm Từ quay lại nhìn ngươi. Nàng chưa biết thân phận thật của Hắc Thổ, hoặc đã biết mà không nói.',
   choices:()=>[
-    {t:'Chia tay trước cổng, hẹn sẽ gặp lại',canon:1,eff:()=>{rel('tamtu',10);q2Ending('q2_thuongluong');return 'Thương gia thành: thế lực buôn bán số một Nam Cương. Chính đạo, nhưng là nơi ma đạo tiêu thụ tang vật.'}},
-    {t:'Đi cùng nàng vào thành',eff:()=>{rel('tamtu',15);S.f.cungTamTu=1;q2Ending('q2_thuongluong');return 'Tiểu Điệp lườm, nhưng không phản đối.'}},
+    {t:'Chia tay trước cổng, hẹn sẽ gặp lại',canon:1,eff:()=>{rel('tamtu',10);chapEnd('q2_thanh');return 'Thương gia thành: thế lực buôn bán số một Nam Cương. Chính đạo, nhưng là nơi ma đạo tiêu thụ tang vật.'}},
+    {t:'Đi cùng nàng vào thành',eff:()=>{rel('tamtu',15);S.f.cungTamTu=1;chapEnd('q2_thanh');return 'Tiểu Điệp lườm, nhưng không phản đối.'}},
   ]},
 
 // bên lề

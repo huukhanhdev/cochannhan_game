@@ -2,7 +2,7 @@
 // Nạp sau core.js. Chỉ bổ sung vào các bảng có sẵn của Quyển 1.
 
 Object.assign(GU,{
-  thiennguyen:{n:'Thiên Nguyên Bảo Liên',r:3,food:0,fn:'tự dưỡng',t:'passive',income:6,p:900,d:'Hoa sen ngọc sinh nguyên thạch. Mỗi lượt nhả ra 6 nguyên thạch. Bảo vật lấy từ Thanh Mao Sơn.'},
+  thiennguyen:{n:'Thiên Nguyên Bảo Liên',r:3,food:0,fn:'tự dưỡng',t:'passive',get income(){return 2+4*((typeof S!=='undefined'&&S)?S.chuyen:1)},p:900,d:'Hoa sen ngọc sinh nguyên thạch. Mỗi lượt nhả ra 2 + 4 × chuyển nguyên thạch (Nhất chuyển 6, Tứ chuyển 18). Bảo vật lấy từ Thanh Mao Sơn.'},
   dausuat:{n:'Đâu Suất Hoa',r:3,food:0,fn:'tự dưỡng',t:'passive',p:400,d:'Cổ chứa đồ. Trong hoa còn thuốc phàm, băng vải, nồi sắt, than, thịt khô mang từ Thanh Mao Sơn.'},
   boigiap:{n:'Bối Giáp Cổ',r:2,food:3,fn:'vảy cá',t:'guard',cost:9,p:130,d:'Hình xăm vảy sau lưng hóa thành mai: giảm 55% sát thương trong 2 lượt. Lấy từ cá sấu vương (VN 213).'},
   ngacluc:{n:'Ngạc Lực Cổ',r:2,food:4,fn:'thịt cá sấu',t:'passive',atk:7,p:150,d:'Lực cắn của cá sấu. Mọi đòn +7. Xương chưa đủ cứng thì dùng lâu sẽ tổn thương.'},

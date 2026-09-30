@@ -12,7 +12,7 @@ const ctx={
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
@@ -33,6 +33,7 @@ function botEvent(){
   // Ưu tiên lựa chọn có tỉ lệ cao; đôi khi theo nguyên tác
   // LECH=1: người chơi cố tình đi khác nguyên tác
   const sc=x=>(x.c.check?chance(x.c.check[0],x.c.check[1],x.c.bonus?x.c.bonus():0):70)+(x.c.canon?(globalThis.__lech&&ev.canon?-40:15):0)+(globalThis.__lech&&x.c.drift?30:0)+(x.c.mem&&(S.picked||{})[S.evq[0]+':probe']&&varShifted(varOfEv(S.evq[0]))?-80:0)+Math.random()*25;
+  if(!ok.length)throw new Error('Kẹt: '+S.evq[0]+' · thạch '+S.stones);
   ok.sort((a,b)=>sc(b)-sc(a));
   choose(ok[0].i);
 }
@@ -59,9 +60,9 @@ function botTurn(){
   if(S.herbs<2&&S.stones>30)buyItem('herb');
   const hpR=S.hp/maxHp();
   if(hpR<.45||(S.inj&&Math.random()<.5))return act('nghi');
-  if(S.ess>=maxEss()*.7)return act('tuluyen');
-  if(!S.f.hoatuu&&Math.random()<.35)return act('hauson');
-  if(S.book===2){const sp=curChap().spots.filter(s=>!s.minor&&!['tuluyen','nghi'].includes(s.id)&&(!s.show||s.show()));return act(pick(sp).id)}
+  if(S.ess>=maxEss()*(S.book===2?.9:.7)&&Math.random()<(S.book===2?.5:1))return act('tuluyen');
+  if(S.book!==2&&!S.f.hoatuu&&Math.random()<.35)return act('hauson');
+  if(S.book===2){const sp=curChap().spots.filter(s=>!s.minor&&!['tuluyen','nghi'].includes(s.id)&&(!s.show||s.show()));const hot=sp.filter(s=>['dienvo','txvang','txlam','txdo'].includes(s.id));return act(pick(hot.length&&Math.random()<.6?hot:sp).id)}
   return act(pick(['nui','nui','nhiemvu','nhiemvu','hocduong','trai'].filter(a=>a!=='hocduong'||S.turn<=18)));
 }
 function r0(i){return RECIPES[i].st+40}
@@ -88,6 +89,7 @@ for(let n=0;n<N;n++){
     run('botTurn()');steps++;
   }
   if(steps>=6000)res.stuck++;
+  (res.st=res.st||[]).push(run("({dv:S.f.dvRank||0,kv:(S.f.kv||{}).ai||0,tv:(S.f.tv||{}).ai||0,bv:(S.f.bv||{}).ai||0,batu:+!!S.f.batuChet,duc:+hasGu('cotduc'),toan:+hasGu('toanluc'),beast:beastCount()})"));
   const rk=run('S.chuyen+"."+S.giai');res.rank[rk]=(res.rank[rk]||0)+1;
 }
 console.log(`Chiến dịch: ${N}, làm lại tối đa ${RETRY} lần mỗi chương`);
@@ -95,4 +97,5 @@ console.log('Tới chương:',JSON.stringify(res.reach));
 console.log('Số lần làm lại theo chương:',JSON.stringify(res.retries));
 console.log('Kết:',JSON.stringify(res.end),'· kẹt vòng lặp:',res.stuck,'· Thiền cứu:',res.rewinds);
 console.log('Cảnh giới cuối (chuyển.giai):',JSON.stringify(res.rank));
+{const A=k=>(res.st.reduce((s,x)=>s+x[k],0)/res.st.length).toFixed(2);console.log('Trung bình: hạng diễn võ',A('dv'),'· ải Khuyển',A('kv'),'· ải Tín',A('tv'),'· ải Bạo',A('bv'),'· giết Bá Tu',A('batu'),'· Cốt Dực',A('duc'),'· Toàn Lực',A('toan'),'· hư ảnh',A('beast'))}
 console.log('Nguyên nhân chết:',Object.entries(res.cause).sort((a,b)=>b[1]-a[1]).slice(0,12));

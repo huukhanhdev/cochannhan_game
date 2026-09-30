@@ -61,6 +61,8 @@ function autoAct(){
     if(heal&&hpR<.8)return playerAct('gu',heal.i);
     if(S.ess<maxEss()*.6&&S.stones>=5&&S.ess<maxEss())return playerAct('absorb');
   }
+  // Lực tu có Toàn Lực Ứng Phó: quyền mạnh hơn cổ tấn công
+  if(typeof lucPrefer==='function'&&lucPrefer())return playerAct('strike');
   const opts=gus.filter(x=>x.d.t==='attack'&&ready(x)).map(x=>({s:autoScore(c,x.d,guCostIdx(x.i)),go:()=>playerAct('gu',x.i)}))
     .concat(combos.map(cb=>({s:autoScore(c,cb,costOf(cb.cost))*1.3,go:()=>playerAct('combo',cb.id)})));
   opts.sort((a,b)=>b.s-a.s);

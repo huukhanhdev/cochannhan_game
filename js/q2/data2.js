@@ -14,7 +14,11 @@ Object.assign(GU,{
   ngoccot:{n:'Ngọc Cốt Cổ',r:2,food:3,fn:'ngọc vụn',t:'passive',hp:60,p:140,d:'Xương hóa ngọc bích vĩnh viễn, chịu được sức nặng nhiều thú lực. Khí huyết tối đa +60.'},
   thietcot:{n:'Thiết Cốt Cổ',r:3,food:4,fn:'thiết vụn',armor:0.15,t:'passive',hp:80,p:360,d:'Hấp thu sắt lỏng, xương hóa thiết cốt đen bóng. Khí huyết tối đa +80, giảm 15% sát thương nhận vào.'},
   votucdieu:{n:'Vô Túc Điểu',r:3,food:5,fn:'gió trời',t:'passive',fleeMod:0.8,p:500,d:'Chim xương không chân, bay vạn dặm một ngày, chạm đất là vỡ. Chạy trốn gần như chắc chắn.'},
-  cotnhuc:{n:'Cốt Nhục Đoàn Viên',r:3,food:0,fn:'tình nghĩa',t:'passive',cult:.45,p:0,d:'Hôi Cốt Tài Tử sáng tạo. Cặp vòng ngọc giúp hai người chuyển chân nguyên cho nhau không bài xích. Tu luyện +45%.'},
+  cotnhuc:{n:'Cốt Nhục Đoàn Viên',r:3,food:0,fn:'tình nghĩa',t:'passive',cult:.15,p:0,d:'Hôi Cốt Tài Tử sáng tạo. Cặp vòng ngọc xanh đỏ: chuyển chân nguyên người kia thành của mình, không bài xích. Song tu cùng Bạch Ngưng Băng: tình nghĩa càng sâu, chân nguyên chuyển sang càng nhiều (20% tới 100%).'},
+  phicotthuan:{n:'Phi Cốt Thuẫn',r:3,food:4,fn:'tủy xương',t:'guard',cost:12,turns:3,p:380,d:'Ba khiên xương bay quanh người, tự chặn đòn. Phương Nguyên chọn con này ở sảnh hai.'},
+  lacotthuan:{n:'Lặc Cốt Thuẫn',r:3,food:4,fn:'tủy xương',t:'guard',cost:4,turns:3,p:360,d:'Hai hàng xương sườn mọc ra trước ngực. Gần như không tốn chân nguyên khi duy trì.'},
+  ticotduc:{n:'Ti Cốt Dực',r:3,food:4,fn:'tủy xương',t:'passive',pow:.12,p:380,d:'Cánh xương mọc dọc cẳng tay, ra đòn nhanh và mạnh hơn. Sát thương +12%.'},
+  nhucbachcot:{n:'Nhục Bạch Cốt',r:3,food:5,fn:'huyết nhục',t:'heal',healAmt:70,cure:1,cost:26,p:420,d:'Cổ trị liệu Tam chuyển hình bộ răng ngọc, dùng được nhiều lần. Tốn nhiều chân nguyên.'},
   khieukhieu:{n:'Khiêu Khiêu Thảo',r:2,food:2,fn:'nước mưa',cost:6,turns:1,t:'guard',fleeMod:0.25,p:90,d:'Rễ lò xo dưới bàn chân, bật xa hàng chục trượng. Né hẳn đòn kế tiếp, chạy trốn dễ hơn.'},
   thanhnhiet:{n:'Thanh Nhiệt Cổ',r:1,food:2,fn:'lá bạc hà',t:'heal',healAmt:25,cure:1,cost:6,p:50,d:'Bọ hung ngọc bích của Bách gia trại, tiết dịch giải độc rắn rết, chướng khí. Hồi 25 khí huyết, giải hết độc và thiêu đốt.'},
 });

@@ -81,11 +81,25 @@ const EVENT_ILLUSTRATIONS={
   q2_ng_dangHon:'scene_danghun_mountain',
   q2_pb_hotien:'scene_little_hu_danghun'
 };
+// Phông nền theo sự kiện
+const EV_SCENE={
+  c_lang1:'tide',c_lang2:'snow',c_lang3:'tide',c_luancong:'village',c_bai:'snow',c_huyetdong:'blood',c_nhatdai:'blood',c_thiet:'village',c_thietvay:'village',c_final:'fire',
+  hs_khe:'wine',hs_bich:'wine',hs_ngam:'wine',hs_dong:'wine',hs_mo:'blood',c_baigia:'forest',c_kimsinh:'forest'
+};
+// Phông nền theo vị trí
+const LOC_SCENE={
+  hocduong:'village',trai:'village',nui:'forest',nhiemvu:'forest',diso:'forest',
+  hl_song:'forest',hl_rung:'forest',bc_nui:'snow',bc_dong:'snow',td_doan:'forest',
+  tc_thanh:'village',tx_nui:'forest',ng_hotien:'forest',bq_dong:'blood',pb_phuc:'forest'
+};
 function eventArt(id){
   const ev=EV[id]||{};
   if(ev.art)return asset('art/'+ev.art+'.jpg');
   if(EVENT_ILLUSTRATIONS[id])return asset('art/'+EVENT_ILLUSTRATIONS[id]+'.jpg');
-  const sc=EV_SCENE[id]||ev.sc||LOC_SCENE[ev.loc]||'village';
+  const chapBg=(typeof S!=='undefined'&&S.book===2&&typeof curChap==='function'&&curChap()&&curChap().bg)?curChap().bg:null;
+  const sc=(typeof EV_SCENE!=='undefined'&&EV_SCENE[id])||ev.sc||(typeof LOC_SCENE!=='undefined'&&LOC_SCENE[ev.loc])||null;
+  if(sc&&BGIMG[sc])return asset('art/'+BGIMG[sc]+'.jpg');
+  if(chapBg)return asset('art/'+chapBg+'.jpg');
   return asset('art/'+(BGIMG[sc]||'bg_village')+'.jpg');
 }
 

@@ -31,7 +31,7 @@ CHAPTERS.q2_thanh={n:'Thương gia thành',title:'Quyển hai · Chương bốn 
   canon:{1:'q2_tt_nhaiti1',2:'q2_tt_giayen',3:'q2_tt_lucdao',4:'q2_tt_tinhthan',5:'q2_tt_lynhien',6:'q2_tt_dienvo',7:'q2_tt_bachgia',8:'q2_tt_amvan',9:'q2_tt_nhuocnam',10:'q2_tt_daugia',11:'q2_tt_nhaiti2',12:'q2_tt_viemdot',13:'q2_tt_cukhaibi',14:'q2_tt_ket'},
   side:['q2_tt_nguyuong','q2_tt_baogioi','q2_tt_noikhong','q2_tt_lyhao','q2_tt_tucgia'],
   spots:[
-    {id:'ttpho',x:18,y:56,g:'街',n:'Dạo phố',d:'Tửu lâu, Phong Vũ lâu, chuyện trong thành.',loc:'tt_pho',evP:.8,quiet:'Phố xá đông đúc. Không ai để ý tới một gã mặt bỏng.'},
+    {id:'ttpho',x:18,y:56,g:'街',n:'Dạo phố',d:'Tửu lâu, Phong Vũ lâu, chuyện trong thành.',loc:'tt_pho',evP:.8,quiet:'Phố xá đông đúc. Không ai để ý tới một gã lạ mặt.'},
     {id:'dienvo',x:52,y:34,g:'武',n:'Diễn võ trường',d:'Leo hạng. Thắng thì có nguyên thạch và danh vọng.',run:dvFight,show:()=>S.f.dvReg},
     {id:'tttamtu',x:34,y:72,g:'慈',n:'Phủ Thương Tâm Từ',d:'Gặp Tâm Từ.',run:tamtuCity,show:()=>S.met.tamtu},
     {id:'baicanh',x:70,y:70,g:'冰',n:'Nam Thu Uyển',d:'Bạch Ngưng Băng luyện đao. Nàng cũng leo diễn võ.',run:baiLesson},
@@ -81,7 +81,7 @@ q2_tt_nhaiti1:{canon:1,title:'Thiếu chủ đòi chia',hint:'Thương Nhai Tí'
     {t:'Cười, bảo hắn cứ đi báo',tag:'ma',eff:()=>{meet('nhaiti');rel('nhaiti',-30);S.susp+=15;return 'Nhai Tí đỏ mặt bỏ đi. Hiềm nghi +15.'}},
   ]},
 q2_tt_giayen:{canon:1,title:'Gia yến Thương gia',hint:'Bán bí phương',g:'宴',who:'yenphi',
-  text:()=>'Thương Yến Phi, tộc trưởng Ngũ chuyển tóc lửa, mời hai người dự gia yến. Ngươi có trong tay một bí phương Thương gia thèm muốn. Tố Thủ y sư ở tiệc có thể chữa gương mặt bỏng của ngươi.',
+  text:()=>'Thương Yến Phi, tộc trưởng Ngũ chuyển tóc lửa, mời hai người dự gia yến. Ngươi có trong tay một bí phương Thương gia thèm muốn.'+(S.f.matBong?' Tố Thủ y sư ở tiệc có thể chữa gương mặt bỏng của ngươi.':''),
   choices:()=>[
     {t:'Bán bí phương, ép giá tới chín mươi vạn, ký Thề Độc với Bạch Ngưng Băng chia đôi',canon:1,check:['tamco',14],ok:()=>{meet('yenphi');meet('tothu');meet('nguyuong');rel('yenphi',15);S.stones+=450;gainGu('thetdoc',true);S.f.theDocBai=1;S.hp=maxHp();return 'Chín mươi vạn. Chia đôi, phần ngươi đổi ra 450 nguyên thạch. Tố Thủ chữa lành mặt và tai. Bạch Ngưng Băng tẩy lớp ngụy trang: cả gia yến lặng đi. Hai người ký Thề Độc: nàng giúp ngươi lên Tứ chuyển đỉnh, ngươi trả Dương cổ.'},fail:()=>{meet('yenphi');meet('tothu');S.stones+=250;return 'Yến Phi không để bị ép. Vẫn được 250 nguyên thạch.'}},
     {t:'Không bán, giữ bí phương làm con bài',eff:()=>{meet('yenphi');rel('yenphi',-10);S.tamco++;return 'Yến Phi mỉm cười. Ngươi biết bà ta không quen bị từ chối.'}},
@@ -136,7 +136,7 @@ q2_tt_daugia:{canon:1,title:'Hội đấu giá',hint:'Khổ Lực và Phong Khí
   text:()=>'Tự gia sập nguyên tuyền, nhập Thương gia, đem gia sản ra đấu giá. Lô 13 là Khổ Lực cổ Tứ chuyển. Đối thủ: Nhai Tí, Thương Bí Hý, Cự Khai Bi. Ngụy Ương cho ngươi mượn gần trăm vạn.',
   choices:()=>[
     {t:'Đẩy giá cho Nhai Tí mua Khổ Lực với giá gấp đôi, rồi mua Phong Khí cổ',canon:1,check:['tamco',14],ok:()=>{meet('nhaiti');rel('nhaiti',-20);S.stones=Math.max(0,S.stones-150);gainGu('phongkhi',true);S.f.nhaitiNo=1;return 'Nhai Tí mua Khổ Lực tám mươi mốt vạn, gấp đôi giá, rồi mới biết mình bị lừa. Ngươi lấy Phong Khí cổ, cổ thiên nhiên chưa ai tìm ra bí phương. Nghịch luyện nó sẽ ra Khí Lực.'},fail:()=>{S.stones=Math.max(0,S.stones-200);gainGu('phongkhi',true);return 'Ngươi mua được Phong Khí cổ, nhưng đắt.'}},
-    {t:'Tranh Khổ Lực bằng mọi giá',req:()=>S.stones>=320,reqT:'Cần 320 nguyên thạch',eff:()=>{S.stones-=320;gainGu('kholuc',true);return 'Khổ Lực cổ về tay ngươi. Cả hội trường nhìn gã mặt bỏng mới nổi.'}},
+    {t:'Tranh Khổ Lực bằng mọi giá',req:()=>S.stones>=320,reqT:'Cần 320 nguyên thạch',eff:()=>{S.stones-=320;gainGu('kholuc',true);return 'Khổ Lực cổ về tay ngươi. Cả hội trường nhìn '+(S.f.matBong?'gã mặt bỏng':'gã tán tu')+' mới nổi.'}},
   ]},
 q2_tt_nhaiti2:{canon:1,title:'Kẽ hở của Thề Độc',hint:'Hạ bệ Nhai Tí',g:'誓',who:'nhaiti',
   text:()=>'Nhai Tí từng ép ngươi ký Thề Độc không tiết lộ bí mật của hắn cho "người thứ ba không biết". Nhưng ngươi đã kể cho Bạch Ngưng Băng trước khi thề.'+(hasGu('phongkhi')?' Phong Khí cổ trong khiếu ngươi chờ được nghịch luyện.':''),
@@ -190,7 +190,7 @@ q2r_tt_tuulau:{loc:'tt_pho',title:'Thực Thiên Lâu',g:'酒',text:()=>'Tửu l
   choices:[{t:'Ăn một bữa (10 thạch)',req:()=>S.stones>=10,reqT:'Cần 10',eff:()=>{S.stones-=10;S.hp=maxHp();return 'Khí huyết đầy.'}},{t:'Nghe chuyện bàn bên',eff:()=>{S.tamco+=Math.random()<.3?1:0;return 'Người ta bàn về Tiểu Thú Vương mới nổi ở diễn võ.'}}]},
 q2r_tt_phongvu:{loc:'tt_pho',title:'Phong Vũ lâu',g:'报',text:()=>'Tổ chức tình báo của Thương gia bán đủ loại tin.',
   choices:[{t:'Mua tin (20 thạch)',req:()=>S.stones>=20,reqT:'Cần 20',eff:()=>{S.stones-=20;S.susp=Math.max(0,S.susp-15);return 'Biết ai đang dò la về ngươi. Hiềm nghi −15.'}},{t:'Bán tin về Bách gia',eff:()=>{S.stones+=25;return '+25 nguyên thạch.'}}]},
-q2r_tt_ancuop:{loc:'tt_pho',title:'Hẻm tối',g:'暗',text:()=>'Ba tên ma tu chặn trong hẻm, muốn cướp gã mặt bỏng.',
+q2r_tt_ancuop:{loc:'tt_pho',title:'Hẻm tối',g:'暗',text:()=>'Ba tên ma tu chặn trong hẻm, muốn cướp '+(S.f.matBong?'gã mặt bỏng':'gã tán tu lạ mặt')+'.',
   choices:[{t:'Đánh',eff:()=>{fight('dvmatu',{scale:1,mod:.9});return 'Chúng chọn nhầm người.'}},{t:'Ném 15 thạch rồi đi',req:()=>S.stones>=15,reqT:'Cần 15',eff:()=>{S.stones-=15;return 'Chúng cười hô hố.'}}]},
 q2r_tt_cocho:{loc:'tt_pho',title:'Sạp cổ vỉa hè',g:'蛊',text:()=>'Một sạp bán cổ lực giá rẻ, không rõ nguồn gốc.',
   choices:[{t:'Mua một con (60 thạch)',req:()=>S.stones>=60,reqT:'Cần 60',check:['ngo',12],ok:()=>{S.stones-=60;const k=pick(['nguluc','maluc','hungluc','hacthi','trucxung']);gainGu(k,true);return `Được ${GU[k].n} khỏe mạnh.`},fail:()=>{S.stones-=60;return 'Con cổ chết sau hai ngày.'}},{t:'Đi qua',eff:()=>'Ngươi không tin hàng vỉa hè.'}]},

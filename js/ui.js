@@ -228,7 +228,8 @@ function renderLog(){
 function choiceBtn(c,i,evId){
   const ok=!c.req||c.req();
   const seen=META.seen&&META.seen[evId];
-  const tags=[c.mem?'<span class="tag mem">憶 Ký ức</span>':'',c.canon&&seen?'<span class="tag canon">Nguyên tác</span>':'',c.tag==='ma'?'<span class="tag ma">Ma</span>':'',c.tag==='chinh'?'<span class="tag chinh">Chính</span>':''].join('');
+  // Không gắn nhãn Chính/Ma: người chơi tự đọc tình huống mà chọn
+  const tags=[c.mem?'<span class="tag mem">憶 Ký ức</span>':'',c.canon&&seen?'<span class="tag canon">Nguyên tác</span>':'',].join('');
   let chk='';
   if(c.check){
     const p=chance(c.check[0],c.check[1],c.bonus?c.bonus():0);
@@ -240,8 +241,6 @@ function choiceBtn(c,i,evId){
 
 function scChoiceBtn(c, i, sc){
   let tags = '';
-  if(c.tag === 'ma') tags += `<span class="tag ma">Ma</span>`;
-  if(c.tag === 'chinh') tags += `<span class="tag chinh">Chính</span>`;
   if(c.canon) tags += `<span class="tag canon">Nguyên tác</span>`;
   if(c.mem) tags += `<span class="tag mem">Ký ức</span>`;
   if(c.hidden) tags += `<span class="tag mem">Tâm cơ</span>`;
@@ -328,7 +327,8 @@ function renderStage(){
   if(S.over==='win'){
     const E=ENDINGS[S.ending],tot=S.canonHit+S.canonMiss;
     st.innerHTML=`<div class="over has-art" style="--art:url('${asset('art/p_hero.jpg')}')"><span class="label">Kiếp ${META.life} · Tháng ${month()} · ${rankName()}</span>
-      <h3>${E.t}</h3><p>${E.d}</p>
+      <h3>${E.t}</h3><p>${esc(endingText(S.ending))}</p>
+      ${(()=>{const f=endingFates();return f.length?`<div class="fates"><span class="label">Số phận những người khác</span>${f.map(x=>`<p><b>${esc(x.n)}.</b> ${esc(x.t)}</p>`).join('')}</div>`:''})()}
       <p>Bám nguyên tác ${tot?Math.round(S.canonHit/tot*100):0}% · chết ${META.life-1} lần trước khi tới được đây.</p>
       ${Q2_GATE.includes(S.ending)?`<p>Quyển hai mở ra: xuôi sông Hoàng Long, tới Bạch Cốt Sơn và Thương gia thành.</p><button class="btn big" data-a="q2">Sang Quyển hai</button>`:'<p class="dimt">Kết cục này ở lại chính đạo, không dẫn sang Quyển hai. Các kết cục ma đạo hoặc cùng Bạch Ngưng Băng xuống núi mới mở Quyển hai.</p>'}
       <button class="btn ${Q2_GATE.includes(S.ending)?'ghost':'big'}" data-a="newgame">Bắt đầu lại từ kiếp một</button></div>`;

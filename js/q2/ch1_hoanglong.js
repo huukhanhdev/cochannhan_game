@@ -5,7 +5,20 @@ function loseGu(k){const i=S.gu.findIndex(g=>g.k===k);if(i>=0)S.gu.splice(i,1)}
 function baiRel(n){rel('bainu',n)}
 
 // Ở cạnh Bạch Ngưng Băng: dạy nàng đánh tiết kiệm chân nguyên (kinh nghiệm 500 năm, VN 212)
+// Song tu (VN 253): Cốt Nhục Đoàn Viên chuyển chân nguyên của Bạch Ngưng Băng sang ngươi.
+// Năm phẩm theo tình nghĩa: Tương Tàn 20%, Tương Liên 40%, Tình Đồng Cốt Nhục 60%, Thân Như Cốt Nhục 80%, Chí Thân 100%. Mất cả tuần.
+const COTNHUC_TIER=[[-99,.2,'Cốt Nhục Tương Tàn'],[0,.4,'Cốt Nhục Tương Liên'],[20,.6,'Tình Đồng Cốt Nhục'],[45,.8,'Thân Như Cốt Nhục'],[75,1,'Cốt Nhục Chí Thân']];
+function cotNhucTier(){const r=S.rel.bainu||0;let t=COTNHUC_TIER[0];for(const x of COTNHUC_TIER)if(r>=x[0])t=x;return t}
+function songTu(){
+  const [,rate,name]=cotNhucTier();
+  const gain=Math.round(need()*.5*rate*cultMult());
+  S.prog+=gain;baiRel(3);S.ap=1;
+  log(`Song tu cả đêm. Vòng ngọc xanh trên cổ tay trái ngươi và vòng đỏ trên tay phải nàng cùng sáng. Phẩm ${name}: chân nguyên của nàng chuyển sang ${Math.round(rate*100)}%. Tu vi +${gain}.`,'good');
+  if(rate<.6)log('Tình nghĩa còn mỏng, phần lớn chân nguyên tản mất giữa đường.','sys');
+  levelUp();
+}
 function baiLesson(){
+  if(hasGu('cotnhuc')&&!S.f.baiAway&&!S.f.baiHurt)return songTu();
   S.f.baiLes=(S.f.baiLes||0)+1;baiRel(6);
   const n=S.f.baiLes;
   if(n===1)log('Ngươi chỉ cho nàng: đòn nào cũng dốc hết chân nguyên là thói quen của người được gia tộc nuôi. Bạch Ngưng Băng cau mày nhưng vẫn nghe.','sys');

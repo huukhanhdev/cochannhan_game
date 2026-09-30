@@ -263,15 +263,8 @@ function startTurn(){
   if(S.f.tramthuyAmbush&&S.turn>=22&&!S.evq.length&&Math.random()<.5){S.f.tramthuyAmbush=0;S.evq.push('x_tramthuy')}
   // Dị số chen vào trước tuyến NPC khi tuần này chưa có mốc nguyên tác
   disoTick();
-  if(!S.evq.length&&(!S.pend||Math.random()<.5)){
-    if(!S.npcProg)S.npcProg={phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1};
-    for(const qid of NPC_POOL){
-      if(EV[qid]&&(!EV[qid].cond||EV[qid].cond())&&!S.f[qid]&&!S.evq.includes(qid)){
-        S.evq.push(qid);
-        break;
-      }
-    }
-  }
+  S.npcWeek=0;
+  if(!S.evq.length&&(!S.pend||Math.random()<.5))npcPoolTick();
   if(S.turn>=(S.tideT||19)-3&&S.turn<(S.tideT||19)&&!S.f.tideDone){
     if(window.SFX) SFX.thunder();
     log('Đêm nào cũng nghe tiếng sói tru gần hơn.','danger');
@@ -307,6 +300,15 @@ function advance(){
   // Hết việc trong tuần: đại sự đang chờ tự tìm tới trước khi sang tuần
   if(S.ap<=0&&S.pend){firePend();if(S.evq.length)return}
   if(S.ap<=0)endTurn();
+}
+// Tuyến NPC: mỗi tuần tối đa một chuyện. Đầu tuần bận (mốc chính ập tới) thì chuyện NPC tới sau việc đầu tiên.
+function npcPoolTick(){
+  if(S.book===2||S.npcWeek===S.turn)return false;
+  if(!S.npcProg)S.npcProg={phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1};
+  for(const qid of NPC_POOL){
+    if(EV[qid]&&(!EV[qid].cond||EV[qid].cond())&&!S.f[qid]&&!S.evq.includes(qid)){S.evq.push(qid);S.npcWeek=S.turn;return true}
+  }
+  return false;
 }
 function firePend(){const id=S.pend;S.pend=null;if(id&&EV[id]&&(!EV[id].cond||EV[id].cond()))S.evq.push(id)}
 // Người chơi chủ động đối mặt với đại sự của tuần
@@ -615,6 +617,7 @@ function act(id){
       log('Ngươi tĩnh dưỡng, nghe gió núi thổi qua rừng trúc.','sys');break;
   }
   spendAct();
+  if(!S.evq.length&&!S.combat&&S.ap===AP_WEEK-1)npcPoolTick();
   resEnd();saveAll();advance();render();
 }
 // Mỗi tuần (Quyển 2: mỗi đơn vị thời gian của chương) có AP_WEEK việc

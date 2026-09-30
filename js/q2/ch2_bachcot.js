@@ -7,14 +7,15 @@ CHAPTERS.q2_bachcot={n:'Bạch Cốt Sơn',title:'Quyển hai · Chương hai ·
   canon:{1:'q2_bc_toi',2:'q2_bc_maodanh',3:'q2_bc_daisan',4:'q2_bc_tiec',5:'q2_bc_dausan',6:'q2_bc_thietgia',7:'q2_bc_hang',8:'q2_bc_sanh',9:'q2_bc_suho',10:'q2_bc_tron'},
   side:['q2_bc_lolang','q2_bc_daokho'],
   spots:[
-    {id:'bctrai',x:20,y:58,g:'寨',n:'Trại Bách gia',d:'Tiệc rượu, dò la, đấu đá.',loc:'bc_trai',evP:.75,quiet:'Người Bách gia cười nói với ngươi, mắt thì không cười.'},
-    {id:'bcsan',x:50,y:70,g:'猎',n:'Đồng săn',d:'Săn thú, lấy nguyên thạch.',loc:'bc_san',foes:['khicuongtru','gauden'],evP:.4,foeP:.8},
-    {id:'bcnui',x:66,y:30,g:'骨',n:'Sườn Bạch Cốt Sơn',d:'Rừng xương, cốt thú, suối sữa.',loc:'bc_nui',foes:['cotthu'],evP:.5,foeP:.8},
+    {id:'bctt',x:48,y:46,g:'骨',n:'Dò các nhánh truyền thừa',d:'Sảnh giả, cơ quan, cốt thú trong hầm. Bách gia bám sau lưng.',loc:'bc_tt',evP:.7,foes:['cotthu'],foeP:.6,show:()=>S.f.inHoiCot},
+    {id:'bctrai',show:()=>!S.f.inHoiCot,x:20,y:58,g:'寨',n:'Trại Bách gia',d:'Tiệc rượu, dò la, đấu đá.',loc:'bc_trai',evP:.75,quiet:'Người Bách gia cười nói với ngươi, mắt thì không cười.'},
+    {id:'bcsan',show:()=>!S.f.inHoiCot,x:50,y:70,g:'猎',n:'Đồng săn',d:'Săn thú, lấy nguyên thạch.',loc:'bc_san',foes:['khicuongtru','gauden'],evP:.4,foeP:.8},
+    {id:'bcnui',show:()=>!S.f.inHoiCot,x:66,y:30,g:'骨',n:'Sườn Bạch Cốt Sơn',d:'Rừng xương, cốt thú, suối sữa.',loc:'bc_nui',foes:['cotthu'],evP:.5,foeP:.8},
     {id:'baicanh',x:36,y:36,g:'冰',n:'Ở cạnh Bạch Ngưng Băng',d:'Bàn mưu, luyện đao.',run:baiLesson},
     {id:'tuluyen',x:82,y:58,g:'修',n:'Bế quan',d:'Dồn chân nguyên vào tu vi.'},
     {id:'nghi',x:10,y:34,g:'息',n:'Tĩnh dưỡng',d:'Hồi khí huyết và chân nguyên.'},
-    {id:'market',minor:1,x:28,y:80,g:'市',n:'Chợ Bách gia',d:'Mua bán'},
-    {id:'refine',minor:1,x:90,y:26,g:'炉',n:'Lò luyện',d:'Luyện cổ'},
+    {id:'market',show:()=>!S.f.inHoiCot,minor:1,x:28,y:80,g:'市',n:'Chợ Bách gia',d:'Mua bán'},
+    {id:'refine',show:()=>!S.f.inHoiCot,minor:1,x:90,y:26,g:'炉',n:'Lò luyện',d:'Luyện cổ'},
   ]};
 
 Object.assign(EV,{
@@ -62,16 +63,61 @@ q2_bc_thietgia:{canon:1,title:'Hố Tiêu Lôi',hint:'Đội Thiết gia',g:'铁
 q2_bc_hang:{canon:1,title:'Hang gai xương',hint:'Lối vào truyền thừa',g:'洞',
   text:()=>'Trong một hang trên núi, những gai xương xoắn ốc mọc chi chít. Xoay đúng gai to nhất thì cửa mở: truyền thừa của Hôi Cốt Tài Tử. Bách Sinh và Bách Hoa đứng sau lưng ngươi. Người được truyền thừa "chọn" thường có vận khí.',
   choices:()=>[
-    {t:'Bắt hai đứa nhỏ đi cùng, đuổi gia lão Bách gia ra',tag:'ma',canon:1,dao:10,eff:()=>{S.f.bachSinh=1;S.susp+=10;learn('q2_hoicot');return 'Bách Sinh cắn răng che cho em. Nữ tộc trưởng nhìn thấy qua khói ghi hình, nhưng không dám động vào con tin.'}},
-    {t:'Vào một mình với Bạch Ngưng Băng',eff:()=>{learn('q2_hoicot');return 'Không có con tin, Bách gia sẽ theo sát sau lưng.'}},
+    {t:'Bắt hai đứa nhỏ đi cùng, đuổi gia lão Bách gia ra',tag:'ma',canon:1,dao:10,eff:()=>{S.f.inHoiCot=1;S.f.bachSinh=1;S.susp+=10;learn('q2_hoicot');return 'Bách Sinh cắn răng che cho em. Nữ tộc trưởng nhìn thấy qua khói ghi hình, nhưng không dám động vào con tin.'}},
+    {t:'Vào một mình với Bạch Ngưng Băng',eff:()=>{S.f.inHoiCot=1;learn('q2_hoicot');return 'Không có con tin, Bách gia sẽ theo sát sau lưng.'}},
   ]},
-q2_bc_sanh:{canon:1,title:'Sảnh suối sữa',hint:'Chọn cổ truyền thừa',g:'骨',
-  text:()=>'Sảnh đầu: vạc suối sữa nuôi hàng trăm Cốt Thương. Sảnh hai: ba cột xương, mỗi cột một con cổ Tam chuyển. Chỉ được chọn một.',
-  choices:()=>[
-    {t:'Luyện hóa hết Cốt Thương, hủy phần còn lại, chọn Cốt Thứ cổ',canon:1,eff:()=>{gainGu('cotthuong');gainGu('loatoan');gainGu('cotthu');S.stones+=30;S.susp+=5;return 'Hơn hai trăm Cốt Thương vào không khiếu trong vài khắc nhờ Xuân Thu Thiền và Bảo Liên. Phần còn lại ngươi đập nát, không để lại cho Bách gia. Cột thứ ba: Cốt Thứ cổ.'}},
-    {t:'Chọn Ngọc Cốt và Thiết Cốt, cổ làm xương cứng',eff:()=>{gainGu('cotthuong');gainGu('ngoccot');gainGu('thietcot');return 'Xương cứng thì mới dùng được Ngạc Lực lâu dài.'}},
-    {t:'Dập đầu trước hài cốt chủ nhân, chờ mật đạo',check:['ngo',13],bonus:()=>mem('q2_hoicot')?5:0,ok:()=>{gainGu('cotthuong');gainGu('cotthu');gainGu('ngoccot');return 'Mật đạo thứ hai mở. Ngươi đạp nát hài cốt, lấy thêm Ngọc Cốt cổ.'},fail:()=>{gainGu('cotthuong');return 'Không có gì xảy ra. Chỉ còn Cốt Thương.'}},
-  ]},
+// Truyền thừa Hôi Cốt Tài Tử (VN 239–244). Nhánh theo lựa chọn: tham hay không ở sảnh hai, dập đầu thật hay đạp hài cốt,
+// có mang Bách Sinh và Bách Hoa theo hay không (hai đứa "được truyền thừa chọn", gõ răng ra cổ quý).
+q2_bc_sanh:{canon:1,title:'Truyền thừa Hôi Cốt Tài Tử',hint:'Chọn cổ truyền thừa',g:'骨',
+  scene:{
+    start:'sua',budget:2,
+    nodes:{
+      sua:{
+        talk:[
+          ['','Xoay đúng gai xương to nhất, cửa đá mở. Sảnh đầu: một vạc suối sữa trắng đục, hàng trăm Cốt Thương Cổ và vài chục Loa Toàn Cốt Thương bơi lờ đờ.'],
+          ['bainu','Nhiều thế này, ngươi định lấy hết?']
+        ],
+        choices:[
+          {t:'Kéo gai xoắn thấp nhất, luyện hóa hết rồi đập nát phần còn lại',tag:'ma',canon:1,eff:()=>{gainGu('cotthuong');gainGu('loatoan');S.stones+=20;S.f.bcHuy=1;return 'Hơn hai trăm Cốt Thương và hơn hai mươi Loa Toàn vào không khiếu trong vài khắc, nhờ Xuân Thu Thiền và Bảo Liên. Phần còn lại ngươi đập nát. Bách gia tới sau sẽ không còn gì.'},go:'cot'},
+          {t:'Chỉ lấy vừa đủ dùng, để lại cho người sau',tag:'chinh',eff:()=>{gainGu('cotthuong');return 'Ngươi lấy một ít Cốt Thương. Vạc sữa vẫn đầy.'},go:'cot'},
+        ]
+      },
+      cot:{
+        talk:[['','Sảnh hai: ba cột xương, mỗi cột đỡ một con cổ Tam chuyển. Dòng chữ khắc: "Chọn một."'],['','Lặc Cốt Thuẫn: hai hàng xương sườn che ngực, gần như không tốn chân nguyên. Phi Cốt Thuẫn: ba khiên xương bay quanh người. Ti Cốt Dực: cánh xương dọc cẳng tay, ra đòn nhanh hơn.']],
+        choices:[
+          {t:'Nhìn kỹ chân các cột xương',stay:1,check:['ngo',11],say:'Chân mỗi cột có một rãnh máu nối xuống dưới nền. Lấy một con thì rãnh đóng. Lấy nhiều hơn thì mật đạo phía sau sẽ đổi hướng.',flag:'biet_cot'},
+          {t:'Chọn Phi Cốt Thuẫn',canon:1,eff:()=>{gainGu('phicotthuan');return 'Ba khiên xương bay lên, xoay quanh người ngươi.'},go:'haicot'},
+          {t:'Chọn Lặc Cốt Thuẫn',eff:()=>{gainGu('lacotthuan');return 'Hai hàng xương sườn mọc ra trước ngực, cứng như sắt.'},go:'haicot'},
+          {t:'Chọn Ti Cốt Dực',eff:()=>{gainGu('ticotduc');return 'Cánh xương mọc dọc cẳng tay. Nắm đấm nhẹ hẳn đi.'},go:'haicot'},
+          {t:'Tham, lấy cả ba',tag:'ma',eff:()=>{gainGu('phicotthuan');gainGu('lacotthuan');gainGu('ticotduc');S.f.bcTham=1;return 'Ba cột xương cùng đổ. Dưới nền vang lên tiếng đá chuyển. Mật đạo phía sau đã đổi hướng.'},go:'haicot'},
+        ]
+      },
+      haicot:{
+        talk:()=>[['','Sảnh ba: một bộ hài cốt ngồi xếp bằng, trước mặt là Hôi Cốt Cự Thư. Chữ trên vách: người kế thừa phải dập đầu ba cái.'],...(S.f.bcTham?[['','Nền đá dưới hài cốt đã nứt từ lúc ba cột xương đổ. Mật đạo sâu nhất sẽ không mở nữa.']]:[])],
+        choices:()=>[
+          {t:'Dập đầu ba tiếng vang, rồi đứng yên, không động vào hài cốt',canon:1,check:['tamco',12],bonus:()=>mem('q2_hoicot')?5:0,
+            ok:()=>{if(S.f.bcTham){gainGu('thanhnhiet');return 'Chỉ mật đạo thứ nhất mở. Trong hốc có một con Thanh Nhiệt Cổ và cuốn cốt thư.'}gainGu('cotthu');return 'Mật đạo thứ hai, sâu hơn, mở ra. Ngươi đạp nát hài cốt rồi mới đi. Trong hốc: Cốt Thứ Cổ.'},
+            fail:()=>{gainGu('thanhnhiet');return 'Ngươi liếc hài cốt một lần. Chỉ mật đạo thứ nhất mở: Thanh Nhiệt Cổ và cuốn cốt thư.'},go:'bicac'},
+          {t:'Đạp nát hài cốt, lục cự thư',tag:'ma',eff:()=>{S.stones+=15;return 'Cự thư toàn bí phương. Không mật đạo nào mở. Ngươi phải tự tìm cầu thang. +15 nguyên thạch vụn trong hài cốt.'},go:'bicac'},
+        ]
+      },
+      bicac:{
+        talk:()=>[
+          ['','Cầu thang nghìn thước dẫn tới Nhục Nang Bí Các: vách thịt ấm, đầy những cái miệng đang cười. Một hàm răng ngọc mười chiếc treo giữa phòng. Sách nhỏ ghi: gõ răng tùy duyên để lấy cổ.'],
+          ['bainu','Để ta.'],
+          ['','Bạch Ngưng Băng gõ bừa. Một bộ răng ngọc rơi vào tay nàng: Nhục Bạch Cốt, cổ trị liệu Tam chuyển.'],
+          ...(S.f.bachSinh?[['','Bách Sinh và Bách Hoa đứng nép vào vách thịt. Hai đứa trẻ "được truyền thừa chọn". Người có vận gõ răng thì ra cổ tốt.']]:[['','Không có ai khác. Gõ đúng thứ tự năm chiếc thì mới ra thứ quý.']])
+        ],
+        choices:()=>[
+          ...(S.f.bachSinh?[{t:'Đá tỉnh hai đứa nhỏ, bắt chúng gõ răng',tag:'ma',canon:1,eff:()=>{gainGu('nhucbachcot');gainGu('votucdieu');gainGu('ngoccot');gainGu('thietcot');baiRel(-3);return 'Bách Hoa gõ ra Vô Túc Điểu và Thiết Cốt Cổ. Bách Sinh cắn răng che em, gõ ra Ngọc Cốt Cổ. Bạch Ngưng Băng tát nó một cái khi nó định cắn ngươi.'}}]:[]),
+          {t:'Tự gõ, theo nhịp trên bức vách',check:['ngo',13],bonus:()=>mem('q2_hoicot')?5:0,
+            ok:()=>{gainGu('nhucbachcot');gainGu('votucdieu');return 'Năm tiếng gõ đúng thứ tự. Một con chim xương không chân rơi xuống: Vô Túc Điểu.'},
+            fail:()=>{gainGu('nhucbachcot');gainGu('ngoccot');return 'Ngươi gõ sai nhịp. Chỉ rơi ra Ngọc Cốt Cổ. Không có đường bay ra khỏi núi.'}},
+          {t:'Không tham, đi tiếp',eff:()=>{gainGu('nhucbachcot');return 'Ngươi để Bạch Ngưng Băng giữ Nhục Bạch Cốt rồi đi tiếp.'}},
+        ]
+      },
+    }
+  }},
 q2_bc_suho:{canon:1,title:'Kim tự tháp sư hổ',hint:'Cốt Nhục Đoàn Viên',g:'肉',
   text:()=>'Sảnh lớn nhất, sáu mẫu, giữa là kim tự tháp xương và tượng đầu sư hổ mắt hồng ngọc: "Song Tử đồng tâm, Tam Linh hợp nhất." Ngươi và Bạch Ngưng Băng đặt tay lên, cửa không mở. Hai người không đồng tâm. Lò luyện bên trong cần huyết nhục tươi.'+(S.f.bachSinh?' Bách Sinh và Bách Hoa đứng co ro trong góc.':''),
   choices:()=>[
@@ -82,21 +128,22 @@ q2_bc_suho:{canon:1,title:'Kim tự tháp sư hổ',hint:'Cốt Nhục Đoàn Vi
 q2_bc_tron:{canon:1,title:'Vách núi',hint:'Trốn khỏi Bạch Cốt Sơn',g:'逃',sc:'fire',
   text:()=>'Bách gia chặn cửa ra. Nữ tộc trưởng phóng Hàn Ngư cổ, một gia lão bóp vỡ cổ trong khiếu ngươi từ xa. Gia lão Bách Chiến Ôn bước ra, Hỏa Nhân cổ cháy quanh người.'+(S.f.bachSinhChet?' Họ đã biết hai đứa trẻ chết thế nào.':''),
   choices:()=>[
-    {t:'Chạy ra vách núi, cưỡi Vô Túc Điểu',canon:1,eff:()=>{gainGu('votucdieu');S.f.votuc=1;later('q2_bc_roi',0,0);return 'Vô Túc Điểu một ngày vạn dặm, không có chân, chạm đất là chết. Không bay thì chết.'}},
-    {t:'Đánh mở đường',eff:()=>{fight2('bachchienon',{after:'q2_bc_on',spare:.25,spareAfter:'q2_bc_on_hong',spareT:'Hỏa Nhân cổ lao tới định đồng quy vu tận. Bạch Ngưng Băng kéo ngươi nhảy khỏi vách núi.'});return 'Lửa và xương va nhau.'}},
+    {t:'Chạy ra vách núi, cưỡi Vô Túc Điểu',canon:1,need:{gu:'votucdieu',t:'Cần Vô Túc Điểu (Bách Hoa gõ ra ở Nhục Nang Bí Các)'},eff:()=>{S.f.inHoiCot=0;S.f.votuc=1;later('q2_bc_roi',0,0);return 'Vô Túc Điểu một ngày vạn dặm, không có chân, chạm đất là chết. Không bay thì chết.'}},
+    {t:'Nhảy vực theo Bạch Ngưng Băng, bật Khiêu Khiêu Thảo',need:{gu:'khieukhieu'},check:['satphat',13],ok:()=>{S.f.inHoiCot=0;S.hp=Math.max(1,S.hp-40);chapEnd('q2_thuongdoi');return 'Rễ lò xo bật ngươi qua khe vực. Hai người lăn xuống sườn núi, gãy mấy chiếc xương sườn. Khí huyết −40.'},fail:()=>{S.hp=Math.max(1,S.hp-30);fight2('bachchienon',{after:'q2_bc_on',spare:.25,spareAfter:'q2_bc_on_hong',spareT:'Hỏa Nhân cổ lao tới. Bạch Ngưng Băng kéo ngươi nhảy khỏi vách núi.'});return 'Nhảy hụt. Khí huyết −30. Bách Chiến Ôn đã tới.'}},
+    {t:'Đánh mở đường',eff:()=>{S.f.inHoiCot=0;fight2('bachchienon',{after:'q2_bc_on',spare:.25,spareAfter:'q2_bc_on_hong',spareT:'Hỏa Nhân cổ lao tới định đồng quy vu tận. Bạch Ngưng Băng kéo ngươi nhảy khỏi vách núi.'});return 'Lửa và xương va nhau.'}},
   ]},
 q2_bc_roi:{title:'Núi Tử U',g:'紫',
-  text:()=>'Vô Túc Điểu kiệt sức, rơi xuống rừng tím núi Tử U. Nó chạm đất và chết. Ban ngày rừng này yên, ban đêm thì không.',
-  choices:[{t:'Tìm đường ra trước khi trời tối',eff:()=>{loseGu('votucdieu');chapEnd('q2_thuongdoi');return 'Chương hai kết thúc.'}}]},
+  text:()=>'Bách Chiến Ôn đuổi theo trên không, Hỏa Nhân cổ cháy rực. Ngươi điều khiển chim lượn vòng cho hắn đuổi hụt tới khi hắn tự bạo. Lửa táp qua: toàn thân ngươi bỏng, mặt cháy nham nhở. Vô Túc Điểu kiệt sức, rơi xuống rừng tím núi Tử U. Nó chạm đất và chết.',
+  choices:[{t:'Tìm đường ra trước khi trời tối',eff:()=>{S.f.matBong=1;loseGu('votucdieu');chapEnd('q2_thuongdoi');return 'Chương hai kết thúc.'}}]},
 
 // bên lề
-q2_bc_lolang:{title:'Cổ lo âu',g:'莲',who:'bachlien',cond:()=>S.turn>=3,
+q2_bc_lolang:{title:'Cổ lo âu',g:'莲',who:'bachlien',cond:()=>S.turn>=3&&!S.f.inHoiCot,
   text:()=>'Bách Liên ngồi xuống cạnh ngươi, rót rượu. Tự nhiên ngươi thấy bồn chồn, muốn nói ra điều gì đó.',
   choices:[
     {t:'Nhận ra cổ gây lo âu, giả vờ lo đúng chỗ nàng muốn',check:['tamco',13],ok:()=>{rel('bachlien',10);S.f.bachLua=1;return 'Ngươi "lỡ lời" rằng tộc trưởng Cổ Nguyệt sắp tới. Bách gia sẽ chờ.'},fail:()=>{S.susp+=8;return 'Ngươi nói nhiều hơn mình muốn. Hiềm nghi +8.'}},
     {t:'Đứng dậy bỏ đi',eff:()=>'Nàng nhìn theo.'},
   ]},
-q2_bc_daokho:{title:'Người Thiết gia',g:'刀',who:'daokho',cond:()=>S.turn>=4,
+q2_bc_daokho:{title:'Người Thiết gia',g:'刀',who:'daokho',cond:()=>S.turn>=4&&!S.f.inHoiCot,
   text:()=>'Một đao khách Thiết gia ghé trại. Hắn kể: ba trại ở Thanh Mao Sơn đã diệt, có ma tu chạy thoát, Thiết gia đang truy.',
   choices:[{t:'Nghe rồi đi',eff:()=>{meet('daokho');S.tamco++;return 'Tên hắn là Thiết Đao Khổ. Tâm cơ +1.'}}]},
 q2_bc_daokho2:{title:'Đao khách sống sót',g:'刀',who:'daokho',
@@ -104,6 +151,22 @@ q2_bc_daokho2:{title:'Đao khách sống sót',g:'刀',who:'daokho',
   choices:[{t:'Ghi nhớ gương mặt hắn',eff:()=>{rel('daokho',-20);return 'Sớm muộn gì hắn cũng tới tìm ngươi.'}}]},
 
 // nơi chốn
+// trong truyền thừa (VN 243: nhiều nhánh có sảnh giống hệt để đánh lừa)
+q2r_tt_sanhgia:{loc:'bc_tt',title:'Sảnh giống hệt',g:'骨',text:()=>'Ngươi rẽ vào một nhánh khác. Cuối đường là một sảnh y hệt sảnh ba: hài cốt, cự thư, chữ khắc bảo dập đầu.',
+  choices:[
+    {t:'Soi kỹ vết mòn trên nền đá',check:['ngo',12],ok:()=>{S.tamco++;return 'Nền không mòn. Chưa ai từng quỳ ở đây: sảnh giả. Ngươi quay ra. Tâm cơ +1.'},fail:()=>{S.hp=Math.max(1,S.hp-20);return 'Ngươi quỳ xuống. Nền đá sụp, gai xương đâm lên. Khí huyết −20.'}},
+    {t:'Không phí thời gian, quay lại',eff:()=>'Ngươi quay lại lối cũ.'},
+  ]},
+q2r_tt_bachgia:{loc:'bc_tt',title:'Tiếng bước chân phía sau',g:'足',text:()=>'Có tiếng bước chân nhẹ phía sau. Người Bách gia đang bám theo, chờ ngươi mở hết cửa cho họ.'+(S.f.bachSinh?' Họ không dám lại gần vì hai đứa nhỏ đang trong tay ngươi.':''),
+  choices:()=>[
+    {t:'Phục kích kẻ đi đầu',tag:'ma',eff:()=>{fight2('bachchienliep',{spare:.3,spareT:'Bách Chiến Liệp lùi vào bóng tối.'});return 'Ngươi nấp sau một khúc quanh.'}},
+    {t:'Đánh sập một đoạn hành lang sau lưng',check:['satphat',12],ok:()=>{S.susp=Math.max(0,S.susp-5);return 'Đá xương đổ xuống. Bách gia mất nửa ngày mới đào qua.'},fail:()=>{S.hp=Math.max(1,S.hp-15);return 'Đá đổ trúng vai ngươi. Khí huyết −15.'}},
+  ]},
+q2r_tt_cotthu:{loc:'bc_tt',title:'Hầm cốt thú',g:'兽',text:()=>'Một hầm tối sâu hoắm, tiếng xương va lách cách. Cốt thú làm tổ dưới đó, giữa đống xương có ánh ngọc.',
+  choices:[
+    {t:'Xuống hầm',eff:()=>{fight2('cotthu',{});return 'Cốt thú trườn ra khỏi đống xương.'}},
+    {t:'Dùng Cốt Thương bắn từ miệng hầm',req:()=>hasGu('cotthuong'),reqT:'Cần Cốt Thương Cổ',check:['satphat',11],ok:()=>{S.stones+=18;return 'Mấy phát Cốt Thương xuyên qua đống xương. Ngươi xuống nhặt nguyên thạch vụn. +18.'},fail:()=>{fight2('cotthu',{});return 'Cốt thú lao lên theo tiếng động.'}},
+  ]},
 q2r_bc_ruou:{loc:'bc_trai',title:'Giả say',g:'酒',text:()=>'Tiệc rượu kéo dài. Doanh trại canh gác nghiêm ngặt.',
   choices:[{t:'Giả say, đi lạc để thử đường',check:['tamco',12],ok:()=>{S.tamco++;return 'Ngươi thuộc hết đường trong trại. Tâm cơ +1.'},fail:()=>{S.susp+=8;return 'Lính gác đưa ngươi về lều, không tin ngươi say. Hiềm nghi +8.'}}]},
 q2r_bc_gialao:{loc:'bc_trai',title:'Gia lão thăm dò',g:'老',text:()=>'Một gia lão Bách gia hỏi han về Cổ Nguyệt, về nguyên tuyền, về đường núi.',
@@ -124,5 +187,5 @@ Object.assign(AFTER,{
   q2_bc_cotthu:()=>{S.stones+=20;S.danh+=6;log('Đội ngươi mang về xương cốt thú. Bách gia nhìn nhau.','good')},
   q2_bc_thiet:()=>{S.susp+=10;S.stones+=20;log('Người Thiết gia chết không kịp kêu. Thiết gia sẽ đếm lại quân số.','danger')},
   q2_bc_on:()=>{S.stones+=60;S.danh+=15;chapEnd('q2_thuongdoi');log('Bách Chiến Ôn ngã. Hỏa Nhân cổ tắt trước khi kịp nổ. Ngươi rời Bạch Cốt Sơn bằng đường chính.','big')},
-  q2_bc_on_hong:()=>{chapEnd('q2_thuongdoi');S.hp=Math.max(1,Math.round(maxHp()*.3));log('Hai người rơi xuống rừng tím núi Tử U, sống sót.','big')},
+  q2_bc_on_hong:()=>{S.f.matBong=1;chapEnd('q2_thuongdoi');S.hp=Math.max(1,Math.round(maxHp()*.3));log('Hai người rơi xuống rừng tím núi Tử U, sống sót.','big')},
 });

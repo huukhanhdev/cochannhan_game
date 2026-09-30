@@ -70,8 +70,8 @@ run(`var __bf={diso:0,q:0,memOk:0,memBad:0,lives:0,shift:0};const __ch=choose;ch
 // Đo lặp sự kiện ngẫu nhiên: khoảng cách ngắn nhất (tuần) giữa hai lần cùng một sự kiện trong một kiếp
 run(`var __rep={n:0,gaps:{}};const __re=randomEvent;randomEvent=function(loc){const ok=__re(loc);if(ok){const id=S.evq[S.evq.length-1];S.__ev=S.__ev||{};if(S.__ev[id]!==undefined){const g=S.turn-S.__ev[id];__rep.gaps[g]=(__rep.gaps[g]||0)+1}S.__ev[id]=S.turn;__rep.n++}return ok}`);
 
-const N=+process.argv[2]||200,MAXLIFE=+process.argv[3]||8;
-const res={r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{},replay:[],firstWin:[]};
+const N=process.env.STORY?0:(+process.argv[2]||200),MAXLIFE=+process.argv[3]||8;
+const res={drift:{win:[],dead:[]},r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{},replay:[],firstWin:[]};
 for(let n=0;n<N;n++){
   run('META=freshMeta();META.opt={turn:'+(!!process.env.TURN)+'};newLife();');
   let won=false,replay=0;
@@ -113,3 +113,30 @@ console.log(`Số tuần phải chơi lại mỗi chiến dịch: trung bình ${
 console.log('Kết cục:',JSON.stringify(res.end||{}));
 console.log('Cổ lúc thắng:',JSON.stringify(Object.entries(res.guWin||{}).sort((a,b)=>b[1]-a[1])));
 console.log('Nguyên nhân chết:',Object.entries(res.cause).sort((a,b)=>b[1]-a[1]).slice(0,12));
+
+// ---- Kiểm tra nhất quán truyện lúc chạy và độ phủ nhánh (KE_HOACH_NHANH_TRUYEN.md, T1) ----
+// STORY=1 node tools/sim.cjs 100 6 → in lời thoại sai với trạng thái và các sự kiện chưa từng chạy
+if(process.env.STORY){
+  const R=run(`(function(){
+    const RULES=[
+      [/giết Cổ Kim Sinh|vụ án Cổ Kim Sinh|Kim Sinh (mất tích|bỏ mạng)|xác (Cổ )?Kim Sinh/,()=>S.f.killedJKS,'nhắc Kim Sinh chết khi hắn còn sống'],
+      [/phục kích (em ta|hắn) ở khe đá/,()=>S.f.jksEscaped,'nhắc Kim Sinh bị phục kích khi không có'],
+      [/cửa tửu lâu|tửu lâu của ngươi|tới tửu lâu tìm/,()=>S.f.tuulau,'nhắc tửu lâu khi không có'],
+      [/cái cây giữa tường trại|xác Thanh Thư|gốc cây mọc lên từ xác/,()=>S.f.qingshuDead,'nhắc Thanh Thư chết khi hắn còn sống'],
+      [/Thanh Thư (sống sót|còn sống)/,()=>S.f.qingshuAlive,'nhắc Thanh Thư sống khi hắn đã chết'],
+      [/cụt một tay/,()=>S.f.pcHate,'nhắc Phương Chính cụt tay khi không có'],
+    ];
+    const bad={},seen={};
+    const txt=x=>{try{return typeof x==='function'?x():x}catch(e){return ''}};
+    function check(id,t){if(!t)return;for(const [re,ok,n] of RULES)if(re.test(t)&&!ok()){const k=id+' · '+n;bad[k]=(bad[k]||0)+1}}
+    const _ch=choose;choose=function(i){const id=S.evq[0];if(id&&EV[id]&&!EV[id].scene){seen[id]=(seen[id]||0)+1;check(id,txt(EV[id].text));(choicesOf(EV[id])||[]).forEach(c=>check(id,c.t))}return _ch(i)};
+    const _is=initScene;initScene=function(id){const had=S.sc&&S.sc.id===id;const r=_is(id);if(r&&!had){seen[id]=(seen[id]||0)+1}const nd=r&&EV[id].scene.nodes[r.node];if(nd){scTalk(nd).forEach(l=>check(id+'.'+r.node,l[1]))}return r};
+    const _go=scGoto;scGoto=function(t){const id=S.sc.id;_go(t);const nd=EV[id].scene.nodes[t];seen[id+'.'+t]=(seen[id+'.'+t]||0)+1;if(nd)scTalk(nd).forEach(l=>check(id+'.'+t,l[1]))};
+    return {bad,seen};
+  })()`);
+  const N=+process.argv[2]||100,MAXL=+process.argv[3]||6;
+  for(let n=0;n<N;n++){run('META=freshMeta();META.opt={turn:'+(!!process.env.TURN)+'};newLife();');for(let life=1;life<=MAXL;life++){let st=0;while(st<5000){const o=run('S.over');if(o==='rewind'){run('rewindTime(false)');st++;continue}if(o)break;run('botTurn()');st++}if(run('S.over')==='win')break;run('rebirth()')}}
+  console.log('\n== Lời thoại sai với trạng thái ==');const b=Object.entries(R.bad);console.log(b.length?b.map(x=>x[1]+' lần · '+x[0]).join('\n'):'Không có.');
+  const ids=run('Object.keys(EV).filter(k=>!EV[k].loc||EV[k].loc!=="diso").filter(k=>/^(c|npc|q|x|k)_/.test(k))');
+  console.log('\n== Sự kiện chưa từng chạy ('+N+' chiến dịch) ==');console.log(ids.filter(k=>!R.seen[k]).join(' ')||'Không có.');
+}

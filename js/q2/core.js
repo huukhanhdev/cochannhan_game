@@ -70,7 +70,7 @@ function startQ2(ending){
 // Bắt đầu chương k: đặt lại lượt, lịch mốc, ảnh chụp quay ngược; lưu mốc chơi lại.
 function enterChapter(k){
   const ch=CHAPTERS[k];if(!ch)return;
-  S.chap=k;S.turn=0;S.evq=[];S.panel=null;S.ap=AP_WEEK;S.pend=null;S.pendingChap=null;S.snaps=[];S.later=[];S.evLast={};S.over=null;S.combat=null;
+  S.f.inHoiCot=0;S.chap=k;S.turn=0;S.evq=[];S.panel=null;S.ap=AP_WEEK;S.pend=null;S.pendingChap=null;S.snaps=[];S.later=[];S.evLast={};S.over=null;S.combat=null;
   S.canon=Object.assign({},ch.canon);
   if(ch.shop)rollShop2();
   log(`— ${ch.title} —`,'big');
@@ -168,7 +168,7 @@ function renderMap2(st){
 function q2WinHTML(){
   const E=ENDINGS[S.ending]||{t:'Còn tiếp',d:''};
   return `<div class="over has-art" style="--art:url('${asset('art/p_hero.jpg')}')"><span class="label">Quyển hai · ${timeLabel()} · ${rankName()}</span>
-    <h3>${E.t}</h3><p>${E.d}</p>
+    <h3>${E.t}</h3><p>${esc(endingText(S.ending))}</p>
     <p>Làm lại chương ${META.q2Retry||0} lần.</p>
     <button class="btn big" data-a="chapretry">Chơi lại chương này</button>
     <button class="btn ghost" data-a="newgame">Bắt đầu lại từ kiếp một</button></div>`;

@@ -38,7 +38,7 @@ Object.assign(EV,{
 q2_td_thon:{canon:1,title:'Thôn phàm nhân',hint:'Giả làm phàm nhân',g:'村',who:'truongthon',
   text:()=>'Muốn tới Thương gia thành thì phải trà trộn vào thương đội. Người lạ không được nhận, trừ khi có trưởng thôn bảo lãnh. Trưởng thôn là cổ sư Nhất chuyển duy nhất ở đây.',
   choices:()=>[
-    {t:'Đốt mặt, cắt tai, giả phàm nhân bị bỏng; Bạch Ngưng Băng cắt tóc nhuộm đen',canon:1,dao:8,eff:()=>{meet('truongthon');rel('truongthon',15);S.f.giaPham=1;S.hp=Math.max(1,S.hp-20);return 'Không ai nhìn ra hai người vừa từ Bạch Cốt Sơn chạy tới. Một bà lão trong thôn còn tưởng hai người là vợ chồng son. Khí huyết −20.'}},
+    {t:S.f.matBong?'Giữ nguyên gương mặt cháy, cắt tai, giả phàm nhân; Bạch Ngưng Băng cắt tóc nhuộm đen':'Đốt mặt, cắt tai, giả phàm nhân bị bỏng; Bạch Ngưng Băng cắt tóc nhuộm đen',canon:1,dao:8,eff:()=>{meet('truongthon');rel('truongthon',15);S.f.giaPham=1;S.hp=Math.max(1,S.hp-(S.f.matBong?8:20));S.f.matBong=1;return 'Không ai nhìn ra hai người vừa từ Bạch Cốt Sơn chạy tới. Một bà lão trong thôn còn tưởng hai người là vợ chồng son. Khí huyết −20.'}},
     {t:'Bán lá Tử Phong giá cao cho trưởng thôn để lấy lòng',check:['tamco',12],ok:()=>{meet('truongthon');rel('truongthon',20);S.stones+=10;return 'Lão Trương mua, cười rồi viết thư bảo lãnh.'},fail:()=>{meet('truongthon');S.stones=Math.max(0,S.stones-5);return 'Lão ép giá, nhưng vẫn bảo lãnh.'}},
   ]},
 q2_td_vao:{canon:1,title:'Hắc Thổ và Bạch Vân',hint:'Vào thương đội',g:'队',
@@ -159,4 +159,4 @@ q2_td_auduong:{title:'Âu Dương Công báo thù',g:'欧',who:'auduongcong',
   ]},
 });
 
-ENDINGS.q2_thuongluong={t:'Trước cổng Thương gia thành',d:'Từ Thanh Mao Sơn, qua sông Hoàng Long, Bạch Cốt Sơn, tới Thương gia thành. Tên giả Hắc Thổ, trong tay có Cốt Nhục Đoàn Viên và hơn trăm nguyên thạch. Còn tiếp: Thương gia thành, diễn võ trường, Tam Vương truyền thừa.'};
+ENDINGS.q2_thuongluong={t:'Trước cổng Thương gia thành',d:()=>'Từ Thanh Mao Sơn, qua sông Hoàng Long, Bạch Cốt Sơn, tới Thương gia thành. Tên giả Hắc Thổ'+(hasGu('cotnhuc')?', trong tay có Cốt Nhục Đoàn Viên':'')+`, túi còn ${S.stones} nguyên thạch. Còn tiếp: Thương gia thành, diễn võ trường, Tam Vương truyền thừa.`};

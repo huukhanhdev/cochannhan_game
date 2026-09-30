@@ -181,12 +181,12 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:2.55,atk:2.55,q2:.62,furyTurn:8};
+const DIFF={hp:2.55,atk:2.55,q2:.66,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={cuongthu:4,amduong:4,nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;
 // Giảm sát thương khi hộ thể (tỉ lệ còn nhận)
-const SHIELD_RED={khieukhieu:.05,ngocbi:.5,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.4,bachngoc:.3,thuytrao:.5,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.1};
+const SHIELD_RED={phicotthuan:.35,lacotthuan:.45,khieukhieu:.05,ngocbi:.5,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.4,bachngoc:.3,thuytrao:.5,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.1};
 // def: giáp trừ thẳng mỗi đòn (xuyên giáp bỏ qua); sk: chiêu riêng; boss: có giai đoạn 2; noflee: không cho chạy
 // fast: né đòn đánh đơn; swarm: cả bầy, đòn diện rộng mạnh hơn (xem FOE_TR trong auto.js)
 const EAI={

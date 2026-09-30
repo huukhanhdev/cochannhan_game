@@ -11,7 +11,7 @@ const ctx={
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','battle.js','minigame.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','ff.js','cicada.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
@@ -87,7 +87,10 @@ for(let n=0;n<N;n++){
   let won=false;
   for(let life=1;life<=MAXLIFE&&!won;life++){
     let steps=0;
-    while(!run('S.over')&&steps<4000){
+    while(steps<4000){
+      const o=run('S.over');
+      if(o==='rewind'){run('rewindTime(false)');res.rewinds=(res.rewinds||0)+1;steps++;continue}
+      if(o)break;
       run('botTurn()');steps++;
       if(run('S.turn')===11&&!run('S._r11')){res.r11.push(run('S.chuyen+S.giai/4'));run('S._r11=1')}
       if(run('S.turn')===27&&!run('S._r27')){res.reach27++;run('S._r27=1')}

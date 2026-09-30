@@ -548,6 +548,17 @@
     .ink-in,.story .choice,.trait-card,.story-art,.story-cap h2,.mist,.lantern,.rain,.flash,.ts-bg,.ts-hero,.ts-glyph,.ts-content h1,.ts-sub,.ts-btns,.title-screen{animation:none!important}
     .ts-intro p,.ts-go{opacity:1;animation:none!important}
   }
+  /* Xuân Thu Thiền */
+  .cicada-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:99px;border:1px solid #4a4330;background:var(--panel2);font-size:12.5px;font-weight:600;color:var(--dim);font-variant-numeric:tabular-nums}
+  .cicada-chip i{font-style:normal;font-family:var(--brush);width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#2a2414;color:#8a7440;font-size:14px;line-height:1}
+  .cicada-chip.ready{color:var(--gold);border-color:#6e5a2d}
+  .cicada-chip.ready i{background:#3a2d12;color:var(--gold);box-shadow:0 0 10px rgba(214,174,96,.45)}
+  /* Tua nhanh bằng ký ức */
+  .ff-offer .ff-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+  .ff-offer select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:6px 10px}
+  .ff-offer select:focus-visible{outline:2px solid var(--moon);outline-offset:2px}
+  #stage.ff-on{pointer-events:none}
+  #stage.ff-on>*{opacity:.9}
   </style>
 </head>
 <body>
@@ -573,10 +584,13 @@
   <script src="js/sound.js"></script>
   <script src="js/data.js"></script>
   <script src="js/events.js"></script>
+  <script src="js/living.js"></script>
   <script src="js/battle.js"></script>
   <script src="js/minigame.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/aperture.js"></script>
+  <script src="js/ff.js"></script>
+  <script src="js/cicada.js"></script>
   <script src="js/engine.js"></script>
 </body>
 </html>

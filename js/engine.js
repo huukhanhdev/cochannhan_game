@@ -133,10 +133,11 @@ function newLife(){
     log('Mở mắt ra, ngươi đang đứng giữa Cổ Nguyệt sơn trại, năm mười lăm tuổi, sáng ngày khai khiếu.','big');
   }else{
     if(window.SFX) SFX.cicada();
-    log(`Xuân Thu Thiền vỗ cánh. Quang âm chảy ngược. Kiếp thứ ${META.life}.`,'big');
+    log(`Lần thử thứ ${META.life}. Xuân Thu Thiền đã không kịp cứu ngươi, mọi thứ bắt đầu lại từ lễ khai khiếu.`,'big');
     const n=Object.keys(META.mem).length;
     log(`Tu vi, nguyên thạch, cổ trùng đều tan biến. Chỉ còn ${n} mảnh ký ức và đạo tâm vững hơn (tu luyện +${5*Math.min(META.life-1,5)}%).`,'sys');
   }
+  S.path=[];S.ffOffer=META.life>1&&ffAvailable();S.cicada={charge:0};S.snaps=[];S.rewinds=0;
   S.world=Object.keys(WORLD).sort(()=>Math.random()-.5).slice(0,2);
   if(W('thuongsom')&&W('langsom'))S.world[1]='hunggia';
   S.canon=buildCanon();
@@ -188,6 +189,8 @@ function startTurn(){
     if(window.SFX) SFX.thunder();
     log('Đêm nào cũng nghe tiếng sói tru gần hơn.','danger');
   }
+  if(S.turn>1)cicadaTick();
+  cicadaSnap();
 }
 
 function endTurn(){
@@ -225,6 +228,7 @@ function choose(i){
   (META.seen=META.seen||{})[id]=1;
   const chs=choicesOf(ev),c=chs[i];
   if(!c||(c.req&&!c.req()))return;
+  ffRememberChoice(id,c);
   S.evq.shift();
   if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else S.canonMiss++}
   if(c.tag==='ma')S.dao=clamp(S.dao+(c.dao||8),-100,100);
@@ -273,6 +277,7 @@ const ACTS=[
 ];
 function act(id){
   if(S.combat||S.over||S.evq.length||S.acted||S.traitOpts||S.mg)return;
+  ffRecord('act',{a:id});
   S.panel=null;
   const ci=(S.cache||[]).findIndex(c=>c.loc===id&&!c.done&&S.turn>=c.from&&S.turn<=c.to);
   if(ci>=0&&Math.random()<(S.cache[ci].rumor?.85:.4)){S.curCache=ci;S.evq.push('x_cache');S.acted=true;saveAll();advance();render();return}
@@ -320,6 +325,7 @@ function cultMaxStones(){return Math.ceil(maxEss()/5)}
 function cultivate(st){
   S.stones=Math.max(0,S.stones);
   if(st>S.stones||st>cultMaxStones())return;
+  ffRecord('cult',{n:st});
   const e=Math.floor(S.ess);S.stones-=st;
   const gain=Math.round((e+st*5)*cultMult());
   S.ess=0;S.prog+=gain;
@@ -687,16 +693,19 @@ function pickTrait(k){
   if(!S.traitOpts||!S.traitOpts.includes(k))return;
   S.traitOpts=null;S.trait=k;TRAITS[k].ap();S.hp=maxHp();S.ess=Math.min(S.ess,maxEss());
   log(`Mệnh cách kiếp này: ${TRAITS[k].n}. ${TRAITS[k].up}; ${TRAITS[k].down}.`,'mem');
-  saveAll();render();
+  cicadaSnap();saveAll();render();
 }
 function die(cause){
   if(S.combat&&!S.combat.pko&&window.PIXI&&$('arena')&&!RM){S.combat.pko=1;S.combat.cause=cause;FX.busy=true;FX.q({type:'pdie'});saveAll();render();setTimeout(()=>{FX.busy=false;die(cause)},1100);return}
-  S.combat=null;S.hp=0;S.evq=[];S.over='dead';FX.queue.length=0;
-  META.deaths.push({life:META.life,turn:S.turn,cause});
+  const back=cicadaReady()&&(S.snaps||[]).length>0;
+  S.combat=null;S.hp=0;S.evq=[];S.over=back?'rewind':'dead';S.ff=null;FX.queue.length=0;
+  META.deaths.push({life:META.life,turn:S.turn,cause,rewind:back});
   log('Mắt ngươi tối sầm. Tiếng tim đập chậm dần.','big');
+  if(!back)log(`Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.`,'danger');
   saveAll();render();
 }
 function rebirth(){
+  ffSaveLife();
   META.life++;newLife();saveAll();render();
 }
 
@@ -767,10 +776,11 @@ document.addEventListener('click',ev=>{
       case 'refine':S.panel='refine';render();return;
       case 'absorb':absorb();return;
       case 'rebirth':rebirth();return;
+      case 'rewind':rewindTime(false);return;
       case 'newgame':META.wins.push(S.ending);const w=META.wins;META=freshMeta();META.wins=w;newLife();saveAll();render();return;
       case 'thien':
         if(!confirm2(b,'thien','Bấm lần nữa: mất hết, quay về khai khiếu'))return;
-        META.deaths.push({life:META.life,turn:S.turn,cause:'tự nghịch chuyển'});rebirth();return;
+        rewindTime(true);return;
       default:act(d.a);return;
     }
   }
@@ -791,6 +801,8 @@ function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];META.combos=META.combos||{};
+  // Tải lại giữa lúc đang tua thì trả quyền điều khiển cho người chơi
+  if(S.ff)S.ff=null;
   // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị
   S.gu=(S.gu||[]).filter(g=>GU[g.k]);S.shop=(S.shop||[]).filter(k=>GU[k]);META.codex=(META.codex||[]).filter(k=>GU[k]);
   for(const id in META.combos)if(!COMBOS.some(c=>c.id===id))delete META.combos[id];

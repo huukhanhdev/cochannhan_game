@@ -30,6 +30,74 @@ Link chơi: https://claude.ai/artifact/JCxtbEtAKCESDM5jjCa6xM
 
 ---
 
+## Lộ trình tiếp theo (từ 30/09/2026)
+
+> Lộ trình này thay cho các mục Đợt 5, Đợt 6, Đợt 7 và Kỹ thuật ở phía dưới. Các mục cũ giữ lại chỉ để tham khảo.
+
+### Vấn đề gốc
+
+Đây là game vòng lặp thời gian, nhưng vòng lặp đang là điểm yếu chứ chưa phải điểm mạnh.
+
+- **Người chơi phải chơi lại phần đầu quá nhiều.** Theo mô phỏng, trung bình chết ở tuần 13/27, kiếp đầu thắng khoảng 3%. Tháng 1–4 bị chơi lại 4–5 lần với cùng các lựa chọn.
+- **Ký ức chủ yếu là cộng chỉ số** (+25% sát thương lên sói, +35% mổ đá...). Game vòng lặp hay làm ngược lại: mỗi lần chết cho biết thêm một điều, và điều đó mở ra việc mới để làm. Với Phương Nguyên, cảm giác đúng là "lần này ta biết hắn sẽ đi đường nào, nên ta phục sẵn".
+- **Đầu tư đồ họa đang lệch chỗ.** Người chơi dành phần lớn thời gian đọc sự kiện và chọn trên bản đồ, nhưng thẻ sự kiện hiện chỉ là tranh nền và chữ.
+
+Hiện trạng số liệu: 38 cổ trùng, 98 sự kiện, 33 loại địch. 22 cổ chưa gắn với sự kiện cốt truyện nào. 12/17 NPC chưa có chân dung. Đấu trường mới gắn xương cho 2 tranh (Phương Nguyên, Điện Lang).
+
+### Cách làm
+
+- Mỗi giai đoạn chia thành bước nhỏ. Mỗi bước kết thúc bằng một bản chơi được trên link để test trên điện thoại.
+- Mỗi bước chỉ coi là xong khi: dữ liệu không tham chiếu tới cổ, địch, sự kiện không tồn tại; `node tools/sim.cjs 300 6` không có ca kẹt vòng lặp; chạy thử trong trình duyệt không có lỗi JS.
+- Cân bằng đo bằng số liệu người chơi cảm nhận được: số kiếp tới lần thắng đầu, số tuần phải chơi lại. Tỉ lệ thắng của người chơi máy (mục tiêu 15–35%) chỉ là số phụ.
+
+### Luật Xuân Thu Thiền (theo nguyên tác, đã làm)
+- Thiền cần 12 tuần để hồi phục. Đầu game Thiền đang kiệt sức (0%).
+- Chết khi Thiền đã hồi phục: quang âm quay ngược 3 tuần. Mất những gì có được trong 3 tuần đó, ký ức giữ lại, Thiền kiệt sức lại.
+- Chết khi Thiền chưa hồi phục: chết thật, chơi lại từ lễ khai khiếu. Ký ức vẫn giữ cho lần chơi sau (có thể đổi thành mất sạch nếu muốn khó hơn).
+- Nút tự kích hoạt Thiền chỉ dùng được khi Thiền đã hồi phục, cũng chỉ quay ngược 3 tuần.
+- Code: `js/cicada.js` (hằng số `CICADA_WEEKS`, `REWIND_WEEKS`). Mỗi đầu tuần lưu ảnh chụp trạng thái trong `S.snaps` (tối đa 4).
+- Độ khó trận đánh tăng từ 1,15 lên 1,25 (`DIFF` trong `js/data.js`) để bù cho việc chết không còn là chơi lại từ đầu. Mô phỏng 250 chiến dịch: thắng 32,8% trong 6 lần chơi, lần đầu 4%.
+- Tua nhanh bằng ký ức giờ dùng sau cái chết thật, lúc phải chơi lại từ đầu.
+
+### Giai đoạn 1: Sửa vòng lặp (ưu tiên cao nhất)
+- [x] **1.1 Tua nhanh bằng ký ức.** (Đã làm: `js/ff.js`, kiểm tra bằng `node tools/ff_test.cjs 120`.) Đầu kiếp mới, cho chọn "đi lại con đường cũ": game tự áp lại các lựa chọn kiếp trước cho tới khi gặp điều khác đi (thiên cơ mới, cánh bướm, sự kiện chưa thấy). Người chơi dừng lại đúng chỗ muốn đổi.
+- [ ] **1.2 Sổ ký ức** thay cho tab Ký ức hiện tại. Tự ghi lại những gì đã thấy: sự kiện nào xảy ra tuần nào, NPC hay ở đâu, bí mật nào đã biết, chết vì ai và ở đâu.
+- [ ] **1.3 Ký ức mở lựa chọn mới thay vì cộng chỉ số.** Ví dụ: biết đường Giả Kim Sinh hay đi thì phục kích trước; biết ngày Bạch gia tập kích thì báo trước hoặc bán tin; biết lối vào động Hoa Tửu thì vào ngay tuần đầu. Lựa chọn mở nhờ ký ức có nhãn riêng.
+- [ ] **1.4 Tâm nguyện mỗi kiếp.** Đầu kiếp chọn một mục tiêu cụ thể (lấy truyền thừa Hoa Tửu trước tháng 5, cứu Thanh Thư, giết Giả Kim Sinh không để lộ). Làm được thì ghi thêm ký ức. Mỗi kiếp có hướng đi rõ, không chỉ là sống lâu hơn kiếp trước.
+
+### Giai đoạn 2: Chiến đấu có chiều sâu mà không kéo dài
+- [ ] **2.1 Đánh nhanh cho trận dễ.** Trận với thú rừng, sơn tặc cho tự đánh bằng AI có sẵn trong script mô phỏng. Người chơi chỉ tự đánh trận khó và trùm.
+- [ ] **2.2 Mỗi loại địch cần một cách đối phó riêng.** Giáp dày cần cổ xuyên giáp, Bạch gia phong ấn cổ thì cần cổ dự phòng, trùm hồi máu cần chảy máu. 38 cổ có vai trò khác nhau thay vì chỉ khác chỉ số, và việc chọn nuôi cổ nào có ý nghĩa.
+- [ ] **2.3 Cân lại độ khó** theo số kiếp tới lần thắng đầu và số tuần phải chơi lại. Xem lại trận Giả Kim Sinh và hộ vệ Giả gia (hai nguyên nhân chết nhiều nhất).
+
+### Giai đoạn 3: Trình bày ở chỗ người chơi nhìn nhiều nhất
+- [ ] **3.1 Sự kiện thành cảnh hội thoại:** chân dung người nói (tranh sống, chớp mắt, đổi nét mặt), chữ hiện dần. Chân dung NPC chính vẽ bằng Canva AI theo thiết kế riêng, cùng phong cách thủy mặc với tranh hiện có.
+- [ ] **3.2 Bản đồ sống:** ngày đêm theo tuần, thời tiết theo thiên cơ, trăng máu trước lang triều.
+- [ ] **3.3 Cảnh chết và trùng sinh:** con ve vàng vỗ cánh, thời gian tua ngược. Đây là khoảnh khắc lặp lại nhiều nhất trong game.
+- [ ] **3.4 Bố cục điện thoại** làm lại cho gọn.
+
+### Giai đoạn 4: Đấu trường
+- [ ] Gắn xương cho các trùm: Bạch Ngưng Băng, Lôi Quan Lang Vương, Hắc Hùng, gia lão, Huyết Thủ ma tu.
+- [ ] Hiệu ứng riêng theo nhóm cổ: nguyệt, băng, huyết, phong, kim, hộ thể.
+- [ ] Cảnh cắt khi tung sát chiêu; địch chết tan thành mực.
+
+### Giai đoạn 5: Nội dung
+- [ ] Gắn 22 cổ chưa có cốt truyện vào sự kiện theo đúng chủ nhân trong nguyên tác (Hoa Tửu, Nhất Đại, Thanh Thư, Xích Sơn, Bạch gia).
+- [ ] Thêm nhánh kết cục phụ thuộc vào những gì người chơi biết và đã làm qua nhiều kiếp.
+
+### Làm xen kẽ
+- [ ] Kiểm tra dữ liệu và mô phỏng tự động sau mỗi lần sửa.
+- [ ] Đánh số phiên bản save và viết hàm chuyển đổi khi đổi cấu trúc dữ liệu.
+- [ ] Gỡ `assets/local/_scraped/` khỏi git và thêm vào `.gitignore`.
+
+### Hoãn hoặc bỏ
+- **Quyển hai:** hoãn tới khi vòng lặp quyển một thật sự hay.
+- **Minigame bắt cổ hoang:** bỏ.
+- **Thành tựu:** bỏ, sổ ký ức làm tốt việc này hơn.
+- **Chế độ khó:** để sau cùng.
+
+---
+
 ## Việc đang dở (làm ngay)
 
 ### A. Ảnh cá nhân (chỉ trên máy)

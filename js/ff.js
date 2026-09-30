@@ -11,7 +11,7 @@ const FF_BUTTERFLY={
   c_kimsinh:{k:'kimsinh',stop:1},c_baigia:{k:'baigia',stop:1},c_bai:{k:'bai',stop:1},c_lang1:{k:'lang',stop:1},c_huyetdong:{k:'huyethai',stop:1},
 };
 // Sự kiện ngẫu nhiên nhỏ (không phải mốc truyện, không thuộc tuyến NPC): được tự chọn khi chưa có lựa chọn cũ
-function ffMinor(id){const e=EV[id];return !!(e&&e.loc&&!e.canon)}
+function ffMinor(id){const e=EV[id];return !!(e&&e.loc&&e.loc!=='diso'&&!e.canon)}
 // Chọn phương án an toàn: không cần điều kiện thì ưu tiên, có tung xúc xắc thì chọn tỉ lệ cao nhất
 function ffSafeChoice(chs){
   let best=-1,bs=-1;
@@ -58,7 +58,9 @@ function ffStep(){
     const id=S.evq[0],ev=EV[id];
     const bf=FF_BUTTERFLY[id];
     if(bf&&META.lastVar&&META.lastVar[bf.k]!==undefined&&META.lastVar[bf.k]!==(S.var||{})[bf.k]){
-      if(bf.stop)return ffStop(`cánh bướm vỗ cánh, 【${ev.title}】 kiếp này đã khác kiếp trước.`),false;
+      // Lựa chọn cũ dựa vào ký ức thì có thể phản tác dụng: luôn dừng
+      const old=choicesOf(ev).find(c=>c.t===(META.choiceMem||{})[id]);
+      if(bf.stop||(old&&old.mem))return ffStop(`cánh bướm vỗ cánh, 【${ev.title}】 kiếp này đã khác kiếp trước.`),false;
       log(`Cánh bướm: 【${ev.title}】 kiếp này có chỗ khác kiếp trước. Ký ức vẫn chọn như cũ.`,'mem');
     }
     const chs=choicesOf(ev);

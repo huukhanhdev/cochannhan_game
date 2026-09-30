@@ -143,10 +143,10 @@ const NPC={
 const MEM={
   hoatuu:{n:'Đường vào động phủ Hoa Tửu',d:'Biết lối vào và cách giải trận pháp cửa động.'},
   giasan:{n:'Điểm yếu của cậu',d:'Biết cậu đã lén bán ruộng trà của cha mẹ. Đòi gia sản dễ hơn.'},
-  jks:{n:'Thói quen Giả Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, đánh hắn mạnh hơn.'},
-  langtrieu:{n:'Nhịp lang triều',d:'Đã thấy sói tràn qua tường. Sát thương lên sói +25%.'},
+  jks:{n:'Thói quen Giả Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, và có thể phục sẵn ở bờ sông, nếu hắn vẫn đi một mình như ký ức.'},
+  langtrieu:{n:'Nhịp lang triều',d:'Đã thấy sói tràn qua tường. Sát thương lên sói +25%, và biết cổng nào sói dồn tới, nếu lang triều không đổi hướng.'},
   bai:{n:'Nỗi lòng Bạch Ngưng Băng',d:'Biết hắn khao khát tự do và thể chất đang giết hắn.'},
-  huyethai:{n:'Cửa sinh trong huyết động',d:'Biết điểm yếu của huyết khôi. Huyết khôi yếu đi 25%.'},
+  huyethai:{n:'Cửa sinh trong huyết động',d:'Biết điểm yếu của huyết khôi và lối cửa sinh, nếu cấm chế chưa bị ai đánh thức.'},
   doanthach:{n:'Kinh nghiệm mổ thạch Giả gia',d:'Nhìn thấu vân đá cổ. Tỷ lệ đoán thạch thành công +35%.'},
   xichgia:{n:'Nắm thóp Cổ Nguyệt Xích Thành',d:'Biết rõ Xích Thành khai khiếu giả tạo nhờ ông nội truyền công. Dễ dàng tống tiền Xích Luyện.'},
   huyetlo:{n:'Bí mật lăng mộ Nhất Đại',d:'Biết thủy tổ Cổ Nguyệt nuôi con cháu làm nguyên liệu cho Huyết Lô Cổ.'},
@@ -166,7 +166,7 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:1.31,atk:1.31,furyTurn:8};
+const DIFF={hp:1.36,atk:1.36,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;
@@ -211,6 +211,11 @@ const SK={
 };
 EN.madutam={n:'Huyết Thủ ma tu',hp:380,atk:[22,32],st:[150,200],bl:6,i:'Một ma tu Tam chuyển áo đỏ thẫm ngồi trên tảng đá, tay nhuộm máu tới khuỷu. Hắn liếc ngươi như nhìn một bữa ăn.'};
 EN.giave={n:'Hộ vệ Giả gia',hp:165,atk:[12,18],st:[70,100],bl:3,drop:.5,i:'Hộ vệ Nhị chuyển của Giả Phú chặn đường. "Thiếu gia nhà ta chết không nhắm mắt."'};
+MEM.gate={n:'Túi thạch ở cổng học đường',d:'Nhớ đứa nào giàu, đứa nào nhát trong đám bạn học. Mở lựa chọn chặn cổng gọn gàng, nếu cổng học đường vẫn như ký ức.'};
+MEM.baigia={n:'Đường tuần của Bạch gia',d:'Nhớ con đường trinh sát Bạch gia hay đi. Mở lựa chọn phục kích, nếu Bạch gia không đổi đường.'};
+// Chết dưới tay ai thì nhớ được điều gì (engine.js die())
+const DEATH_MEM={kimsinh:'jks',giave:'giave',dlbay:'langtrieu',loiquan:'langtrieu',langvuong:'langtrieu',huyetkhoi:'huyethai',bai:'bai',
+  baitrinhsat:'baigia',hoctro:'gate',madutam:'tukiep',tiexueleng:'tiexue',hunglam:'hunglam',sontacvuong:'sontac',tramthuysat:'tramthuy',bachmaon:'bachmaon',nhatdai:'huyetlo'};
 MEM.tukiep={n:'Lộ trình Huyết Thủ ma tu',d:'Biết ma tu Tam chuyển ẩn trong núi và con đường hắn hay đi. Có thể tránh.'};
 MEM.giave={n:'Sát thủ Giả gia',d:'Biết Giả Phú sẽ phái hộ vệ trả thù. Có thể bày bẫy trước.'};
 

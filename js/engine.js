@@ -124,7 +124,8 @@ function newLife(){
     over:null,ending:null,acted:false,refined:false,log:[],mod:{},inj:null,
     traitOpts:Object.keys(TRAITS).sort(()=>Math.random()-.5).slice(0,3),
     npcProg:{phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1},
-    var:{giasan:Math.random()<.4?'manh':'yeu',kimsinh:pick(['alone','alone','guard','trap']),lang:pick(['bac','tay']),huyethai:Math.random()<.4?'bay':'thuong',bai:Math.random()<.5?'satý':'tomo',gate:Math.random()<.4?'mac':'thuong',baigia:Math.random()<.4?'phuc':'thuong',
+    // Mốc nguyên tác: đúng ký ức trừ 1–2 mốc đã lệch (butterfly.js). Tuyến NPC vẫn rút ngẫu nhiên.
+    var:{...initVariants(),
       phuongchinh_route:Math.random()<.5?'kieu_ngao':'tu_ti',thanhthu_route:Math.random()<.5?'trach_nhiem':'u_uat',bai_route:Math.random()<.5?'sat_y':'co_doc',xich_mac_route:pick(['xich_the','mac_the','tranh_doat']),caumo_route:Math.random()<.5?'phan_don':'suy_tan'}};
   discoverGu('xuanthu');
   meet('phuongchinh');meet('caumo');meet('xichthanh');meet('xichluyen');meet('mactran');
@@ -137,10 +138,11 @@ function newLife(){
     const n=Object.keys(META.mem).length;
     log(`Tu vi, nguyên thạch, cổ trùng đều tan biến. Chỉ còn ${n} mảnh ký ức và đạo tâm vững hơn (tu luyện +${5*Math.min(META.life-1,5)}%).`,'sys');
   }
-  S.path=[];S.ffOffer=META.life>1&&ffAvailable();S.cicada={charge:0};S.snaps=[];S.rewinds=0;
+  S.path=[];S.ffOffer=META.life>1&&ffAvailable();S.cicada={charge:0};S.snaps=[];S.rewinds=0;S.drift=0;S.driftStep=0;S.later=[];
   S.world=Object.keys(WORLD).sort(()=>Math.random()-.5).slice(0,2);
   if(W('thuongsom')&&W('langsom'))S.world[1]='hunggia';
   S.canon=buildCanon();
+  if(META.life>1)echoApply();
   S.tideT=+Object.keys(S.canon).find(t=>S.canon[t]==='c_lang1')||19;
   const locs=['nui','hauson','trai','nhiemvu'];
   S.cache=Object.keys(CACHE).sort(()=>Math.random()-.5).slice(0,2).map(kind=>{const from=rand(3,20);return {kind,loc:pick(CACHE_LOCS[kind]||locs),from,to:from+rand(3,6),done:0,rumor:0}});
@@ -172,10 +174,13 @@ function startTurn(){
     if(S.f.freeMoon)S.f.freeMoon--;
     if(S.f.tieHunt&&!S.f.tieGone){const p=hasGu('liemtuc')?3:6;S.susp+=p;log(`Thiết Huyết Lãnh vẫn đang lần theo dấu vết. Hiềm nghi +${p}.`,'danger')}
   }
+  laterTick();
   const cid=(S.canon||CANON)[S.turn];
   if(cid&&(!EV[cid].cond||EV[cid].cond()))S.evq.push(cid);
   if((S.f.killedJKS||S.f.jksEscaped)&&!S.f.giaveDone&&S.turn>=14&&(S.susp>=45||S.turn>=18)&&!S.evq.includes('x_giave')){S.f.giaveDone=1;S.evq.push('x_giave')}
   if(S.f.tramthuyAmbush&&S.turn>=22&&!S.evq.length&&Math.random()<.5){S.f.tramthuyAmbush=0;S.evq.push('x_tramthuy')}
+  // Dị số chen vào trước tuyến NPC khi tuần này chưa có mốc nguyên tác
+  disoTick();
   if(!S.evq.length){
     if(!S.npcProg)S.npcProg={phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1};
     for(const qid of NPC_POOL){
@@ -230,7 +235,9 @@ function choose(i){
   if(!c||(c.req&&!c.req()))return;
   ffRememberChoice(id,c);
   S.evq.shift();
-  if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else S.canonMiss++}
+  if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else{S.canonMiss++;driftAdd(8)}}
+  if(c.drift)driftAdd(c.drift);
+  if(ev.loc==='diso'&&MEM['ds_'+id])learn('ds_'+id);
   if(c.tag==='ma')S.dao=clamp(S.dao+(c.dao||8),-100,100);
   if(c.tag==='chinh')S.dao=clamp(S.dao-(c.dao||8),-100,100);
   log(`【${ev.title}】 ${c.t}.`,'choice');
@@ -248,20 +255,34 @@ function choose(i){
   if(S.hp<=0&&!S.combat){die(`${ev.title}`);return}
   saveAll();advance();render();
 }
+// Rút một sự kiện ngẫu nhiên của nơi chốn loc.
+// Chống lặp: sự kiện vừa ra phải chờ hồi chiêu (mặc định nửa cỡ kho, tối đa 6 tuần);
+// gặp càng nhiều thì càng hiếm; kiếp sau ưu tiên chuyện chưa từng thấy.
 function randomEvent(loc){
-  const pool=Object.entries(EV).filter(([id,e])=>e.loc===loc&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id]));
-  const wt=(id,e)=>(e.w||1)*(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1);
+  S.evLast=S.evLast||{};S.evSeen=S.evSeen||{};
+  const all=Object.entries(EV).filter(([id,e])=>e.loc===loc&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id]));
+  const cd=Math.min(6,Math.ceil(all.length/2));
+  const pool=all.filter(([id,e])=>S.evLast[id]===undefined||S.turn-S.evLast[id]>=(e.cd||cd));
+  const wt=(id,e)=>(e.w||1)*(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1)
+    /(1+(S.evSeen[id]||0))*((META.seen||{})[id]?1:1.5);
   const tot=pool.reduce((s,[id,e])=>s+wt(id,e),0);
   let r=Math.random()*tot;
   for(const [id,e] of pool){
     r-=wt(id,e);
     if(r<=0){
       if(e.once)S.f['ev_'+id]=1;
+      S.evLast[id]=S.turn;S.evSeen[id]=(S.evSeen[id]||0)+1;
       S.evq.push(id);
       return true;
     }
   }
   return false;
+}
+// Câu chữ của sự kiện. text có thể là mảng hàm: lần gặp thứ n dùng bản thứ n
+function evText(id){
+  const t=EV[id].text;
+  if(!Array.isArray(t))return t();
+  return t[Math.max(0,((S.evSeen||{})[id]||1)-1)%t.length]();
 }
 
 /* ---------- hành động ---------- */
@@ -707,15 +728,17 @@ function pickTrait(k){
 }
 function die(cause){
   if(S.combat&&!S.combat.pko&&window.PIXI&&$('arena')&&!RM){const c=S.combat;c.pko=1;c.cause=cause;FX.busy=true;FX.q({type:'pdie'});saveAll();render();setTimeout(()=>{FX.busy=false;if(S.combat===c)die(cause)},1100);return}
-  const back=cicadaReady()&&(S.snaps||[]).length>0;
+  const back=cicadaReady()&&(S.snaps||[]).length>0,foe=S.combat&&S.combat.k;
   S.combat=null;S.hp=0;S.evq=[];S.over=back?'rewind':'dead';S.ff=null;FX.queue.length=0;
   META.deaths.push({life:META.life,turn:S.turn,cause,rewind:back});
+  // Chết dưới tay ai thì nhớ được thói quen kẻ đó
+  if(foe&&DEATH_MEM[foe])learn(DEATH_MEM[foe]);
   log('Mắt ngươi tối sầm. Tiếng tim đập chậm dần.','big');
   if(!back)log(`Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.`,'danger');
   saveAll();render();
 }
 function rebirth(){
-  ffSaveLife();
+  ffSaveLife();echoSave();
   META.life++;newLife();saveAll();render();
 }
 
@@ -811,6 +834,7 @@ function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];META.combos=META.combos||{};
+  S.drift=S.drift||0;S.driftStep=S.driftStep||0;S.later=S.later||[];
   // Tải lại giữa lúc đang tua thì trả quyền điều khiển cho người chơi
   if(S.ff)S.ff=null;
   // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị

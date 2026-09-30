@@ -644,7 +644,9 @@ const Arena=(function(){
     if(art.sc==='tide'&&T>nextBolt&&!RM){nextBolt=T+2600+Math.random()*4200;bolt()}
 
     if(stop_>0){stop_-=ms;return}
-    for(let i=tw.length-1;i>=0;i--){const t=tw[i];t.t+=ms;const p=Math.min(1,t.t/t.dur);t.upd(t.e(p));if(p>=1){tw.splice(i,1);t.done&&t.done()}}
+    // Tween của trận trước (hẹn giờ chạy trễ) có thể trỏ tới hình đã hủy: bỏ đi thay vì báo lỗi mỗi khung hình
+    for(let i=tw.length-1;i>=0;i--){const t=tw[i];t.t+=ms;const p=Math.min(1,t.t/t.dur);
+      try{t.upd(t.e(p));if(p>=1){tw.splice(i,1);t.done&&t.done()}}catch(err){tw.splice(i,1)}}
     for(let i=parts.length-1;i>=0;i--){
       const p=parts[i];p.life-=ms;
       if(p.life<=0||p.s.destroyed){if(!p.s.destroyed)p.s.destroy();parts.splice(i,1);continue}

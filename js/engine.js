@@ -328,7 +328,7 @@ function initScene(id){
   resBegin(ev.title);
   S.sc={
     id,
-    node:ev.scene.start,
+    node:typeof ev.scene.start==='function'?ev.scene.start():ev.scene.start,
     budget:ev.scene.budget!==undefined?ev.scene.budget:3,
     tense:0,
     flags:{},

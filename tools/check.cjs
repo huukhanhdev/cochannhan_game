@@ -39,9 +39,10 @@ for(const [evId, ev] of Object.entries(EV)){
     const sc=ev.scene;
     if(!sc.nodes) errs.push(`sự kiện ${evId}: scene thiếu nodes`);
     else {
-      if(!sc.start || !sc.nodes[sc.start]) errs.push(`sự kiện ${evId}: scene.start không có: ${sc.start}`);
+      const starts=typeof sc.start==='function'?[...String(sc.start).matchAll(/'([a-z0-9_]+)'/g)].map(m=>m[1]):[sc.start];
+      for(const st of starts)if(!st||!sc.nodes[st]) errs.push(`sự kiện ${evId}: scene.start không có: ${st}`);
       const reachable = new Set();
-      const q = [sc.start];
+      const q = starts.slice();
       while(q.length){
         const curr = q.shift();
         if(!curr || reachable.has(curr)) continue;

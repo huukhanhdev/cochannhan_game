@@ -108,9 +108,9 @@ function stoneAct(a){
 }
 function stoneOpen(){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);S.mg=null;S.panel='gamble';
-  if(m.content==='thach'){const v=Math.round(st.price*(1.4+Math.random()*1.0));S.stones+=v;learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
+  if(m.content==='thach'){const v=Math.round(st.price*(1.4+Math.random()*1.0));S.stones+=v;if(v>=60)S.f.stoneWin=Math.max(S.f.stoneWin||0,v);learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
   else if(m.content==='co'){
-    const k=pick(STONE_POOL[m.id]||STONE_POOL.thach_re);gainGu(k,true);learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
+    const k=pick(STONE_POOL[m.id]||STONE_POOL.thach_re);gainGu(k,true);if((GU[k].r||1)>=2||(GU[k].p||0)>=100)S.f.stoneGu=k;learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
   }else if(m.content==='doc'){S.hp=Math.max(1,S.hp-20);log('Một con độc cổ ngủ đông trong đá cắn trúng tay ngươi. Khí huyết −20.','danger')}
   else log('Đá vỡ ra toàn vụn vôi. Mất trắng.','danger');
   saveAll();render();

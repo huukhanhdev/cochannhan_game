@@ -31,7 +31,7 @@ const NPC_IMG={
   nguyuong:'n_weiyang',weiyang:'n_weiyang',
   kimhoang:'n_fengjinhuang',fengjinhuang:'n_fengjinhuang',
   tieuhotien:'n_littlehu',littlehu:'n_littlehu',hotien:'n_littlehu',
-  baquy:'n_baquy',bagui:'n_baquy',
+  baquy:'n_bagui',bagui:'n_bagui',
   tieumang:'n_xiaomang',xiaomang:'n_xiaomang',
   himi:'n_humeier',humeier:'n_humeier',
   phongthienngu:'n_fengtianyu',fengtianyu:'n_fengtianyu',
@@ -286,7 +286,7 @@ function renderScene(st, id, ev){
   ) : '';
 
   st.innerHTML = `<article class="story scene ${ev.canon ? 'canon' : ''} ${diso ? 'diso' : ''} ${tenseCls}">
-    <div class="story-art" style="background-image:url('${eventArt(id)}')">
+    <div class="story-art" style="background-image:url('${node.art?asset('art/'+node.art+'.jpg'):eventArt(id)}')">
       ${speakerHTML(speakerKey)}
       <div class="story-cap">
         <span class="label">${ev.canon ? 'Mốc nguyên tác' : diso ? 'Dị số' : 'Kỳ ngộ'} · ${timeLabel()} ${sc.budget !== undefined ? `· Dò xét: ${sc.budget}` : ''}</span>
@@ -381,7 +381,7 @@ function renderStage(){
         <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':diso?'Dị số':'Kỳ ngộ'} · ${timeLabel()}</span><h2>${ev.title}</h2></div>
       </div>
       <div class="story-body">
-        <p class="story-text">${esc(evText(id))}</p>
+        <p class="story-text">${esc(evText(id))}</p>${remark(id)?`<p class="story-remark">${esc(remark(id))}</p>`:''}
         <div class="choices">${choicesOf(ev).map((c,i)=>choiceBtn(c,i,id)).join('')}</div>
       </div></article>`;
     return;

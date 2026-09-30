@@ -457,6 +457,7 @@
   .skill .cdv{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);pointer-events:none}
   .skill .dur{position:absolute;left:8px;right:8px;bottom:2px;height:3px;background:#222;border-radius:2px;overflow:hidden}.skill .dur i{display:block;height:100%;background:#86e0b0}.skill .dur.low i{background:#e8847a}
   .skill.combo{border-color:#6a4a8a}
+  .story-remark{margin:.4em 0 0;font-size:.9em;font-style:italic;color:var(--dim)}
   .gu-dur{position:relative;height:14px;background:#111;border-radius:3px;overflow:hidden;margin-top:6px}.gu-dur i{display:block;height:100%;background:#2f6a4e}.gu-dur.low i{background:#8a2f2a}.gu-dur small{position:absolute;inset:0;font-size:10.5px;line-height:14px;padding-left:6px;color:#e8e2d0}
   .rt-ctrl{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
   .rt-ctrl kbd{font-size:10px;opacity:.6;margin-left:4px}
@@ -637,8 +638,9 @@
 
   /* ===== Giai đoạn 3: trình bày ===== */
   /* Người nói trong sự kiện */
-  .speaker{position:absolute;right:18px;bottom:14px;z-index:2;display:grid;justify-items:center;gap:4px;animation:rise .6s .2s ease both}
-  .spk-ava{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:#1a2226 center 18%/165% no-repeat;border:2px solid #6e5a2d;box-shadow:0 0 0 4px rgba(10,14,16,.7),0 8px 24px rgba(0,0,0,.6);font-family:var(--brush);font-size:44px;line-height:1;color:var(--gold);animation:breathe 4.5s ease-in-out infinite}
+  .speaker{position:absolute;right:18px;bottom:14px;z-index:2;display:grid;justify-items:center;gap:6px;animation:rise .6s .2s ease both}
+  .spk-ava{width:124px;height:124px;border-radius:50%;display:grid;place-items:center;background:#1a2226 center center/cover no-repeat;border:3px solid #8c733e;box-shadow:0 0 0 4px rgba(10,14,16,.75),0 10px 28px rgba(0,0,0,.75);font-family:var(--brush);font-size:52px;line-height:1;color:var(--gold);animation:breathe 4.5s ease-in-out infinite;overflow:hidden}
+  .spk-ava.img{background-position:center center;background-size:cover;background-repeat:no-repeat}
   .speaker.warm .spk-ava{border-color:#3f8a66;box-shadow:0 0 0 4px rgba(10,14,16,.7),0 0 22px rgba(95,174,138,.35)}
   .speaker.cold .spk-ava{border-color:#8e2f22;box-shadow:0 0 0 4px rgba(10,14,16,.7),0 0 22px rgba(200,60,40,.35)}
   .story.tense-1 .spk-ava{border-color:#d4a040;box-shadow:0 0 0 4px rgba(10,14,16,.7),0 0 16px rgba(212,160,64,.35)}
@@ -655,7 +657,7 @@
   .choice.stay .ct::before{content:'[察] ';color:#8fe0b0;font-weight:700}
   .spk-name{font-size:11.5px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:3px;background:rgba(10,14,16,.85);color:var(--moon);border:1px solid var(--line);white-space:nowrap}
   @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
-  .story-cap{right:130px}
+  .story-cap{right:160px}
   .choices.await{visibility:hidden}
   .story-text{cursor:default}
   /* Bản đồ: buổi, thời tiết, trăng máu, khói */
@@ -711,7 +713,7 @@
     .choice,.skill,.tab{min-height:44px}
     .btn{min-height:40px;display:inline-grid;place-items:center}
     .chronicle .log{height:200px}
-    .speaker{right:10px;bottom:10px}.spk-ava{width:64px;height:64px;font-size:30px}.story-cap{right:88px;left:12px}
+    .speaker{right:12px;bottom:10px}.spk-ava{width:86px;height:86px;font-size:38px}.story-cap{right:116px;left:12px}
     .story-body{padding:6px 12px 14px}
   }
   </style>

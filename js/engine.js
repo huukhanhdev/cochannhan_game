@@ -791,6 +791,9 @@ function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];META.combos=META.combos||{};
+  // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị
+  S.gu=(S.gu||[]).filter(g=>GU[g.k]);S.shop=(S.shop||[]).filter(k=>GU[k]);META.codex=(META.codex||[]).filter(k=>GU[k]);
+  for(const id in META.combos)if(!COMBOS.some(c=>c.id===id))delete META.combos[id];
   if(S.combat){const c=S.combat;c.cd=c.cd||{};c.frozen=c.frozen||{};c.def=c.def||0;c.turn=c.turn||0;c.atkBuff=c.atkBuff||0;c.poison=c.poison||0;c.suppress=c.suppress||0;c.shieldRed=c.shieldRed||.4}
   // Tải lại giữa lúc đang diễn đòn kết liễu
   if(S.combat&&S.combat.hp<=0){S.combat.ko=1;win();return}

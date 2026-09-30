@@ -328,20 +328,102 @@ c_thuongdoi:{canon:1,title:'Thương đội Cổ gia',hint:'Thương đội Cổ
   ]},
 
 c_kimsinh:{canon:1,title:'Cổ Kim Sinh',hint:'Cổ Kim Sinh',
-  text:()=>(hasGu('tuutrung')?'Cổ Kim Sinh, con út Cổ gia, ngửi thấy mùi rượu trên người ngươi và nhận ra ngươi đang nuôi Tửu Trùng. Hắn chặn đường, đòi mua lại với giá 30 nguyên thạch, rẻ như cho.':'Cổ Kim Sinh, con út Cổ gia, thấy ngươi giàu lên bất thường ở chợ thương đội. Hắn chặn đường, đòi 30 nguyên thạch "phí qua đường".')+((S.var||{}).kimsinh==='guard'&&S.tamco>=10?' Sau lưng hắn, một gã áo đen đứng im lìm, tay không rời túi cổ.':'')+((S.var||{}).kimsinh==='trap'&&S.tamco>=11?' Ánh mắt hắn quá bình tĩnh so với một kẻ tham lam.':'')+(mem('jks')?' Ngươi nhớ rõ: hắn tham, và không bao giờ nghi một thằng nhóc Bính đẳng.':''),
-  choices:()=>[
-    {t:'Hẹn hắn ra khe đá vắng sau núi để "giao hàng", rồi diệt khẩu',tag:'ma',canon:1,dao:12,check:['tamco',11],bonus:()=>mem('jks')?6:0,
-      ok:()=>{const v=(S.var||{}).kimsinh;if(v==='trap'){S.susp+=20;fight('giave',{after:'jkstrap',mod:.8,canFlee:true});return 'Khe đá có người chờ sẵn. Cổ Kim Sinh cười lạnh rồi lùi ra sau hộ vệ: "Tưởng ta ngu à?"'}if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.25});return 'Hắn đến, và gã áo đen cũng đến. Hai đánh một.'}fight('kimsinh',{after:'kimsinh',mod:mem('jks')?.75:1});return 'Hắn đến một mình, mắt sáng rực vì lòng tham.'},
-      fail:()=>{S.susp+=15;later('q_giapho',2,4,'killedJKS');fight('kimsinh',{after:'kimsinh'});return 'Hắn đến, nhưng vài người trong chợ đã thấy hai người rời đi cùng nhau. Hiềm nghi +15.'}},
-    ...(hasGu('tuutrung')?[{t:'Bán Tửu Trùng cho hắn',eff:()=>{S.gu.splice(S.gu.findIndex(g=>g.k==='tuutrung'),1);S.stones+=30;rel('kimsinh',10);return 'Cổ Kim Sinh cười khẩy, ném cho ngươi 30 nguyên thạch. Tu luyện của ngươi chậm lại hẳn.'}}]
-      :[{t:'Nộp tiền cho yên chuyện',req:()=>S.stones>=30,reqT:'Cần 30 nguyên thạch',eff:()=>{S.stones-=30;rel('kimsinh',5);return 'Cổ Kim Sinh nhét túi thạch vào tay áo.'}}]),
-    ...(mem('jks')?[{t:'Theo ký ức, phục sẵn ở khe đá trước khi hắn tới',mem:'jks',tag:'ma',dao:12,eff:()=>{
-      const v=(S.var||{}).kimsinh;
-      if(v==='alone'){fight('kimsinh',{after:'kimsinh',mod:.8});S.combat.stun=1;return 'Hắn đi một mình, đúng như ký ức. Nhát đầu tiên của ngươi tới trước khi hắn kịp rút cổ.'}
-      if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.15});return 'Ngươi phục sẵn, nhưng hắn không đi một mình. Gã áo đen phía sau đã thấy ngươi trước.'}
-      S.susp+=25;fight('giave',{after:'jkstrap',canFlee:true});return 'Khe đá trong ký ức giờ là bẫy. Người Cổ gia đã nấp sẵn từ trước cả ngươi. Hiềm nghi +25.'}}]:[]),
-    {t:'Báo với tộc trưởng',tag:'chinh',drift:6,eff:()=>{S.danh+=5;rel('kimsinh',-30);rel('toctruong',5);S.f.jksHate=1;later('q_jksthu',3,5,'!killedJKS');return 'Tộc trưởng nhắc khéo Cổ Phú. Cổ Kim Sinh bị anh mắng, nhìn ngươi đầy thù hận.'}},
-  ]},
+  who:'kimsinh',
+  scene:{
+    start:'chan_duong',budget:2,
+    nodes:{
+      chan_duong:{
+        talk:[
+          ['','Sau phiên chợ thương đội, ngươi rẽ vào lối mòn sau núi thì bất ngờ bị một bóng người chắn ngang.'],
+          ['kimsinh','Tiểu tử! Đứng lại đó cho bản thiếu gia!'],
+          ['','Cổ Kim Sinh — con út của Cổ gia, ngực áo phanh ra, hai tay chống nạnh nhìn ngươi bằng ánh mắt soi mói đầy thèm thuồng.']
+        ],
+        choices:[
+          {t:'Lặng lẽ quan sát sau lưng hắn xem có mai phục',stay:1,flag:'soi_jks',say:()=>((S.var||{}).kimsinh==='guard'?'Sau lưng hắn thấp thoáng một gã hộ vệ áo đen bắp tay cuồn cuộn, tay lăm lăm túi cổ!':((S.var||{}).kimsinh==='trap'?'Ánh mắt hắn liếc về rặng cây hai bên, rõ ràng có mai phục sẵn!':'Hắn chỉ đi một mình, mặt vênh lên vì ỷ thế thương đội.'))},
+          {t:'Hẹn hắn ra khe đá vắng sau núi để "giao hàng", rồi diệt khẩu',tag:'ma',canon:1,dao:12,go:'hen_kheda'},
+          {t:'Theo ký ức: bí mật phục sẵn ở khe đá trước khi hắn tới',mem:'jks',tag:'ma',dao:12,go:'phuc_kich'},
+          {t:'Thương lượng: nộp tiền hoặc bán cổ cho xong chuyện',go:'nhuong_bo'},
+          {t:'Báo cáo lên tộc trưởng Cổ Nguyệt Bác phân xử',tag:'chinh',go:'bao_toctruong'}
+        ]
+      },
+      hen_kheda:{
+        talk:[
+          ['','Ngươi hạ giọng tỏ vẻ sợ hãi: "Nhị thiếu gia xin bớt giận! Đồ vật quý giá ta giấu trong khe đá sau núi, xin theo ta ra đó lấy."'],
+          ['kimsinh','Hừ! Biết điều thế có phải tốt không! Liệu hồn đừng giở trò quỷ!']
+        ],
+        check:['tamco',11],bonus:()=>mem('jks')?6:0,
+        okGo:'ra_kheda_ok',failGo:'ra_kheda_lo'
+      },
+      ra_kheda_ok:{
+        talk:[
+          ['','Đêm đen như mực. Tiếng gió rít qua vách đá heo hút sau núi.'],
+          ['kimsinh','Đồ đâu? Mau mang ra đây cho lão tử!']
+        ],
+        eff:()=>{
+          const v=(S.var||{}).kimsinh;
+          if(v==='trap'){S.susp+=20;fight('giave',{after:'jkstrap',mod:.8,canFlee:true});return 'Khe đá có người phục sẵn! Cổ Kim Sinh cười lạnh lùi lại: "Tưởng ta ngu à?"';}
+          if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.25});return 'Hắn đến cùng một gã áo đen. Hai đánh một!';}
+          fight('kimsinh',{after:'kimsinh',mod:mem('jks')?.75:1});
+          return 'Cổ Kim Sinh đi một mình, mắt sáng rực vì lòng tham!';
+        }
+      },
+      ra_kheda_lo:{
+        talk:[
+          ['','Ngươi cùng hắn rời chợ, nhưng vài tên gia đinh thương đội đã để ý thấy hai người đi cùng nhau.'],
+          ['kimsinh','Ngươi lén lút cái gì? Đến nơi chưa?']
+        ],
+        eff:()=>{
+          S.susp+=15;later('q_giapho',2,4,'killedJKS');
+          fight('kimsinh',{after:'kimsinh'});
+          return 'Đến khe đá, ngươi vung đao quyết chiến nhưng hành tung đã bị người trông thấy. Hiềm nghi +15!';
+        }
+      },
+      phuc_kich:{
+        talk:[
+          ['','Nhờ ký ức kiếp trước, ngươi biết rõ thói quen đi đứng và góc khuất của hắn. Ngươi luồn vào khe đá nấp sẵn từ trước.'],
+          ['kimsinh','(Tiếng bước chân đến gần) Tên nhãi họ Cổ Nguyệt đâu rồi...']
+        ],
+        eff:()=>{
+          const v=(S.var||{}).kimsinh;
+          if(v==='alone'){fight('kimsinh',{after:'kimsinh',mod:.8});S.combat.stun=1;return 'Hắn đi một mình đúng như ký ức! Đòn phủ đầu của ngươi chém tới trước khi hắn kịp rút cổ!';}
+          if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.15});return 'Ngươi phục sẵn, nhưng hắn không đi một mình! Gã áo đen phía sau đã thấy ngươi trước!';}
+          S.susp+=25;fight('giave',{after:'jkstrap',canFlee:true});
+          return 'Khe đá trong ký ức giờ là bẫy! Người Cổ gia đã nấp sẵn từ trước. Hiềm nghi +25!';
+        }
+      },
+      nhuong_bo:{
+        talk:[
+          ['','Ngươi cúi đầu lấy đồ ra hòa hoãn.'],
+          ['kimsinh','Ha ha ha! Đồ thức thời mới sống lâu được!']
+        ],
+        eff:()=>{
+          if(hasGu('tuutrung')){
+            S.gu.splice(S.gu.findIndex(g=>g.k==='tuutrung'),1);
+            S.stones+=30;rel('kimsinh',10);
+            return 'Bán Tửu Trùng lấy 30 thạch. Cổ Kim Sinh cười khẩy bỏ đi. Tu luyện chậm lại.';
+          }
+          if(S.stones>=30){
+            S.stones-=30;rel('kimsinh',5);
+            return 'Nộp 30 nguyên thạch cho yên chuyện. Cổ Kim Sinh đắc ý nhét thạch vào tay áo.';
+          }
+          S.stones=0;rel('kimsinh',-10);
+          return 'Vét sạch nguyên thạch trong túi nộp cho hắn. Cổ Kim Sinh nhổ toẹt một bãi nước bọt rồi đi.';
+        }
+      },
+      bao_toctruong:{
+        talk:[
+          ['','Ngươi không đôi co, quay ngoắt chạy thẳng vào nghị sự đường báo cáo với tộc trưởng Cổ Nguyệt Bác.'],
+          ['toctruong','Cổ gia thương đội khinh người quá đáng! Để lão phu sang nói chuyện với Cổ Phú!']
+        ],
+        eff:()=>{
+          S.danh+=5;rel('kimsinh',-30);rel('toctruong',5);S.f.jksHate=1;
+          later('q_jksthu',3,5,'!killedJKS');
+          return 'Tộc trưởng Cổ Nguyệt Bác sang chấn chỉnh Cổ Phú. Cổ Kim Sinh bị mắng té tát, nhìn ngươi căm hờn.';
+        }
+      }
+    }
+  }
+},
 
 c_dieutra:{canon:1,title:'Cổ Phú điều tra',hint:'Cổ Phú điều tra',cond:()=>S.f.killedJKS,
   text:()=>'Cổ Phú lần theo dấu vết em trai tới tận Cổ Nguyệt sơn trại, yêu cầu gia tộc giao người. Những ai có mặt ở chợ hôm đó bị gọi tới từng người.',
@@ -371,20 +453,99 @@ c_baigia:{canon:1,title:'Bạch gia lấn đất',hint:'Bạch gia gây hấn',
   ]},
 
 c_bai:{canon:1,title:'Bạch Ngưng Băng',hint:'Gặp Bạch Ngưng Băng',
+  who:'bai',
   post:()=>{if(!S.f.kimngoSched&&!hasGu('cuxikimngo')){S.f.kimngoSched=1;later('c_kimngo',1,1)}},
-  text:()=>'Tuyết rơi giữa mùa hạ. Một thiếu niên tóc bạc, mắt lam, đứng chắn đường ngươi. Bạch Ngưng Băng, thiên tài Tam chuyển của Bạch gia, người mang Bắc Minh Băng Phách Thể. "Nghe nói Cổ Nguyệt có một kẻ thú vị."'+((S.var||{}).bai==='satý'&&S.tamco>=10?' Hàn khí quanh hắn lần này không phải tò mò, mà là sát ý.':'')+(mem('bai')?' Ngươi nhớ: thể chất này sẽ giết hắn trước tuổi hai mươi, và hắn biết điều đó.':''),
-  choices:()=>[
-    ...(mem('bai')?[{t:'Theo ký ức, nói thẳng về cái chết đang chờ hắn trước khi hắn mở lời',mem:'bai',eff:()=>{meet('bai');
-      if(!varShifted('bai')){rel('bai',45);S.tamco++;return 'Bạch Ngưng Băng khựng lại. Chưa ai từng nói câu đó với hắn trước khi hắn kịp ra tay. "Ngươi là ai?" Tâm cơ +1.'}
-      fight('bai',{after:'bai'});return 'Lần này hắn đến để giết, không phải để tò mò. Câu nói của ngươi chỉ làm hắn chắc tay hơn.'}}]:[]),
-    {t:'Rút cổ, giao chiến',eff:()=>{meet('bai');const tomo=(S.var||{}).bai!=='satý';fight('bai',{after:'bai',spare:tomo?.3:0,spareT:'Bạch Ngưng Băng thu hàn khí, nhìn ngươi nằm trên tuyết: "Chỉ thế thôi sao? Sống tiếp đi, lần sau cho ta xem nhiều hơn."'});return tomo?'Hắn cười: "Tốt. Để ta xem ngươi thú vị tới đâu."':'Hắn cười: "Tốt." Hàn khí lần này có sát ý.'}},
-    {t:'Nói với hắn về cái chết và tự do',canon:1,check:['tamco',(S.var||{}).bai==='satý'?19:15],bonus:()=>mem('bai')?8:0,
-      ok:()=>{rel('bai',35);learn('bai');S.tamco++;return 'Bạch Ngưng Băng im lặng rất lâu. "Ngươi là người đầu tiên không sợ ta." Hắn bỏ đi, để lại vết chân đóng băng.'},
-      fail:()=>{meet('bai');learn('bai');fight('bai',{after:'bai',spare:(S.var||{}).bai!=='satý'?.3:0,spareT:'Bạch Ngưng Băng dừng tay: "Nói thì hay, đánh thì dở." Hắn bỏ đi.'});return 'Hắn nheo mắt: "Ngươi nói nhiều quá." Hàn khí ập tới.'}},
-    {t:'Bỏ chạy ngay',check:['satphat',12],
-      ok:()=>{meet('bai');return 'Ngươi lao xuống sườn dốc, lăn qua bụi gai. Hắn không đuổi theo.'},
-      fail:()=>{meet('bai');fight('bai',{after:'bai'});return 'Băng đã phủ kín đường lui.'}},
-  ]},
+  scene:{
+    start:'tuyet_roi',budget:2,
+    nodes:{
+      tuyet_roi:{
+        talk:[
+          ['','Tuyết rơi trắng xóa giữa trưa hè oi ả. Từng bông tuyết lạnh thấu xương lướt qua tán thông rậm rạp.'],
+          ['','Trên đỉnh tảng đá phủ băng, một thiếu niên áo trắng như tuyết, tóc bạc bay lòa xòa trong gió buốt, đôi mắt lam biếc sâu thẳm như hồ băng nghìn năm đang cúi nhìn ngươi.'],
+          ['bai','Ngươi là Cổ Nguyệt Phương Nguyên? Nghe nói trại Cổ Nguyệt có một kẻ thú vị, không màng danh lợi cũng chẳng sợ hãi ai.']
+        ],
+        choices:[
+          {t:'Lặng lẽ quan sát khí tức quanh người hắn',stay:1,flag:'soi_bai',say:()=>((S.var||{}).bai==='satý'?'Hàn khí quanh người hắn cô đặc lại thành từng lưỡi băng nhọn hoắt. Không phải tò mò, mà là sát ý lạnh lẽo!':(mem('bai')?'Biển chân nguyên trong không khiếu hắn tràn trề đến mức nứt toác kinh mạch. Hắn biết rõ thể chất này sẽ giết chết hắn trước tuổi hai mươi!':'Hàn khí Tam chuyển đỉnh phong tỏa ra bức người, nhưng trong đáy mắt hắn chỉ toàn là sự chán chường vô tận.'))},
+          {t:'Nói với hắn về sự hư vô của sinh tử và tự do đích thực',tag:'chinh',canon:1,go:'luan_dao'},
+          {t:'Theo ký ức: nói thẳng về thể chất Bắc Minh Băng Phách đang giết hắn',mem:'bai',go:'nho_thechat'},
+          {t:'Rút Nguyệt Quang Cổ, sẵn sàng liều mình một trận sinh tử',tag:'ma',go:'quyet_chien'},
+          {t:'Lùi bước, lợi dụng địa hình rừng rậm để thoát thân',go:'lui_buoc'}
+        ]
+      },
+      luan_dao:{
+        talk:[
+          ['','Ngươi bình thản đứng giữa màn tuyết, tà áo khẽ bay: "Sống trên đời, ai cũng bị gông cùm trói buộc. Người tầm thường bị danh lợi trói, kẻ ngạo nghễ như ngươi lại bị chính sự kiêu hãnh và cái chết của mình giam cầm. Ta sống vì con đường của ta, sống hay chết có gì phải sợ hãi?"']
+        ],
+        check:['tamco',14],bonus:()=>(mem('bai')?8:0)+((S.var||{}).bai==='satý'?-3:0),
+        okGo:'luan_dao_ok',failGo:'luan_dao_fail'
+      },
+      luan_dao_ok:{
+        talk:[
+          ['','Bạch Ngưng Băng sững người, đôi mắt lam biếc lóe lên tia sáng rực rỡ như chưa từng thấy trước đây.'],
+          ['bai','...Ha ha! Hay! Hay lắm! "Sống vì con đường của ta"! Đám Cổ sư trên núi này toàn một lũ giòi bọ hèn hạ, chỉ có ngươi mới hiểu được cái chết rực rỡ là thế nào!'],
+          ['','Hắn vung tay áo thu lại hàn khí, quay gót bước vào màn tuyết: "Sống cho tốt. Ta sẽ chờ xem ngươi đi được bao xa!"']
+        ],
+        eff:()=>{meet('bai');rel('bai',35);learn('bai');S.tamco+=2;return 'Bạch Ngưng Băng coi ngươi là tri kỷ sinh tử! Hắn thu lại sát ý rời đi. Tâm cơ +2.';}
+      },
+      luan_dao_fail:{
+        talk:[
+          ['bai','Nói thì hay lắm, nhưng thực lực không đủ thì đạo lý chỉ là lời sủa của kẻ hèn! Để ta xem ngươi chịu được mấy kiếm!']
+        ],
+        eff:()=>{
+          meet('bai');learn('bai');
+          fight('bai',{after:'bai',spare:(S.var||{}).bai!=='satý'?.3:0,spareT:'Bạch Ngưng Băng dừng tay giữa trận: "Đánh dở tệ. Nhưng lời ngươi nói khiến ta không muốn giết ngươi quá sớm." Hắn phất tay áo bỏ đi.'});
+          return 'Hàn khí đóng băng cả mặt đất, Bạch Ngưng Băng vung băng đao chém tới!';
+        }
+      },
+      nho_thechat:{
+        talk:[
+          ['','Ngươi nhìn thẳng vào mắt hắn: "Bắc Minh Băng Phách Thể. Mười thành tư chất, tinh bích không khiếu nứt vỡ từng ngày. Ngươi chỉ còn sống không quá ba năm nữa."'],
+          ['bai','(Sắc mặt biến đổi hoàn toàn, hàn khí ngưng trệ) Ngươi... làm sao ngươi biết bí mật tuyệt đối của Bạch gia ta?!']
+        ],
+        eff:()=>{
+          meet('bai');
+          if(!varShifted('bai')){
+            rel('bai',45);learn('bai');S.tamco+=2;
+            return 'Bạch Ngưng Băng rúng động tâm can! Chưa một ai nhìn thấu hắn đến tận cùng như thế. Hắn lùi lại nhìn ngươi đầy kiêng dè và tò mò. Tâm cơ +2.';
+          }
+          fight('bai',{after:'bai'});
+          return 'Nhưng kiếp này sát ý của hắn quá nặng! Bí mật bị vạch trần càng khiến hắn muốn giết ngươi diệt khẩu!';
+        }
+      },
+      quyet_chien:{
+        talk:[
+          ['','Ngươi cười lạnh rút cổ, chân nguyên dồn vào lòng bàn tay: "Muốn thử xem thú vị thế nào sao? Đao kiếm không có mắt, chớ hối hận!"'],
+          ['bai','Tốt! Khí phách lắm! Rất hợp ý ta!']
+        ],
+        eff:()=>{
+          meet('bai');
+          const tomo=(S.var||{}).bai!=='satý';
+          fight('bai',{after:'bai',spare:tomo?.3:0,spareT:'Bạch Ngưng Băng thu kiếm: "Khá lắm! Hôm nay dừng ở đây. Lần sau hãy cho ta thấy nhiều hơn nữa!"'});
+          return tomo?'Bạch Ngưng Băng mỉm cười điên cuồng, rút băng đao nghênh chiến!':'Bạch Ngưng Băng tràn ngập sát ý, bão tuyết cuốn phăng cây cối!';
+        }
+      },
+      lui_buoc:{
+        talk:[
+          ['','Ngươi phán đoán chênh lệch tu vi Nhất/Nhị chuyển so với Tam chuyển đỉnh phong, lập tức thả khói xoay người lao xuống sườn dốc!']
+        ],
+        check:['satphat',11],
+        okGo:'lui_ok',failGo:'lui_fail'
+      },
+      lui_ok:{
+        talk:[
+          ['','Ngươi luồn lách qua khe đá bụi rậm biến mất. Bạch Ngưng Băng đứng trên tảng đá nhìn theo, khóe môi khẽ nhếch: "Chạy nhanh đấy... nhưng núi này nhỏ lắm."']
+        ],
+        eff:()=>{meet('bai');return 'Thoát thân an toàn khỏi tầm mắt Bạch Ngưng Băng!';}
+      },
+      lui_fail:{
+        talk:[
+          ['','Băng tuyết đóng cứng lối đi sau lưng. Bạch Ngưng Băng đã xuất hiện ngay trước mặt: "Chưa giao lưu xong đã vội đi đâu?"']
+        ],
+        eff:()=>{meet('bai');fight('bai',{after:'bai'});return 'Đường lui bị chặn đứng, buộc phải rút cổ nghênh chiến!';}
+      }
+    }
+  }
+},
 
 c_lang1:{canon:1,title:'Lang triều',hint:'Lang triều bắt đầu',
   text:()=>'Đêm đó, tiếng sói tru át cả tiếng gió. Lang triều ập đến. Tộc trưởng ra lệnh: mọi Cổ sư lên tường trại.'+(S.ngo>=9?((S.var||{}).lang==='tay'?' Tiếng tru vọng về từ phía tây dày đặc hơn hẳn.':' Tiếng tru dồn về phía cổng bắc.'):'')+(S.chuyen<2?' Ngươi chưa đạt Nhị chuyển nên bị xếp vào đội cảm tử.':''),

@@ -2,21 +2,21 @@
 // Nạp sau core.js. Chỉ bổ sung vào các bảng có sẵn của Quyển 1.
 
 Object.assign(GU,{
-  thiennguyen:{n:'Thiên Nguyên Bảo Liên',r:3,food:0,fn:'tự dưỡng',t:'passive',get income(){return 2+4*((typeof S!=='undefined'&&S)?S.chuyen:1)},p:900,d:'Hoa sen ngọc sinh nguyên thạch. Mỗi lượt nhả ra 2 + 4 × chuyển nguyên thạch (Nhất chuyển 6, Tứ chuyển 18). Bảo vật lấy từ Thanh Mao Sơn.'},
-  dausuat:{n:'Đâu Suất Hoa',r:3,food:0,fn:'tự dưỡng',t:'passive',p:400,d:'Cổ chứa đồ. Trong hoa còn thuốc phàm, băng vải, nồi sắt, than, thịt khô mang từ Thanh Mao Sơn.'},
-  boigiap:{n:'Bối Giáp Cổ',r:2,food:3,fn:'vảy cá',t:'guard',cost:9,p:130,d:'Hình xăm vảy sau lưng hóa thành mai: giảm 55% sát thương trong 2 lượt. Lấy từ cá sấu vương (VN 213).'},
-  ngacluc:{n:'Ngạc Lực Cổ',r:2,food:4,fn:'thịt cá sấu',t:'passive',atk:7,p:150,d:'Lực cắn của cá sấu. Mọi đòn +7. Xương chưa đủ cứng thì dùng lâu sẽ tổn thương.'},
-  tichhoi:{n:'Tích Hôi Cổ',r:3,food:4,fn:'tro than',t:'heal',healAmt:60,cost:14,p:320,d:'Cổ trị liệu Tam chuyển của cá sấu dung nham: tro nóng phủ vết thương, hồi 60 khí huyết.'},
-  tieuloi:{n:'Tiêu Lôi Thổ Đậu',r:2,food:3,fn:'đất bùn',t:'attack',dmg:44,cost:12,aoe:1,p:160,d:'Hạt đậu đất nổ khi bị giẫm. Chôn thành bãi bẫy thì giết được cả đoàn người. Đất toàn xương thì vô dụng.'},
-  cotthuong:{n:'Cốt Thương Cổ',r:2,food:3,fn:'sữa suối xương',t:'attack',dmg:34,cost:10,pierce:1,p:160,d:'Mũi thương xương bắn ra từ lòng bàn tay, xuyên giáp. Truyền thừa Hôi Cốt Tài Tử (VN 239).'},
-  loatoan:{n:'Loa Toàn Cốt Thương',r:3,food:5,fn:'sữa suối xương',t:'attack',dmg:56,cost:16,pierce:1,p:400,d:'Cốt thương xoắn ốc. Bắn xong tan thành bụi trắng, không để lại dấu vết.'},
-  cotthu:{n:'Cốt Thứ Cổ',r:3,food:5,fn:'tủy xương',t:'guard',cost:14,reflect:.35,p:420,d:'Xương đâm gai ra khỏi da: giảm sát thương và phản 35% sát thương. Tự làm mình bị thương.'},
-  ngoccot:{n:'Ngọc Cốt Cổ',r:2,food:3,fn:'ngọc vụn',t:'passive',hp:25,p:140,d:'Xương hóa ngọc. Khí huyết tối đa +25. Luyện hóa đau tới ngất.'},
-  thietcot:{n:'Thiết Cốt Cổ',r:3,food:4,fn:'thiết vụn',t:'passive',hp:40,atk:3,p:360,d:'Xương hóa sắt. Khí huyết tối đa +40, mọi đòn +3.'},
-  votucdieu:{n:'Vô Túc Điểu',r:3,food:5,fn:'gió trời',t:'passive',fleeMod:.5,p:500,d:'Chim không chân, một ngày vạn dặm, chạm đất là chết. Chạy trốn dễ hơn nhiều.'},
-  cotnhuc:{n:'Cốt Nhục Đoàn Viên',r:3,food:0,fn:'tình nghĩa',t:'passive',cult:.45,p:0,d:'Cổ hiếm luyện từ máu thịt người sống. Mượn không khiếu của người thân cận để tu luyện: tu luyện +45%. Lộ ra là cả thiên hạ truy sát.'},
-  khieukhieu:{n:'Khiêu Khiêu Thảo',r:2,food:2,fn:'nước mưa',t:'passive',fleeMod:.25,p:90,d:'Cỏ bật nhảy. Chạy trốn dễ hơn.'},
-  thanhnhiet:{n:'Thanh Nhiệt Cổ',r:1,food:2,fn:'lá bạc hà',t:'heal',healAmt:25,cure:1,cost:6,p:50,d:'Giải thi độc và nhiệt độc, hồi 25 khí huyết.'},
+  thiennguyen:{n:'Thiên Nguyên Bảo Liên',r:3,food:0,fn:'tự dưỡng',t:'passive',get income(){return 2+4*((typeof S!=='undefined'&&S)?S.chuyen:1)},p:900,d:'Kỳ trân xếp hạng ba trần gian, nguyên tuyền di động. Mỗi lượt nhả ra 2 + 4 × chuyển nguyên thạch (quy đổi từ 50 viên mỗi ngày).'},
+  dausuat:{n:'Đâu Suất Hoa',r:3,food:0,fn:'tự dưỡng',t:'passive',p:400,d:'Bông hoa lam ngậm trên lưỡi, bên trong là không gian trữ vật lớn, chứa hàng hóa mà không nặng thêm.'},
+  boigiap:{n:'Bối Giáp Cổ',r:2,food:3,fn:'vảy cá',t:'guard',cost:9,p:130,d:'Từ cá sấu vương sáu chân. Da lưng hóa mai rùa che điểm mù sau lưng. Chỉ nhận 45% sát thương trong 2 lượt.'},
+  ngacluc:{n:'Ngạc Lực Cổ',r:2,food:4,fn:'thịt cá sấu',t:'passive',atk:8,p:150,d:'Sức hung bạo của cá sấu khổng lồ. Mọi đòn +8, thêm hư ảnh Ngạc.'},
+  tichhoi:{n:'Tích Hôi Cổ',r:3,food:4,fn:'tro than',cure:1,t:'heal',healAmt:80,cost:14,p:320,d:'Ký sinh trên cá sấu dung nham, ăn tro. Tro nóng cầm máu, tái tạo thịt thần tốc. Hồi 80 khí huyết, cầm máu, giải độc.'},
+  tieuloi:{n:'Tiêu Lôi Thổ Đậu',r:2,food:3,fn:'đất bùn',t:'attack',dmg:60,cost:14,aoe:1,p:160,d:'Cổ của Trần Thúy Hoa. Hạt đậu sấm chôn dưới đất, giẫm là nổ. Từng giết Thiết Ngạo Thiên. Nổ quét cả vùng.'},
+  cotthuong:{n:'Cốt Thương Cổ',r:2,food:3,fn:'sữa suối xương',t:'attack',dmg:34,cost:8,pierce:1,p:160,d:'Cổ nền của truyền thừa Bạch Cốt Sơn. Thương xương bắn từ lòng bàn tay, tốn ít chân nguyên, bắn liên hoàn.'},
+  loatoan:{n:'Loa Toàn Cốt Thương',r:3,food:5,fn:'sữa suối xương',t:'attack',dmg:48,cost:16,pierce:1,p:400,d:'Tiến giai của Cốt Thương. Mũi giáo xoắn ốc khoan thủng khiên và giáp sắt. Bắn xong tan thành bụi, không dấu vết.'},
+  cotthu:{n:'Cốt Thứ Cổ',r:3,food:5,fn:'tủy xương',dmg:42,aoe:1,stun:1,t:'attack',cost:14,p:420,d:'Xương toàn thân mọc gai sắc đâm xuyên kẻ thù. Quét cả vùng, địch bất động 1 lượt.'},
+  ngoccot:{n:'Ngọc Cốt Cổ',r:2,food:3,fn:'ngọc vụn',t:'passive',hp:60,p:140,d:'Xương hóa ngọc bích vĩnh viễn, chịu được sức nặng nhiều thú lực. Khí huyết tối đa +60.'},
+  thietcot:{n:'Thiết Cốt Cổ',r:3,food:4,fn:'thiết vụn',armor:0.15,t:'passive',hp:80,p:360,d:'Hấp thu sắt lỏng, xương hóa thiết cốt đen bóng. Khí huyết tối đa +80, giảm 15% sát thương nhận vào.'},
+  votucdieu:{n:'Vô Túc Điểu',r:3,food:5,fn:'gió trời',t:'passive',fleeMod:0.8,p:500,d:'Chim xương không chân, bay vạn dặm một ngày, chạm đất là vỡ. Chạy trốn gần như chắc chắn.'},
+  cotnhuc:{n:'Cốt Nhục Đoàn Viên',r:3,food:0,fn:'tình nghĩa',t:'passive',cult:.45,p:0,d:'Hôi Cốt Tài Tử sáng tạo. Cặp vòng ngọc giúp hai người chuyển chân nguyên cho nhau không bài xích. Tu luyện +45%.'},
+  khieukhieu:{n:'Khiêu Khiêu Thảo',r:2,food:2,fn:'nước mưa',cost:6,turns:1,t:'guard',fleeMod:0.25,p:90,d:'Rễ lò xo dưới bàn chân, bật xa hàng chục trượng. Né hẳn đòn kế tiếp, chạy trốn dễ hơn.'},
+  thanhnhiet:{n:'Thanh Nhiệt Cổ',r:1,food:2,fn:'lá bạc hà',t:'heal',healAmt:25,cure:1,cost:6,p:50,d:'Bọ hung ngọc bích của Bách gia trại, tiết dịch giải độc rắn rết, chướng khí. Hồi 25 khí huyết, giải hết độc và thiêu đốt.'},
 });
 // Chợ theo chương
 const Q2_SHOP={
@@ -91,5 +91,5 @@ Object.assign(MEM,{
   q2_dinhhao:{n:'Tâm sự của Đinh Hạo',d:'Biết Đinh Hạo nhận truyền thừa của Cương Vương đời hai và sợ bị đại sư huynh tìm tới.'},
 });
 Object.assign(DEATH_MEM,{casauvuong:'q2_casau',thuyhoa:'q2_thuyhoa',auduongcong:'q2_thuongdoi',hacmao:'q2_dinhhao'});
-Object.assign(SHIELD_RED,{boigiap:.45,cotthu:.6});
+Object.assign(SHIELD_RED,{boigiap:.45});
 Object.assign(CD,{boigiap:3,cotthu:3,tichhoi:3,thanhnhiet:3,cotthuong:1,loatoan:2,tieuloi:2});

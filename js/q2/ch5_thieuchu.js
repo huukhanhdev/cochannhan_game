@@ -26,11 +26,11 @@ Object.assign(NPC,{
 });
 if(typeof NPC_META!=='undefined')Object.assign(NPC_META,{traophong:'潮',hungdai:'熊',veduchinh:'卫',chutoan:'周'});
 Object.assign(GU,{
-  ngukhuyen:{n:'Ngự Khuyển Cổ',r:1,food:0,fn:'không cần',t:'passive',p:30,d:'Cổ khiển chó. Chìa khóa vào cột sáng vàng của Khuyển Vương truyền thừa.'},
-  chihac:{n:'Chỉ Hạc Cổ',r:1,food:0,fn:'không cần',t:'passive',p:30,d:'Hạc giấy truyền tin. Chìa khóa vào cột sáng lam của Tín Vương truyền thừa.'},
-  baodan:{n:'Bạo Đản Cổ',r:1,food:0,fn:'không cần',t:'passive',p:30,d:'Trứng nổ. Chìa khóa vào cột sáng đỏ của Bạo Vương truyền thừa.'},
-  cuunhan:{n:'Cửu Nhãn Tửu Trùng',r:4,food:8,fn:'chín loại rượu',t:'passive',cult:1.6,p:1400,d:'Cuối chuỗi Tửu trùng. Tinh luyện chân nguyên lên một tiểu cảnh. Tu luyện +160%.'},
-  dochat:{n:'Độc Hạt Cổ',r:3,food:4,fn:'độc trùng',t:'attack',dmg:48,cost:14,bleed:2,p:380,d:'Bọ cạp trắng như bình sứ. Nọc độc làm vết thương không khép.'},
+  ngukhuyen:{n:'Ngự Khuyển Cổ',r:1,food:0,fn:'không cần',t:'passive',p:30,d:'Nô đạo, hình ngọc thạch đầu chó, thu phục chó hoang cấp thấp. Chìa khóa vào Khuyển Vương truyền thừa.'},
+  chihac:{n:'Chỉ Hạc Cổ',r:1,food:0,fn:'không cần',t:'passive',p:30,d:'Tín đạo, hạc giấy chỉ lối trong mê trận luyện cổ. Chìa khóa vào Tín Vương truyền thừa.'},
+  baodan:{n:'Bạo Đản Cổ',r:1,food:0,fn:'không cần',dmg:35,cost:8,aoe:1,bleed:2,t:'attack',p:30,d:'Viêm đạo, quả trứng đỏ ném ra nổ thành biển lửa, thiêu cả chướng ngại. Chìa khóa vào Bạo Vương truyền thừa. Địch cháy 2 lượt.'},
+  cuunhan:{n:'Cửu Nhãn Tửu Trùng',r:4,food:8,fn:'chín loại rượu',pow:0.5,t:'passive',cult:1.6,p:1400,d:'Đỉnh của dòng Tửu Trùng, chín mắt phát quang. Tinh luyện chân nguyên Tứ chuyển lên Tinh Kim. Tu luyện +160%, uy lực chiêu +50%.'},
+  dochat:{n:'Độc Hạt Cổ',r:3,food:4,fn:'độc trùng',t:'attack',dmg:30,cost:14,bleed:4,p:380,d:'Bọ cạp bài tiết hạt thỉ đen kịch độc, ăn mòn kinh mạch. Địch trúng độc 4 lượt.'},
 });
 
 Object.assign(EV,{

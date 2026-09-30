@@ -19,45 +19,45 @@ const ATTR={tamco:'Tâm cơ',satphat:'Sát phạt',ngo:'Ngộ tính'};
 
 // t: attack | guard | heal | passive | use | fate
 const GU={
-  xuanthu:{n:'Xuân Thu Thiền',r:6,food:0,fn:'quang âm',t:'fate',d:'Bản mệnh cổ, Lục chuyển. Khi ngươi chết, nó nghịch chuyển quang âm, đưa ngươi về lễ khai khiếu. Tu vi, nguyên thạch, cổ trùng đều mất, chỉ ký ức còn lại.'},
-  nguyetquang:{n:'Nguyệt Quang Cổ',r:1,food:2,fn:'nguyệt lan',t:'attack',dmg:12,cost:6,p:25,d:'Phóng nguyệt nhận lam nhạt chém địch.'},
-  tuutrung:{n:'Tửu Trùng',r:1,food:3,fn:'rượu',t:'passive',cult:.5,p:45,d:'Tinh luyện chân nguyên. Tu luyện +50%.'},
-  tuvi:{n:'Tứ Vị Tửu Trùng',r:3,food:5,fn:'tứ vị tửu',t:'passive',cult:1.2,p:150,d:'Tửu trùng đã hấp thu chua, ngọt, đắng, cay. Tu luyện +120%.'},
-  bachthi:{n:'Bạch Thỉ Cổ',r:1,food:2,fn:'thịt thú',t:'passive',atk:3,p:30,d:'Sức một con heo rừng. Mọi đòn +3.'},
-  hacthi:{n:'Hắc Thỉ Cổ',r:1,food:3,fn:'thịt thú',t:'passive',atk:5,p:55,d:'Sức heo đen. Mọi đòn +5.'},
-  ngocbi:{n:'Ngọc Bì Cổ',r:1,food:3,fn:'ngọc thạch vụn',t:'guard',cost:5,p:45,d:'Da hóa ngọc: giảm 60% sát thương trong 2 lượt.'},
-  thietbi:{n:'Thiết Bì Cổ',r:2,food:4,fn:'thiết vụn',t:'guard',cost:10,p:120,d:'Da hóa thiết giáp, giảm 65% sát thương trong 2 lượt.'},
-  thienbong:{n:'Thiên Bồng Cổ',r:3,food:7,fn:'thịt thú',t:'guard',cost:22,p:360,d:'Bảo hộ chí bảo Tam chuyển: giảm 80% sát thương trong 3 lượt, phản 25% sát thương.'},
-  trilieu:{n:'Trị Liệu Cổ',r:1,food:2,fn:'thảo dược',t:'heal',cost:8,p:40,d:'Hồi phục khí huyết trong chiến đấu.'},
-  huyetnguyet:{n:'Huyết Nguyệt Cổ',r:2,food:5,fn:'máu tươi',t:'attack',dmg:32,cost:14,p:140,d:'Nguyệt nhận nhuốm máu, xé toạc thân địch.'},
-  nguyetmang:{n:'Nguyệt Mang Cổ',r:2,food:4,fn:'nguyệt lan',t:'attack',dmg:42,cost:16,pierce:1,p:160,d:'Nguyệt nhận lam biếc kéo dài, xuyên thủng mọi giáp trụ.'},
-  uguang:{n:'U Quang Cổ',r:1,food:2,fn:'nguyệt lan',t:'passive',p:60,d:'Ánh sáng lam lân tinh mờ ảo, nguyên liệu hợp luyện Nguyệt Mang Cổ.'},
-  diathinh:{n:'Địa Thính Nhục Nhĩ Thảo',r:2,food:4,fn:'thịt tươi',t:'passive',p:140,scout:1,d:'Cấy vào tai, thính lực tăng vọt. Giúp nhận biết cơ duyên trên núi và né tránh phục kích.'},
-  cuongnham:{n:'Cương Nham Cổ',r:1,food:2,fn:'khoáng thạch',t:'guard',cost:6,p:50,d:'Da hóa nham thạch thô ráp, giảm 50% sát thương trong 2 lượt.'},
-  huyetlo:{n:'Huyết Lô Cổ',r:4,food:0,fn:'máu người cùng huyết mạch',t:'fate',p:500,d:'Tứ chuyển bí cổ của Huyết Hải lão tổ. Luyện chết người cùng huyết mạch trong lò máu để nâng vĩnh viễn tư chất không khiếu.'},
-  bachngoc:{n:'Bạch Ngọc Cổ',r:2,food:4,fn:'bạch ngọc vụn',t:'guard',cost:9,p:150,d:'Toàn thân phủ một lớp bạch ngọc sáng như sứ: giảm 60% sát thương trong 2 lượt. Cổ phòng ngự Nhị chuyển.'},
-  hungluc:{n:'Hùng Lực Cổ',r:1,food:3,fn:'thịt thú',t:'passive',atk:6,p:65,d:'Cổ sức mạnh của Hùng gia, ban sức một con gấu. Mọi đòn +6.'},
-  liemtuc:{n:'Liễm Tức Cổ',r:1,food:2,fn:'sương đêm',t:'passive',p:70,d:'Thu liễm khí tức, xóa dấu vết. Hiềm nghi mỗi tuần giảm thêm 5.'},
-  xaloi1:{n:'Thanh Đồng Xá Lợi Cổ',r:1,food:0,fn:'không cần',t:'use',p:150,d:'Dùng một lần: Nhất chuyển tăng một tiểu cảnh giới.'},
+  xuanthu:{n:'Xuân Thu Thiền',r:6,food:0,fn:'quang âm',t:'fate',d:'Xếp thứ bảy Thập Đại Kỳ Cổ Bảng. Hiến tế thân xác và tu vi, ngược dòng Quang Âm Chi Hà. Hồi phục thì chết sẽ quay ngược thời gian.'},
+  nguyetquang:{n:'Nguyệt Quang Cổ',r:1,food:2,fn:'nguyệt lan',nguyet:1,t:'attack',dmg:18,cost:6,p:25,d:'Trấn tộc cổ của Cổ Nguyệt nhất tộc, trong như lam thủy tinh, nhẹ như trang giấy. Ngưng thành nguyệt nhận dài ba trượng, tầm mười mét.'},
+  tuutrung:{n:'Tửu Trùng',r:1,food:3,fn:'rượu',pow:0.25,t:'passive',cult:.5,p:45,d:'Thực đạo, ăn rượu, bay được. Tinh luyện chân nguyên Nhất chuyển lên nửa cảnh giới. Tu luyện +50%, uy lực chiêu +25%.'},
+  tuvi:{n:'Tứ Vị Tửu Trùng',r:3,food:5,fn:'tứ vị tửu',pow:0.3,t:'passive',cult:1.2,p:150,d:'Hợp luyện từ hai Tửu Trùng và bốn vị rượu chua, cay, ngọt, đắng. Tinh luyện chân nguyên lên một tiểu cảnh. Tu luyện +120%, uy lực chiêu +30%.'},
+  bachthi:{n:'Bạch Thỉ Cổ',r:1,food:2,fn:'thịt thú',t:'passive',atk:5,p:30,d:'Lực đạo, dùng một lần là tăng vĩnh viễn sức một con lợn rừng trắng. Truyền thừa Hoa Tửu Hành Giả. Mọi đòn +5, thêm hư ảnh Trư.'},
+  hacthi:{n:'Hắc Thỉ Cổ',r:1,food:3,fn:'thịt thú',t:'passive',atk:5,p:55,d:'Sức một con lợn rừng đen. Cùng Bạch Thỉ thành Song Trư chi lực. Mọi đòn +5, thêm hư ảnh Trư.'},
+  ngocbi:{n:'Ngọc Bì Cổ',r:1,food:3,fn:'ngọc thạch vụn',t:'guard',cost:8,p:45,d:'Ngọc đạo, phòng ngự hơn Đồng Bì mà tốn ít chân nguyên hơn, da tỏa ánh ngọc. Chỉ nhận 50% sát thương trong 2 lượt.'},
+  thietbi:{n:'Thiết Bì Cổ',r:2,food:4,fn:'thiết vụn',t:'guard',cost:10,p:120,d:'Bản nâng cấp của Đồng Bì, da hóa sắt xám đen. Chỉ nhận 40% sát thương trong 2 lượt.'},
+  thienbong:{n:'Thiên Bồng Cổ',r:3,food:7,fn:'thịt thú',turns:3,t:'guard',cost:15,p:360,d:'Giáp ánh sáng trắng hư ảo, vững như núi. Hộ thân của Phương Nguyên thời kỳ đầu. Chỉ nhận 20% sát thương trong 3 lượt.'},
+  trilieu:{n:'Trị Liệu Cổ',r:1,food:2,fn:'thảo dược',healAmt:35,cure:1,t:'heal',cost:8,p:40,d:'Cổ trị liệu cơ bản của cổ sư mới nhập môn, bạch quang làm lành vết rách. Hồi 35 khí huyết, cầm máu.'},
+  huyetnguyet:{n:'Huyết Nguyệt Cổ',r:2,food:5,fn:'máu tươi',bleed:3,nguyet:1,t:'attack',dmg:32,cost:14,p:140,d:'Nguyệt nhận đỏ như máu, vết thương chảy máu không khép miệng. Địch chảy máu 3 lượt.'},
+  nguyetmang:{n:'Nguyệt Mang Cổ',r:2,food:4,fn:'nguyệt lan',nguyet:1,t:'attack',dmg:36,cost:16,pierce:1,p:160,d:'Nguyệt nhận vàng lam, xé gió, tầm mười lăm mét, xuyên giáp.'},
+  uguang:{n:'U Quang Cổ',r:1,food:2,fn:'nguyệt lan',moonAtk:6,t:'passive',p:60,d:'Hợp luyện từ Nguyệt Quang, nguyệt nhận sắc và nhanh hơn. Mọi chiêu nguyệt nhận +6.'},
+  diathinh:{n:'Địa Thính Nhục Nhĩ Thảo',r:2,food:4,fn:'thịt tươi',t:'passive',p:140,scout:1,d:'Thảo cổ mọc trong tai, áp xuống đất nghe động tĩnh trong ba trăm dặm. Báo trước phục kích và cơ duyên.'},
+  cuongnham:{n:'Cương Nham Cổ',r:1,food:2,fn:'khoáng thạch',t:'guard',cost:6,p:50,d:'Thổ đạo, da cứng như đá hoa cương, chịu va đập và lực ép. Chỉ nhận 50% sát thương trong 2 lượt.'},
+  huyetlo:{n:'Huyết Lô Cổ',r:4,food:0,fn:'máu người cùng huyết mạch',t:'fate',p:500,d:'Huyết Hải Cửu Đạo Chân Truyền. Tàn sát người cùng huyết thống, lấy máu tưới không khiếu, nâng tư chất lên Giáp đẳng.'},
+  bachngoc:{n:'Bạch Ngọc Cổ',r:2,food:4,fn:'bạch ngọc vụn',t:'guard',cost:6,p:150,d:'Cổ của Bạch Ngưng Băng. Da hóa ngọc trắng, phòng ngự toàn diện, tốn cực ít chân nguyên. Chỉ nhận 30% sát thương trong 2 lượt.'},
+  hungluc:{n:'Hùng Lực Cổ',r:1,food:3,fn:'thịt thú',t:'passive',atk:6,p:65,d:'Cổ lực đạo đặc trưng của Hùng gia trại, sức cuồng bạo của gấu đen. Mọi đòn +6, thêm hư ảnh Hùng.'},
+  liemtuc:{n:'Liễm Tức Cổ',r:1,food:2,fn:'sương đêm',t:'passive',p:70,d:'Ẩn đạo, giấu hoàn toàn dao động chân nguyên, trông như phàm nhân không tư chất. Hiềm nghi mỗi tuần giảm thêm 5, dễ tránh tai mắt.'},
+  xaloi1:{n:'Thanh Đồng Xá Lợi Cổ',r:1,food:0,fn:'không cần',t:'use',p:150,d:'Bảo vật nhân đạo. Dùng một lần: Nhất chuyển tăng một tiểu cảnh giới.'},
   xaloi2:{n:'Xích Thiết Xá Lợi Cổ',r:2,food:0,fn:'không cần',t:'use',p:260,d:'Dùng một lần: Nhị chuyển tăng một tiểu cảnh giới.'},
 
   // Cổ trùng mới từ Cổ Chân Nhân (thuvienanime)
-  tieuguang:{n:'Tiểu Quang Cổ',r:1,food:2,fn:'cánh hoa',t:'passive',atk:4,p:35,d:'Phụ trợ quang đạo của Cổ Nguyệt tộc. Tăng uy lực cho mọi đòn công kích nguyệt nhận thêm +4.'},
-  toanphong:{n:'Toàn Phong Cổ',r:1,food:2,fn:'phong sương',t:'attack',dmg:16,cost:7,aoe:1,p:40,d:'Bắn ra luồng gió xoáy quét cả một vùng, bầy đông hay thú nhanh đều khó tránh. Có thể hợp luyện thành Nguyệt Toàn Cổ.'},
-  dongbi:{n:'Đồng Bì Cổ',r:1,food:3,fn:'quặng đồng',t:'guard',cost:5,p:40,d:'Da hóa đồng bì: giảm 55% sát thương trong 2 lượt. Tiêu chuẩn của Cổ sư cận chiến.'},
-  thanhti:{n:'Thanh Ti Cổ',r:1,food:2,fn:'nước mưa',t:'guard',cost:6,p:35,d:'Phóng ra tơ xanh quấn thân phòng hộ, giảm 50% sát thương trong 2 lượt.'},
-  nguyettoan:{n:'Nguyệt Toàn Cổ',r:2,food:4,fn:'nguyệt lan và gió',t:'attack',dmg:38,cost:13,pierce:1,aoe:1,p:155,d:'Tuyệt kỹ của Cổ Nguyệt Thanh Thư. Nguyệt nhận bích lục lượn vòng cung quét qua cả đám địch, xuyên thủng mọi giáp trụ.'},
-  nguyetngan:{n:'Nguyệt Ngân Cổ',r:2,food:4,fn:'ngân khoáng',t:'attack',dmg:40,cost:14,p:150,d:'Nguyệt nhận ánh bạc sắc lạnh, tầm phóng xa gấp đôi, chém nát hộ thể địch.'},
-  nguyetnghe:{n:'Nguyệt Nghê Thường',r:2,food:4,fn:'cánh hoa',t:'guard',cost:10,p:160,d:'Khăn lụa ánh trăng dệt bằng nguyệt quang và ngọc bì: giảm 65% sát thương trong 2 lượt.'},
-  bangdao:{n:'Băng Đao Cổ',r:2,food:4,fn:'băng sương',t:'attack',dmg:36,cost:12,slow:.2,p:145,d:'Cổ trùng cận chiến của Bạch Ngưng Băng. Chém ra đao băng sắc lạnh, hàn khí làm suy yếu đòn công của địch.'},
-  thuytrao:{n:'Thủy Tráo Cổ',r:2,food:3,fn:'nước suối ngọt',t:'guard',cost:8,p:135,d:'Màn cầu nước chảy xiết phân tán xung lực: giảm 60% sát thương trong 2 lượt, tiêu hao chân nguyên cực thấp.'},
-  anlan:{n:'Ẩn Lân Cổ',r:2,food:3,fn:'vảy cá',t:'passive',scout:1,fleeMod:.2,p:140,d:'Cổ trùng trinh sát Bạch gia. Phủ một lớp vảy tàng hình hòa vào cảnh vật, tăng tỉ lệ trốn thoát và giảm hiềm nghi.'},
-  hoalo:{n:'Hỏa Lô Cổ',r:2,food:4,fn:'than lửa',t:'guard',cost:9,reflect:.2,warm:1,p:130,d:'Cổ bảo hộ của Cổ Nguyệt Xích Sơn. Hỏa khí ấm áp xua tan hàn khí, giảm 50% sát thương và phản 20% sát thương lửa.'},
-  cuudiep:{n:'Cửu Diệp Sinh Cơ Thảo',r:2,food:0,fn:'chân nguyên',t:'heal',healAmt:50,cure:1,cost:14,p:280,d:'Kỳ trân của Hoa Tửu. Mỗi tuần tự ngưng kết một phiến Sinh Cơ Diệp (linh dược). Trong chiến đấu hồi 50 khí huyết và giải độc.'},
-  cuxikimngo:{n:'Cứ Xỉ Kim Ngô',r:3,food:6,fn:'thịt tươi và thiết khí',t:'attack',dmg:58,cost:20,bleed:3,p:380,d:'Rết khổng lồ răng cưa vàng kim của Hoa Tửu Hành Giả. Hai hàng răng cưa xoay tàn khốc, xẻ toạc giáp thịt địch gây Chảy Máu dữ dội.'},
-  mokmi:{n:'Mộc Mị Cổ',r:3,food:5,fn:'lá cổ thụ',t:'guard',cost:18,p:350,d:'Cấm cổ của Cổ Nguyệt tộc. Cổ sư tạm thời hóa thân Thụ Tinh: giảm 85% sát thương và phản 30% chấn động trong 3 lượt.'},
-  daosihuyetbuc:{n:'Đao Sí Huyết Bức Cổ',r:3,food:6,fn:'máu tươi',t:'attack',dmg:52,cost:18,lifesteal:.35,aoe:1,p:420,d:'Bầy dơi cánh đao huyết sắc của Huyết Hải lão tổ. Bắn ra đàn dơi cắn xé địch, hút 35% sát thương gây ra phản bổ khí huyết.'},
-  xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:480,d:'Dùng một lần: Tam chuyển tăng trực tiếp một tiểu cảnh giới.'},
+  tieuguang:{n:'Tiểu Quang Cổ',r:1,food:2,fn:'cánh hoa',moonAtk:4,t:'passive',p:35,d:'Cổ phụ trợ của Cổ Nguyệt tộc, làm nguyệt nhận sáng và mạnh hơn. Mọi chiêu nguyệt nhận +4.'},
+  toanphong:{n:'Toàn Phong Cổ',r:1,food:2,fn:'phong sương',slow:0.25,t:'attack',dmg:16,cost:7,aoe:1,p:40,d:'Phong đạo, lốc xoáy làm địch chao đảo, quét cả bầy. Nguyên liệu Nguyệt Toàn Cổ. Địch yếu đi 25% lượt sau.'},
+  dongbi:{n:'Đồng Bì Cổ',r:1,food:3,fn:'quặng đồng',t:'guard',cost:6,p:40,d:'Kim đạo, da sắc đồng thau cản đao kiếm phàm tục, tốn ít chân nguyên. Chỉ nhận 45% sát thương trong 2 lượt.'},
+  thanhti:{n:'Thanh Ti Cổ',r:1,food:2,fn:'nước mưa',selfHeal:15,t:'guard',cost:6,p:35,d:'Mộc đạo, tơ xanh quấn thân làm khiên hoặc cầm máu. Nguyên liệu Hắc Tông Cổ. Chỉ nhận 50% sát thương trong 2 lượt, hồi 15 khí huyết.'},
+  nguyettoan:{n:'Nguyệt Toàn Cổ',r:2,food:4,fn:'nguyệt lan và gió',nguyet:1,t:'attack',dmg:38,cost:13,pierce:1,aoe:1,p:155,d:'Tuyệt kỹ của Cổ Nguyệt Thanh Thư. Nguyệt nhận bay vòng cung, luồn qua khiên, quét cả bầy.'},
+  nguyetngan:{n:'Nguyệt Ngân Cổ',r:2,food:4,fn:'ngân khoáng',nguyet:1,t:'attack',dmg:40,cost:14,p:150,d:'Nguyệt nhận ánh bạc sắc như dao cạo, tầm hai mươi mét.'},
+  nguyetnghe:{n:'Nguyệt Nghê Thường',r:2,food:4,fn:'cánh hoa',t:'guard',cost:10,p:160,d:'Cổ của Phương Chính. Dải lụa ánh trăng triệt tiêu xung lực. Chỉ nhận 35% sát thương trong 2 lượt.'},
+  bangdao:{n:'Băng Đao Cổ',r:2,food:4,fn:'băng sương',t:'attack',dmg:36,cost:12,slow:0.3,p:145,d:'Cổ cận chiến của Bạch Ngưng Băng. Đao băng làm đông máu: địch yếu đi 30%.'},
+  thuytrao:{n:'Thủy Tráo Cổ',r:2,food:3,fn:'nước suối ngọt',t:'guard',cost:8,p:135,d:'Cầu nước xoay quanh thân, phân tán ngoại lực, tốn ít chân nguyên. Chỉ nhận 50% sát thương trong 2 lượt.'},
+  anlan:{n:'Ẩn Lân Cổ',r:2,food:3,fn:'vảy cá',t:'passive',scout:1,fleeMod:0.3,p:140,d:'Hợp luyện từ Ẩn Thạch Cổ và Ngư Lân Cổ. Khúc xạ ánh sáng, người và áo tàng hình. Chạy trốn +30%, ít bị tập kích.'},
+  hoalo:{n:'Hỏa Lô Cổ',r:2,food:4,fn:'than lửa',t:'guard',cost:9,reflect:0.25,warm:1,p:130,d:'Cổ của Cổ Nguyệt Xích Sơn. Nhiệt lượng xua hàn khí, phản hỏa diễm. Chỉ nhận 50% sát thương, phản 25%, chặn băng phong.'},
+  cuudiep:{n:'Cửu Diệp Sinh Cơ Thảo',r:2,food:0,fn:'chân nguyên',t:'heal',healAmt:50,cure:1,cost:14,p:280,d:'Hoa Tửu Hành Giả lưu lại. Chín lá, mỗi tuần kết một phiến Sinh Cơ Diệp. Trong trận hồi 50 khí huyết, giải độc.'},
+  cuxikimngo:{n:'Cứ Xỉ Kim Ngô',r:3,food:6,fn:'thịt tươi và thiết khí',t:'attack',dmg:58,cost:20,bleed:3,p:380,d:'Rết Vàng Răng Cưa của Hoa Tửu Hành Giả. Hai hàng răng cưa xoay như cưa máy, xé toạc giáp trụ. Địch chảy máu 3 lượt.'},
+  mokmi:{n:'Mộc Mị Cổ',r:3,food:5,fn:'lá cổ thụ',reflect:0.3,turns:3,drainPct:0.15,t:'guard',cost:18,p:350,d:'Cấm cổ của Cổ Nguyệt tộc: hóa Thụ Tinh cổ đại. Chỉ nhận 10% sát thương, phản 30%, trong 3 lượt; mỗi lượt mất 15% khí huyết tối đa.'},
+  daosihuyetbuc:{n:'Đao Sí Huyết Bức Cổ',r:3,food:6,fn:'máu tươi',t:'attack',dmg:52,cost:18,lifesteal:0.35,aoe:1,p:420,d:'Huyết Hải chân truyền của Cổ Nguyệt Nhất Đại. Đàn dơi cánh đao xé địch, hút 35% sát thương về cho chủ.'},
+  xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:480,d:'Dùng một lần: Tam chuyển tăng một tiểu cảnh giới.'},
 };
 
 const SHOP=['nguyetquang','tuutrung','bachthi','hacthi','ngocbi','trilieu','cuongnham','hungluc','tieuguang','toanphong','dongbi','thanhti'];
@@ -168,12 +168,12 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:1.38,atk:1.38,furyTurn:8};
+const DIFF={hp:1.7,atk:1.7,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;
 // Giảm sát thương khi hộ thể (tỉ lệ còn nhận)
-const SHIELD_RED={ngocbi:.4,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.35,bachngoc:.35,thuytrao:.4,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.15};
+const SHIELD_RED={khieukhieu:.05,ngocbi:.5,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.4,bachngoc:.3,thuytrao:.5,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.1};
 // def: giáp trừ thẳng mỗi đòn (xuyên giáp bỏ qua); sk: chiêu riêng; boss: có giai đoạn 2; noflee: không cho chạy
 // fast: né đòn đánh đơn; swarm: cả bầy, đòn diện rộng mạnh hơn (xem FOE_TR trong auto.js)
 const EAI={
@@ -275,7 +275,7 @@ EAI.nhatdai={def:6,sk:'regen',regen:.08,boss:1,noflee:1};
 /* ================= Bản 13: mở rộng nội dung ================= */
 // Cổ trùng mới. Trường mới: stun (choáng địch), chill (giảm lực địch), heal (lượng hồi riêng), cure (giải độc hết)
 Object.assign(GU,{
-  sinhco:{n:'Sinh Cơ Diệp',r:1,food:1,fn:'sương sớm',t:'heal',cost:5,heal:[14,8],cure:1,p:30,d:'Chiếc lá xanh non, dán lên vết thương là lành. Hồi ít hơn Trị Liệu Cổ nhưng rẻ, giải độc hoàn toàn.'},
+  sinhco:{n:'Sinh Cơ Diệp',r:1,food:1,fn:'sương sớm',healAmt:50,t:'heal',cost:5,heal:[14,8],cure:1,p:30,d:'Phiến lá rơi từ Cửu Diệp Sinh Cơ Thảo, cầm máu liền sẹo. Hồi 50 khí huyết.'},
 });
 SHOP.push('sinhco');
 WILD.push('sinhco');

@@ -47,12 +47,12 @@ Object.assign(ART,{lynhanbq:{g:'闲',sc:'blood',c:'#aeb8c2'},thietmobach:{g:'金
 Object.assign(PORTRAIT,{lynhanbq:'p_cultivator',thietmobach:'p_baitruonglao',ocat:'p_madutam',khomac:'p_blood',cuucuu:'p_elder'});
 Object.assign(DROP_POOL,{lynhanbq:['kimcuong','liemtuc']});
 Object.assign(GU,{
-  kimquang:{n:'Kim Quang Cổ',r:5,food:10,fn:'kim tinh',t:'attack',dmg:110,cost:30,pierce:1,p:3000,d:'Ngũ chuyển kim đạo của Thiết Mộ Bạch. Hóa thành kim quang xuyên thủng mọi giáp.'},
-  hoangkimnhan:{n:'Hoàng Kim Nhãn',r:5,food:8,fn:'kim tinh',t:'passive',atk:10,p:2500,d:'Ngũ chuyển. Mắt vàng nhìn thấu sơ hở. Mọi đòn +10.'},
-  nole:{n:'Nô Lệ Cổ',r:4,food:4,fn:'ý chí người khác',t:'passive',p:1200,d:'Gieo vào ai thì kẻ đó thành nô lệ.'},
-  hondao:{n:'Hồn cổ của Ô Cật',r:5,food:8,fn:'hồn phách',t:'guard',cost:24,p:2500,d:'Hồn phách Ngũ chuyển bọc thân: chỉ nhận 25% sát thương trong 2 lượt.'},
+  kimquang:{n:'Kim Quang Cổ',r:5,food:10,fn:'kim tinh',t:'attack',dmg:120,cost:30,pierce:1,p:3000,d:'Cổ bản mệnh của Thiết Mộ Bạch. Kim quang sắc bén tột cùng, xé tan mọi phòng ngự.'},
+  hoangkimnhan:{n:'Hoàng Kim Nhãn',r:5,food:8,fn:'kim tinh',t:'passive',atk:10,p:2500,d:'Mắt vàng kim của Thiết Mộ Bạch, nhìn xuyên ảo ảnh, soi thấu kinh mạch đối thủ. Mọi đòn +10.'},
+  nole:{n:'Nô Lệ Cổ',r:4,food:4,fn:'ý chí người khác',t:'passive',p:1200,d:'Nô đạo. Khống chế được cả cổ sư Ngũ chuyển thành nô lệ tuyệt đối phục tùng.'},
+  hondao:{n:'Hồn cổ của Ô Cật',r:5,food:8,fn:'hồn phách',dmg:110,pierce:1,stun:2,t:'attack',cost:28,p:2500,d:'Cổ hạch tâm của Vu Quỷ Ô Cật. Mây quỷ đen nuốt linh hồn, đánh thẳng vào hồn phách: xuyên giáp, choáng 2 lượt.'},
 });
-Object.assign(SHIELD_RED,{hondao:.25});Object.assign(CD,{kimquang:2,hondao:3});
+Object.assign(CD,{kimquang:2,hondao:3});
 Object.assign(NPC,{baquy:{n:'Địa linh Bá Quy',d:'Rùa đá rêu phong, chấp niệm của chủ nhân phúc địa Tam Vương'}});
 if(typeof NPC_META!=='undefined')Object.assign(NPC_META,{baquy:'龟'});
 Object.assign(MEM,{q2_mobach:{n:'Ải sâu của Bạo Vương',d:'Thiết Mộ Bạch ngồi quay lưng về lối vào phía tây khi suy ngẫm cổ trận.'}});

@@ -39,13 +39,13 @@ function tvStep(){
 }
 
 Object.assign(GU,{
-  xaloi4:{n:'Hoàng Kim Xá Lợi Cổ',r:4,food:0,fn:'không cần',t:'use',p:1200,d:'Dùng một lần: Tứ chuyển tăng một tiểu cảnh giới. Phần thưởng Tín Vương truyền thừa.'},
-  thuylung:{n:'Thủy Lung Cổ',r:3,food:3,fn:'nước',t:'passive',p:300,d:'Lồng nước bắt cổ hoang.'},
-  cotduc:{n:'Cốt Dực Cổ',r:4,food:8,fn:'tủy xương',t:'passive',fleeMod:.6,p:2000,d:'Gai xương từ sống lưng xuyên thịt thành đôi cánh sắt đen. Người thường cần năm năm mới chiến đấu được trên không; ngươi có năm trăm năm kinh nghiệm. Trong trận chuỗi, bay lên thì địch cận chiến không với tới.'},
-  tinhthietcot:{n:'Tinh Thiết Cốt Cổ',r:4,food:6,fn:'thiết tinh',t:'passive',hp:70,atk:5,p:1400,d:'Khúc xương đen ô quang, nghịch luyện ra Thiết Cốt. Khí huyết +70, mọi đòn +5.'},
-  lientrongdongbi:{n:'Đồng Bì Cổ (tắm đồng)',r:3,food:5,fn:'đồng nóng chảy',t:'guard',cost:12,p:350,d:'Da đồng sau khi tắm đồng nóng chảy: chỉ nhận 40% sát thương trong 2 lượt.'},
+  xaloi4:{n:'Hoàng Kim Xá Lợi Cổ',r:4,food:0,fn:'không cần',t:'use',p:1200,d:'Dùng một lần: Tứ chuyển tăng một tiểu cảnh giới. Phần thưởng ải 40 Tín Vương.'},
+  thuylung:{n:'Thủy Lung Cổ',r:3,food:3,fn:'nước',t:'passive',p:300,d:'Phun cầu nước hơn hai mét giam cổ hoang hoặc đối thủ đã kiệt sức để bắt sống.'},
+  cotduc:{n:'Cốt Dực Cổ',r:4,food:8,fn:'tủy xương',t:'passive',fleeMod:.6,p:2000,d:'Cánh xương mọc xuyên sống lưng, bay tự do ba chiều. Trong trận chuỗi, địch cận chiến khó với tới; chạy trốn dễ hơn nhiều.'},
+  tinhthietcot:{n:'Tinh Thiết Cốt Cổ',r:4,food:6,fn:'thiết tinh',t:'passive',hp:140,atk:5,p:1400,d:'Xương cứng hơn Thiết Cốt nhiều lần, chịu va đập của hàng chục thú lực. Khí huyết tối đa +140, mọi đòn +5.'},
+  lientrongdongbi:{n:'Đồng Bì Cổ (tắm đồng)',r:3,food:5,fn:'đồng nóng chảy',armor:0.2,t:'passive',p:350,d:'Ngâm mình trong vạc đồng nóng chảy, ép cổ vào da thịt thành biểu bì đồng vĩnh viễn. Giảm 20% mọi sát thương nhận vào.'},
 });
-Object.assign(SHIELD_RED,{lientrongdongbi:.4});
+
 
 /* ---------- Bạo Vương: phòng trứng nổ ---------- */
 // S.f.bv={ai, egg, fuse, done}. Mỗi phòng có một ổ Bạo Đản với ngòi ẩn 1–3 nhịp.
@@ -71,9 +71,9 @@ function bvNext(){
 function bvBoom(mult){const d=Math.round(maxHp()*(.1+bvState().ai*.006)*mult);S.hp=Math.max(1,S.hp-d);return d}
 
 Object.assign(GU,{
-  hoathu:{n:'Hỏa Thủ Cổ',r:3,food:5,fn:'than hồng',t:'attack',dmg:50,cost:15,p:400,d:'Ấn lòng bàn tay thành trảo lửa ba ngón, tầm vài trượng. Viêm đạo, phần thưởng Bạo Vương.'},
-  nhamngac:{n:'Nham Ngạc Lực Cổ',r:3,food:6,fn:'đá nóng chảy',t:'passive',atk:9,hp:20,beast:'Nham Ngạc',p:600,d:'Sức cá sấu dung nham. Mọi đòn +9, khí huyết +20, thêm hư ảnh Nham Ngạc.'},
-  baoviem:{n:'Bạo Viêm Cổ',r:4,food:8,fn:'lưu huỳnh',t:'attack',dmg:78,cost:24,aoe:1,p:1500,d:'Tứ chuyển. Một quả cầu lửa nổ tung, quét cả một vùng. Di sản của Bạo Vương, kẻ ra tay là núi lở.'},
+  hoathu:{n:'Hỏa Thủ Cổ',r:3,food:5,fn:'than hồng',bleed:2,t:'attack',dmg:45,cost:15,p:400,d:'Hai bàn tay hóa vuốt lửa, đốt da thịt và chân nguyên đối phương. Địch cháy 2 lượt.'},
+  nhamngac:{n:'Nham Ngạc Lực Cổ',r:3,food:6,fn:'đá nóng chảy',t:'passive',atk:12,beast:'Nham Ngạc',p:600,d:'Nâng cấp từ Ngạc Lực: cá sấu nham thạch khổng lồ, quật đuôi nát đá. Mọi đòn +12, thêm hư ảnh Nham Ngạc.'},
+  baoviem:{n:'Bạo Viêm Cổ',r:4,food:8,fn:'lưu huỳnh',pierce:1,t:'attack',dmg:85,cost:24,aoe:1,p:1500,d:'Cầu lửa nổ như thiên thạch, xé màng bảo hộ của cổ sư Tứ chuyển. Quét cả vùng, xuyên giáp.'},
 });
 Object.assign(CD,{hoathu:2,baoviem:3});
 

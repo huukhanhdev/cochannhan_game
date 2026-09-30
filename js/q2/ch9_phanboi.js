@@ -7,7 +7,7 @@ Object.assign(MEM,{
   q2_phanboi:{n:'Điện luyện cổ',d:'Bạch Ngưng Băng thông đồng với Thiết gia. Định Tinh cổ nằm ở cẳng tay trái. Phúc địa không giữ nổi: dù không bị phản bội, liên quân bên ngoài cũng sẽ tràn vào.'},
 });
 Object.assign(GU,{
-  dinhtiendu:{n:'Định Tiên Du',r:6,food:0,fn:'tiên nguyên',t:'fate',p:0,d:'Tiên cổ Lục chuyển vũ đạo, hình con bướm ngọc bích. Chỉ cần nhớ rõ một cảnh là truyền tống tới đó.'},
+  dinhtiendu:{n:'Định Tiên Du',r:6,food:0,fn:'tiên nguyên',t:'fate',p:0,d:'Một trong tứ đại di động tiên cổ. Trong ba hơi thở đưa người tới bất kỳ nơi nào trên Ngũ Vực, chỉ cần nhớ rõ cảnh ấy.'},
 });
 Object.assign(EN,{
   lienquan:{n:'Liên quân chính ma',hp:2600,atk:[60,80],st:[0,0],bl:0,i:'Thiết Nhược Nam dẫn đầu, Tứ lão Thiết gia, Tiêu Mang, các gia tộc chính đạo, cả ma đạo. Cả điện luyện cổ chật kín người muốn giết ngươi.'},

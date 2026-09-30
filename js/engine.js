@@ -85,6 +85,8 @@ function maxEss(){
 function injMat(){return S.inj&&S.inj.k==='mat'?2:0}
 function need(){return NEED[S.chuyen][S.giai]}
 function passAtk(){return S.gu.reduce((s,g)=>s+(GU[g.k].atk||0),0)}
+// Tổng một chỉ số bị động của các cổ đang có (pow: tinh luyện chân nguyên, moonAtk: thưởng nguyệt nhận, armor: giáp, refine: luyện cổ)
+function guSum(k){return S.gu.reduce((s,g)=>s+((GU[g.k]||{})[k]||0),0)}
 function rankMult(){return 1+.45*(S.chuyen-1)+.05*S.giai}
 function baseAtk(){return Math.max(1,4+S.satphat+3*S.chuyen+passAtk()-(S.inj&&S.inj.k==='tay'?3:0))}
 function cultMult(){
@@ -447,7 +449,7 @@ function gambleStone(id){
 }
 
 /* ---------- luyện cổ ---------- */
-function refineChance(r){return Math.min(.95,r.ch+(S.ngo-6)*.03+(S.f.refineBonus||0)/100)}
+function refineChance(r){return Math.min(.95,r.ch+(S.ngo-6)*.03+(S.f.refineBonus||0)/100+guSum('refine'))}
 function canRefine(r){
   if(S.refined) return false;
   if(!hasGu(r.from)) return false;
@@ -504,6 +506,9 @@ function dmgMult(){
   const c=S.combat;let m=1;
   if(c.wolf){if(mem('langtrieu'))m+=.25;if(S.f.wolfPrep)m+=.15}
   if(c.intent==='guard'&&!(c.stun>0))m*=.5;
+  m*=1+guSum('pow');
+  // Khổ Lực: mất bao nhiêu phần trăm khí huyết thì đòn nặng thêm bấy nhiêu, tối đa 80%
+  if(hasGu('kholuc'))m*=1+Math.min(.8,Math.max(0,1-S.hp/maxHp()));
   return m;
 }
 function chillFoe(c,v){
@@ -522,6 +527,7 @@ function enemyHit(c,mult,opt){
   opt=opt||{};
   let d=rand(c.atk[0],c.atk[1])*mult*(1+c.atkBuff+fury(c));
   if(c.shield>0&&!opt.pierce){d*=c.shieldRed;c.shield--}
+  d*=1-Math.min(.4,guSum('armor'));
   d=Math.max(1,Math.round(d));
   S.hp-=d;
   FX.q({type:'eatk',dmg:d,heavy:!!opt.heavy});
@@ -589,7 +595,7 @@ function playerAct(type,arg){
     if(hung)log(`${g.n} đang đói, sức yếu hẳn đi.`,'danger');
     if(g.t==='attack'){
       if(window.SFX)SFX.blade();
-      const d=hitFoe((g.dmg*rankMult()*(1-.25*hung)+passAtk())*vary(),!!g.pierce,{type:'patk',kind:key},!!g.aoe);
+      const d=hitFoe((g.dmg*rankMult()*(1-.25*hung)+passAtk()+(g.nguyet?guSum('moonAtk'):0))*vary(),!!g.pierce,{type:'patk',kind:key},!!g.aoe);
       if(d){
       log(`${g.n}! ${c.n} mất ${d}.${g.pierce?' (Xuyên giáp)':c.def?` (giáp chặn ${c.def})`:''}${g.aoe&&foeHas(c,'bay')?' (Quét cả bầy)':''}`,'good');
       if(g.stun&&!hung){c.stun+=g.stun;log(`${c.n} bị trói chặt, choáng ${g.stun} lượt.`,'good')}
@@ -604,9 +610,10 @@ function playerAct(type,arg){
       }}
     }else if(g.t==='guard'){
       if(window.SFX)SFX.bell();
-      c.shield=key==='thienbong'||key==='mokmi'?3:2;
+      c.shield=g.turns||2;c.drainPct=g.drainPct||0;
+      if(g.selfHeal){S.hp=Math.min(maxHp(),S.hp+g.selfHeal);FX.q({type:'heal',amt:g.selfHeal})}
       c.shieldRed=SHIELD_RED[key]||.4;
-      c.reflect=key==='thienbong'?.25:key==='mokmi'?.3:(g.reflect||0);c.warm=!!g.warm;
+      c.reflect=g.reflect||0;c.warm=!!g.warm;
       FX.q({type:'shield',k:key});
       log(`${g.n} hộ thể: chỉ nhận ${Math.round(c.shieldRed*100)}% sát thương trong ${c.shield} lượt${c.reflect?` (phản ${Math.round(c.reflect*100)}% sát thương)`:''}.`,'good');
     }else if(g.t==='heal'){
@@ -696,6 +703,7 @@ function playerAct(type,arg){
   if(S.hp<=0){die(c.n);return}
 
   // Cuối lượt
+  if(c.shield>0&&c.drainPct){const p=Math.round(maxHp()*c.drainPct);S.hp-=p;log(`Cấm cổ nuốt sinh mệnh. Khí huyết −${p}.`,'danger');if(S.hp<=0){die(c.n);return}}
   for(const k in c.cd)if(c.cd[k]>0)c.cd[k]--;
   for(const k in c.frozen)if(c.frozen[k]>0)c.frozen[k]--;
   if(c.suppress>0)c.suppress--;

@@ -149,3 +149,14 @@ Chỉ làm khi quyển một đã ổn định và hay.
 3. Nguồn gốc Huyết Nguyệt Cổ và Huyết Lô Cổ.
 4. Diễn biến thật của Trầm Thúy, Thanh Thư, và vụ Giả Kim Sinh.
 5. Tên nhân vật theo bản bạn đọc (convert hay bản dịch).
+
+---
+
+## Đã bổ sung Cổ Trùng từ Thư Viện Anime (Chính văn Cổ Chân Nhân)
+- **16 Cổ trùng mới chuẩn nguyên tác**:
+  - Nhất Chuyển: `Tiểu Quang Cổ` (phụ trợ nguyệt quang), `Toàn Phong Cổ` (phong đạo), `Đồng Bì Cổ` (kim/thổ cận chiến), `Thanh Ti Cổ` (mộc hộ thể).
+  - Nhị Chuyển: `Nguyệt Toàn Cổ` (Thanh Thư - đường cong xuyên giáp), `Nguyệt Ngân Cổ` (bắn xa 20m), `Nguyệt Nghê Thường` (khăn lụa hộ thể), `Băng Đao Cổ` (Bạch Ngưng Băng - hàn khí làm chậm), `Thủy Tráo Cổ` (màn nước tiêu hao thấp), `Ẩn Lân Cổ` (Bạch gia trinh sát - tàng hình né phục kích), `Hỏa Lô Cổ` (Xích Sơn - chống lạnh phản hỏa), `Cửu Diệp Sinh Cơ Thảo` (Hoa Tửu - sinh Sinh Cơ Diệp linh dược mỗi tuần).
+  - Tam Chuyển: `Cứ Xỉ Kim Ngô` (Hoa Tửu - rết răng cưa gây Chảy Máu), `Mộc Mị Cổ` (Cổ Nguyệt tộc cấm cổ - thụ tinh hộ thể), `Đao Sí Huyết Bức Cổ` (Nhất Đại Cổ Nguyệt - hút máu lifesteal), `Bạch Ngân Xá Lợi Cổ` (tiêu hao tăng 1 tiểu cảnh giới Tam chuyển).
+- **8 Công thức hợp luyện mới**: Nguyệt Toàn, Nguyệt Ngân, Nguyệt Nghê Thường, Băng Đao, Thủy Tráo, Ẩn Lân, Cứ Xỉ Kim Ngô, Mộc Mị.
+- **4 Sát chiêu combo mới**: Nguyệt Toàn Xuyên Kích, Băng Lam Thủy Thuẫn, Kim Ngô Phệ Thể, Huyết Bức Thực Khí.
+- **Tương tác**: Cổ Đồ Giám tự động cập nhật, bế quan ngộ sát chiêu, chợ học đường & thương đội bày bán, mổ thạch Giả gia có xác suất xuất hiện cổ sống.

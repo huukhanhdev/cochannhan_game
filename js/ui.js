@@ -11,8 +11,9 @@ const GU_META={
   huyetnguyet:{icon:'血',cls:'rank-2'},huyetlo:{icon:'炉',cls:'rank-3'},diathinh:{icon:'耳',cls:'rank-2'},cuongnham:{icon:'岩',cls:'rank-1'},
   uguang:{icon:'幽',cls:'rank-1'},bachngoc:{icon:'瓷',cls:'rank-2'},hungluc:{icon:'熊',cls:'rank-1'},liemtuc:{icon:'隐',cls:'rank-1'},
   xaloi1:{icon:'舍',cls:'rank-1'},xaloi2:{icon:'利',cls:'rank-2'},xaloi3:{icon:'银',cls:'rank-3'},
-  thuytrao:{icon:'水',cls:'rank-1'},sinhco:{icon:'叶',cls:'rank-1'},dangman:{icon:'藤',cls:'rank-1'},kimcham:{icon:'针',cls:'rank-1'},
-  bangtien:{icon:'冰',cls:'rank-2'},langhao:{icon:'嚎',cls:'rank-1'},thanhti:{icon:'丝',cls:'rank-1'},tuunang:{icon:'囊',cls:'rank-2'},
+  sinhco:{icon:'叶',cls:'rank-1'},tieuguang:{icon:'光',cls:'rank-1'},toanphong:{icon:'风',cls:'rank-1'},dongbi:{icon:'铜',cls:'rank-1'},thanhti:{icon:'丝',cls:'rank-1'},
+  nguyettoan:{icon:'旋',cls:'rank-2'},nguyetngan:{icon:'银',cls:'rank-2'},nguyetnghe:{icon:'裳',cls:'rank-2'},bangdao:{icon:'刀',cls:'rank-2'},thuytrao:{icon:'水',cls:'rank-2'},
+  anlan:{icon:'鳞',cls:'rank-2'},hoalo:{icon:'炉',cls:'rank-2'},cuudiep:{icon:'草',cls:'rank-2'},cuxikimngo:{icon:'蜈',cls:'rank-3'},mokmi:{icon:'魅',cls:'rank-3'},daosihuyetbuc:{icon:'蝠',cls:'rank-3'},
 };
 // Chân dung NPC từ tranh cổ (Met Museum, phạm vi công cộng)
 const NPC_IMG={toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu'};

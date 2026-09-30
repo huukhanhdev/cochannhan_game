@@ -212,6 +212,7 @@ const EAI={
   baitruonglao:{def:5,sk:'suppress',boss:1,noflee:1},
   madutam:{def:5,sk:'drain',boss:1,noflee:1},
   giave:{def:2,sk:'poison',noflee:1},
+  thachhau:{def:4,sk:'rage'},
 };
 const SK={
   charge:{n:'Húc thẳng',i:'Chuẩn bị húc thẳng (×1.7)'},
@@ -225,6 +226,7 @@ const SK={
   suppress:{n:'Uy áp',i:'Uy áp: cổ tốn gấp rưỡi chân nguyên 2 lượt'},
 };
 EN.madutam={n:'Huyết Thủ ma tu',hp:380,atk:[22,32],st:[150,200],bl:6,i:'Một ma tu Tam chuyển áo đỏ thẫm ngồi trên tảng đá, tay nhuộm máu tới khuỷu. Hắn liếc ngươi như nhìn một bữa ăn.'};
+EN.thachhau={n:'Thạch Hầu Vương',hp:200,atk:[14,22],st:[30,50],bl:3,i:'Thạch Hầu Vương nhảy xuống, lông đá dựng đứng, hòa lẫn vào vách núi.'};
 EN.giave={n:'Hộ vệ Cổ gia',hp:165,atk:[12,18],st:[70,100],bl:3,drop:.5,i:'Hộ vệ Nhị chuyển của Cổ Phú chặn đường. "Thiếu gia nhà ta chết không nhắm mắt."'};
 MEM.gate={n:'Túi thạch ở cổng học đường',d:'Nhớ đứa nào giàu, đứa nào nhát trong đám bạn học. Mở lựa chọn chặn cổng gọn gàng, nếu cổng học đường vẫn như ký ức.'};
 MEM.baigia={n:'Đường tuần của Bạch gia',d:'Nhớ con đường trinh sát Bạch gia hay đi. Mở lựa chọn phục kích, nếu Bạch gia không đổi đường.'};
@@ -393,4 +395,4 @@ const STONE_POOL={
 // Nơi có thể giấu từng loại bí tàng (mặc định: bất kỳ)
 const CACHE_LOCS={hauquan:['nui','hauson'],tocong:['nui','hauson','nhiemvu']};
 // Thú rừng (mệnh cách Con nhà thợ săn nhận thêm huyết khí)
-const BEASTS=new Set(['heorung','dienlang','hachung','docxa','bao','bachmaon','dlbay','loiquan','langvuong','hauquan']);
+const BEASTS=new Set(['thachhau','heorung','dienlang','hachung','docxa','bao','bachmaon','dlbay','loiquan','langvuong','hauquan']);

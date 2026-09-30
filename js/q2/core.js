@@ -155,8 +155,8 @@ function renderMap2(st){
   st.innerHTML=`<div class="mapwrap">
     <div class="map ${mapMood()}" style="background-image:url('${asset('art/'+(ch.bg||'bg_forest')+'.jpg')}')">
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i></div>
-      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?(ch.ask||'Lượt này làm gì?'):`Còn ${S.ap} việc trong ${ch.unit} này`}</h2></div>
-      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại':' · 1 việc'}</span></button>`).join('')}
+      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?(ch.ask||'Lượt này làm gì?'):S.ap>0?`Còn ${S.ap} việc trong ${ch.unit} này`:(S.pend?'Đã hết việc · Bấm Đối mặt để tiếp tục':`Đã hết việc · Bấm Qua ${ch.unit} để tiếp tục`)}</h2></div>
+      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại':' · 1 việc'}</span></button>`).join('')}
     </div>
     <div class="map-foot">
       <button class="btn" data-a="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}>Hấp thu 5 nguyên thạch (+25 chân nguyên)</button>

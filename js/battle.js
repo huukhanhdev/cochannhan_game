@@ -30,6 +30,7 @@ const ART={
   giave:{g:'卫',sc:'village',c:'#dcb466'},
   docxa:{g:'蛇',sc:'forest',c:'#8fd07a'},
   bao:{g:'豹',sc:'forest',c:'#e0b35a'},
+  thachhau:{g:'猴',sc:'forest',c:'#b5ad9a'},
   hauquan:{g:'猴',sc:'wine',c:'#d9b27a'},
   hunglam:{g:'熊',sc:'forest',c:'#c8915e'},
   sontacvuong:{g:'匪',sc:'forest',c:'#b5ad9a'},

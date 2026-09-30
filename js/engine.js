@@ -577,7 +577,13 @@ const ACTS=[
   {id:'nghi',n:'Tĩnh dưỡng',d:'Hồi khí huyết và chân nguyên.'},
 ];
 function act(id){
-  if(S.combat||S.over||S.evq.length||S.ap<=0||S.traitOpts||S.mg)return;
+  if(S.combat||S.over||S.evq.length||S.traitOpts||S.mg)return;
+  if(S.ap<=0){
+    if(typeof toast==='function')toast('Hết việc tuần này',S.pend?'Hãy bấm "Đối mặt" sự kiện hoặc "Qua tuần" ở cuối trang.':'Hãy bấm "Qua tuần" ở cuối trang để sang tuần mới.','休','warn');
+    const pb=document.querySelector('.pend-btn')||document.querySelector('[data-a="endweek"]');
+    if(pb){pb.classList.remove('pulse-btn');void pb.offsetWidth;pb.classList.add('pulse-btn')}
+    return;
+  }
   ffRecord('act',{a:id});
   // Quyển 2 chỉ có hành động của chương, cộng bế quan và tĩnh dưỡng
   resBegin((ACTS.find(a=>a.id===id)||{}).n||'');
@@ -1118,6 +1124,7 @@ document.addEventListener('click',ev=>{
   const b=ev.target.closest('button');if(!b||b.disabled)return;
   if(b.id==='resetBtn'){
     if(!confirm2(b,'reset','Bấm lần nữa để xóa hết'))return;
+    try{sessionStorage.removeItem('tms-entered')}catch(e){}
     META=freshMeta();newLife();saveAll();render();b.textContent='Xóa toàn bộ, chơi lại';return;
   }
   if(b.id==='soundBtn'){
@@ -1138,7 +1145,7 @@ document.addEventListener('click',ev=>{
   const d=b.dataset;
   if(d.a){
     switch(d.a){
-      case 'close':S.panel=null;resEnd();saveAll();advance();render();return;
+      case 'close':S.panel=null;resEnd();saveAll();render();return;
       case 'resok':S.result=null;saveAll();render();return;
       case 'market':S.panel='market';render();return;
       case 'gamble':S.panel='gamble';render();return;

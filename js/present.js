@@ -71,7 +71,15 @@ function typeStory(){
   let n=0;el.textContent='';ch.classList.add('await');
   const card=el.closest('.story');
   const done=()=>{clearInterval(typeTimer);if(el.isConnected)el.textContent=full;ch.classList.remove('await');card&&card.removeEventListener('click',skip,true)};
-  const skip=ev=>{if(ch.classList.contains('await')){ev.stopPropagation();ev.preventDefault();done()}};
+  const skip=ev=>{
+    if(ch.classList.contains('await')){
+      done();
+      if(!ev.target.closest('.choice')){
+        ev.stopPropagation();
+        ev.preventDefault();
+      }
+    }
+  };
   card&&card.addEventListener('click',skip,true);
   const t0=performance.now();
   typeTimer=setInterval(()=>{

@@ -74,3 +74,21 @@ Dùng file này làm chuẩn khi sửa Quyển 1 và khi `startQ2()` nhận túi
 
 Cốt lõi: Xuân Thu Thiền, Nguyệt Quang, Tứ Vị Tửu Trùng, Thiên Bồng, Huyết Nguyệt, Cự Xỉ Kim Ngô, Đâu Suất Hoa, Thiên Nguyên Bảo Liên.
 Q1 phải cho nhặt đủ các con này, và `startQ2()` phải lấy từ túi thật thay vì phát sẵn (xem KE_HOACH_Q1_CHUAN.md).
+
+## Đối chiếu thêm (30/09/2026, tóm tắt theo chương trên novelwiki.net)
+
+| Chương | Sự kiện |
+|---|---|
+| 44–46 | Cổ Kim Sinh lừa một người Cổ Nguyệt ở quán rượu; Phương Nguyên dẫn hắn lúc say tới hang di tàng Hoa Tửu rồi giết để giữ bí mật |
+| 65–68 | Vương Nhị là thợ săn. Phương Nguyên giết hắn, rồi giết lão Vương và con gái để lấy **tấm bản đồ da thú** |
+| 94–95 | Trong đợt thú triều, Phương Nguyên phá tiểu tổ của Tiêu Tam; sói giết cả tổ trong lúc hắn ẩn nấp |
+| 101–102 | Nhận gia sản: Cửu Diệp Sinh Cơ Thảo, tửu lâu, trúc lâu, gia nô |
+| 103–104 | Cậu Đống Thổ tới tửu lâu tìm cách lấy Tửu Trùng |
+| 111–112 | **Bán tửu lâu và trúc lâu cho cậu lấy nguyên thạch, mua Xích Thiết Xá Lợi Cổ** |
+| 114–116 | Săn Ngọc Nhãn Thạch Hầu, hạ Thạch Hầu Vương, lấy Ẩn Thạch Cổ |
+| 132–134 | **Dụ bầy sói tấn công tiểu tổ Cổ sư đối thủ**, trừ khử họ và lấy cổ, lấy chiến công |
+| 146 | Cứu tổ của Hùng Khương Man khỏi Lôi Lang rồi tống tiền |
+| 149–150 | Lang triều tập kích trại; Phương Nguyên nhân hỗn loạn bắt cóc Dao Lạc |
+| 175 | Thiết Nhược Nam vạch trần vụ Phương Nguyên giết nhà họ Vương |
+
+Nguồn: https://novelwiki.net/reverend-insanity/summaries/chapters-1-100/ và .../chapters-101-200/

@@ -279,10 +279,9 @@ function renderScene(st, id, ev){
   }).join('');
 
   const chs = scChoices(ev);
-  const chsHtml = isDoneTalk ? (
-    chs.length ? chs.map((c, i) => scChoiceBtn(c, i, sc)).join('') :
-    `<button class="btn big active" data-sc-finish="1">Tiếp tục</button>`
-  ) : '';
+  const chsHtml = chs.length
+    ? chs.map((c, i) => scChoiceBtn(c, i, sc)).join('')
+    : `<button class="btn big active" data-sc-finish="1">Tiếp tục</button>`;
 
   st.innerHTML = `<article class="story scene ${ev.canon ? 'canon' : ''} ${diso ? 'diso' : ''} ${tenseCls}">
     <div class="story-art" style="background-image:url('${node.art?asset('art/'+node.art+'.jpg'):eventArt(id)}')">
@@ -300,7 +299,7 @@ function renderScene(st, id, ev){
       <div class="scene-actions">
         ${!isDoneTalk ? `<button class="btn ghost small" data-sc-skip="1">Bỏ qua thoại ⏭️</button>` : ''}
       </div>
-      <div class="choices ${isDoneTalk ? '' : 'await'}">
+      <div class="choices">
         ${chsHtml}
       </div>
     </div>
@@ -440,8 +439,8 @@ function renderStage(){
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i>
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
         ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
-      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?'Tuần này đi đâu?':`Còn ${S.ap} việc trong tuần`}</h2></div>
-      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại trong tuần':' · 1 việc'}</span></button>`).join('')}
+      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?'Tuần này đi đâu?':S.ap>0?`Còn ${S.ap} việc trong tuần`:(S.pend?'Đã hết việc · Bấm Đối mặt để tiếp tục':'Đã hết việc · Bấm Qua tuần để tiếp tục')}</h2></div>
+      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại trong tuần':' · 1 việc'}</span></button>`).join('')}
     </div>
     <div class="map-foot">
       <button class="btn" data-a="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}>Hấp thu 5 nguyên thạch (+25 chân nguyên)</button>
@@ -488,13 +487,23 @@ const INTRO=[
   'Hắn mở mắt, trở lại năm mười lăm tuổi, sáng ngày khai khiếu ở Cổ Nguyệt sơn trại.',
   'Lần này hắn biết trước tương lai. Nhưng tương lai cũng đã bắt đầu lệch đi.',
 ];
-UI.title=true;
+function toast(t,sub,g='!',cls=''){
+  if(typeof FX!=='undefined'){FX.toastMsg={g,t,sub,cls};showToast()}
+}
+function hasActiveGame(){
+  try{
+    const s=JSON.parse(localStorage.getItem('tms2-save'));
+    return !!(s&&s.v===2&&(s.turn>0||s.chap||s.book===2||(s.hp>0&&!s.over)));
+  }catch(e){return false}
+}
+const inSession=(()=>{try{return sessionStorage.getItem('tms-entered')==='1'}catch(e){return false}})();
+UI.title=!inSession&&!hasActiveGame();
 function renderTitle(){
   const L=$('titleLayer');if(!L)return;
   if(!UI.title){L.innerHTML='';return}
   if(L.dataset.mode===(UI.intro?'intro':'title'))return;
   L.dataset.mode=UI.intro?'intro':'title';
-  const cont=META.life>1||S.turn>1||S.log.length>6;
+  const cont=(S&&(S.turn>1||S.book===2||S.evq?.length||(S.traits&&S.traits.length)))||META.life>1||(S&&S.log&&S.log.length>2);
   L.innerHTML=`<div class="title-screen ${UI.intro?'intro':''}">
     <div class="ts-bg" style="background-image:url('${asset('art/bg_title.jpg')}')"></div>
     <div class="ts-hero" style="background-image:url('${asset('art/p_hero.jpg')}')"></div>
@@ -519,9 +528,10 @@ document.addEventListener('click',ev=>{
   const b=ev.target.closest('[data-title]');if(!b)return;
   if(b.dataset.title==='intro'){UI.intro=true;renderTitle();return}
   UI.title=false;UI.intro=false;
+  try{sessionStorage.setItem('tms-entered','1')}catch(e){}
   if(b.dataset.title==='q2')startQ2(META.q2From||'ma');
   const L=$('titleLayer');L.firstElementChild&&L.firstElementChild.classList.add('ts-out');
-  setTimeout(()=>{L.dataset.mode='';renderTitle()},RM?0:700);
+  setTimeout(()=>{L.dataset.mode='';renderTitle()},RM?0:350);
 });
 
 // Xuất / nhập save (mã base64, dán qua clipboard)

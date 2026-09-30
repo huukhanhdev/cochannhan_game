@@ -80,7 +80,7 @@ Object.assign(NPC,{
   dinhhao:{n:'Đinh Hạo',d:'Thôn phu nhặt được truyền thừa cương thi'},
 });
 if(typeof NPC_META!=='undefined')Object.assign(NPC_META,{bainu:'冰',thuyhoa:'翠',bachtoc:'百',bachlien:'莲',bachchienliep:'猎',daokho:'刀',truongthon:'村',tamtu:'慈',tieudiep:'蝶',truongtru:'柱',auduongcong:'欧',dinhhao:'尸'});
-if(typeof WHO_ART!=='undefined')WHO_ART.bainu='art/p_bai.jpg';
+if(typeof WHO_ART!=='undefined')WHO_ART.bainu='art/p_bai_female.jpg';
 
 Object.assign(MEM,{
   q2_casau:{n:'Yếu huyệt cá sấu vương',d:'Nó chỉ mở mõm ra khi cắn. Huyết Nguyệt làm nó chảy máu không ngừng.'},

@@ -11,6 +11,7 @@ const WHO_PREFIX={npc_pc_:'phuongchinh',npc_tt_:'thanhthu',npc_bai_:'bai',npc_cm
 // Tranh chân dung ngoài assets/npc
 const WHO_ART={
   bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'art/p_bai_female.jpg' : 'art/p_bai.jpg'),
+  bainu: 'art/p_bai_female.jpg',
   phuongchinh: 'art/p_phuongchinh.jpg',
   thanhthu: 'art/p_thanhthu.jpg',
   nhuocnam: 'art/p_thietnhuocnam.jpg',

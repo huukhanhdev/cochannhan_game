@@ -20,7 +20,8 @@ const GU_META={
 const NPC_IMG={
   toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
   phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_giave',nhatdai:'n_nhatdai',
-  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai')
+  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai'),
+  bainu: 'n_bai_nu', gialao: 'n_toctruong'
 };
 const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',

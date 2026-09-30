@@ -280,9 +280,10 @@ function scChoices(ev){
   const node=scCurrentNode(ev);
   if(!node||!node.choices)return [];
   const list=typeof node.choices==='function'?node.choices():node.choices;
-  return list.filter((c,i)=>{
+  // _i: vị trí gốc trong nút, để đánh dấu lựa chọn dò xét đã dùng không bị lệch khi danh sách co lại
+  return list.map((c,i)=>Object.assign({},c,{_i:i})).filter(c=>{
     if(c.hidden&&(!S.sc.flags||!S.sc.flags[c.hidden]))return false;
-    if(c.stay&&S.sc.picked&&S.sc.picked[S.sc.node+':'+i])return false;
+    if(c.stay&&((S.sc.budget||0)<=0||(S.sc.picked&&S.sc.picked[S.sc.node+':'+c._i])))return false;
     if(c.mem&&!mem(c.mem))return false;
     return true;
   });
@@ -325,7 +326,7 @@ function scChoose(i){
   if(c.stay){
     if(S.sc.budget<=0)return;
     S.sc.budget--;
-    (S.sc.picked=S.sc.picked||{})[S.sc.node+':'+i]=1;
+    (S.sc.picked=S.sc.picked||{})[S.sc.node+':'+c._i]=1;
     if(c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
     if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
     if(c.drift)driftAdd(c.drift);

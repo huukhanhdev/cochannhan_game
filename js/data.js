@@ -166,8 +166,12 @@ const MEM={
 // Tranh cổ trùng (Canva AI) trong assets/gu/g_<khóa>.jpg
 // Còn thiếu tranh: nguyetmang, uguang, cuongnham, huyetlo, xaloi1, xaloi2, hungluc, liemtuc (dùng chữ thư pháp tạm)
 const GU_IMG=new Set(['xuanthu','nguyetquang','tuutrung','tuvi','bachthi','hacthi','ngocbi','bachngoc','huyetnguyet','diathinh',
-  'thietbi','thienbong','trilieu','cuxikimngo','thiennguyenbaolien','thiennguyen','huyetlo','cotthuong','amduongchuyenthan']);
-function guImgUrl(k){return GU_IMG.has(k)?asset(`gu/g_${k}.jpg`):''}
+  'thietbi','thienbong','trilieu','cuxikimngo','thiennguyenbaolien','thiennguyen','huyetlo','cotthuong','amduongchuyenthan','amduong','duongco']);
+function guImgUrl(k){
+  if(k==='amduong'||k==='duongco') return asset('gu/g_amduongchuyenthan.jpg');
+  if(k==='thiennguyen'||k==='thiennguyenbaolien') return asset('gu/g_thiennguyenbaolien.jpg');
+  return GU_IMG.has(k)?asset(`gu/g_${k}.jpg`):'';
+}
 // Ô hình cổ trùng; glyph là chữ dự phòng khi chưa có tranh
 function guEmblem(k,glyph,cls){
   const u=guImgUrl(k);

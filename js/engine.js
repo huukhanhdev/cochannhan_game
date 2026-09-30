@@ -253,6 +253,7 @@ function startTurn(){
     if(S.f.freeMoon)S.f.freeMoon--;
     if(S.f.tieHunt&&!S.f.tieGone){const p=hasGu('liemtuc')?3:6;S.susp+=p;log(`Thiết Huyết Lãnh vẫn đang lần theo dấu vết. Hiềm nghi +${p}.`,'danger')}
   }
+  guRecover(35);
   laterTick();
   const cid=(S.canon||CANON)[S.turn];
   if(cid&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid))S.evq.push(cid);else S.pend=cid}
@@ -609,7 +610,7 @@ function act(id){
       AFTER.nv();break;
     case 'robgate':S.dao=clamp(S.dao+3,-100,100);S.susp+=W('hocnghiem')?10:5;S.danh-=3;fight('hoctro',{scale:1});break;
     case 'nghi':
-      S.hp=Math.min(maxHp(),S.hp+Math.round(maxHp()*.5));S.ess=Math.min(maxEss(),S.ess+Math.round(maxEss()*.4));
+      S.hp=Math.min(maxHp(),S.hp+Math.round(maxHp()*.5));S.ess=Math.min(maxEss(),S.ess+Math.round(maxEss()*.4));guRecover(25);
       if(S.inj){S.inj.t-=2;log(`Tĩnh dưỡng giúp ${INJURY[S.inj.k].n} mau lành.`,'good');if(S.inj.t<=0)healInjury()}
       log('Ngươi tĩnh dưỡng, nghe gió núi thổi qua rừng trúc.','sys');break;
   }
@@ -773,6 +774,7 @@ function fight(k,o){
     shield:0,shieldRed:.4,bleed:0,stun:0,reflect:0,poison:0,suppress:0,atkBuff:0,turn:0,cd:{},frozen:{},phase2:false,intent:'atk'};
   S.panel=null;
   nextIntent();
+  if(rtOn())rtInit(S.combat,o);
   log(e.i,'danger');
   if(elite)log('Đây là một con tinh anh, mạnh hơn hẳn đồng loại.','danger');
   if(!S.combat.flee)log('Không có đường lui.','danger');
@@ -851,8 +853,23 @@ function spared(c){
   if(c.spareAfter&&AFTER[c.spareAfter])AFTER[c.spareAfter]();
   S.combat=null;checkInjury();resEnd();saveAll();advance();render();return true;
 }
+// Thoát khỏi trận (chạy trốn thành công, hoặc mục tiêu thoát thân của trận thời gian thực)
+function fleeSuccess(c){
+  resBegin('Thoát khỏi '+c.n);resFightEnd();
+  log('Ngươi rút vào rừng trúc, cắt đuôi được đối thủ.','sys');
+  FX.toastMsg={g:'走',t:'Thoát khỏi '+c.n,cls:'run'};
+  if(S.sc&&c.sceneFlee){
+    const scEv=EV[S.sc.id];
+    if(scEv&&scEv.scene&&scEv.scene.nodes&&scEv.scene.nodes[c.sceneFlee]){
+      S.sc.node=c.sceneFlee;S.sc.talkIdx=0;S.sc.subTalk=null;
+    }
+  }
+  S.combat=null;checkInjury();resEnd();saveAll();advance();render();
+}
 function playerAct(type,arg){
   const c=S.combat;if(!c||FX.busy||c.ko)return;
+  // Trận thời gian thực: lệnh cũ (tua nhanh, bot) chạy người chơi máy một đoạn
+  if(c.rt){rtRun(type==='flee'?3:1.5);return}
   const vary=()=>.85+Math.random()*.3;
   let attacked=false;
   const hitFoe=(raw,pierce,ev,aoe)=>{
@@ -940,18 +957,7 @@ function playerAct(type,arg){
     log('Giữa trận, ngươi bóp nát 5 viên nguyên thạch. Chân nguyên +20.','sys');
   }else if(type==='flee'){
     if(!c.flee)return;
-    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0)){
-      resBegin('Thoát khỏi '+c.n);resFightEnd();
-      log('Ngươi rút vào rừng trúc, cắt đuôi được đối thủ.','sys');
-      FX.toastMsg={g:'走',t:'Thoát khỏi '+c.n,cls:'run'};
-      if(S.sc&&c.sceneFlee){
-        const scEv=EV[S.sc.id];
-        if(scEv&&scEv.scene&&scEv.scene.nodes&&scEv.scene.nodes[c.sceneFlee]){
-          S.sc.node=c.sceneFlee;S.sc.talkIdx=0;S.sc.subTalk=null;
-        }
-      }
-      S.combat=null;checkInjury();resEnd();saveAll();advance();render();return;
-    }
+    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0))return fleeSuccess(c);
     log('Chạy trốn thất bại!','danger');
   }
 
@@ -1136,6 +1142,7 @@ document.addEventListener('click',ev=>{
       case 'refine':S.panel='refine';render();return;
       case 'absorb':absorb();return;
       case 'pend':goPend();return;
+      case 'fightmode':(META.opt=META.opt||{}).turn=!META.opt.turn;saveAll();render();return;
       case 'endweek':endWeek();return;
       case 'rebirth':cicadaScene('dead',rebirth);return;
       case 'chapretry':cicadaScene('dead',restartChapter);return;
@@ -1148,6 +1155,7 @@ document.addEventListener('click',ev=>{
       default:act(d.a);return;
     }
   }
+  if(d.rt!==undefined)return rtAct(d.rt,d.i===undefined?undefined:(d.rt==='combo'?d.i:+d.i));
   if(d.trait)return pickTrait(d.trait);
   if(d.ch!==undefined)return choose(+d.ch);
   if(d.scCh!==undefined)return scChoose(+d.scCh);
@@ -1189,6 +1197,7 @@ function start(data){
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];S.mem=S.mem||{};S.combos=S.combos||{};
   S.drift=S.drift||0;S.driftStep=S.driftStep||0;S.later=S.later||[];
+  if(S.combat&&S.combat.rt)S.combat.rt.paused=true;
   if(S.ap===undefined)S.ap=S.acted?0:AP_WEEK;if(S.pend===undefined)S.pend=null;
   // Tải lại giữa lúc đang tua thì trả quyền điều khiển cho người chơi
   if(S.ff)S.ff=null;

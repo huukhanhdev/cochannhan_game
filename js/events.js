@@ -374,8 +374,8 @@ c_kimsinh:{canon:1,title:'Cổ Kim Sinh',hint:'Cổ Kim Sinh',cond:()=>(hasGu('t
         eff:()=>{
           const v=(S.var||{}).kimsinh;
           if(v==='trap'){S.susp+=20;fight('giave',{after:'jkstrap',mod:.8,canFlee:true});return 'Khe đá có người phục sẵn! Cổ Kim Sinh cười lạnh lùi lại: "Tưởng ta ngu à?"';}
-          if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.25});return 'Hắn đến cùng một gã áo đen. Hai đánh một!';}
-          fight('kimsinh',{after:'kimsinh',mod:mem('jks')?.75:1});
+          if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.25,terrain:'khe'});return 'Hắn đến cùng một gã áo đen. Hai đánh một!';}
+          fight('kimsinh',{after:'kimsinh',mod:mem('jks')?.75:1,terrain:'khe'});
           return 'Cổ Kim Sinh đi một mình, mắt sáng rực vì lòng tham!';
         }
       },
@@ -397,7 +397,7 @@ c_kimsinh:{canon:1,title:'Cổ Kim Sinh',hint:'Cổ Kim Sinh',cond:()=>(hasGu('t
         ],
         eff:()=>{
           const v=(S.var||{}).kimsinh;
-          if(v==='alone'){fight('kimsinh',{after:'kimsinh',mod:.8});S.combat.stun=1;return 'Hắn đi một mình đúng như ký ức! Đòn phủ đầu của ngươi chém tới trước khi hắn kịp rút cổ!';}
+          if(v==='alone'){fight('kimsinh',{after:'kimsinh',mod:.8,terrain:'khe',ambush:true,adv:'Nấp sẵn trong khe đá: lẻn tới ra đòn trước'});S.combat.stun=1;return 'Hắn đi một mình đúng như ký ức! Đòn phủ đầu của ngươi chém tới trước khi hắn kịp rút cổ!';}
           if(v==='guard'){fight('kimsinh',{after:'kimsinh',mod:1.15});return 'Ngươi phục sẵn, nhưng hắn không đi một mình! Gã áo đen phía sau đã thấy ngươi trước!';}
           S.susp+=25;fight('giave',{after:'jkstrap',canFlee:true});
           return 'Khe đá trong ký ức giờ là bẫy! Người Cổ gia đã nấp sẵn từ trước. Hiềm nghi +25!';
@@ -791,10 +791,10 @@ c_nhatdai:{canon:1,title:'Huyết Cương thức tỉnh',hint:'Cổ Nguyệt Nh�
           const tie=(S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone;
           const al=[S.f.pcAlly&&'Phương Chính',S.f.qingshuAlive&&'Thanh Thư'].filter(Boolean);
           return [
-            {t:'Nhìn kỹ ngực Huyết Cương',stay:1,flag:'soi_nd',say:'Huyết Cương mạnh, nhưng mỗi lần gào lên là một dòng máu trào ra từ vết nứt giữa ngực, chỗ quan tài vỡ đã đâm vào. Đánh vào đó.'},
+            {t:'Nhìn kỹ ngực Huyết Cương',stay:1,flag:'soi_nd',eff:()=>{S.f.soiNd=1},say:'Huyết Cương mạnh, nhưng mỗi lần gào lên là một dòng máu trào ra từ vết nứt giữa ngực, chỗ quan tài vỡ đã đâm vào. Đánh vào đó.'},
             ...(tie?[
               {t:'Để thần bổ và Huyết Cương đồng quy vu tận',tag:'ma',canon:1,eff:()=>{S.f.tieGone=1;S.f.tieHunt=0;S.susp=Math.max(0,S.susp-40);S.stones+=50;return 'Hai kẻ mạnh nhất Thanh Mao Sơn cùng ngã xuống trong biển máu. Không còn ai truy án. Ngươi nhặt được túi thạch rơi bên xác thần bổ (+50).'}},
-              {t:'Liên thủ với Thiết Huyết Lãnh',tag:'chinh',drift:10,eff:()=>{fight('nhatdai',{after:'nhatdai_lienthu',flee:false,mod:(S.f.tieAlly?.45:.55)*(S.sc&&S.sc.flags.soi_nd?.85:1)});return 'Thần bổ liếc ngươi, gật đầu. Hai người cùng lao vào Huyết Cương.'}},
+              {t:'Liên thủ với Thiết Huyết Lãnh',tag:'chinh',drift:10,eff:()=>{fight('nhatdai',{after:'nhatdai_lienthu',flee:false,mod:(S.f.tieAlly?.45:.55)*(S.sc&&S.sc.flags.soi_nd?.85:1),allies:['tiexueleng']});return 'Thần bổ liếc ngươi, gật đầu. Hai người cùng lao vào Huyết Cương.'}},
             ]:[
               {t:'Đối đầu Huyết Cương',eff:()=>{fight('nhatdai',{after:'nhatdai',flee:false,mod:S.sc&&S.sc.flags.soi_nd?.85:1,spare:.2,spareAfter:'nhatdai_hong',spareT:'Huyết Cương hất ngươi văng vào vách đá như hất một con sâu. Hắn còn bận nuốt máu cả tộc, không buồn quay lại.'});return 'Không ai khác đứng giữa ngươi và thủy tổ.'}},
             ]),
@@ -814,7 +814,7 @@ c_nhatdai:{canon:1,title:'Huyết Cương thức tỉnh',hint:'Cổ Nguyệt Nh�
           ['','Nguyệt nhận, dây leo, tiếng hét. Lần đầu tiên trong năm trăm năm, có người lao vào trận vì ngươi.']
         ],
         eff:()=>{const n=(S.f.pcAlly?1:0)+(S.f.qingshuAlive?1:0)+((S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone?1:0);
-          fight('nhatdai',{after:(S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone?'nhatdai_lienthu':'nhatdai',flee:false,mod:Math.max(.4,1-.15*n)*(S.sc&&S.sc.flags.soi_nd?.85:1),spare:.25,spareAfter:'nhatdai_hong',spareT:'Huyết Cương hất văng cả ba người. Các ngươi kéo nhau lăn xuống dốc, còn sống.'});
+          fight('nhatdai',{allies:[S.f.pcAlly&&'phuongchinh',S.f.qingshuAlive&&'thanhthu',(S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone&&'tiexueleng'].filter(Boolean),after:(S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone?'nhatdai_lienthu':'nhatdai',flee:false,mod:Math.max(.4,1-.15*n)*(S.sc&&S.sc.flags.soi_nd?.85:1),spare:.25,spareAfter:'nhatdai_hong',spareT:'Huyết Cương hất văng cả ba người. Các ngươi kéo nhau lăn xuống dốc, còn sống.'});
           return `${n} người cùng ngươi đối đầu thủy tổ.`}
       },
     }
@@ -838,11 +838,11 @@ c_final:{canon:1,title:'Thanh Mao Sơn diệt vong',hint:'Kết cục quyển m�
           const eMod=S.sc&&S.sc.flags.soi_bang?.9:1;
           return [
             {t:'Tìm chỗ băng mỏng nhất',stay:1,flag:'soi_bang',say:'Phía nam, nơi nguyên tuyền cạn, băng đóng chậm hơn. Có một khe nứt đủ cho một người đi qua. Đường chạy nào cũng dễ hơn nếu đi lối đó.'},
-            ...(S.f.pcAlly?[{t:'Cùng Phương Chính phá vây, bảo vệ nhau rời núi',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_songhung',flee:false,mod:finalMod()*.98*eMod});return 'Hai huynh đệ Phương Nguyên - Phương Chính lưng tựa lưng, nguyệt nhận lam xích hòa quyện chém tan vòng vây!'}}]:[]),
-            ...(S.f.qingshuAlive?[{t:'Cùng Thanh Thư bảo vệ tộc nhân thoát khỏi biển lửa và băng giá',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_thanhthu',flee:false,mod:finalMod()*.94*eMod});return 'Thanh Thư tung dây leo mở đường, ngươi bọc hậu. Tộc nhân hướng về hai người như hai vầng thái dương mới của bộ tộc!'}}]:[]),
+            ...(S.f.pcAlly?[{t:'Cùng Phương Chính phá vây, bảo vệ nhau rời núi',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_songhung',flee:false,mod:finalMod()*.98*eMod,allies:['phuongchinh']});return 'Hai huynh đệ Phương Nguyên - Phương Chính lưng tựa lưng, nguyệt nhận lam xích hòa quyện chém tan vòng vây!'}}]:[]),
+            ...(S.f.qingshuAlive?[{t:'Cùng Thanh Thư bảo vệ tộc nhân thoát khỏi biển lửa và băng giá',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_thanhthu',flee:false,mod:finalMod()*.94*eMod,allies:['thanhthu']});return 'Thanh Thư tung dây leo mở đường, ngươi bọc hậu. Tộc nhân hướng về hai người như hai vầng thái dương mới của bộ tộc!'}}]:[]),
             {t:'Nhảy xuống vực, cược Xuân Thu Thiền lần hai dù nó chưa hồi phục',tag:'ma',canon:1,dao:40,need:{gu:'xuanthu'},go:'thien_a'},
             {t:'Tế Huyết Lô Cổ bằng máu tộc nhân, rồi mở đường máu',tag:'ma',dao:40,req:()=>hasGu('huyetlo'),reqT:'Cần Huyết Lô Cổ',eff:()=>{thachKhieuClash();S.tuchat=99;S.danh=0;S.ess=maxEss();S.hp=maxHp();fight('baitruonglao',{after:'end_huyetlo',flee:false,mod:finalMod()*.7});return 'Máu của cả tộc chảy vào lò. Không khiếu của ngươi rộng ra, chân nguyên cuồn cuộn: Bính đẳng 44% vọt lên Giáp đẳng 99%.'}},
-            ...(S.f.baiAlly&&!hasGu('huyetlo')?[{t:'Cùng Bạch Ngưng Băng xé vòng vây Bạch gia',tag:'ma',eff:()=>{fight('baitruonglao',{after:'end_bai',flee:false,mod:finalMod()*.9});return 'Bạch Ngưng Băng quay lưng với chính gia tộc mình. Băng tiễn và nguyệt nhận cùng mở một con đường.'}}]:[]),
+            ...(S.f.baiAlly&&!hasGu('huyetlo')?[{t:'Cùng Bạch Ngưng Băng xé vòng vây Bạch gia',tag:'ma',eff:()=>{fight('baitruonglao',{after:'end_bai',flee:false,mod:finalMod()*.9,allies:['bai']});return 'Bạch Ngưng Băng quay lưng với chính gia tộc mình. Băng tiễn và nguyệt nhận cùng mở một con đường.'}}]:[]),
             ...(S.f.preLo?[{t:'Mang lò máu đã no rời núi',tag:'ma',eff:()=>{fight('baitruonglao',{after:'end_tienlo',flee:false,mod:finalMod()*.6});return 'Huyết Lô Cổ còn ấm máu thủy tổ. Chân nguyên của ngươi cuồn cuộn như chưa từng có.'}}]:[]),
             ...(mem('bai')&&!S.f.baiAlly&&(S.rel.bai||0)>=20?[{t:'Theo ký ức kiếp trước, bán đường vào trại cho Bạch gia',mem:'bai',tag:'ma',dao:30,check:['tamco',18],bonus:()=>mem('langtrieu')?3:0,
               ok:()=>{fight('baitruonglao',{after:'end_phantoc',flee:false,mod:finalMod()*.9});return 'Ngươi biết đêm nay Bạch gia sẽ tới, và biết cổng nào không ai canh. Ngươi mở cổng cho họ. Gia lão Bạch gia vẫn muốn thử xem kẻ bán tộc có đáng giữ lời hứa không.'},

@@ -42,6 +42,7 @@ function autoScore(c,g,cost){
   return v/Math.max(4,cost);
 }
 function autoAct(){
+  if(S.combat&&S.combat.rt){rtRun(1.5);return}
   const c=S.combat,hpR=S.hp/maxHp();
   const gus=S.gu.map((g,i)=>({i,k:g.k,d:GU[g.k]}));
   const ready=x=>guReady(x.k)&&S.ess>=guCostIdx(x.i);
@@ -78,6 +79,12 @@ function autoEligible(c){return !!(c&&!c.boss&&c.flee&&!c.ko&&!c.pko)}
 function autoFight(){
   const c=S.combat;
   if(!autoEligible(c)||FX.busy||S.hp<maxHp()*AUTO_STOP)return;
+  if(c.rt){
+    UI.batch=true;log(`Ngươi để bản năng dẫn dắt trận với ${c.n}.`,'sys');
+    try{rtRun(180,AUTO_STOP)}finally{UI.batch=false}
+    if(S.combat===c){FX.toastMsg={g:'停',t:'Dừng tự đánh',sub:`Khí huyết còn ${Math.round(S.hp)}/${maxHp()}. Ngươi tự quyết.`,cls:'run'};saveAll();render()}
+    return;
+  }
   const hp0=S.hp;let n=0;
   log(`Ngươi để bản năng dẫn dắt trận với ${c.n}.`,'sys');
   // Chạy liền các lượt, không vẽ lại giữa chừng

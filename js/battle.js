@@ -92,6 +92,7 @@ function eventArt(id){
 /* ================= HTML: khung đấu trường, bảng chỉ số, thanh kỹ năng ================= */
 function combatId(c){return String(c.id||c.k)}
 function renderCombat(st){
+  if(S.combat.rt)return renderRT(st);
   const c=S.combat,art=Object.assign({k:c.k},ART[c.k]||{g:'敌',sc:'forest',c:'#ddd6c0'});
   let arena=$('arena');
   if(!arena||arena.dataset.cid!==combatId(c)){

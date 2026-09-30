@@ -18,13 +18,13 @@ const GU_META={
 };
 // Chân dung NPC từ tranh nhân vật
 const NPC_IMG={
-  toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
+  toctruong:'n_toctruong',caumo:'n_caumo',mo:'n_mo',mactran:'n_mactran',xichluyen:'n_xichluyen',xichthanh:'n_xichthanh',giaphu:'n_giaphu',kimsinh:'n_kimsinh',gialao:'n_gialao',
   phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',
   nhuocnam: () => (typeof S !== 'undefined' && S.book === 2 ? 'n_nhuocnam_q2' : 'n_thietnhuocnam'),
   tiexueleng:'n_tiexueleng',nhatdai:'n_nhatdai',
   tramthuy:'n_tramthuy',hoatuu:'n_hoatuu',
   bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai'),
-  bainu: 'n_bai_nu', gialao: 'n_toctruong',
+  bainu: 'n_bai_nu',
   // Quyển 2 (Thương Gia Thành & Tam Vương Phúc Địa)
   tamtu:'n_shangxinci',shangxinci:'n_shangxinci',
   yenphi:'n_shangyanfei',shangyanfei:'n_shangyanfei',
@@ -102,6 +102,7 @@ function renderHUD(){
     <div class="hud-btns">
       ${S.ff?'<button class="btn warn" data-ff="stop">Dừng tua</button>':''}
       <button class="btn ghost" id="codexBtn">Cổ Đồ Giám</button>
+      <button class="btn ghost" data-a="fightmode" title="Đổi kiểu chiến đấu cho các trận sau">${META.opt&&META.opt.turn?'Đánh: theo lượt':'Đánh: thời gian thực'}</button>
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
     </div>`;
   renderMoon();
@@ -157,6 +158,7 @@ function renderSheet(){
           <div class="gu-desc">${d.d}</div>
           <div class="gu-footer"><small class="dimt">${d.food?`Ăn ${d.fn} · ${(g.k==='nguyetquang'&&S.f.freeMoon)?'miễn phí':d.food+' thạch'}`:'Ăn '+d.fn}${d.cost?` · ${d.cost} chân nguyên`:''}${CD[g.k]?` · hồi ${CD[g.k]}`:''}</small>
             ${g.h?`<span class="hunger-pill hunger-bad">Đói ${g.h}/3</span>`:''}</div>
+          ${d.t!=='fate'?`<div class="gu-dur ${guHp(g)<35?'low':''}" title="Độ bền: đỡ đòn nặng, dùng sát chiêu, đánh khi đói đều làm cổ bị thương. Về 0 thì chết. Nuôi no thì mỗi tuần hồi 35, tĩnh dưỡng hồi thêm 25."><i style="width:${guHp(g)}%"></i><small>Độ bền ${Math.round(guHp(g))}/100${guHp(g)<35?' · trọng thương, sức còn 6 phần':''}</small></div>`:''}
           ${d.t==='use'?`<button class="btn" data-use="${i}" ${S.combat?'disabled':''}>Dùng</button>`:''}
         </div></div>`}).join('')}</div>`;
   }else if(UI.tab==='nhan'){

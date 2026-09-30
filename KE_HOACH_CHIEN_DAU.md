@@ -114,3 +114,85 @@ Các cờ đã có (dò xét trong cảnh, `wolfPrep`, ký ức, `hide`) giờ h
 1. **Điều kiện thắng khác ở mục 2.4.** Có trận nào anh muốn bắt buộc phải hạ gục không? Ví dụ Huyết Cương: trong truyện là Thiết Huyết Lãnh và Hạc Tai hạ, nên mình để "phá huyết hạch" hoặc "cầm chân".
 2. **Đồng minh chỉ là máy tự đánh, hay cho người chơi ra lệnh** (tấn công hoặc che chắn)? Mình đề xuất tự đánh cho đơn giản.
 3. **Bắt đầu B1 được chưa?**
+
+---
+
+## 6. Đã làm (30/09/2026): chiến đấu thời gian thực
+
+Anh chốt "làm hết, không cần theo lượt". Đã làm cả 5 ý cùng cơ chế cổ bị thương và chết. Code nằm ở `js/rt.js`. Kiểu đánh theo lượt vẫn giữ, đổi ở nút **"Đánh: thời gian thực / theo lượt"** trên thanh trên cùng.
+
+**Nhịp trận:**
+- Địch chọn đòn rồi vận chiêu, có thanh vận chiêu và tên đòn. Thời gian vận chiêu: đánh thường 1,1 giây, dồn lực 1,8 giây, kỹ năng 2,2 giây, thủ thế 2 giây.
+- Người chơi nghỉ 0,95 giây giữa hai hành động. Mỗi con cổ có thời gian hồi riêng, tính bằng giây.
+
+**Hộ thể đúng khoảnh khắc:** kích cổ phòng ngự trong 0,45 giây cuối trước khi đòn trúng (nhãn "ĐỠ!") thì chỉ nhận 10% sát thương, và thế của địch vỡ nhiều.
+
+**Thế và sơ hở:**
+- Đánh trúng khi địch đang vận chiêu thì vỡ thế ×1,6.
+- Cổ có choáng hoặc xuyên giáp vỡ thế nhiều hơn; cổ khắc chế vỡ ×2.
+- Thế về 0 thì địch lộ sơ hở 2,6 giây: không ra tay, nhận thêm 50% sát thương, đòn đang tụ bị hủy.
+
+**Chân nguyên và thể lực của địch:**
+- Cổ sư có chân nguyên (thường 80, thủ lĩnh 160). Dồn lực và kỹ năng tốn chân nguyên; cạn thì chỉ còn đánh thường.
+- Thú có 3 nấc thể lực, hồi mỗi 5 giây.
+- Hút chân nguyên chuyển chân nguyên của ngươi sang địch.
+
+**Khoảng cách:**
+- Ba tầm: Gần, Trung, Xa. Thú áp sát dần; đòn cận chiến của thú hụt nếu ngươi ở xa, và hụt thì mất thế.
+- Đánh tay và Cường Thủ Cổ cần áp sát.
+- Bỏ chạy phải lùi ra Xa, rồi giữ 1,4 giây không trúng đòn.
+
+**Địa hình:** rừng trúc (đổi tầm nhanh), tuyết (hàn khí rút chân nguyên, trừ khi có Hỏa Lô), tường trại (thú leo chậm), huyết trì (địch hồi máu, trừ khi đang chảy máu), biển lửa (cả hai mất máu), động đá (không lùi quá tầm trung), khe đá hẹp (kẻ to lớn ra đòn chậm; dùng ở các trận Kim Sinh).
+
+**Phục kích:**
+- Có Liễm Tức hoặc Ẩn Lân (hoặc nhánh phục kích Kim Sinh) thì trận mở bằng pha lẻn tới gần. Bấm "Lẻn tới" khi ánh mắt địch nằm ngoài vùng tối; đủ 3 bước là ám sát (22% máu, địch lộ sơ hở).
+- Bị phát hiện thì địch cảnh giác 15 giây.
+
+**Trận có cách thắng riêng:**
+
+| Trận | Mục tiêu |
+|---|---|
+| Lang Vương | Trụ 40 giây |
+| Lôi Quan Lang | Trụ 30 giây |
+| Bạch Ngưng Băng | Trụ 25 giây, hoặc làm hắn lộ sơ hở một lần |
+| Thiết Huyết Lãnh | Lấp đầy thanh đường thoát (tăng nhanh ở tầm Xa khi không trúng đòn) |
+| Huyết Cương | Phá 3 mạch máu, hoặc trụ 32 giây tới khi Hạc Tai giáng xuống |
+| Gia lão Bạch gia (trận cuối) | Mở đường thoát |
+| Huyết Thủ ma tu | Hạ gục, hoặc ép cạn chân nguyên rồi bỏ chạy |
+
+Các trận này không bị cuồng nộ.
+
+**Điểm yếu:** hiện thành chip 弱 khi đã dò xét hoặc có ký ức. Ví dụ: Hỏa Lô với Bạch Ngưng Băng; giáp hành thổ đỡ lôi bạo của sói; chảy máu làm sói ngừng tru gọi bầy; cổ trị liệu chặn đòn hút máu của Huyết Thủ ma tu.
+
+**Đồng minh:**
+- Phương Chính: nguyệt nhận mỗi 3 giây.
+- Thanh Thư: dây leo trói địch.
+- Thiết Huyết Lãnh: chém, và khóa kỹ năng địch.
+- Bạch Ngưng Băng: băng tiễn làm địch chậm.
+- Đã nối vào trận Huyết Cương, trận cuối (Song Hùng, Thanh Thư, cùng Bạch Ngưng Băng) và các trận Quyển 2 có Bạch Ngưng Băng đi cùng.
+
+**Độ bền cổ (theo nguyên tác):**
+- Mỗi con cổ có độ bền 100.
+- Làm cổ mất độ bền:
+  - Đỡ đòn: mất theo lượng sát thương đã chặn. Địch cao chuyển hơn thì mất nhiều hơn; đỡ đúng khoảnh khắc chỉ mất 30%.
+  - Bị đánh xuyên hộ thể: mất 15.
+  - Dùng cổ tấn công: mất 1,5 mỗi lần.
+  - Sát chiêu: mỗi con tham gia mất 10.
+  - Bị hàn khí băng phong: mất 8.
+  - Cổ đang đói: mọi mức mất ×1,8.
+- Dưới 35 là trọng thương: sức còn 6 phần. Về 0 thì cổ chết.
+- Hồi phục: nuôi no thì mỗi tuần hồi 35; tĩnh dưỡng hồi thêm 25.
+- Tab Cổ trùng hiện thanh độ bền.
+
+**Phím tắt:** 1–9 dùng cổ, Space hộ thể bằng cổ phòng ngự tốt nhất, A áp sát, D lùi, P tạm dừng. Có nút "Tốc độ: thong thả" (chậm còn 55%). Rời tab thì trận tự dừng; tải lại giữa trận cũng dừng sẵn.
+
+**Bot và cân bằng:**
+- `rtBot()` phản xạ như người: 55% đỡ đúng khoảnh khắc, 30% đỡ sớm, 15% quên đỡ.
+- `sim.cjs 400 6`: **41,3%**, kiếp đầu 6,5%.
+- `LECH=1`: khoảng 44% (đo ở sức đánh ×1,7).
+- `sim2.cjs`: lần thử đầu 55%.
+- Hệ số riêng cho thời gian thực: máu địch ×2,2, sức đánh ×1,8. `DIFF.q2` 0.75 → 0.62.
+
+**Chưa làm / cần anh thử:**
+- Bố cục trên điện thoại mới chỉnh cơ bản.
+- Tuần chết trung bình khoảng 7, đầu game còn gắt. Nếu anh thấy khó quá thì hạ `atkMul` hoặc chỉnh đường cong theo tuần.

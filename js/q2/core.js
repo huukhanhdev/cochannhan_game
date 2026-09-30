@@ -144,7 +144,7 @@ function baiWith(){return S.book===2&&!S.f.baiAway&&!S.f.baiHurt}
 function allyMod(){if(!baiWith())return 1;const r=S.rel.bainu||0;return r>=40?.8:r>=15?.87:.93}
 function fight2(k,o){
   o=Object.assign({},o||{});
-  if(!o.solo&&baiWith()){o.mod=(o.mod||1)*allyMod();log('Bạch Ngưng Băng rút đao băng đứng cạnh ngươi.','sys')}
+  if(!o.solo&&baiWith()){o.mod=(o.mod||1)*allyMod();o.allies=(o.allies||[]).concat('bai');log('Bạch Ngưng Băng rút đao băng đứng cạnh ngươi.','sys')}
   fight(k,o);
 }
 

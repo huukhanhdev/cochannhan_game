@@ -6,7 +6,7 @@ const ctx={console,Math,JSON,Date,setTimeout:noop,clearTimeout:noop,localStorage
   document:{getElementById:()=>null,addEventListener:noop,querySelectorAll:()=>[],createElement:()=>({getContext:()=>null})},
   matchMedia:()=>({matches:true}),performance:{now:()=>0}};
 ctx.window=ctx;vm.createContext(ctx);
-const files=['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js'];
+const files=['data.js','events.js','living.js','battle.js','minigame.js','auto.js','rt.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js'];
 for(const f of files)vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 const run=c=>vm.runInContext(c,ctx);
 const GU=run('GU'),EN=run('EN'),EV=run('EV'),MEM=run('MEM'),ENDINGS=run('ENDINGS'),AFTER=run('AFTER'),NPC=run('NPC');

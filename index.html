@@ -424,6 +424,50 @@
   .spot .stip{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);width:max-content;max-width:220px;padding:6px 9px;border-radius:5px;background:#0b0f11;border:1px solid var(--line);font-size:12px;line-height:1.4;color:var(--dim);white-space:normal;opacity:0;pointer-events:none;transition:opacity .15s}
   .spot:hover .stip,.spot:focus-visible .stip{opacity:1}
   .map-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  /* Chiến đấu thời gian thực (js/rt.js) */
+  .arena.rt{height:400px}
+  .arena.rt .mbar i{transition:width .12s linear}
+  .mbar.po{height:9px}.mbar.po i{background:linear-gradient(90deg,#8a6a1a,#e8c45a);margin-left:auto}.mbar.po em{font-size:9px;line-height:8px}
+  .mbar.fe{height:9px}.mbar.fe i{background:linear-gradient(90deg,#1e4a6e,#6ab8ff);margin-left:auto}.mbar.fe em{font-size:9px;line-height:8px}
+  .mbar.ob i{background:linear-gradient(90deg,#3b5a2a,#9fd49a)}
+  .plate .pips{display:flex;gap:4px;justify-content:flex-end;align-items:center}.plate .pips i{width:14px;height:6px;border-radius:2px;background:#2a2a2a;border:1px solid #444}.plate .pips i.on{background:#e0b35a}.plate .pips small{font-size:10px;color:var(--dim);margin-left:4px}
+  .chip.crack{color:#fff1b8;border-color:#b58a2a;background:#4a3510;animation:crack .5s ease-in-out infinite alternate}
+  .chip.weak{color:#b9e8a8;border-color:#3e6a2a;background:#172a10;cursor:help;max-width:100%;white-space:normal}
+  .chip.run{color:#aac8e6;border-color:#2a4a6a;background:#101c28}
+  @keyframes crack{to{box-shadow:0 0 10px #e8c45a}}
+  .rt-range{position:absolute;z-index:2;top:10px;left:50%;transform:translateX(-50%);display:flex;gap:4px;align-items:center;background:rgba(9,13,15,.7);border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:4px 8px}
+  .rt-range .slot{width:54px;height:22px;border-radius:3px;border:1px dashed #3a4a50;display:grid;place-items:center;font-size:11px;color:var(--dim)}
+  .rt-range .slot em{font-style:normal}
+  .rt-range .slot.on{border:1px solid var(--gold);color:var(--gold);background:#2a2410}
+  .rt-range .slot.to{border-color:#9fd8ff}
+  .rt-range .foe{margin-left:6px;font-family:var(--brush);font-size:20px;color:#ff8a7a}
+  #rtHud{margin:8px 0}
+  .cast{border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:#11171a}
+  .cast b{font-size:14px}.cast small{display:block;color:var(--dim);font-size:12px;margin-top:4px}
+  .cast .cbar{position:relative;height:10px;background:#000;border-radius:3px;overflow:hidden;margin-top:5px}
+  .cast .cbar i{display:block;height:100%;background:linear-gradient(90deg,#6a3a1a,#e8844a)}
+  .cast.atk .cbar i{background:linear-gradient(90deg,#5a3a2a,#c89a6a)}
+  .cast.guard .cbar i{background:linear-gradient(90deg,#2a4a5a,#6ab8d8)}
+  .cast .now{position:absolute;right:6px;top:-2px;font-size:10px;font-weight:700;color:#fff1b8;animation:crack .2s infinite alternate}
+  .cast.stag{border-color:#b58a2a;background:#2a200e}
+  .cast.idle{opacity:.7}
+  .rt-obj{margin-top:8px;font-size:12.5px;color:#cfe8c0;display:grid;gap:4px}
+  .rt-obj .nodes{display:flex;gap:6px}.rt-obj .nodes span{flex:1;height:8px;background:#200;border:1px solid #6a241f;border-radius:2px;overflow:hidden}.rt-obj .nodes span i{display:block;height:100%;background:#e8664f}.rt-obj .nodes span.off{opacity:.3}
+  .skillbar.rt .skill{overflow:hidden}
+  .skill .cdv{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);pointer-events:none}
+  .skill .dur{position:absolute;left:8px;right:8px;bottom:2px;height:3px;background:#222;border-radius:2px;overflow:hidden}.skill .dur i{display:block;height:100%;background:#86e0b0}.skill .dur.low i{background:#e8847a}
+  .skill.combo{border-color:#6a4a8a}
+  .gu-dur{position:relative;height:14px;background:#111;border-radius:3px;overflow:hidden;margin-top:6px}.gu-dur i{display:block;height:100%;background:#2f6a4e}.gu-dur.low i{background:#8a2f2a}.gu-dur small{position:absolute;inset:0;font-size:10.5px;line-height:14px;padding-left:6px;color:#e8e2d0}
+  .rt-ctrl{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+  .rt-ctrl kbd{font-size:10px;opacity:.6;margin-left:4px}
+  #rtSneak .sneak{position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,90%);background:rgba(9,13,15,.9);border:1px solid var(--gold);border-radius:6px;padding:12px;display:grid;gap:8px;text-align:center}
+  .sneak .vis{position:relative;height:16px;background:#3a2410;border-radius:3px;overflow:hidden}
+  .sneak .vis .safe{position:absolute;left:0;top:0;bottom:0;background:#0a1a10}
+  .sneak .vis i{position:absolute;top:0;bottom:0;width:4px;margin-left:-2px;background:#fff1b8;box-shadow:0 0 8px #fff1b8}
+  .sneak small{color:var(--dim);font-size:12px}
+  @media (max-width:640px){.arena.rt{height:430px}.rt-range .slot{width:42px}.skillbar.rt{grid-template-columns:1fr 1fr}}
+  @media (prefers-reduced-motion:reduce){.chip.crack,.cast .now{animation:none}}
+
   .result-card{max-width:680px;margin:0 auto;animation:resIn .35s ease-out}
   .result-card .res-choice{margin:.2em 0 .8em;opacity:.85}
   .result-card .res-lines{display:flex;flex-direction:column;gap:.45em;margin-bottom:1em}
@@ -702,6 +746,7 @@
   <script src="js/present.js"></script>
   <script src="js/aperture.js"></script>
   <script src="js/auto.js"></script>
+  <script src="js/rt.js"></script>
   <script src="js/ff.js"></script>
   <script src="js/cicada.js"></script>
   <script src="js/butterfly.js"></script>

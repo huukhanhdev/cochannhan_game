@@ -64,11 +64,30 @@ const PORTRAIT={heorung:'p_boar',dienlang:'p_wolf',hachung:'p_bear',tanbinh:'p_c
   phuongchinh:'p_phuongchinh',thanhthu:'p_thanhthu',nhuocnam:'p_thietnhuocnam',macnhan:'p_cultivator'};
 const PTINT={docxa:0xa8f0a0,bao:0xffd890,bachmaon:0xf4fbff,hunglam:0xeed0b0,phuongchinh:0xcfe8ff,tramthuysat:0xffb0b0,tiexueleng:0xd8dde2,nhatdai:0xff8a70,loiquan:0xcfe2ff,dlbay:0xdde6ee,kimsinh:0xf2e0b4,hunggia:0xeed0b0,baitrinhsat:0xe4edf4,baicosu:0xe4edf4,cosusay:0xf0dcc0,madutam:0xffc2b4};
 const BGIMG={forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_wine',blood:'bg_blood',snow:'bg_snow',fire:'bg_fire'};
-// Tranh đầu thẻ sự kiện
-const EV_SCENE={c_lang1:'tide',c_lang2:'snow',c_lang3:'tide',c_luancong:'village',c_bai:'snow',c_huyetdong:'blood',c_nhatdai:'blood',c_thiet:'village',c_thietvay:'village',c_final:'fire',
-  hs_khe:'wine',hs_bich:'wine',hs_ngam:'wine',hs_dong:'wine',hs_mo:'blood',c_baigia:'forest',c_kimsinh:'forest'};
-const LOC_SCENE={hocduong:'village',trai:'village',nui:'forest',nhiemvu:'forest'};
-function eventArt(id){const ev=EV[id]||{};const sc=EV_SCENE[id]||ev.sc||LOC_SCENE[ev.loc]||'village';return asset('art/'+BGIMG[sc]+'.jpg')}
+// Tranh minh họa kinh điển cho các mốc sự kiện lớn (Quyển 1 & Quyển 2)
+const EVENT_ILLUSTRATIONS={
+  c_khaikhieu:'scene_fy_moonlight',
+  c_lang2:'scene_qingshu_vs_bai',
+  c_bai:'scene_fy_bnb_vol1',
+  c_nhatdai:'scene_first_ancestor_blood',
+  c_final:'scene_bnb_ice',
+  q2_hl_be:'scene_fy_bnb_vol2',
+  q2_tc_phe:'scene_fy_shangxinci',
+  q2_bc_ket:'scene_footless_bird_fly',
+  q2_tx_himi:'scene_three_kings_entrance',
+  q2_tx_tamxoa:'scene_three_kings_entrance',
+  q2_bq_phong:'scene_refine_fixed_immortal',
+  q2_pb_luyen:'scene_refine_fixed_immortal',
+  q2_ng_dangHon:'scene_danghun_mountain',
+  q2_pb_hotien:'scene_little_hu_danghun'
+};
+function eventArt(id){
+  const ev=EV[id]||{};
+  if(ev.art)return asset('art/'+ev.art+'.jpg');
+  if(EVENT_ILLUSTRATIONS[id])return asset('art/'+EVENT_ILLUSTRATIONS[id]+'.jpg');
+  const sc=EV_SCENE[id]||ev.sc||LOC_SCENE[ev.loc]||'village';
+  return asset('art/'+(BGIMG[sc]||'bg_village')+'.jpg');
+}
 
 /* ================= HTML: khung đấu trường, bảng chỉ số, thanh kỹ năng ================= */
 function combatId(c){return String(c.id||c.k)}

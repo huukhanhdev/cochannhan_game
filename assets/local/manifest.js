@@ -6,12 +6,10 @@ window.LOCAL_ASSETS = {
   'art/p_hero.jpg':         'local/art/p_hero.png',         // Phương Nguyên (Huashi6 触站)
   'art/p_bai.jpg':          'local/art/p_bai.jpg',          // Bạch Ngưng Băng Nam - Q1
   'art/p_bai_female.jpg':   'local/art/p_bai_female.jpg',   // Bạch Ngưng Băng Nữ - Q2
-  'art/p_bai_q2.jpg':       'local/art/p_bai_female.jpg',   // Bạch Ngưng Băng Nữ - Q2
   'art/p_phuongchinh.jpg':  'npc/n_phuongchinh.jpg',        // Cổ Nguyệt Phương Chính
   'art/p_thanhthu.jpg':     'npc/n_thanhthu.jpg',           // Cổ Nguyệt Thanh Thư
   'art/p_thietnhuocnam.jpg':'npc/n_thietnhuocnam.jpg',      // Thiết Nhược Nam
   'art/p_tiexueleng.jpg':   'npc/n_tiexueleng.jpg',         // Thiết Huyết Lãnh
-  'art/p_shangxinci.jpg':   'local/art/p_shangxinci.jpg',   // Thương Tâm Từ
   'art/p_nhatdai.jpg':      'art/p_nhatdai.jpg',            // Cổ Nguyệt Nhất Đại (Huyết Quỷ)
   'art/p_tramthuy.jpg':     'npc/n_tramthuy.jpg',           // Thẩm Thúy
   'art/p_hoatuu.jpg':       'npc/n_hoatuu.jpg',             // Hoa Tửu Hành Giả

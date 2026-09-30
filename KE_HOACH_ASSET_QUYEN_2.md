@@ -17,23 +17,23 @@ Toàn bộ Master Art đều được thu thập từ nguồn **Concept Art / Do
 
 ## 2. Danh Mục Asset Master & Avatar 1:1 Đã Tải Về (`assets/v2_xianxia/`)
 
-Tất cả các file ảnh gốc siêu nét (2K - 4K) được lưu tại `assets/v2_xianxia/raw_masters/`, còn các avatar đã crop căn giữa khuôn mặt (600x600) lưu tại `assets/v2_xianxia/avatars/`, đồng thời tự động đồng bộ vào runtime `assets/npc/` và `assets/art/`.
+Tất cả các file ảnh gốc siêu nét (2K - 4K) được lưu duy nhất tại `assets/v2_xianxia/raw_masters/`, còn các avatar đã crop chuẩn 1:1 (600x600) lưu duy nhất tại runtime `assets/npc/` (mỗi nhân vật đúng 1 file duy nhất, loại bỏ hoàn toàn các file nhân bản/alias).
 
 ### 2.1. Nhân Vật Trọng Yếu (Characters)
 
-| STT | Tên Nhân Vật | Khóa Game (`who`) | File Master (2K/4K) | File Avatar 1:1 (600x600) | Ghi Chú Nguyên Tác |
+| STT | Tên Nhân Vật | Khóa Game (`who`) | File Master (2K/4K) | File Avatar Runtime (600x600) | Ghi Chú Nguyên Tác |
 |:---:|---|---|---|---|---|
-| 1 | **Thương Tâm Từ** | `tamtu` / `shangxinci` | `shang_xin_ci_raw.png` (2560×1440) | `n_shangxinci.jpg`<br>`n_tamtu.jpg` | Thiếu nữ áo vàng thanh tú, tính tình thiện lương thuần hậu, thiếu chủ thứ 16 Thương gia |
-| 2 | **Thương Yến Phi** | `yenphi` / `shangyanfei` | `shang_yan_fei_raw.jpg` (3848×2156) | `n_shangyanfei.jpg`<br>`n_yenphi.jpg` | Tộc trưởng Thương gia, Ngũ chuyển Viêm Ma, bá khí ngút trời, tóc đỏ áo choàng tím |
-| 3 | **Ngụy Ương** | `nguyuong` / `weiyang` | `wei_yang_raw.jpg` (3836×2160) | `n_weiyang.jpg`<br>`n_nguyuong.jpg` | Tam chuyển đỉnh phong Quang đạo, nghĩa khí ngút trời, đại tướng tâm phúc của Thương Yến Phi |
-| 4 | **Thiết Nhược Nam (Q2)** | `nhuocnam` (Book 2) | `tie_ruo_nan_q2_raw.jpg` (3848×2156) | `n_nhuocnam_q2.jpg` | Tiểu Thần Bộ Thiết gia, thiết diện che nửa mặt, chiến giáp nghiêm cậy, ánh mắt kiên định báo thù |
-| 5 | **Phượng Kim Hoàng** | `kimhoang` / `fengjinhuang` | `feng_jin_huang_raw.png` (2560×1440) | `n_fengjinhuang.jpg`<br>`n_kimhoang.jpg` | Thiên kiêu Linh Duyên Trai Trung Châu, trâm phượng áo trắng kim tuyến, kiêu ngạo vô song |
-| 6 | **Địa Linh Tiểu Hồ Tiên** | `tieuhotien` / `littlehu` | `little_hu_raw.png` (2560×1440) | `n_littlehu.jpg`<br>`n_tieuhotien.jpg` | Địa linh bé gái ngây thơ đáng yêu, áo hồng phấn, tai hồ ly và đuôi tuyết trắng xù |
-| 7 | **Địa Linh Bá Quy** | `baquy` / `bagui` | `ba_gui_raw.jpg` (3848×2156) | `n_baquy.jpg` | Thần quy cự đại rêu phong ngàn năm, chấp niệm của Tam Vương phúc địa |
-| 8 | **Tiêu Mang** | `tieumang` / `xiaomang` | `xiao_mang_raw.png` (2560×1440) | `n_xiaomang.jpg`<br>`n_tieumang.jpg` | Ngũ chuyển Quang đạo Tiêu gia, cầm quạt ngọc, danh môn chính đạo nhưng tâm cơ giả dối |
-| 9 | **Hồ Mị Nhi** | `himi` / `humeier` | `hu_mei_er_raw.jpg` (2560×1440) | `n_humeier.jpg`<br>`n_himi.jpg` | Mị hoặc nữ tu Tam Xoa Sơn, xiêm y tím quyến rũ, thủ đoạn giảo quyệt |
-| 10 | **Phong Thiên Ngữ** | `phongthienngu` / `fengtianyu` | `feng_tian_yu_raw.png` (2560×1440) | `n_fengtianyu.jpg`<br>`n_phongthienngu.jpg` | Luyện đạo tông sư Phong gia, thiên tài luyện cổ bị Phương Nguyên dùng Nô Lệ Cổ thao túng |
-| 11 | **Cừu Cửu** | `cuucuu` / `choujiu` | `chou_jiu_raw.jpg` (1924×1078) | `n_choujiu.jpg`<br>`n_cuucuu.jpg` | Sát Nhân Quỷ Y, môn đồ bí mật của Môn Phái Môn Cổ, áo đen đầu lâu ma quái |
+| 1 | **Thương Tâm Từ** | `tamtu` / `shangxinci` | `shang_xin_ci_raw.png` (2560×1440) | `assets/npc/n_shangxinci.jpg` | Thiếu nữ áo vàng thanh tú, tính tình thiện lương thuần hậu, thiếu chủ thứ 16 Thương gia |
+| 2 | **Thương Yến Phi** | `yenphi` / `shangyanfei` | `shang_yan_fei_raw.jpg` (3848×2156) | `assets/npc/n_shangyanfei.jpg` | Tộc trưởng Thương gia, Ngũ chuyển Viêm Ma, bá khí ngút trời, tóc đỏ áo choàng tím |
+| 3 | **Ngụy Ương** | `nguyuong` / `weiyang` | `wei_yang_raw.jpg` (3836×2160) | `assets/npc/n_weiyang.jpg` | Tam chuyển đỉnh phong Quang đạo, nghĩa khí ngút trời, đại tướng tâm phúc của Thương Yến Phi |
+| 4 | **Thiết Nhược Nam (Q2)** | `nhuocnam` (Book 2) | `tie_ruo_nan_q2_raw.jpg` (3848×2156) | `assets/npc/n_nhuocnam_q2.jpg` | Tiểu Thần Bộ Thiết gia, thiết diện che nửa mặt, chiến giáp nghiêm cậy, ánh mắt kiên định báo thù |
+| 5 | **Phượng Kim Hoàng** | `kimhoang` / `fengjinhuang` | `feng_jin_huang_raw.png` (2560×1440) | `assets/npc/n_fengjinhuang.jpg` | Thiên kiêu Linh Duyên Trai Trung Châu, trâm phượng áo trắng kim tuyến, kiêu ngạo vô song |
+| 6 | **Địa Linh Tiểu Hồ Tiên** | `tieuhotien` / `littlehu` | `little_hu_raw.png` (2560×1440) | `assets/npc/n_littlehu.jpg` | Địa linh bé gái ngây thơ đáng yêu, áo hồng phấn, tai hồ ly và đuôi tuyết trắng xù |
+| 7 | **Địa Linh Bá Quy** | `baquy` / `bagui` | `ba_gui_raw.jpg` (3848×2156) | `assets/npc/n_baquy.jpg` | Thần quy cự đại rêu phong ngàn năm, chấp niệm của Tam Vương phúc địa |
+| 8 | **Tiêu Mang** | `tieumang` / `xiaomang` | `xiao_mang_raw.png` (2560×1440) | `assets/npc/n_xiaomang.jpg` | Ngũ chuyển Quang đạo Tiêu gia, cầm quạt ngọc, danh môn chính đạo nhưng tâm cơ giả dối |
+| 9 | **Hồ Mị Nhi** | `himi` / `humeier` | `hu_mei_er_raw.jpg` (2560×1440) | `assets/npc/n_humeier.jpg` | Mị hoặc nữ tu Tam Xoa Sơn, xiêm y tím quyến rũ, thủ đoạn giảo quyệt |
+| 10 | **Phong Thiên Ngữ** | `phongthienngu` / `fengtianyu` | `feng_tian_yu_raw.png` (2560×1440) | `assets/npc/n_fengtianyu.jpg` | Luyện đạo tông sư Phong gia, thiên tài luyện cổ bị Phương Nguyên dùng Nô Lệ Cổ thao túng |
+| 11 | **Cừu Cửu** | `cuucuu` / `choujiu` | `chou_jiu_raw.jpg` (1924×1078) | `assets/npc/n_choujiu.jpg` | Sát Nhân Quỷ Y, môn đồ bí mật của Môn Phái Môn Cổ, áo đen đầu lâu ma quái |
 
 ---
 
@@ -45,6 +45,26 @@ Tất cả các file ảnh gốc siêu nét (2K - 4K) được lưu tại `asset
 | 2 | **Đệ Nhị Không Khiếu Cổ** | `second_aperture_raw.jpg` | Lục chuyển Tiên Cổ | Tạo ra không khiếu thứ hai trong cơ thể, phá vỡ hạn lượng chân nguyên trần thế. |
 | 3 | **Mộng Dực Cổ** | `dream_wings_raw.jpg` | Lục chuyển Tiên Cổ | Đôi cánh mộng ảo ngũ sắc, bản mệnh cổ của Phượng Kim Hoàng, chìa khóa vào mộng cảnh. |
 | 4 | **Vô Túc Điểu Cổ** | `footless_bird_raw.png` | Tam chuyển Cổ | Chim xương không chân bay vạn dặm không ngừng, chạm đất là vỡ tan, tốc độ trốn chạy đỉnh cao. |
+
+### 2.3. Đại Cảnh Minh Họa Sự Kiện (Epic Scene Illustrations)
+
+Bên cạnh chân dung nhân vật và cổ trùng, game đã được nâng cấp hệ thống `EVENT_ILLUSTRATIONS` trong `js/battle.js` để tự động hiển thị các bức họa đại cảnh tráng lệ ở đầu thẻ sự kiện (`story-art`):
+
+| STT | Mã Sự Kiện | Tên Sự Kiện / Bối Cảnh | File Minh Họa Runtime | Mô Tả Tranh & Dấu Ấn Nguyên Tác |
+|:---:|---|---|---|---|
+| 1 | `c_khaikhieu` | **Khai Khiếu Đầu Đời** | `scene_fy_moonlight.jpg` | Phương Nguyên 15 tuổi ngắm nhìn Nguyệt Quang Cổ phát sáng u lam trong lòng bàn tay. |
+| 2 | `c_lang2` | **Thanh Thư Tử Trận** | `scene_qingshu_vs_bai.jpg` | Cổ Nguyệt Thanh Thư kích hoạt Mộc Mị Cổ hóa người cây, huyết chiến Bạch Ngưng Băng giữa bão tuyết. |
+| 3 | `c_bai` | **Chạm Trán Bạch Ngưng Băng** | `scene_fy_bnb_vol1.jpg` | Phương Nguyên cưỡi Thiên Lý Địa Lang Chu đối đầu Bạch Ngưng Băng cưỡi bạch xà trên vách núi. |
+| 4 | `c_nhatdai` | **Huyết Cương Thức Tỉnh** | `scene_first_ancestor_blood.jpg` | Thủy tổ Cổ Nguyệt Nhất Đại phá quan thức tỉnh, biển máu ngút trời, cánh dơi đao dực ma đạo. |
+| 5 | `c_final` | **Bạch Ngưng Băng Tự Bạo** | `scene_bnb_ice.jpg` | Bắc Minh Băng Phách tự bạo đóng băng toàn bộ Thanh Mao Sơn thành thế giới điêu khắc tuyết vĩnh cửu. |
+| 6 | `c_final` (nhánh tế lò) | **Tế Luyện Huyết Lô Cổ** | `scene_blood_skull_refine.jpg` | Phương Nguyên tế máu tộc nhân nuôi Huyết Lô Cổ nâng cao tư chất, sát khí ngút trời. |
+| 7 | `q2_hl_be` | **Xuôi Dòng Hoàng Long** | `scene_fy_bnb_vol2.jpg` | Bè tre chở Phương Nguyên và Bạch Ngưng Băng xuôi dòng sông Hoàng Long, hồng hạc bay lượn trên mây. |
+| 8 | `q2_bc_ket` | **Cưỡi Vô Túc Điểu** | `scene_footless_bird_fly.jpg` | Phương Nguyên (Hắc Thổ) và Bạch Ngưng Băng cưỡi Vô Túc Điểu Cổ bay qua biển mây Bạch Cốt Sơn. |
+| 9 | `q2_tc_phe` / `q2_td_cuu` | **Bên Thương Tâm Từ** | `scene_fy_shangxinci.jpg` | Phương Nguyên hộ tống Thương Tâm Từ trong đoàn thương buôn vượt Nam Cương hiểm trở. |
+| 10 | `q2_tx_tamxoa` / `q2_tx_himi` | **Tam Vương Phúc Địa** | `scene_three_kings_entrance.jpg` | Ba đạo quang trụ khổng lồ Xích - Lam - Hoàng chiếu rọi đỉnh Tam Xoa Sơn, quần hùng tề tựu. |
+| 11 | `q2_bq_phong` / `q2_pb_luyen` | **Luyện Định Tiên Du Cổ** | `scene_refine_fixed_immortal.jpg` | Phong Thiên Ngữ trợ lực Phương Nguyên luyện chế Định Tiên Du giữa vạc đồng sôi sục. |
+| 12 | `q2_ng_dangHon` | **Tuyết Phong Đãng Hồn Sơn** | `scene_danghun_mountain.jpg` | Đãng Hồn Sơn sừng sững tại Trung Châu giữa biển tuyết, mây cuộn và quỷ hồn gào thét. |
+| 13 | `q2_pb_hotien` | **Nhận Chủ Tiểu Hồ Tiên** | `scene_little_hu_danghun.jpg` | Phương Nguyên đáp xuống đỉnh Đãng Hồn Sơn trước Phượng Kim Hoàng, Tiểu Hồ Tiên rưng rưng nhận chủ. |
 
 ---
 

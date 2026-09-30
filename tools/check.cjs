@@ -6,7 +6,7 @@ const ctx={console,Math,JSON,Date,setTimeout:noop,clearTimeout:noop,localStorage
   document:{getElementById:()=>null,addEventListener:noop,querySelectorAll:()=>[],createElement:()=>({getContext:()=>null})},
   matchMedia:()=>({matches:true}),performance:{now:()=>0}};
 ctx.window=ctx;vm.createContext(ctx);
-const files=['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js'];
+const files=['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js','butterfly.js'];
 for(const f of files)vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 const run=c=>vm.runInContext(c,ctx);
 const GU=run('GU'),EN=run('EN'),EV=run('EV'),MEM=run('MEM'),ENDINGS=run('ENDINGS'),AFTER=run('AFTER'),NPC=run('NPC');
@@ -16,10 +16,13 @@ const chk=(kind,set,re)=>{for(const m of src.matchAll(re))if(!(m[1] in set))errs
 chk('cổ',GU,/gainGu\('([a-z0-9_]+)'/g);chk('cổ',GU,/hasGu\('([a-z0-9_]+)'/g);
 chk('địch',EN,/fight\('([a-z0-9_]+)'/g);
 chk('sự kiện',EV,/evq\.push\('([a-z0-9_]+)'/g);
-chk('ký ức',MEM,/learn\('([a-z0-9_]+)'/g);chk('ký ức',MEM,/mem\('([a-z0-9_]+)'/g);
+chk('ký ức',MEM,/learn\('([a-z0-9_]+)'\)/g);chk('ký ức',MEM,/mem\('([a-z0-9_]+)'\)/g);
 chk('hàm sau trận',AFTER,/after:'([a-z0-9_]+)'/g);
 chk('kết cục',ENDINGS,/ending='([a-z0-9_]+)'/g);
 chk('nhân vật',NPC,/meet\('([a-z0-9_]+)'/g);
+chk('hậu quả trễ',EV,/later\('([a-z0-9_]+)'/g);chk('ký ức',MEM,/mem:'([a-z0-9_]+)'/g);chk('người nói',NPC,/who:'([a-z0-9_]+)'/g);
+for(const [k,v] of Object.entries(run('VARIANTS')))if(!EV[v.ev])errs.push('biến thể trỏ tới mốc không có: '+k);
+for(const [e,k] of Object.entries(run('DEATH_MEM')))if(!MEM[k]||!EN[e])errs.push('DEATH_MEM sai: '+e+' → '+k);
 for(const id of Object.values(run('CANON')))if(!EV[id])errs.push('CANON trỏ tới sự kiện không có: '+id);
 for(const id of run('NPC_POOL'))if(!EV[id])errs.push('NPC_POOL trỏ tới sự kiện không có: '+id);
 for(const r of run('RECIPES'))for(const k of [r.id,r.from,r.extraGu].filter(Boolean))if(!GU[k])errs.push('công thức dùng cổ không có: '+k);

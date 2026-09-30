@@ -68,6 +68,7 @@ function renderHUD(){
       ${meter('Chân nguyên <em>'+e.n+'</em>',S.ess,maxEss(),'es')}
     </div>
     ${cicadaChip()}
+    ${driftChip()}
     <div class="hud-res">${res.map(r=>`<span class="res ${r[3]}" title="${r[2]}"><i>${r[0]}</i>${r[1]}</span>`).join('')}</div>
     <div class="hud-social">
       ${meter('Danh vọng',Math.max(0,S.danh),100,'danh')}
@@ -90,12 +91,12 @@ function renderHUD(){
 function renderTimeline(){
   let cells='';
   for(let t=1;t<=FINAL_TURN;t++){
-    const cid=CANON[t],m=Math.ceil(t/3),tu=TUAN[(t-1)%3];
+    const cid=(S.canon||CANON)[t],m=Math.ceil(t/3),tu=TUAN[(t-1)%3];
     const cls=[t<S.turn?'past':'',t===S.turn?'now':'',cid?'ev':'',t%3===1?'mstart':''].join(' ');
     cells+=`<div class="tl ${cls}" title="Tháng ${m} · ${tu}${cid?': '+EV[cid].hint:''}">${t%3===1?`<span class="mlab">T${m}</span>`:''}${cid?`<i>${CANON_GLYPH[cid]||'事'}</i>`:''}</div>`;
   }
-  const next=Object.keys(CANON).map(Number).find(t=>t>=S.turn);
-  const nx=next?`<span class="next">Ký ức tương lai: <b>${EV[CANON[next]].hint}</b>${next===S.turn?' · tuần này':` · còn ${next-S.turn} tuần`}</span>`:'';
+  const cal=S.canon||CANON,next=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>t>=S.turn);
+  const nx=next?`<span class="next">Ký ức tương lai: <b>${EV[cal[next]].hint}</b>${next===S.turn?' · tuần này':` · còn ${next-S.turn} tuần`}</span>`:'';
   $('timeline').innerHTML=`<div class="tl-track">${cells}</div>${nx}`;
 }
 
@@ -122,6 +123,7 @@ function renderSheet(){
         <div class="row"><span>Hệ số tu luyện</span><span>×${cultMult().toFixed(2)}</span></div>
         <div class="row"><span>Nuôi cổ mỗi tuần</span><span>${foodCost()} thạch</span></div>
         <div class="row"><span>Lệch nguyên tác</span><span>${tot?dev+'%':'chưa có'}</span></div>
+        <div class="row"><span>Ký ức kiếp trước</span><span class="drift-t${driftTier()}">${DRIFT_LABEL[driftTier()]}</span></div>
         ${S.inj?`<div class="row danger"><span>${INJURY[S.inj.k].n}</span><span>${INJURY[S.inj.k].d} · ${S.inj.t} tuần</span></div>`:''}
       </div>
       <button class="btn warn wide" data-a="thien" ${cicadaReady()&&!S.combat&&!S.over?'':'disabled'} title="Tự kích hoạt Xuân Thu Thiền, quay ngược ${REWIND_WEEKS} tuần">${cicadaReady()?`Kích hoạt Xuân Thu Thiền (quay ngược ${REWIND_WEEKS} tuần)`:`Xuân Thu Thiền đang hồi phục ${Math.floor(cicadaCharge())}% · còn ${cicadaWeeksLeft()} tuần`}</button>`;
@@ -203,7 +205,7 @@ function renderLog(){
 function choiceBtn(c,i,evId){
   const ok=!c.req||c.req();
   const seen=META.seen&&META.seen[evId];
-  const tags=[c.canon&&seen?'<span class="tag canon">Nguyên tác</span>':'',c.tag==='ma'?'<span class="tag ma">Ma</span>':'',c.tag==='chinh'?'<span class="tag chinh">Chính</span>':''].join('');
+  const tags=[c.mem?'<span class="tag mem">憶 Ký ức</span>':'',c.canon&&seen?'<span class="tag canon">Nguyên tác</span>':'',c.tag==='ma'?'<span class="tag ma">Ma</span>':'',c.tag==='chinh'?'<span class="tag chinh">Chính</span>':''].join('');
   let chk='';
   if(c.check){
     const p=chance(c.check[0],c.check[1],c.bonus?c.bonus():0);
@@ -258,13 +260,14 @@ function renderStage(){
   if(S.mg){renderMG(st);return}
   if(S.evq.length){
     const id=S.evq[0],ev=EV[id];
-    st.innerHTML=`<article class="story ${ev.canon?'canon':''}">
+    const diso=ev.loc==='diso';
+    st.innerHTML=`<article class="story ${ev.canon?'canon':''} ${diso?'diso':''}">
       <div class="story-art" style="background-image:url('${eventArt(id)}')">
         ${speakerHTML(evSpeaker(id))}
-        <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':'Kỳ ngộ'} · Tháng ${month()} · ${tuan()}</span><h2>${ev.title}</h2></div>
+        <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':diso?'Dị số':'Kỳ ngộ'} · Tháng ${month()} · ${tuan()}</span><h2>${ev.title}</h2></div>
       </div>
       <div class="story-body">
-        <p class="story-text">${esc(ev.text())}</p>
+        <p class="story-text">${esc(evText(id))}</p>
         <div class="choices">${choicesOf(ev).map((c,i)=>choiceBtn(c,i,id)).join('')}</div>
       </div></article>`;
     return;

@@ -556,6 +556,17 @@
   .cicada-chip i{font-style:normal;font-family:var(--brush);width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#2a2414;color:#8a7440;font-size:14px;line-height:1}
   .cicada-chip.ready{color:var(--gold);border-color:#6e5a2d}
   .cicada-chip.ready i{background:#3a2d12;color:var(--gold);box-shadow:0 0 10px rgba(214,174,96,.45)}
+  /* Cánh bướm */
+  .drift-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:99px;border:1px solid #2f4f40;background:var(--panel2);font-size:12.5px;font-weight:600;color:#8fd0b0}
+  .drift-chip i{font-style:normal;font-family:var(--brush);width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:#16281f;font-size:14px;line-height:1}
+  .drift-chip.t1{color:#e0c070;border-color:#6e5a2d}.drift-chip.t1 i{background:#2a2414}
+  .drift-chip.t2{color:#ef8a78;border-color:#6a241f}.drift-chip.t2 i{background:#2a0f0d}
+  .drift-t0{color:#8fd0b0}.drift-t1{color:#e0c070}.drift-t2{color:#ef8a78}
+  .tag.mem{color:#f0c46a;border-color:#6e5a2d;background:#261f12}
+  .story.diso{border-color:#5a3a78;box-shadow:0 0 0 1px rgba(150,90,200,.18),0 10px 30px rgba(40,10,60,.4)}
+  .story.diso .story-art{filter:blur(1.2px) saturate(.7) hue-rotate(-20deg)}
+  .story.diso .story-cap .label{color:#c9a0f0}
+  @media (max-width:700px){.drift-chip{display:none}}
   /* Tua nhanh bằng ký ức */
   .ff-offer .ff-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
   .ff-offer select{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:6px 10px}
@@ -664,6 +675,7 @@
   <script src="js/auto.js"></script>
   <script src="js/ff.js"></script>
   <script src="js/cicada.js"></script>
+  <script src="js/butterfly.js"></script>
   <script src="js/engine.js"></script>
 </body>
 </html>

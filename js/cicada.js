@@ -33,6 +33,8 @@ function rewindTime(manual){
   S=JSON.parse(snap.data);
   S.log=old.log;S.snaps=old.snaps.filter(x=>x.turn<=snap.turn);
   S.cicada={charge:0};S.rewinds=(old.rewinds||0)+1;
+  // Quang âm bị khuấy động: thế giới lệch thêm
+  if(typeof driftAdd==='function')driftAdd(6);
   S.over=null;S.combat=null;S.mg=null;S.ff=null;S.ffOffer=false;S.traitOpts=null;
   if(window.SFX)SFX.cicada();
   FX.queue.length=0;FX.toastMsg=null;

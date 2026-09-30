@@ -67,6 +67,7 @@ function renderHUD(){
       ${meter('Khí huyết',S.hp,maxHp(),'hp')}
       ${meter('Chân nguyên <em>'+e.n+'</em>',S.ess,maxEss(),'es')}
     </div>
+    ${cicadaChip()}
     <div class="hud-res">${res.map(r=>`<span class="res ${r[3]}" title="${r[2]}"><i>${r[0]}</i>${r[1]}</span>`).join('')}</div>
     <div class="hud-social">
       ${meter('Danh vọng',Math.max(0,S.danh),100,'danh')}
@@ -78,6 +79,7 @@ function renderHUD(){
       <svg id="moon" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"></svg>
     </div>
     <div class="hud-btns">
+      ${S.ff?'<button class="btn warn" data-ff="stop">Dừng tua</button>':''}
       <button class="btn ghost" id="codexBtn">Cổ Đồ Giám</button>
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
     </div>`;
@@ -122,7 +124,7 @@ function renderSheet(){
         <div class="row"><span>Lệch nguyên tác</span><span>${tot?dev+'%':'chưa có'}</span></div>
         ${S.inj?`<div class="row danger"><span>${INJURY[S.inj.k].n}</span><span>${INJURY[S.inj.k].d} · ${S.inj.t} tuần</span></div>`:''}
       </div>
-      <button class="btn warn wide" data-a="thien" ${S.turn>=6&&!S.combat&&!S.over?'':'disabled'} title="Tự kích hoạt Xuân Thu Thiền, quay về lễ khai khiếu">${S.turn>=6?'Kích hoạt Xuân Thu Thiền':'Xuân Thu Thiền đang ngủ (tới tháng 2)'}</button>`;
+      <button class="btn warn wide" data-a="thien" ${cicadaReady()&&!S.combat&&!S.over?'':'disabled'} title="Tự kích hoạt Xuân Thu Thiền, quay ngược ${REWIND_WEEKS} tuần">${cicadaReady()?`Kích hoạt Xuân Thu Thiền (quay ngược ${REWIND_WEEKS} tuần)`:`Xuân Thu Thiền đang hồi phục ${Math.floor(cicadaCharge())}% · còn ${cicadaWeeksLeft()} tuần`}</button>`;
   }else if(UI.tab==='co'){
     body=`<div class="gu">${S.gu.map((g,i)=>{
       const d=GU[g.k],gm=GU_META[g.k]||{icon:'蛊',cls:'rank-1'};
@@ -222,16 +224,25 @@ function renderStage(){
       <button class="btn big" data-a="newgame">Bắt đầu lại từ kiếp một</button></div>`;
     return;
   }
+  if(S.over==='rewind'){
+    const d=META.deaths[META.deaths.length-1],to=Math.max(1,S.turn-REWIND_WEEKS);
+    st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">Tháng ${month()} · ${tuan()} · ${rankName()}</span>
+      <h3>Xuân Thu Thiền thức tỉnh</h3>
+      <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Con ve vàng trong không khiếu vỗ cánh, quang âm chảy ngược ${REWIND_WEEKS} tuần, về tháng ${Math.ceil(to/3)}.</p>
+      <p>Mất: những gì có được trong ${REWIND_WEEKS} tuần đó. Giữ lại: mọi ký ức. Sau lần này Xuân Thu Thiền kiệt sức, cần ${CICADA_WEEKS} tuần để hồi phục. Chết trước lúc đó là chết thật.</p>
+      <button class="btn big" data-a="rewind">Nghịch chuyển quang âm</button></div>`;
+    return;
+  }
   if(S.over==='dead'){
     const d=META.deaths[META.deaths.length-1];
     st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">Tháng ${month()} · ${tuan()} · ${rankName()}</span>
-      <h3>Xuân Thu Thiền thức tỉnh</h3>
-      <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Con ve vàng trong không khiếu vỗ cánh, quang âm chảy ngược về sáng ngày khai khiếu.</p>
-      <p>Mất: toàn bộ tu vi, nguyên thạch, cổ trùng, quan hệ. Giữ lại: ${Object.keys(META.mem).length} ký ức, đạo tâm +5% tu luyện. Thế giới kiếp sau sẽ lệch đi đôi chút.</p>
-      <button class="btn big" data-a="rebirth">Nghịch chuyển quang âm</button></div>`;
+      <h3>Phương Nguyên đã chết</h3>
+      <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.</p>
+      <p>Mọi thứ bắt đầu lại từ lễ khai khiếu. Chỉ những điều ngươi đã biết là còn lại: ${Object.keys(META.mem).length} ký ức, đạo tâm +5% tu luyện. Thế giới lần này sẽ lệch đi đôi chút.</p>
+      <button class="btn big" data-a="rebirth">Bắt đầu lại từ đầu</button></div>`;
     return;
   }
-  if(S.combat){renderCombat(st);return}
+  if(S.combat){if(S.ff){st.innerHTML=ffCombatHTML();return}renderCombat(st);return}
   if(S.traitOpts){
     st.innerHTML=`<div class="paper intro">
       <span class="label">Kiếp ${META.life} · Sáng ngày khai khiếu</span>
@@ -243,6 +254,7 @@ function renderStage(){
     </div>`;
     return;
   }
+  if(S.ffOffer){st.innerHTML=ffOfferHTML();return}
   if(S.mg){renderMG(st);return}
   if(S.evq.length){
     const id=S.evq[0],ev=EV[id];
@@ -329,11 +341,12 @@ function viewKey(){
 }
 function render(){
   $('mainPanel').classList.toggle('in-combat',!!S.combat);
+  $('stage').classList.toggle('ff-on',!!S.ff);
   if(!S.combat)Scene.stop();
   renderHUD();renderTimeline();renderSheet();renderLog();renderStage();
   // Mực loang khi đổi cảnh
   const k=viewKey(),kind=k.split(':')[0];
-  if(UI.lastView!==undefined&&UI.lastView!==k&&!(kind==='combat'&&UI.lastView===k)&&!RM){
+  if(UI.lastView!==undefined&&UI.lastView!==k&&!(kind==='combat'&&UI.lastView===k)&&!RM&&!S.ff){
     const el=$('stage').firstElementChild;
     if(el&&(kind!=='ev'||UI.lastView.split(':')[1]!==k.split(':')[1])){
       el.classList.add('ink-in');el.addEventListener('animationend',()=>el.classList.remove('ink-in'),{once:true});

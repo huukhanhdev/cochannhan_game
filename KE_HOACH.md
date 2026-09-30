@@ -50,8 +50,17 @@ Hiện trạng số liệu: 38 cổ trùng, 98 sự kiện, 33 loại địch. 2
 - Mỗi bước chỉ coi là xong khi: dữ liệu không tham chiếu tới cổ, địch, sự kiện không tồn tại; `node tools/sim.cjs 300 6` không có ca kẹt vòng lặp; chạy thử trong trình duyệt không có lỗi JS.
 - Cân bằng đo bằng số liệu người chơi cảm nhận được: số kiếp tới lần thắng đầu, số tuần phải chơi lại. Tỉ lệ thắng của người chơi máy (mục tiêu 15–35%) chỉ là số phụ.
 
+### Luật Xuân Thu Thiền (theo nguyên tác, đã làm)
+- Thiền cần 12 tuần để hồi phục. Đầu game Thiền đang kiệt sức (0%).
+- Chết khi Thiền đã hồi phục: quang âm quay ngược 3 tuần. Mất những gì có được trong 3 tuần đó, ký ức giữ lại, Thiền kiệt sức lại.
+- Chết khi Thiền chưa hồi phục: chết thật, chơi lại từ lễ khai khiếu. Ký ức vẫn giữ cho lần chơi sau (có thể đổi thành mất sạch nếu muốn khó hơn).
+- Nút tự kích hoạt Thiền chỉ dùng được khi Thiền đã hồi phục, cũng chỉ quay ngược 3 tuần.
+- Code: `js/cicada.js` (hằng số `CICADA_WEEKS`, `REWIND_WEEKS`). Mỗi đầu tuần lưu ảnh chụp trạng thái trong `S.snaps` (tối đa 4).
+- Độ khó trận đánh tăng từ 1,15 lên 1,25 (`DIFF` trong `js/data.js`) để bù cho việc chết không còn là chơi lại từ đầu. Mô phỏng 250 chiến dịch: thắng 32,8% trong 6 lần chơi, lần đầu 4%.
+- Tua nhanh bằng ký ức giờ dùng sau cái chết thật, lúc phải chơi lại từ đầu.
+
 ### Giai đoạn 1: Sửa vòng lặp (ưu tiên cao nhất)
-- [ ] **1.1 Tua nhanh bằng ký ức.** Đầu kiếp mới, cho chọn "đi lại con đường cũ": game tự áp lại các lựa chọn kiếp trước cho tới khi gặp điều khác đi (thiên cơ mới, cánh bướm, sự kiện chưa thấy). Người chơi dừng lại đúng chỗ muốn đổi.
+- [x] **1.1 Tua nhanh bằng ký ức.** (Đã làm: `js/ff.js`, kiểm tra bằng `node tools/ff_test.cjs 120`.) Đầu kiếp mới, cho chọn "đi lại con đường cũ": game tự áp lại các lựa chọn kiếp trước cho tới khi gặp điều khác đi (thiên cơ mới, cánh bướm, sự kiện chưa thấy). Người chơi dừng lại đúng chỗ muốn đổi.
 - [ ] **1.2 Sổ ký ức** thay cho tab Ký ức hiện tại. Tự ghi lại những gì đã thấy: sự kiện nào xảy ra tuần nào, NPC hay ở đâu, bí mật nào đã biết, chết vì ai và ở đâu.
 - [ ] **1.3 Ký ức mở lựa chọn mới thay vì cộng chỉ số.** Ví dụ: biết đường Giả Kim Sinh hay đi thì phục kích trước; biết ngày Bạch gia tập kích thì báo trước hoặc bán tin; biết lối vào động Hoa Tửu thì vào ngay tuần đầu. Lựa chọn mở nhờ ký ức có nhãn riêng.
 - [ ] **1.4 Tâm nguyện mỗi kiếp.** Đầu kiếp chọn một mục tiêu cụ thể (lấy truyền thừa Hoa Tửu trước tháng 5, cứu Thanh Thư, giết Giả Kim Sinh không để lộ). Làm được thì ghi thêm ký ức. Mỗi kiếp có hướng đi rõ, không chỉ là sống lâu hơn kiếp trước.

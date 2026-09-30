@@ -41,4 +41,10 @@ Sau đó mở trình duyệt và truy cập:
 ```bash
 node tools/sim.cjs 100 6
 ```
-Tỉ lệ thắng mục tiêu: **15% – 35%** (bản 13 đo được khoảng 33%).
+Tỉ lệ thắng mục tiêu: **15% – 35%** trong 6 lần chơi (một lần chơi kết thúc khi chết lúc Xuân Thu Thiền chưa hồi phục). Hiện đo được khoảng 33%.
+
+Kiểm tra tính năng tua nhanh bằng ký ức:
+
+```bash
+node tools/ff_test.cjs 120
+```

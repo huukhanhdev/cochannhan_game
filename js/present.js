@@ -15,7 +15,10 @@ const WHO_ART={
   phuongchinh: 'art/p_phuongchinh.jpg',
   thanhthu: 'art/p_thanhthu.jpg',
   nhuocnam: 'art/p_thietnhuocnam.jpg',
-  nhatdai: 'art/p_nhatdai.jpg'
+  tiexueleng: 'npc/n_tiexueleng.jpg',
+  nhatdai: 'art/p_nhatdai.jpg',
+  tramthuy: 'npc/n_tramthuy.jpg',
+  hoatuu: 'npc/n_hoatuu.jpg'
 };
 function evSpeaker(id){
   const ev=EV[id]||{};

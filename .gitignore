@@ -19,3 +19,6 @@ Icon
 *.njsproj
 *.sln
 *.sw?
+
+# Test outputs
+tools/*.png

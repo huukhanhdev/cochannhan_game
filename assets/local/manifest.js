@@ -10,8 +10,11 @@ window.LOCAL_ASSETS = {
   'art/p_phuongchinh.jpg':  'npc/n_phuongchinh.jpg',        // Cổ Nguyệt Phương Chính
   'art/p_thanhthu.jpg':     'npc/n_thanhthu.jpg',           // Cổ Nguyệt Thanh Thư
   'art/p_thietnhuocnam.jpg':'npc/n_thietnhuocnam.jpg',      // Thiết Nhược Nam
+  'art/p_tiexueleng.jpg':   'npc/n_tiexueleng.jpg',         // Thiết Huyết Lãnh
   'art/p_shangxinci.jpg':   'local/art/p_shangxinci.jpg',   // Thương Tâm Từ
   'art/p_nhatdai.jpg':      'art/p_nhatdai.jpg',            // Cổ Nguyệt Nhất Đại (Huyết Quỷ)
+  'art/p_tramthuy.jpg':     'npc/n_tramthuy.jpg',           // Thẩm Thúy
+  'art/p_hoatuu.jpg':       'npc/n_hoatuu.jpg',             // Hoa Tửu Hành Giả
 
   // Cổ trùng
   'gu/g_xuanthu.jpg':           'local/gu/g_xuanthu.jpg',           // Xuân Thu Thiền

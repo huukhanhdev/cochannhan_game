@@ -49,7 +49,12 @@ for(const [evId, ev] of Object.entries(EV)){
         const node = sc.nodes[curr];
         if(!node) continue;
         if(node.choices){
-          for(const c of node.choices){
+          // Lựa chọn dạng hàm (đổi theo trạng thái): đọc các nút đích từ mã nguồn
+          const chs=typeof node.choices==='function'
+            ?[...String(node.choices).matchAll(/\b(?:go|okGo|failGo):'([a-z0-9_]+)'/g)].map(m=>({go:m[1]}))
+              .concat([...String(node.choices).matchAll(/\bmem:'([a-z0-9_]+)'/g)].map(m=>({mem:m[1]})))
+            :node.choices.flatMap(c=>[c,...[c.okGo,c.failGo].filter(Boolean).map(g=>({go:g}))]);
+          for(const c of chs){
             if(c.go){
               if(!sc.nodes[c.go]) errs.push(`sự kiện ${evId}, nút ${curr}: go trỏ tới nút không có: ${c.go}`);
               else if(!reachable.has(c.go)) q.push(c.go);

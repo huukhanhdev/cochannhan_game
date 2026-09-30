@@ -272,6 +272,8 @@ function initScene(id){
   };
   return S.sc;
 }
+// Thoại của nút: mảng, hoặc hàm trả về mảng (thoại đổi theo trạng thái)
+function scTalk(node){const t=node&&node.talk;return (typeof t==='function'?t():t)||[]}
 function scCurrentNode(ev){
   if(!S.sc||!ev||!ev.scene||!ev.scene.nodes)return null;
   return ev.scene.nodes[S.sc.node]||null;
@@ -300,7 +302,7 @@ function scNextTalk(){
     }
     saveAll();render();return;
   }
-  const talk=node.talk||[];
+  const talk=scTalk(node);
   if(S.sc.talkIdx<talk.length){
     S.sc.talkIdx++;
   }
@@ -311,7 +313,7 @@ function scSkipTalk(){
   const ev=EV[S.sc.id];if(!ev||!ev.scene)return;
   const node=scCurrentNode(ev);if(!node)return;
   S.sc.subTalk=null;
-  S.sc.talkIdx=(node.talk||[]).length;
+  S.sc.talkIdx=scTalk(node).length;
   saveAll();render();
 }
 function scChoose(i){
@@ -338,7 +340,7 @@ function scChoose(i){
       if(txt)log(txt);
       if(r.ok&&c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
     }else{
-      if(c.say)log(c.say);
+      if(c.say)log(typeof c.say==='function'?c.say():c.say);
       if(c.eff){const txt=c.eff();if(txt)log(txt)}
     }
     if(c.talk){
@@ -356,6 +358,7 @@ function scChoose(i){
   if(c.tag==='chinh')S.dao=clamp(S.dao-(c.dao||8),-100,100);
   if(c.drift)driftAdd(c.drift);
   if(c.canon)S.canonHit=(S.canonHit||0)+1;
+  else if(ev.canon&&scChoices(ev).some(x=>x.canon))S.canonMiss=(S.canonMiss||0)+1;
 
   let nextTarget=c.go;
   if(c.check){
@@ -372,30 +375,34 @@ function scChoose(i){
     const txt=c.eff();if(txt)log(txt);
   }
 
-  if(nextTarget&&ev.scene.nodes[nextTarget]){
-    S.sc.node=nextTarget;
-    S.sc.talkIdx=0;
-    S.sc.subTalk=null;
-    const nextNode=ev.scene.nodes[nextTarget];
-    if(nextNode&&nextNode.fight){
-      const f=nextNode.fight;
-      saveAll();
-      fight(f.foe,{
-        sceneWin:f.win,
-        sceneFlee:f.flee
-      });
-      render();
-      return;
-    }
-    saveAll();render();
-  }else{
-    scFinish();
-  }
+  if(nextTarget&&ev.scene.nodes[nextTarget])scGoto(nextTarget);
+  else scFinish();
 }
-function scFinish(){
+// Sang nút khác của cảnh. Nút có fight thì mở trận ngay (fight.o: tùy chọn của fight(), như mod, flee, spare)
+function scGoto(target){
+  const ev=EV[S.sc.id];
+  S.sc.node=target;S.sc.talkIdx=0;S.sc.subTalk=null;
+  const nd=ev.scene.nodes[target];
+  if(nd&&nd.fight){
+    const f=nd.fight;saveAll();
+    fight(f.foe,Object.assign({},f.o||{},{sceneWin:f.win,sceneFlee:f.flee}));
+    render();return;
+  }
+  saveAll();render();
+}
+// Nút không có lựa chọn nhưng có check: bấm "Tiếp tục" thì tung xúc xắc, rồi sang okGo hoặc failGo
+function scNodeCheck(ev,node){
+  const r=roll(node.check[0],node.check[1],node.bonus?node.bonus():0);
+  log(r.text,'roll');
+  const t=r.ok?node.okGo:node.failGo;
+  if(t&&ev.scene.nodes[t])scGoto(t);else scFinish(true);
+}
+function scFinish(noCheck){
   if(!S.sc)return;
   const id=S.sc.id,ev=EV[id];
   const node=ev&&ev.scene&&ev.scene.nodes?ev.scene.nodes[S.sc.node]:null;
+  // Nút tung xúc xắc (check + okGo/failGo) chưa kết thúc cảnh: "Tiếp tục" là lúc tung
+  if(!noCheck&&node&&node.check&&(node.okGo||node.failGo)){scNodeCheck(ev,node);return}
   if(node&&node.eff){
     const txt=node.eff();
     if(txt)log(txt);
@@ -1088,7 +1095,7 @@ document.addEventListener('keydown',ev=>{
     const scEv=EV[S.sc.id];
     if(scEv&&scEv.scene){
       const node=scCurrentNode(scEv);
-      const talk=S.sc.subTalk||(node?node.talk:[])||[];
+      const talk=S.sc.subTalk||scTalk(node);
       const activeIdx=S.sc.subTalk?S.sc.subIdx:S.sc.talkIdx;
       if(activeIdx<talk.length){
         ev.preventDefault();

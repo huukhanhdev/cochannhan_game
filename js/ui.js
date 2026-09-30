@@ -19,7 +19,8 @@ const GU_META={
 // Chân dung NPC từ tranh nhân vật
 const NPC_IMG={
   toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
-  phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_giave',nhatdai:'n_nhatdai',
+  phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_tiexueleng',nhatdai:'n_nhatdai',
+  tramthuy:'n_tramthuy',hoatuu:'n_hoatuu',
   bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai'),
   bainu: 'n_bai_nu', gialao: 'n_toctruong'
 };
@@ -250,7 +251,7 @@ function renderScene(st, id, ev){
   const sc = initScene(id);
   const node = scCurrentNode(ev) || {};
   const diso = ev.loc === 'diso';
-  const talk = sc.subTalk || node.talk || [];
+  const talk = sc.subTalk || scTalk(node);
   const activeIdx = sc.subTalk ? (sc.subIdx || 0) : (sc.talkIdx || 0);
   const isDoneTalk = activeIdx >= talk.length;
 

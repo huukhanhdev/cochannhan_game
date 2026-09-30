@@ -147,6 +147,7 @@ const NPC={
   gialao:{n:'Học đường gia lão',d:'Gia lão phụ trách học đường Cổ Nguyệt'},
   nhatdai:{n:'Cổ Nguyệt Nhất Đại',d:'Thủy tổ khai sơn Cổ Nguyệt, Huyết Quỷ'},
   hoctro:{n:'Đồng học học đường',d:'Bạn học cùng khóa ở học đường Cổ Nguyệt'},
+  hoatuu:{n:'Hoa Tửu Hành Giả',d:'Ma đầu ngũ chuyển, lưu lại di tàng khe đá'},
 };
 
 // Ký ức mang qua các kiếp (nhận được khi đã trải qua sự kiện)
@@ -180,7 +181,7 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:2.52,atk:2.52,q2:.75,furyTurn:8};
+const DIFF={hp:2.55,atk:2.55,q2:.75,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={cuongthu:4,amduong:4,nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;

@@ -58,6 +58,18 @@ for(const [evId, ev] of Object.entries(EV)){
             if(c.rel && (!NPC[c.rel[0]])) errs.push(`sự kiện ${evId}, nút ${curr}: rel trỏ tới NPC không có: ${c.rel[0]}`);
           }
         }
+        if(node.go){
+          if(!sc.nodes[node.go]) errs.push(`sự kiện ${evId}, nút ${curr}: go trỏ tới nút không có: ${node.go}`);
+          else if(!reachable.has(node.go)) q.push(node.go);
+        }
+        if(node.okGo){
+          if(!sc.nodes[node.okGo]) errs.push(`sự kiện ${evId}, nút ${curr}: okGo trỏ tới nút không có: ${node.okGo}`);
+          else if(!reachable.has(node.okGo)) q.push(node.okGo);
+        }
+        if(node.failGo){
+          if(!sc.nodes[node.failGo]) errs.push(`sự kiện ${evId}, nút ${curr}: failGo trỏ tới nút không có: ${node.failGo}`);
+          else if(!reachable.has(node.failGo)) q.push(node.failGo);
+        }
         if(node.fight){
           const f = node.fight;
           if(!EN[f.foe]) errs.push(`sự kiện ${evId}, nút ${curr}: fight.foe không có: ${f.foe}`);

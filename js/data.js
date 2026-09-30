@@ -145,6 +145,7 @@ const NPC={
   xichthanh:{n:'Cổ Nguyệt Xích Thành',d:'Cháu Xích Luyện, tư chất giả mạo'},
   gialao:{n:'Học đường gia lão',d:'Gia lão phụ trách học đường Cổ Nguyệt'},
   nhatdai:{n:'Cổ Nguyệt Nhất Đại',d:'Thủy tổ khai sơn Cổ Nguyệt, Huyết Quỷ'},
+  hoctro:{n:'Đồng học học đường',d:'Bạn học cùng khóa ở học đường Cổ Nguyệt'},
 };
 
 // Ký ức mang qua các kiếp (nhận được khi đã trải qua sự kiện)

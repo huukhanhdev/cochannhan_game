@@ -21,48 +21,238 @@ function cuongThuDrop(){if(hasGu('cuongthu'))return;gainGu('cuongthu',true);log(
 const EV={
 /* ================= NGUYÊN TÁC ================= */
 c_khaikhieu:{canon:1,title:'Lễ khai khiếu',hint:'Lễ khai khiếu',
-  text:()=>'Mười mấy thiếu niên Cổ Nguyệt lần lượt bước vào biển hoa, để Hy Vọng Cổ mở không khiếu. Gia lão hô lớn: "Phương Chính, Giáp đẳng!" Cả trại reo hò. Tới lượt ngươi: "Phương Nguyên, Bính đẳng. Chân nguyên hải bốn mươi bốn phần." Tiếng cười chế giễu vang lên khắp nơi.',
-  choices:[
-    {t:'Im lặng. Tiếng cười hôm nay chẳng đáng một viên nguyên thạch',canon:1,eff:()=>{S.tamco++;return 'Năm trăm năm làm ma đầu dạy ngươi biết nhẫn. Tâm cơ +1.'}},
-    {t:'Chúc mừng Phương Chính trước mặt mọi người',tag:'chinh',eff:()=>{rel('phuongchinh',15);S.danh+=5;return 'Phương Chính ngẩn ra rồi cười rạng rỡ. Vài gia lão gật gù.'}},
-    {t:'Nhìn Phương Chính bằng ánh mắt lạnh như băng',tag:'ma',eff:()=>{rel('phuongchinh',-15);return 'Phương Chính rụt người. Hắn không hiểu vì sao anh trai lại đáng sợ đến thế.'}},
-  ],
+  who:'gialao',
+  scene:{
+    start:'bien_hoa',budget:2,
+    nodes:{
+      bien_hoa:{
+        talk:[
+          ['gialao','Tất cả thiếu niên bước vào biển hoa! Hy Vọng Cổ sẽ khai phá không khiếu cho các ngươi!'],
+          ['','Mười mấy thiếu niên Cổ Nguyệt nín thở bước vào biển hoa dạ quang lung linh dưới lòng đất.'],
+          ['','Từng đốm sáng bay vào bụng các thiếu niên. Bỗng từ đường bùng lên ánh hào quang chói lòa!'],
+          ['gialao','Phương Chính... Chân nguyên hải chín phần tám! Giáp đẳng! Giáp đẳng tuyệt đỉnh!']
+        ],
+        choices:[
+          {t:'Dò xét phản ứng của gia lão và tộc trưởng',stay:1,flag:'soi_toctruong',say:'Tộc trưởng Cổ Nguyệt Bác kích động đứng bật dậy, ánh mắt sáng rực. Đã bao năm sơn trại mới lại xuất hiện Giáp đẳng!'},
+          {t:'Quan sát biểu cảm ngơ ngác của Phương Chính',stay:1,flag:'soi_emtrai',talk:[['phuongchinh','Đệ... đệ là Giáp đẳng thật sao ca ca? Đệ không còn là cái bóng của huynh nữa rồi...']]},
+          {t:'Bước vào biển hoa, tới lượt bản thân',go:'den_luot'}
+        ]
+      },
+      den_luot:{
+        talk:[
+          ['','Ngươi bước tới giữa biển hoa. Đốm sáng tụ lại trong bụng, không khiếu hé mở, hiện ra biển đồng xanh nhạt.'],
+          ['gialao','Phương Nguyên... Chân nguyên hải bốn mươi bốn phần. Bính đẳng.'],
+          ['','Cả từ đường lặng đi trong chớp mắt, rồi tiếng xì xào cười nhạo rộ lên như ong vỡ tổ: "Thiên tài ngâm thơ từ nhỏ hóa ra chỉ là Bính đẳng!"']
+        ],
+        choices:[
+          {t:'Lãnh đạm bước ra. Tiếng cười hôm nay chẳng đáng một viên nguyên thạch',canon:1,go:'nhan_lanh'},
+          {t:'Nở nụ cười chân thành, vỗ vai chúc mừng Phương Chính',tag:'chinh',go:'ket_than'},
+          {t:'Liếc nhìn Phương Chính bằng ánh mắt băng hàn thấu xương',tag:'ma',go:'de_doa'}
+        ]
+      },
+      nhan_lanh:{
+        talk:[
+          ['','Năm trăm năm làm ma đầu dạy ngươi biết nhẫn. Phàm nhân thiển cận chỉ nhìn tư chất, há biết tâm cơ mới định đoạt càn khôn.']
+        ],
+        eff:()=>{S.tamco++;}
+      },
+      ket_than:{
+        talk:[
+          ['phuongchinh','Ca ca... đệ... đệ không ngờ mình lại hơn huynh. Đệ sẽ bảo vệ huynh!'],
+          ['','Phương Chính rưng rưng xúc động. Tộc trưởng và các gia lão nhìn hai huynh đệ gật đầu tán thưởng.']
+        ],
+        eff:()=>{rel('phuongchinh',20);S.danh+=8;S.f.pcThan=1;}
+      },
+      de_doa:{
+        talk:[
+          ['phuongchinh','Ca... ca ca... sao huynh lại nhìn đệ như thế...'],
+          ['','Hào quang Giáp đẳng vừa bốc lên lập tức bị ánh mắt rợn người của Phương Nguyên dập tắt. Phương Chính rụt cổ sợ hãi, vết thương tâm lý khắc sâu.']
+        ],
+        eff:()=>{rel('phuongchinh',-25);S.tamco+=2;S.f.pcSo=1;}
+      }
+    }
+  },
   post:()=>{gainGu('nguyetquang',true);log('Học đường phát cho mỗi học trò một con Nguyệt Quang Cổ. Ngươi luyện hóa nó chỉ trong một đêm.','good')}},
 
 c_giasan:{canon:1,title:'Di sản cha mẹ',hint:'Đòi lại di sản',
-  text:()=>'Cha mẹ mất sớm, để lại một tửu lâu và mấy mẫu ruộng trà. Cậu mợ nuôi hai anh em nhưng giữ luôn di sản. Theo tộc quy, học trò đã khai khiếu có quyền đòi lại phần của mình.'+((S.var||{}).giasan==='manh'&&S.tamco>=10?' Ngươi để ý dạo này gia lão Mạc Trần hay ghé nhà cậu uống trà.':'')+(mem('giasan')?' Ký ức kiếp trước nhắc ngươi: cậu đã lén bán ba mẫu trà.':''),
-  choices:()=>[
-    {t:'Uy hiếp cậu, đòi lại toàn bộ',tag:'ma',canon:1,check:['tamco',(S.var||{}).giasan==='manh'?17:12],bonus:()=>mem('giasan')?8:0,
-      ok:()=>{S.f.tuulau=2;rel('caumo',-50);learn('giasan');return 'Cậu tái mặt, tay run run đưa khế ước. Tửu lâu về tay ngươi: mỗi tuần +8 nguyên thạch. Mợ gửi tỳ nữ Trầm Thúy sang "hầu hạ".'},
-      fail:()=>{if((S.var||{}).giasan==='manh'){rel('caumo',-40);rel('mactran',-25);S.susp+=15;S.danh-=12;learn('giasan');return 'Cậu cười nhạt. Gia lão Mạc Trần bước ra từ sau bình phong: "Học trò Bính đẳng mà dám ức hiếp trưởng bối?" Ngươi trắng tay, bị ghi tên vào sổ đen. Hiềm nghi +15.'}S.f.tuulau=1;rel('caumo',-40);S.danh-=8;learn('giasan');return 'Cậu cãi lại, mợ khóc lóc khắp trại. Ngươi chỉ đòi được nửa phần: mỗi tuần +3 nguyên thạch. Tiếng bất hiếu lan xa.'}},
-    {t:'Nhờ tộc trưởng phân xử theo tộc quy',tag:'chinh',check:['tamco',11],
-      ok:()=>{S.f.tuulau=1;rel('caumo',-15);rel('toctruong',10);S.danh+=5;return 'Tộc trưởng Cổ Nguyệt Bác xử chia đôi. Mỗi tuần +4 nguyên thạch, danh tiếng vẫn giữ được.'},
-      fail:()=>{rel('caumo',-10);return 'Tộc trưởng bận việc gia tộc, bảo ngươi "tự thu xếp trong nhà". Chẳng được gì.'}},
-    {t:'Nhẫn nhịn, để cậu mợ giữ',tag:'chinh',eff:()=>{rel('phuongchinh',15);rel('caumo',10);S.danh+=5;return 'Ngươi ở lại nhà cậu. Phương Chính vui mừng. Túi ngươi vẫn rỗng.'}},
-    ...(mem('giasan')?[{t:'Theo ký ức, đem chuyện ruộng trà ra trước mặt cả họ',mem:'giasan',tag:'ma',eff:()=>{
-      if(!varShifted('giasan')){S.f.tuulau=2;rel('caumo',-50);return 'Đúng như ký ức: cậu đã lén bán ba mẫu trà. Trước mặt cả họ, cậu không cãi được một lời. Tửu lâu về tay ngươi.'}
-      rel('caumo',-30);rel('mactran',-25);S.susp+=20;S.danh-=15;return 'Lần này gia lão Mạc Trần đứng sau lưng cậu, tay cầm khế ước bán ruộng có đóng dấu. Chuyện ngươi nhớ đã được hợp thức hóa từ trước. Ngươi mất mặt, hiềm nghi +20.'}}]:[]),
-  ]},
+  who:'caumo',
+  scene:{
+    start:'phong_khach',budget:2,
+    nodes:{
+      phong_khach:{
+        talk:[
+          ['caumo','Phương Nguyên à, cháu mới Nhất chuyển Sơ kỳ, giữ tửu lâu với ruộng trà làm sao kham nổi? Cậu mợ giữ hộ là vì muốn tốt cho hai đứa thôi!'],
+          ['','Cậu Đống Thổ mặt mày giả nhân giả nghĩa, mợ ngồi bên cạnh quạt phành phạch. Tỳ nữ Trầm Thúy đứng sau bưng trà, mắt lúng liếng dò xét.']
+        ],
+        choices:[
+          {t:'Uống chén trà, quan sát thái độ Trầm Thúy',stay:1,flag:'soi_tramthuy',talk:[['tramthuy','...Khế ước mợ cất kỹ lắm, thiếu gia chớ dại làm căng...']]},
+          {t:'Gặng hỏi về sổ sách thu chi tửu lâu năm qua',stay:1,flag:'soi_sosach',say:'Cậu ấp úng lảng sang chuyện khác. Rõ ràng tửu lâu sinh lời cả trăm thạch mỗi tháng nhưng lão chưa từng chia một cắc.'},
+          {t:'Đem gia quy tộc luật ra đe dọa, đòi lại tửu lâu',tag:'ma',canon:1,go:'doi_manh'},
+          {t:'Mua chuộc Trầm Thúy lấy khế ước giấu trong buồng',hidden:'soi_tramthuy',req:()=>S.stones>=10,reqT:'Cần 10 nguyên thạch mua chuộc',go:'mua_chuoc'},
+          {t:'Đề nghị phân chia hòa hoãn: nhận tửu lâu, để lại ruộng trà',tag:'chinh',go:'hoa_hoan'},
+          {t:'Theo ký ức: vạch trần chuyện cậu lén bán ba mẫu ruộng trà',mem:'giasan',go:'nho_ruongtra'}
+        ]
+      },
+      doi_manh:{
+        talk:[
+          ['','Ngươi đập bàn đứng phắt dậy, sát khí lạnh lẽo tỏa ra: "Tộc quy định rõ, con cái mười sáu tuổi khai khiếu được thừa kế gia sản. Cậu mợ muốn để ta mời hình đường gia lão tới kiểm tra sao?"']
+        ],
+        check:['tamco',11],bonus:()=>mem('giasan')?8:0,
+        okGo:'doi_thanhcong',failGo:'doi_thatbai'
+      },
+      doi_thanhcong:{
+        talk:[
+          ['caumo','Ngươi... đồ nghiệt chủng bất hiếu! Cầm lấy khế ước rồi xéo đi!'],
+          ['','Cậu mặt cắt không còn hạt máu, ném tập khế ước tửu lâu lên bàn.']
+        ],
+        eff:()=>{S.f.tuulau=2;rel('caumo',-50);learn('giasan');return 'Tửu lâu hoàn toàn về tay ngươi: mỗi tuần +6 nguyên thạch.';}
+      },
+      doi_thatbai:{
+        talk:[
+          ['caumo','Hừ! Trứng mà đòi khôn hơn vịt! Ngươi thích kiện cáo thì cứ lên tộc trưởng!'],
+          ['','Mợ khóc lóc bù lu bù loa khắp ngõ xóm. Ngươi chỉ vớt vát được một phần nhỏ tửu lâu.']
+        ],
+        eff:()=>{S.f.tuulau=1;rel('caumo',-30);S.danh-=5;learn('giasan');return 'Chỉ đòi được nửa phần: mỗi tuần +3 nguyên thạch. Tiếng xấu đồn xa.';}
+      },
+      mua_chuoc:{
+        talk:[
+          ['tramthuy','Tạ ơn thiếu gia! Mợ giấu khế ước dưới gầm sập buồng trong, chìa khóa treo sau gương đồng!'],
+          ['','Trầm Thúy nhận 10 viên nguyên thạch, lén lấy trộm khế ước đưa cho ngươi. Ngươi ung dung cầm khế ước đi đăng ký sang tên tại sơn trại mà không tốn một lời cãi vã.']
+        ],
+        eff:()=>{S.stones-=10;S.f.tuulau=2;S.f.tramthuySpy=1;rel('tramthuy',25);return 'Nắm trọn tửu lâu (+6 thạch/tuần) mà cậu mợ không kịp trở tay, còn thu phục được Trầm Thúy!';}
+      },
+      hoa_hoan:{
+        talk:[
+          ['caumo','Được... nể tình phụ mẫu ngươi, tửu lâu cho ngươi tự quản, còn ruộng trà để cậu mợ canh tác.'],
+          ['','Hai bên đạt được thỏa hiệp. Danh tiếng ngươi không bị sứt mẻ.']
+        ],
+        eff:()=>{S.f.tuulau=1;rel('caumo',5);S.danh+=6;return 'Tửu lâu về tay (+4 thạch/tuần), giữ được hòa khí.';}
+      },
+      nho_ruongtra:{
+        talk:[
+          ['','Ngươi lật bài ngửa: "Ba mẫu ruộng trà hướng đông cậu lén bán cho lái buôn ngoài núi lấy sáu mươi thạch, tưởng ta không biết sao?"']
+        ],
+        eff:()=>{
+          if(!varShifted('giasan')){S.f.tuulau=2;rel('caumo',-50);return 'Đúng như ký ức: cậu tái mặt, không cãi được nửa câu, dâng trọn tửu lâu!';}
+          rel('caumo',-30);S.susp+=15;return 'Lần này cậu đã làm giấy tờ hợp pháp từ trước. Ngươi không ép được lão, hiềm nghi +15.';
+        }
+      }
+    }
+  }},
 
 c_conghocduong:{canon:1,title:'Cổng học đường',hint:'Chặn cổng học đường',
-  text:()=>'Tan học, đám học trò túm tụm ở cổng đếm nguyên thạch vừa được phát. Học đường gia lão đứng trên lầu, như thể không nhìn thấy gì.'+((S.var||{}).gate==='mac'?' Lần này Mạc Bắc đứng giữa đám đông, tay đã đặt sẵn lên túi cổ, như thể đang chờ ai đó.':''),
-  choices:()=>[
-    ...(mem('gate')?[{t:'Theo ký ức, chỉ chặn đúng mấy kẻ mang nhiều thạch nhất',mem:'gate',tag:'ma',eff:()=>{
-      if(!varShifted('gate')){S.stones+=12;S.f.gate=1;S.danh-=3;return 'Ngươi nhớ rõ ai giàu, ai nhát. Ba túi thạch đổi chủ trước khi đám đông kịp phản ứng. +12 nguyên thạch.'}
-      fight('hoctro',{after:'gate',mod:1.15});return 'Kẻ ngươi nhớ là nhát nhất lại đứng cạnh Mạc Bắc. Cả đám đã chờ sẵn.'}}]:[]),
-    {t:'Chặn cổng, cướp nguyên thạch của chúng',tag:'ma',canon:1,eff:()=>{if((S.var||{}).gate==='mac'){fight('hoctro',{after:'gate',mod:1.2});return 'Mạc Bắc cười lạnh: "Chờ ngươi lâu rồi." Cả đám rút cổ cùng lúc.'}fight('hoctro',{after:'gate'});return 'Ngươi bước ra giữa cổng, chìa tay: "Nguyên thạch."'}},
-    {t:'Quan sát rồi lặng lẽ rời đi',eff:()=>{S.tamco++;return 'Ngươi ghi nhớ ai giàu, ai yếu, ai hay đi một mình. Tâm cơ +1.'}},
-    {t:'Rủ vài bạn học cùng luyện tập',tag:'chinh',eff:()=>{S.danh+=5;S.satphat++;return 'Mấy buổi đấu tập giúp ngươi quen tay hơn. Sát phạt +1, danh vọng +5.'}},
-  ]},
+  who:'hoctro',
+  scene:{
+    start:'cong_hoc',budget:2,
+    nodes:{
+      cong_hoc:{
+        talk:[
+          ['','Chuông tan học vang lên. Đám thiếu niên hớn hở bước ra cổng, trên tay tung tẩy túi nguyên thạch vừa được học đường trợ cấp.'],
+          ['','Học đường gia lão đứng trên bao lơn lầu hai, ung dung vuốt râu ngắm cảnh như thể mù điếc trước mọi chuyện xảy ra dưới cổng.']
+        ],
+        choices:[
+          {t:'Quan sát kẻ nào nhát gan và nhiều tiền nhất',stay:1,flag:'soi_moc',say:'Đám công tử Mạc gia rủng rỉnh tiền túi, còn đám con nhà nghèo thì run rẩy ôm khư khư từng viên thạch.'},
+          {t:'Bước ra giữa cổng, chặn đường cướp nguyên thạch',tag:'ma',canon:1,go:'cuop_cong'},
+          {t:'Mở dịch vụ "bảo kê": thu phí che chở đám học trò nghèo khỏi Mạc gia',go:'bao_ke'},
+          {t:'Theo ký ức: chặn đúng ba kẻ nhát gan bỏ chạy',mem:'gate',go:'nho_cong'},
+          {t:'Lặng lẽ rời đi, không dính líu',go:'ve'}
+        ]
+      },
+      cuop_cong:{
+        talk:[
+          ['','Phương Nguyên đứng sừng sững giữa cổng đá, tay áo phần phật: "Mỗi người để lại một viên nguyên thạch phí qua cổng. Không nộp thì ở lại luyện tay."'],
+          ['hoctro','Phương Nguyên! Ngươi điên rồi! Bính đẳng mà dám cướp của bọn ta? Huynh đệ, xông lên!']
+        ],
+        fight:{foe:'hoctro',win:'cuop_thang',flee:'cuop_thua'}
+      },
+      cuop_thang:{
+        talk:[
+          ['','Một đòn quét ngã hai tên, Nguyệt Nhận sượt qua gò má tên cầm đầu để lại vệt máu. Đám thiếu niên hoảng loạn vứt lại túi thạch chạy thục mạng.']
+        ],
+        eff:()=>{S.stones+=16;S.f.gate=1;learn('gate');later('q_hoctrophuc',3,6,'gate');S.dao=clamp(S.dao+6,-100,100);S.danh-=4;return '+16 nguyên thạch! Từ nay mỗi tuần có thể chặn cổng cướp bóc.';}
+      },
+      cuop_thua:{
+        talk:[
+          ['','Đám đông ùa tới, ngươi tạm lách mình lùi vào con hẻm bên cạnh.']
+        ]
+      },
+      bao_ke:{
+        talk:[
+          ['','Ngươi đứng cạnh cổng, ngoắc tay gọi mấy đứa học trò nghèo: "Mạc Bắc sắp chặn đường các ngươi. Đưa ta nửa viên, ta bảo đảm các ngươi về nhà an toàn."'],
+          ['hoctro','Thật... thật sao Phương Nguyên ca?']
+        ],
+        eff:()=>{S.stones+=8;S.f.gateProtect=1;S.danh+=4;S.tamco++;return 'Thu 8 nguyên thạch phí bảo kê. Đám học trò nghèo cảm kích, danh vọng +4!';}
+      },
+      nho_cong:{
+        talk:[
+          ['','Ngươi nhớ rõ tên nào có tật hay giấu thạch trong ống giày.']
+        ],
+        eff:()=>{
+          if(!varShifted('gate')){S.stones+=14;S.f.gate=1;return 'Chặn đúng 3 kẻ giàu nhất, thu 14 nguyên thạch trước khi chúng kịp phản ứng!';}
+          fight('hoctro',{mod:1.15,sceneWin:'cuop_thang',sceneFlee:'cuop_thua'});
+          return 'Lần này Mạc Bắc đã liên minh từ trước, chặn đường ngươi!';
+        }
+      },
+      ve:{
+        talk:[
+          ['','Ngươi rảo bước về phòng trọ, trong đầu tính toán lượng chân nguyên cần thiết để nuôi Nguyệt Quang Cổ.']
+        ]
+      }
+    }
+  }},
 
 c_khaohach:{canon:1,title:'Khảo hạch tháng hai',hint:'Học đường khảo hạch',
-  text:()=>`Học đường gia lão kiểm tra tu vi từng người. Phương Chính đã đạt Nhất chuyển Trung giai. Ngươi hiện ở ${rankName()}.`,
-  choices:()=>[
-    {t:'Để lộ thực lực thật',eff:()=>{
-      if(S.chuyen>1||S.giai>=1){S.danh+=10;S.stones+=15;S.susp+=5;return 'Gia lão nhướng mày. Thưởng 15 nguyên thạch, danh vọng +10. Ông ta bắt đầu để ý tới ngươi.'}
-      S.danh-=5;return 'Tu vi thấp nhất lớp. Gia lão lắc đầu. Danh vọng −5.'}},
-    {t:'Che giấu, chỉ đạt mức trung bình',canon:1,eff:()=>{S.tamco++;S.stones+=5;return 'Không ai chú ý tới ngươi, đúng như ngươi muốn. Tâm cơ +1, +5 nguyên thạch.'}},
-  ]},
+  who:'gialao',
+  scene:{
+    start:'vo_dai',budget:2,
+    nodes:{
+      vo_dai:{
+        talk:[
+          ['gialao','Khảo hạch tháng hai bắt đầu! Ai bắn bia chuẩn nhất và tu vi cao nhất sẽ nhận phần thưởng: Thanh Đồng Xá Lợi Cổ!'],
+          ['','Tấm bia cỏ dựng cách ba mươi bước. Phương Chính bước lên, Nguyệt Nhận liên hoàn xé gió cắm phập vào tâm bia!'],
+          ['gialao','Phương Chính: mười điểm trọn vẹn, tu vi Nhất chuyển Trung giai!']
+        ],
+        choices:[
+          {t:'Quan sát bia cỏ và góc gió thổi qua võ đài',stay:1,flag:'soi_gio',say:'Gió đông bắc thổi mạnh qua góc võ đài, nếu không tính độ lệch thì đường cong Nguyệt Nhận sẽ bị dạt.'},
+          {t:'Toàn lực xuất thủ đoạt hạng nhất',go:'doat_nhat'},
+          {t:'Cố tình bắn trượt, giấu tài mức trung bình',canon:1,go:'giau_tai'},
+          {t:'Thách đấu trực tiếp bia của Phương Chính',go:'thach_dau'}
+        ]
+      },
+      doat_nhat:{
+        talk:[
+          ['','Ngươi bước lên vạch, vận chân nguyên xanh nhạt, ba đạo Nguyệt Nhận bay theo quỹ đạo hình vòng cung tuyệt mỹ xé tan hồng tâm!']
+        ],
+        check:['satphat',12],bonus:()=>(S.sc&&S.sc.flags&&S.sc.flags.soi_gio)?4:0,
+        okGo:'nhat_thanhcong',failGo:'nhat_thatbai'
+      },
+      nhat_thanhcong:{
+        talk:[
+          ['gialao','Kỹ xảo xạ kích xuất thần nhập hóa! Hạng nhất khảo hạch: Cổ Nguyệt Phương Nguyên!'],
+          ['','Cả trường ồ lên kinh ngạc. Gia lão trao tận tay ngươi viên Thanh Đồng Xá Lợi Cổ lấp lánh ánh kim!']
+        ],
+        eff:()=>{gainGu('xaloi1');S.danh+=15;S.susp+=5;return 'Đoạt Thanh Đồng Xá Lợi Cổ! Danh vọng +15.';}
+      },
+      nhat_thatbai:{
+        talk:[
+          ['','Chân nguyên Bính đẳng có hạn khiến nhát thứ ba hơi chệch tâm. Ngươi dừng ở hạng nhì.']
+        ],
+        eff:()=>{S.stones+=10;S.danh+=5;return 'Hạng nhì: nhận 10 nguyên thạch an ủi.';}
+      },
+      giau_tai:{
+        talk:[
+          ['','Ngươi cố ý để đòn thứ ba lệch hồng tâm nửa tấc. Kết quả: trung bình khá, nhận 5 nguyên thạch. Không ai nghi ngờ kẻ Bính đẳng này.']
+        ],
+        eff:()=>{S.tamco++;S.stones+=5;return 'Tâm cơ +1, +5 nguyên thạch.';}
+      },
+      thach_dau:{
+        talk:[
+          ['','Ngươi chém thẳng một đòn chẻ đôi mũi Nguyệt Nhận của Phương Chính đang cắm trên bia! Cả võ đài nín thở!']
+        ],
+        eff:()=>{rel('phuongchinh',-15);S.satphat+=2;S.danh+=10;S.stones+=10;return 'Sát phạt +2, danh vọng +10. Phương Chính tái mặt hoảng hốt.';}
+      }
+    }
+  }},
 
 c_tramthuy:{canon:1,title:'Tỳ nữ Trầm Thúy',hint:'Trầm Thúy trở mặt',
   text:()=>'Trầm Thúy hầu hạ hai anh em từ nhỏ. Trước lễ khai khiếu, nàng đon đả chăm sóc ngươi. Từ hôm biết ngươi Bính đẳng còn Phương Chính Giáp đẳng, nàng quay sang chăm chút cho em trai ngươi. Chén trà bưng cho ngươi giờ nguội ngắt.',

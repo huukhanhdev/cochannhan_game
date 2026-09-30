@@ -8,7 +8,7 @@ const ctx={console,Math,JSON,Date,setTimeout:noop,clearTimeout:noop,
   document:{getElementById:()=>null,addEventListener:noop,querySelectorAll:()=>[],createElement:()=>({getContext:()=>null})},
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()}};
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','ff.js','cicada.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
 // Người chơi máy của tools/sim.cjs

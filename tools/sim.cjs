@@ -11,7 +11,7 @@ const ctx={
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','ff.js','cicada.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','auto.js','ff.js','cicada.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
@@ -20,26 +20,10 @@ const run=code=>vm.runInContext(code,ctx);
 // Người chơi máy
 const bot=`
 function botCombat(){
-  const c=S.combat,hpR=S.hp/maxHp();
-  const gus=S.gu.map((g,i)=>({i,k:g.k,d:GU[g.k]}));
-  const ready=x=>guReady(x.k)&&S.ess>=guCostIdx(x.i);
-  const guard=gus.find(x=>x.d.t==='guard'&&ready(x));
-  const heal=gus.find(x=>x.d.t==='heal'&&ready(x));
-  const atks=gus.filter(x=>x.d.t==='attack'&&ready(x)).sort((a,b)=>b.d.dmg-a.d.dmg);
-  const combo=COMBOS.find(cb=>(META.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k))&&guReady(cb.id)&&S.ess>=costOf(cb.cost)&&cb.dmg);
-  if(c.flee&&hpR<.3&&c.boss)return playerAct('flee');
-  if(hpR<.35&&heal)return playerAct('gu',heal.i);
-  if(hpR<.35&&S.herbs>0&&guReady('herb'))return playerAct('herb');
-  if((c.intent==='heavy'||(c.intent==='skill'&&['thunder','charge','rage'].includes(c.sk)))&&guard&&c.shield<=0)return playerAct('gu',guard.i);
-  if(c.intent==='guard'&&!(c.stun>0)){
-    if(S.ess<maxEss()*.6&&S.stones>=5)return playerAct('absorb');
-    if(guard&&c.shield<=0)return playerAct('gu',guard.i);
-    if(heal&&hpR<.8)return playerAct('gu',heal.i);
-  }
-  if(combo)return playerAct('combo',combo.id);
-  if(atks.length)return playerAct('gu',atks[0].i);
-  if(S.stones>=5&&S.ess<10)return playerAct('absorb');
-  return playerAct('strike');
+  const c=S.combat;
+  // Người chơi thật sẽ chạy khi sắp chết, trừ khi không có đường lui
+  if(c.flee&&S.hp/maxHp()<.3)return playerAct('flee');
+  return autoAct();
 }
 function botEvent(){
   const ev=EV[S.evq[0]],chs=choicesOf(ev);
@@ -81,15 +65,15 @@ function r0(i){return RECIPES[i].st+40}
 run(bot);
 
 const N=+process.argv[2]||200,MAXLIFE=+process.argv[3]||8;
-const res={r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{}};
+const res={r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{},replay:[],firstWin:[]};
 for(let n=0;n<N;n++){
   run('META=freshMeta();newLife();');
-  let won=false;
+  let won=false,replay=0;
   for(let life=1;life<=MAXLIFE&&!won;life++){
     let steps=0;
     while(steps<4000){
       const o=run('S.over');
-      if(o==='rewind'){run('rewindTime(false)');res.rewinds=(res.rewinds||0)+1;steps++;continue}
+      if(o==='rewind'){const t0=run('S.turn');run('rewindTime(false)');replay+=t0-run('S.turn');res.rewinds=(res.rewinds||0)+1;steps++;continue}
       if(o)break;
       run('botTurn()');steps++;
       if(run('S.turn')===11&&!run('S._r11')){res.r11.push(run('S.chuyen+S.giai/4'));run('S._r11=1')}
@@ -98,13 +82,14 @@ for(let n=0;n<N;n++){
     }
     res.lives++;
     const over=run('S.over');
-    if(over==='win'){won=true;res.wins++;res.firstWinLife.push(life);res.lifeWins[life]=(res.lifeWins[life]||0)+1;res.rankEnd.push(run('S.chuyen+S.giai/4'))}
+    if(over==='win'){won=true;res.wins++;const en=run('S.ending');(res.end=res.end||{})[en]=(res.end[en]||0)+1;res.firstWinLife.push(life);res.lifeWins[life]=(res.lifeWins[life]||0)+1;res.rankEnd.push(run('S.chuyen+S.giai/4'))}
     else if(over==='dead'){
       const d=run('META.deaths[META.deaths.length-1]');res.deathTurn.push(d.turn);res.deathRank.push(run('S.chuyen+S.giai/4'));if(d.turn>=27)res.finalDeaths++;
       const key=d.cause+(d.turn>=19&&d.turn<=21?' (lang triều)':'');res.cause[key]=(res.cause[key]||0)+1;
-      run('rebirth()');
+      replay+=d.turn-1;run('rebirth()');
     }else{res.cause['kẹt vòng lặp']=(res.cause['kẹt vòng lặp']||0)+1;run('rebirth()')}
   }
+  res.replay.push(replay);res.firstWin.push(won?res.firstWinLife[res.firstWinLife.length-1]:MAXLIFE+1);
 }
 const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length).toFixed(2):'-';
 console.log(`Chiến dịch: ${N}, tổng kiếp: ${res.lives}`);
@@ -114,4 +99,8 @@ console.log(`Tỉ lệ thắng kiếp đầu: ${((res.lifeWins[1]||0)/N*100).toF
 console.log(`Cảnh giới trung bình lúc lang triều (chuyển + giai/4): ${avg(res.rankAt19)}`);
 console.log(`Cảnh giới lúc thắng: ${avg(res.rankEnd)}, tuần chết trung bình: ${avg(res.deathTurn)}`);
 console.log(`Cảnh giới tuần 11: ${avg(res.r11)}, lúc chết: ${avg(res.deathRank)}, tới tuần 27: ${res.reach27}, chết ở trận cuối: ${res.finalDeaths}`);
+const q=(a,p)=>{const b=[...a].sort((x,y)=>x-y);return b[Math.min(b.length-1,Math.floor(p*b.length))]};
+console.log(`Số lần chơi tới lần thắng đầu: trung vị ${q(res.firstWin,.5)}, 80% người chơi ${q(res.firstWin,.8)} (${MAXLIFE+1} = chưa thắng)`);
+console.log(`Số tuần phải chơi lại mỗi chiến dịch: trung bình ${avg(res.replay)}, trung vị ${q(res.replay,.5)}. Thiền cứu: ${res.rewinds||0} lần`);
+console.log('Kết cục:',JSON.stringify(res.end||{}));
 console.log('Nguyên nhân chết:',Object.entries(res.cause).sort((a,b)=>b[1]-a[1]).slice(0,12));

@@ -41,20 +41,20 @@ const GU={
 
   // Cổ trùng mới từ Cổ Chân Nhân (thuvienanime)
   tieuguang:{n:'Tiểu Quang Cổ',r:1,food:2,fn:'cánh hoa',t:'passive',atk:4,p:35,d:'Phụ trợ quang đạo của Cổ Nguyệt tộc. Tăng uy lực cho mọi đòn công kích nguyệt nhận thêm +4.'},
-  toanphong:{n:'Toàn Phong Cổ',r:1,food:2,fn:'phong sương',t:'attack',dmg:16,cost:7,p:40,d:'Bắn ra luồng gió xoáy làm chao đảo kẻ địch. Có thể hợp luyện thành Nguyệt Toàn Cổ.'},
+  toanphong:{n:'Toàn Phong Cổ',r:1,food:2,fn:'phong sương',t:'attack',dmg:16,cost:7,aoe:1,p:40,d:'Bắn ra luồng gió xoáy quét cả một vùng, bầy đông hay thú nhanh đều khó tránh. Có thể hợp luyện thành Nguyệt Toàn Cổ.'},
   dongbi:{n:'Đồng Bì Cổ',r:1,food:3,fn:'quặng đồng',t:'guard',cost:5,p:40,d:'Da hóa đồng bì: giảm 55% sát thương trong 2 lượt. Tiêu chuẩn của Cổ sư cận chiến.'},
   thanhti:{n:'Thanh Ti Cổ',r:1,food:2,fn:'nước mưa',t:'guard',cost:6,p:35,d:'Phóng ra tơ xanh quấn thân phòng hộ, giảm 50% sát thương trong 2 lượt.'},
-  nguyettoan:{n:'Nguyệt Toàn Cổ',r:2,food:4,fn:'nguyệt lan và gió',t:'attack',dmg:38,cost:13,pierce:1,p:155,d:'Tuyệt kỹ của Cổ Nguyệt Thanh Thư. Nguyệt nhận bích lục lượn vòng cung, xuyên thủng mọi giáp trụ.'},
+  nguyettoan:{n:'Nguyệt Toàn Cổ',r:2,food:4,fn:'nguyệt lan và gió',t:'attack',dmg:38,cost:13,pierce:1,aoe:1,p:155,d:'Tuyệt kỹ của Cổ Nguyệt Thanh Thư. Nguyệt nhận bích lục lượn vòng cung quét qua cả đám địch, xuyên thủng mọi giáp trụ.'},
   nguyetngan:{n:'Nguyệt Ngân Cổ',r:2,food:4,fn:'ngân khoáng',t:'attack',dmg:40,cost:14,p:150,d:'Nguyệt nhận ánh bạc sắc lạnh, tầm phóng xa gấp đôi, chém nát hộ thể địch.'},
   nguyetnghe:{n:'Nguyệt Nghê Thường',r:2,food:4,fn:'cánh hoa',t:'guard',cost:10,p:160,d:'Khăn lụa ánh trăng dệt bằng nguyệt quang và ngọc bì: giảm 65% sát thương trong 2 lượt.'},
   bangdao:{n:'Băng Đao Cổ',r:2,food:4,fn:'băng sương',t:'attack',dmg:36,cost:12,slow:.2,p:145,d:'Cổ trùng cận chiến của Bạch Ngưng Băng. Chém ra đao băng sắc lạnh, hàn khí làm suy yếu đòn công của địch.'},
   thuytrao:{n:'Thủy Tráo Cổ',r:2,food:3,fn:'nước suối ngọt',t:'guard',cost:8,p:135,d:'Màn cầu nước chảy xiết phân tán xung lực: giảm 60% sát thương trong 2 lượt, tiêu hao chân nguyên cực thấp.'},
   anlan:{n:'Ẩn Lân Cổ',r:2,food:3,fn:'vảy cá',t:'passive',scout:1,fleeMod:.2,p:140,d:'Cổ trùng trinh sát Bạch gia. Phủ một lớp vảy tàng hình hòa vào cảnh vật, tăng tỉ lệ trốn thoát và giảm hiềm nghi.'},
-  hoalo:{n:'Hỏa Lô Cổ',r:2,food:4,fn:'than lửa',t:'guard',cost:9,reflect:.2,p:130,d:'Cổ bảo hộ của Cổ Nguyệt Xích Sơn. Hỏa khí ấm áp xua tan hàn khí, giảm 50% sát thương và phản 20% sát thương lửa.'},
+  hoalo:{n:'Hỏa Lô Cổ',r:2,food:4,fn:'than lửa',t:'guard',cost:9,reflect:.2,warm:1,p:130,d:'Cổ bảo hộ của Cổ Nguyệt Xích Sơn. Hỏa khí ấm áp xua tan hàn khí, giảm 50% sát thương và phản 20% sát thương lửa.'},
   cuudiep:{n:'Cửu Diệp Sinh Cơ Thảo',r:2,food:0,fn:'chân nguyên',t:'heal',healAmt:50,cure:1,cost:14,p:280,d:'Kỳ trân của Hoa Tửu. Mỗi tuần tự ngưng kết một phiến Sinh Cơ Diệp (linh dược). Trong chiến đấu hồi 50 khí huyết và giải độc.'},
   cuxikimngo:{n:'Cứ Xỉ Kim Ngô',r:3,food:6,fn:'thịt tươi và thiết khí',t:'attack',dmg:58,cost:20,bleed:3,p:380,d:'Rết khổng lồ răng cưa vàng kim của Hoa Tửu Hành Giả. Hai hàng răng cưa xoay tàn khốc, xẻ toạc giáp thịt địch gây Chảy Máu dữ dội.'},
   mokmi:{n:'Mộc Mị Cổ',r:3,food:5,fn:'lá cổ thụ',t:'guard',cost:18,p:350,d:'Cấm cổ của Cổ Nguyệt tộc. Cổ sư tạm thời hóa thân Thụ Tinh: giảm 85% sát thương và phản 30% chấn động trong 3 lượt.'},
-  daosihuyetbuc:{n:'Đao Sí Huyết Bức Cổ',r:3,food:6,fn:'máu tươi',t:'attack',dmg:52,cost:18,lifesteal:.35,p:420,d:'Bầy dơi cánh đao huyết sắc của Huyết Hải lão tổ. Bắn ra đàn dơi cắn xé địch, hút 35% sát thương gây ra phản bổ khí huyết.'},
+  daosihuyetbuc:{n:'Đao Sí Huyết Bức Cổ',r:3,food:6,fn:'máu tươi',t:'attack',dmg:52,cost:18,lifesteal:.35,aoe:1,p:420,d:'Bầy dơi cánh đao huyết sắc của Huyết Hải lão tổ. Bắn ra đàn dơi cắn xé địch, hút 35% sát thương gây ra phản bổ khí huyết.'},
   xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:480,d:'Dùng một lần: Tam chuyển tăng trực tiếp một tiểu cảnh giới.'},
 };
 
@@ -86,7 +86,7 @@ const COMBOS=[
   {id:'man_luc',n:'Man Lực Húc Kích',req:['bachthi','ngocbi'],cost:12,dmg:28,stun:1,shield:2,d:'Da ngọc va chạm toàn lực, làm choáng kẻ địch 1 lượt và nhận giáp.'},
   {id:'nguyet_xa',n:'Nguyệt Mang Xuyên Kích',req:['nguyetmang'],cost:20,dmg:66,pierce:1,d:'Bắn luồng nguyệt mang cực hạn xuyên thấu mọi phòng thủ.'},
   {id:'thien_khue',n:'Thiên Bồng Hộ Thể',req:['thienbong'],cost:25,shield:3,reflect:.35,d:'Triệu hoán hư ảnh bạch trư bảo hộ, phản phệ sát thương dữ dội.'},
-  {id:'nguyet_toan_xa',n:'Nguyệt Toàn Xuyên Kích',req:['nguyettoan','hungluc'],cost:22,dmg:62,pierce:1,stun:1,d:'Nguyệt nhận bích lục mang cự lực xé gió, xuyên giáp và làm choáng địch 1 lượt.'},
+  {id:'nguyet_toan_xa',n:'Nguyệt Toàn Xuyên Kích',req:['nguyettoan','hungluc'],cost:22,dmg:62,pierce:1,aoe:1,stun:1,d:'Nguyệt nhận bích lục mang cự lực xé gió, xuyên giáp và làm choáng địch 1 lượt.'},
   {id:'bang_trao_ho',n:'Băng Lam Thủy Thuẫn',req:['bangdao','thuytrao'],cost:18,shield:2,reflect:.25,d:'Màn nước kết băng, giảm 75% sát thương trong 2 lượt và phản băng thương.'},
   {id:'kim_ngo_tram',n:'Kim Ngô Phệ Thể',req:['cuxikimngo','hacthi'],cost:26,dmg:78,bleed:4,d:'Cưa rết vàng khổng lồ kết hợp cự lực xé toạc thân thể địch, gây Chảy Máu dữ dội.'},
   {id:'huyet_duc_phong',n:'Huyết Bức Thực Khí',req:['daosihuyetbuc','huyetnguyet'],cost:24,dmg:68,lifesteal:.4,d:'Đàn dơi đao huyết sắc tắm trong nguyệt ảnh đỏ rực, hút 40% sát thương hồi phục khí huyết.'},
@@ -105,13 +105,13 @@ const EN={
   dienlang:{n:'Điện Lang',hp:52,atk:[6,11],st:[8,14],bl:1,wolf:1,i:'Điện Lang lông xám, móng lóe điện quang, gầm gừ chắn lối.'},
   hachung:{n:'Hắc Hùng',hp:85,atk:[9,15],st:[14,22],bl:2,i:'Hắc Hùng đứng thẳng, cao gấp đôi người.'},
   tanbinh:{n:'Cổ sư lưu lạc',hp:60,atk:[8,13],st:[20,32],bl:1,drop:.35,i:'Một Cổ sư ma đạo áo rách chặn đường, mắt đầy tham lam.'},
-  hoctro:{n:'Đám học trò Nhất chuyển',hp:55,atk:[5,9],st:[18,28],bl:0,i:'Ba bốn học trò rút cổ, vừa sợ vừa giận.'},
+  hoctro:{n:'Đám học trò Nhất chuyển',hp:45,atk:[5,9],st:[18,28],bl:0,i:'Ba bốn học trò rút cổ, vừa sợ vừa giận.'},
   macbac:{n:'Cổ Nguyệt Mạc Bắc',hp:62,atk:[7,11],st:[8,15],bl:0,i:'Mạc Bắc của Mạc gia hất hàm: "Bính đẳng mà cũng dám ngông?"'},
   cosusay:{n:'Cổ sư say rượu',hp:40,atk:[4,8],st:[3,8],bl:0,i:'Gã Cổ sư say khướt đập vỡ bàn, rút cổ ra.'},
   hunggia:{n:'Cổ sư Hùng gia',hp:85,atk:[8,13],st:[20,30],bl:1,drop:.3,i:'Cổ sư Hùng gia lùi một bước, tay đặt lên túi cổ.'},
   sontac:{n:'Sơn tặc Cổ sư',hp:60,atk:[6,10],st:[10,18],bl:1,i:'Bọn sơn tặc từ hai bên vách núi nhảy xuống.'},
   baitrinhsat:{n:'Trinh sát Bạch gia',hp:110,atk:[10,15],st:[25,35],bl:1,i:'Trinh sát Bạch gia áo trắng đứng trên cành cây, cười lạnh.'},
-  kimsinh:{n:'Giả Kim Sinh',hp:95,atk:[8,13],st:[40,60],bl:2,drop:.6,i:'Giả Kim Sinh nhận ra có điều bất thường, quay phắt lại.'},
+  kimsinh:{n:'Giả Kim Sinh',hp:80,atk:[8,13],st:[40,60],bl:2,drop:.6,i:'Giả Kim Sinh nhận ra có điều bất thường, quay phắt lại.'},
   tuukhoi:{n:'Tửu Khôi thủ động',hp:100,atk:[9,15],st:[0,0],bl:0,i:'Con rối ghép từ những vò rượu vỡ tự đứng dậy canh cửa động.'},
   dlbay:{n:'Bầy Điện Lang',hp:140,atk:[9,14],st:[30,40],bl:2,wolf:1,i:'Hàng chục đôi mắt xanh lục tràn qua tường trại.'},
   loiquan:{n:'Lôi Quan Lang',hp:170,atk:[11,17],st:[40,55],bl:3,wolf:1,i:'Lôi Quan Lang, sừng lôi điện trên đầu, bước ra khỏi màn mưa.'},
@@ -166,27 +166,28 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:1.32,atk:1.32,furyTurn:8};
+const DIFF={hp:1.31,atk:1.31,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;
 // Giảm sát thương khi hộ thể (tỉ lệ còn nhận)
 const SHIELD_RED={ngocbi:.4,dongbi:.45,thanhti:.5,cuongnham:.5,thietbi:.35,bachngoc:.35,thuytrao:.4,hoalo:.5,nguyetnghe:.35,thienbong:.2,mokmi:.15};
 // def: giáp trừ thẳng mỗi đòn (xuyên giáp bỏ qua); sk: chiêu riêng; boss: có giai đoạn 2; noflee: không cho chạy
+// fast: né đòn đánh đơn; swarm: cả bầy, đòn diện rộng mạnh hơn (xem FOE_TR trong auto.js)
 const EAI={
   heorung:{sk:'charge'},
-  dienlang:{sk:'howl'},
+  dienlang:{sk:'howl',fast:1},
   hachung:{def:2,sk:'rage'},
   tanbinh:{sk:'poison'},
-  hoctro:{},
+  hoctro:{swarm:1},
   macbac:{sk:'drain'},
   cosusay:{},
   hunggia:{def:2,sk:'rage'},
-  sontac:{sk:'poison'},
+  sontac:{sk:'poison',swarm:1},
   baitrinhsat:{def:2,sk:'freeze'},
   kimsinh:{def:1,sk:'drain'},
   tuukhoi:{def:1,sk:'regen',regen:.06},
-  dlbay:{sk:'howl'},
+  dlbay:{sk:'howl',swarm:1},
   loiquan:{def:3,sk:'thunder'},
   langvuong:{def:4,sk:'thunder',boss:1},
   gialao:{def:5,sk:'suppress',boss:1,noflee:1},
@@ -297,13 +298,13 @@ Object.assign(EN,{
   phuongchinh:{n:'Phương Chính',hp:190,atk:[12,19],st:[0,0],bl:0,i:'Phương Chính rút Nguyệt Quang Cổ, tay run nhưng mắt không lùi: "Ca ca, đệ không để huynh đi tiếp con đường này."'},
 });
 Object.assign(EAI,{
-  docxa:{sk:'poison'},
-  bao:{sk:'charge'},
-  hauquan:{sk:'howl'},
+  docxa:{sk:'poison',fast:1},
+  bao:{sk:'charge',fast:1},
+  hauquan:{sk:'howl',swarm:1},
   hunglam:{def:3,sk:'rage',boss:1},
   sontacvuong:{def:2,sk:'poison',boss:1},
   bachmaon:{def:3,sk:'rage',boss:1},
-  tramthuysat:{def:1,sk:'poison',noflee:1},
+  tramthuysat:{def:1,sk:'poison',noflee:1,fast:1},
   phuongchinh:{def:2,sk:'drain',boss:1},
   macnhan:{def:1,sk:'poison'},
 });

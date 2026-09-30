@@ -1,4 +1,5 @@
-// Chạy engine thật trong Node để đo độ khó: node tools/sim.cjs [số chiến dịch] [số kiếp tối đa mỗi chiến dịch]
+// Mô phỏng Quyển 2: node tools/sim2.cjs [số chiến dịch] [số lần làm lại tối đa mỗi chương]
+// Bắt đầu từ kết Quyển 1 (huyetlo_bai), chơi bằng bot tới khi hết nội dung Quyển 2 hoặc hết lượt làm lại.
 // Không dùng trong game; chỉ để cân bằng.
 const fs=require('fs'),vm=require('vm'),path=require('path');
 const root=path.join(__dirname,'..');
@@ -60,6 +61,7 @@ function botTurn(){
   if(hpR<.45||(S.inj&&Math.random()<.5))return act('nghi');
   if(S.ess>=maxEss()*.7)return act('tuluyen');
   if(!S.f.hoatuu&&Math.random()<.35)return act('hauson');
+  if(S.book===2){const sp=curChap().spots.filter(s=>!s.minor&&!['tuluyen','nghi'].includes(s.id)&&(!s.show||s.show()));return act(pick(sp).id)}
   return act(pick(['nui','nui','nhiemvu','nhiemvu','hocduong','trai'].filter(a=>a!=='hocduong'||S.turn<=18)));
 }
 function r0(i){return RECIPES[i].st+40}
@@ -70,45 +72,27 @@ run(`var __bf={diso:0,q:0,memOk:0,memBad:0,lives:0,shift:0};const __ch=choose;ch
 // Đo lặp sự kiện ngẫu nhiên: khoảng cách ngắn nhất (tuần) giữa hai lần cùng một sự kiện trong một kiếp
 run(`var __rep={n:0,gaps:{}};const __re=randomEvent;randomEvent=function(loc){const ok=__re(loc);if(ok){const id=S.evq[S.evq.length-1];S.__ev=S.__ev||{};if(S.__ev[id]!==undefined){const g=S.turn-S.__ev[id];__rep.gaps[g]=(__rep.gaps[g]||0)+1}S.__ev[id]=S.turn;__rep.n++}return ok}`);
 
-const N=+process.argv[2]||200,MAXLIFE=+process.argv[3]||8;
-const res={r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{},replay:[],firstWin:[]};
+
+const N=+process.argv[2]||100,RETRY=+process.argv[3]||5;
+const res={end:{},reach:{},retries:{},cause:{},stuck:0,turns:0,rewinds:0,rank:{}};
 for(let n=0;n<N;n++){
-  run('META=freshMeta();newLife();');
-  let won=false,replay=0;
-  for(let life=1;life<=MAXLIFE&&!won;life++){
-    let steps=0;
-    while(steps<4000){
-      const o=run('S.over');
-      if(o==='rewind'){const t0=run('S.turn');run('rewindTime(false)');replay+=t0-run('S.turn');res.rewinds=(res.rewinds||0)+1;steps++;continue}
-      if(o)break;
-      run('botTurn()');steps++;
-      if(run('S.turn')===11&&!run('S._r11')){res.r11.push(run('S.chuyen+S.giai/4'));run('S._r11=1')}
-      if(run('S.turn')===27&&!run('S._r27')){res.reach27++;run('S._r27=1')}
-      if(run('S.turn')===19&&!run('S._r19')){res.rankAt19.push(run('S.chuyen+S.giai/4'));run('S._r19=1')}
-    }
-    res.lives++;
-    const over=run('S.over');(res.drift=res.drift||{win:[],dead:[]})[over==='win'?'win':'dead'].push(run('S.drift||0'));
-    if(over==='win'){won=true;res.wins++;const en=run('S.ending');(res.end=res.end||{})[en]=(res.end[en]||0)+1;res.firstWinLife.push(life);res.lifeWins[life]=(res.lifeWins[life]||0)+1;res.rankEnd.push(run('S.chuyen+S.giai/4'))}
-    else if(over==='dead'){
-      const d=run('META.deaths[META.deaths.length-1]');res.deathTurn.push(d.turn);res.deathRank.push(run('S.chuyen+S.giai/4'));if(d.turn>=27)res.finalDeaths++;
-      const key=d.cause+(d.turn>=19&&d.turn<=21?' (lang triều)':'');res.cause[key]=(res.cause[key]||0)+1;
-      replay+=d.turn-1;run('rebirth()');
-    }else{res.cause['kẹt vòng lặp']=(res.cause['kẹt vòng lặp']||0)+1;run('rebirth()')}
+  run("META=freshMeta();newLife();S.traitOpts=null;S.tamco=14;S.satphat=10;S.ngo=10;S.tuchat=90;S.over='win';S.ending='huyetlo_bai';startQ2('huyetlo_bai')");
+  let steps=0,tries=0;const seen=new Set();
+  while(steps<6000){
+    const ch=run('S.chap');if(!seen.has(ch)){seen.add(ch);res.reach[ch]=(res.reach[ch]||0)+1;tries=0}
+    const o=run('S.over');
+    if(o==='rewind'){run('rewindTime(false)');res.rewinds++;steps++;continue}
+    if(o==='win'){const e=run('S.ending');res.end[e]=(res.end[e]||0)+1;break}
+    if(o==='dead'){const d=run('META.deaths[META.deaths.length-1]');const k=ch+' · '+d.cause;res.cause[k]=(res.cause[k]||0)+1;res.retries[ch]=(res.retries[ch]||0)+1;
+      if(++tries>RETRY)break;run('restartChapter()');steps++;continue}
+    run('botTurn()');steps++;
   }
-  res.replay.push(replay);res.firstWin.push(won?res.firstWinLife[res.firstWinLife.length-1]:MAXLIFE+1);
+  if(steps>=6000)res.stuck++;
+  const rk=run('S.chuyen+"."+S.giai');res.rank[rk]=(res.rank[rk]||0)+1;
 }
-const avg=a=>a.length?(a.reduce((s,x)=>s+x,0)/a.length).toFixed(2):'-';
-console.log(`Chiến dịch: ${N}, tổng kiếp: ${res.lives}`);
-console.log(`Thắng trong ${MAXLIFE} kiếp: ${(res.wins/N*100).toFixed(1)}%`);
-console.log('Thắng ở kiếp thứ:',JSON.stringify(res.lifeWins));
-console.log(`Tỉ lệ thắng kiếp đầu: ${((res.lifeWins[1]||0)/N*100).toFixed(1)}%`);
-console.log(`Cảnh giới trung bình lúc lang triều (chuyển + giai/4): ${avg(res.rankAt19)}`);
-console.log(`Cảnh giới lúc thắng: ${avg(res.rankEnd)}, tuần chết trung bình: ${avg(res.deathTurn)}`);
-console.log(`Cảnh giới tuần 11: ${avg(res.r11)}, lúc chết: ${avg(res.deathRank)}, tới tuần 27: ${res.reach27}, chết ở trận cuối: ${res.finalDeaths}`);
-const q=(a,p)=>{const b=[...a].sort((x,y)=>x-y);return b[Math.min(b.length-1,Math.floor(p*b.length))]};
-console.log(`Số lần chơi tới lần thắng đầu: trung vị ${q(res.firstWin,.5)}, 80% người chơi ${q(res.firstWin,.8)} (${MAXLIFE+1} = chưa thắng)`);
-console.log(`Số tuần phải chơi lại mỗi chiến dịch: trung bình ${avg(res.replay)}, trung vị ${q(res.replay,.5)}. Thiền cứu: ${res.rewinds||0} lần`);
-{const r=run('__rep'),g=Object.entries(r.gaps).sort((a,b)=>a[0]-b[0]);console.log(`Sự kiện ngẫu nhiên: ${r.n} lần; lặp lại sau (tuần: số lần):`,g.slice(0,6).map(x=>x.join(':')).join(' '))}
-{const b=run('__bf');console.log(`Cánh bướm: lệch TB lúc chết ${avg(res.drift.dead)}, lúc thắng ${avg(res.drift.win)}; mỗi kiếp: dị số ${(b.diso/res.lives).toFixed(2)}, hậu quả trễ ${(b.q/res.lives).toFixed(2)}, thế giới xoay chuyển ${(b.shift/res.lives).toFixed(2)}; lựa chọn ký ức đúng ${b.memOk}, phản tác dụng ${b.memBad}`)}
-console.log('Kết cục:',JSON.stringify(res.end||{}));
+console.log(`Chiến dịch: ${N}, làm lại tối đa ${RETRY} lần mỗi chương`);
+console.log('Tới chương:',JSON.stringify(res.reach));
+console.log('Số lần làm lại theo chương:',JSON.stringify(res.retries));
+console.log('Kết:',JSON.stringify(res.end),'· kẹt vòng lặp:',res.stuck,'· Thiền cứu:',res.rewinds);
+console.log('Cảnh giới cuối (chuyển.giai):',JSON.stringify(res.rank));
 console.log('Nguyên nhân chết:',Object.entries(res.cause).sort((a,b)=>b[1]-a[1]).slice(0,12));

@@ -76,7 +76,7 @@ function gainGu(k,silent){
   if(window.SFX) SFX.coin();
   if(!silent)log(`Nhận ${GU[k].n}.`,'good');
 }
-function maxHp(){return Math.round((70+40*S.chuyen)*((S.mod&&S.mod.hp)||1))}
+function maxHp(){return Math.round((70+40*S.chuyen+S.gu.reduce((s,g)=>s+((GU[g.k]||{}).hp||0),0))*((S.mod&&S.mod.hp)||1))}
 function maxEss(){
   const base=MAXE[S.chuyen];
   const tcMod=(S.tuchat||44)/44;
@@ -153,6 +153,7 @@ function newLife(){
 }
 
 function startTurn(){
+  if(S.book===2)return startTurn2();
   S.turn++;S.acted=false;S.refined=false;
   log(`Tháng ${month()} · ${tuan()}`,'day');
   if(S.turn>1){
@@ -215,7 +216,7 @@ function endTurn(){
     S.gu.filter(g=>g.h>=3).forEach(g=>log(`${GU[g.k].n} chết đói.`,'danger'));
     S.gu=S.gu.filter(g=>g.h<3);
   }
-  if(S.susp>=100)S.evq.push('x_thamvan');
+  if(S.susp>=100&&S.book!==2)S.evq.push('x_thamvan');
   startTurn();
 }
 
@@ -301,6 +302,7 @@ const ACTS=[
 function act(id){
   if(S.combat||S.over||S.evq.length||S.acted||S.traitOpts||S.mg)return;
   ffRecord('act',{a:id});
+  if(S.book===2&&act2(id))return;
   S.panel=null;
   const ci=(S.cache||[]).findIndex(c=>c.loc===id&&!c.done&&S.turn>=c.from&&S.turn<=c.to);
   if(ci>=0&&Math.random()<(S.cache[ci].rumor?.85:.4)){S.curCache=ci;S.evq.push('x_cache');S.acted=true;saveAll();advance();render();return}
@@ -368,7 +370,7 @@ function levelUp(){
       if(window.SFX) SFX.levelUp();
       log(`Bích khiếu rung động. Đạt ${rankName()}.`,'good');
     }
-    else if(S.chuyen<3){
+    else if(S.chuyen<maxChuyen()){
       if(typeof startBreak==='function'){log('Tu vi đã đầy. Đến lúc xung kích bích khiếu.','big');startBreak();break}
       const ch=.65+(S.ngo-6)*.02+((S.tuchat||44)-44)*0.005;
       if(Math.random()<ch){
@@ -820,6 +822,8 @@ document.addEventListener('click',ev=>{
       case 'refine':S.panel='refine';render();return;
       case 'absorb':absorb();return;
       case 'rebirth':cicadaScene('dead',rebirth);return;
+      case 'chapretry':cicadaScene('dead',restartChapter);return;
+      case 'q2':startQ2(S.ending);return;
       case 'rewind':cicadaScene('rewind',()=>rewindTime(false));return;
       case 'newgame':META.wins.push(S.ending);const w=META.wins;META=freshMeta();META.wins=w;newLife();saveAll();render();return;
       case 'thien':

@@ -76,7 +76,7 @@ function renderHUD(){
     </div>
     ${S.inj?`<span class="injury" title="${INJURY[S.inj.k].d}">伤 ${INJURY[S.inj.k].n} · ${S.inj.t} tuần</span>`:''}
     <div class="hud-time">
-      <div><b>Tháng ${month()}</b><small>${S.combat?'Giao chiến':tuan()}</small></div>
+      ${hudTimeHTML()}
       <svg id="moon" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"></svg>
     </div>
     <div class="hud-btns">
@@ -90,10 +90,10 @@ function renderHUD(){
 /* ---------- Dòng thời gian 27 tuần ---------- */
 function renderTimeline(){
   let cells='';
-  for(let t=1;t<=FINAL_TURN;t++){
+  for(let t=1;t<=curFinal();t++){
     const cid=(S.canon||CANON)[t],m=Math.ceil(t/3),tu=TUAN[(t-1)%3];
     const cls=[t<S.turn?'past':'',t===S.turn?'now':'',cid?'ev':'',t%3===1?'mstart':''].join(' ');
-    cells+=`<div class="tl ${cls}" title="Tháng ${m} · ${tu}${cid?': '+EV[cid].hint:''}">${t%3===1?`<span class="mlab">T${m}</span>`:''}${cid?`<i>${CANON_GLYPH[cid]||'事'}</i>`:''}</div>`;
+    cells+=`<div class="tl ${cls}" title="Tháng ${m} · ${tu}${cid?': '+EV[cid].hint:''}">${t%3===1?`<span class="mlab">T${m}</span>`:''}${cid?`<i>${CANON_GLYPH[cid]||EV[cid].g||'事'}</i>`:''}</div>`;
   }
   const cal=S.canon||CANON,next=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>t>=S.turn);
   const nx=next?`<span class="next">Ký ức tương lai: <b>${EV[cal[next]].hint}</b>${next===S.turn?' · tuần này':` · còn ${next-S.turn} tuần`}</span>`:'';
@@ -217,27 +217,29 @@ function choiceBtn(c,i,evId){
 
 function renderStage(){
   const st=$('stage');
+  if(S.over==='win'&&S.book===2){st.innerHTML=q2WinHTML();return}
   if(S.over==='win'){
     const E=ENDINGS[S.ending],tot=S.canonHit+S.canonMiss;
     st.innerHTML=`<div class="over has-art" style="--art:url('${asset('art/p_hero.jpg')}')"><span class="label">Kiếp ${META.life} · Tháng ${month()} · ${rankName()}</span>
       <h3>${E.t}</h3><p>${E.d}</p>
       <p>Bám nguyên tác ${tot?Math.round(S.canonHit/tot*100):0}% · chết ${META.life-1} lần trước khi tới được đây.</p>
-      <p class="dimt">Quyển hai (Thương gia thành) sẽ nối tiếp từ đây.</p>
-      <button class="btn big" data-a="newgame">Bắt đầu lại từ kiếp một</button></div>`;
+      ${Q2_GATE.includes(S.ending)?`<p>Quyển hai mở ra: xuôi sông Hoàng Long, tới Bạch Cốt Sơn và Thương gia thành.</p><button class="btn big" data-a="q2">Sang Quyển hai</button>`:'<p class="dimt">Kết cục này ở lại chính đạo, không dẫn sang Quyển hai. Các kết cục ma đạo hoặc cùng Bạch Ngưng Băng xuống núi mới mở Quyển hai.</p>'}
+      <button class="btn ${Q2_GATE.includes(S.ending)?'ghost':'big'}" data-a="newgame">Bắt đầu lại từ kiếp một</button></div>`;
     return;
   }
   if(S.over==='rewind'){
     const d=META.deaths[META.deaths.length-1],to=Math.max(1,S.turn-REWIND_WEEKS);
-    st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">Tháng ${month()} · ${tuan()} · ${rankName()}</span>
+    st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">${timeLabel()} · ${rankName()}</span>
       <h3>Xuân Thu Thiền thức tỉnh</h3>
       <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Con ve vàng trong không khiếu vỗ cánh, quang âm chảy ngược ${REWIND_WEEKS} tuần, về tháng ${Math.ceil(to/3)}.</p>
       <p>Mất: những gì có được trong ${REWIND_WEEKS} tuần đó. Giữ lại: mọi ký ức. Sau lần này Xuân Thu Thiền kiệt sức, cần ${CICADA_WEEKS} tuần để hồi phục. Chết trước lúc đó là chết thật.</p>
       <button class="btn big" data-a="rewind">Nghịch chuyển quang âm</button></div>`;
     return;
   }
+  if(S.over==='dead'&&S.book===2){st.innerHTML=q2DeadHTML();return}
   if(S.over==='dead'){
     const d=META.deaths[META.deaths.length-1];
-    st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">Tháng ${month()} · ${tuan()} · ${rankName()}</span>
+    st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">${timeLabel()} · ${rankName()}</span>
       <h3>Phương Nguyên đã chết</h3>
       <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.</p>
       <p>Mọi thứ bắt đầu lại từ lễ khai khiếu. Chỉ những điều ngươi đã biết là còn lại: ${Object.keys(META.mem).length} ký ức, đạo tâm +5% tu luyện. Thế giới lần này sẽ lệch đi đôi chút.</p>
@@ -264,7 +266,7 @@ function renderStage(){
     st.innerHTML=`<article class="story ${ev.canon?'canon':''} ${diso?'diso':''}">
       <div class="story-art" style="background-image:url('${eventArt(id)}')">
         ${speakerHTML(evSpeaker(id))}
-        <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':diso?'Dị số':'Kỳ ngộ'} · Tháng ${month()} · ${tuan()}</span><h2>${ev.title}</h2></div>
+        <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':diso?'Dị số':'Kỳ ngộ'} · ${timeLabel()}</span><h2>${ev.title}</h2></div>
       </div>
       <div class="story-body">
         <p class="story-text">${esc(evText(id))}</p>
@@ -317,6 +319,7 @@ function renderStage(){
           <div class="rc-side"><span class="pill ${ch>=70?'good':ch>=50?'gold':'danger'}">${ch}%</span><button class="btn" data-refine="${i}" ${canRefine(r)?'':'disabled'}>Luyện</button></div></div>`}).join('')}</div></div>`;
     return;
   }
+  if(S.book===2){renderMap2(st);return}
   // Bản đồ sơn trại
   const acts=Object.fromEntries(ACTS.map(a=>[a.id,a]));
   const spots=MAP_SPOTS.filter(s=>s.minor||(acts[s.id]&&(!acts[s.id].show||acts[s.id].show())));
@@ -325,7 +328,7 @@ function renderStage(){
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i>
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
         ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
-      <div class="map-cap"><span class="label">Tháng ${month()} · ${tuan()}</span><h2>Tuần này đi đâu?</h2></div>
+      <div class="map-cap"><span class="label">${timeLabel()}</span><h2>Tuần này đi đâu?</h2></div>
       ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':' · 1 tuần'}</span></button>`).join('')}
     </div>
     <div class="map-foot">
@@ -388,10 +391,11 @@ function renderTitle(){
       :`<div class="ts-content">
         <div class="ts-glyph" aria-hidden="true">蛊真人</div>
         <h1>Thanh Mao Sơn Ký</h1>
-        <p class="ts-sub">Quyển một · Ma đầu trùng sinh</p>
+        <p class="ts-sub">${S.book===2?'Quyển hai · '+(CHAPTERS[S.chap]||{n:''}).n:'Quyển một · Ma đầu trùng sinh'}</p>
         <div class="ts-btns">
-          <button class="btn big" data-title="${cont?'go':'intro'}">${cont?`Tiếp tục · kiếp ${META.life}, tháng ${month()}`:'Bắt đầu'}</button>
+          <button class="btn big" data-title="${cont?'go':'intro'}">${cont?(S.book===2?`Tiếp tục · ${timeLabel()}`:`Tiếp tục · kiếp ${META.life}, tháng ${month()}`):'Bắt đầu'}</button>
           ${cont?'<button class="btn ghost" data-title="intro">Xem lại mở đầu</button>':''}
+          ${META.q2Unlocked&&S.book!==2?'<button class="btn ghost" data-title="q2">Vào thẳng Quyển hai</button>':''}
         </div>
         <p class="ts-note">Fan game phi thương mại dựa trên Cổ Chân Nhân của Cổ Chân</p>
       </div>`}
@@ -401,6 +405,7 @@ document.addEventListener('click',ev=>{
   const b=ev.target.closest('[data-title]');if(!b)return;
   if(b.dataset.title==='intro'){UI.intro=true;renderTitle();return}
   UI.title=false;UI.intro=false;
+  if(b.dataset.title==='q2')startQ2(META.q2From||'ma');
   const L=$('titleLayer');L.firstElementChild&&L.firstElementChild.classList.add('ts-out');
   setTimeout(()=>{L.dataset.mode='';renderTitle()},RM?0:700);
 });

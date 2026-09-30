@@ -9,9 +9,11 @@ function asset(path){
 }
 const CH=['','Nhất','Nhị','Tam','Tứ','Ngũ','Lục'];
 const GIAI=['Sơ','Trung','Cao','Đỉnh'];
-const ESS=[null,{n:'thanh đồng',c:'#5fae8a'},{n:'xích thiết',c:'#c8664e'},{n:'bạch ngân',c:'#c9d3d6'}];
-const MAXE=[0,50,100,180];
-const NEED=[null,[80,95,110,130],[220,260,300,340],[300,340,380,420]];
+const ESS=[null,{n:'thanh đồng',c:'#5fae8a'},{n:'xích thiết',c:'#c8664e'},{n:'bạch ngân',c:'#c9d3d6'},{n:'hoàng kim',c:'#e0b64a'}];
+const MAXE=[0,50,100,180,280];
+// Quyển 1 dừng ở Tam chuyển, Quyển 2 lên tới Tứ chuyển
+function maxChuyen(){if(!S||S.book!==2)return 3;const c=typeof curChap==='function'&&curChap();return Math.min(4,(c&&c.cap)||4)}
+const NEED=[null,[80,95,110,130],[220,260,300,340],[300,340,380,420],[520,580,640,700]];
 const TUAN=['Thượng tuần','Trung tuần','Hạ tuần'];
 const ATTR={tamco:'Tâm cơ',satphat:'Sát phạt',ngo:'Ngộ tính'};
 

@@ -65,7 +65,7 @@ const BGIMG={forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_win
 const EV_SCENE={c_lang1:'tide',c_lang2:'snow',c_lang3:'tide',c_luancong:'village',c_bai:'snow',c_huyetdong:'blood',c_nhatdai:'blood',c_thiet:'village',c_thietvay:'village',c_final:'fire',
   hs_khe:'wine',hs_bich:'wine',hs_ngam:'wine',hs_dong:'wine',hs_mo:'blood',c_baigia:'forest',c_kimsinh:'forest'};
 const LOC_SCENE={hocduong:'village',trai:'village',nui:'forest',nhiemvu:'forest'};
-function eventArt(id){const ev=EV[id]||{};const sc=EV_SCENE[id]||LOC_SCENE[ev.loc]||'village';return asset('art/'+BGIMG[sc]+'.jpg')}
+function eventArt(id){const ev=EV[id]||{};const sc=EV_SCENE[id]||ev.sc||LOC_SCENE[ev.loc]||'village';return asset('art/'+BGIMG[sc]+'.jpg')}
 
 /* ================= HTML: khung đấu trường, bảng chỉ số, thanh kỹ năng ================= */
 function combatId(c){return String(c.id||c.k)}

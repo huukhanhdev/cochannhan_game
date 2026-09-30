@@ -30,15 +30,32 @@ Người chơi test tay thấy đúng như số đo: rẽ khác truyện là ch�
 4. **Độ khó chỉ cân theo bot bám truyện.** `DIFF` đã lên 1.36 dựa trên bot bám truyện. Cổng kiểm tra không có ca "đi lệch".
 5. **Dị số thiên về họa.** Chúng chen vào đúng lúc người chơi đã yếu vì lệch.
 
+### Đối chiếu với bản review của AI khác (về PR 2 của `BAN_GIAO_2`)
+
+Code hiện tại đã theo phần lớn bản review đó:
+
+| Ý review | Trong code sau `54287fd` |
+|---|---|
+| Không dùng `memB` nhân hệ số; ký ức sai thì **phản tác dụng thật** | Đã làm: `varShifted(k)` đổi kết quả lựa chọn ký ức. Không có `memB` |
+| Mỗi lần chơi lại, 1–2 mốc lệch sẵn; quay ngược giữ biến thể | Đã làm: `initVariants()` lệch 2–3 mốc; ảnh chụp tuần giữ `S.var` |
+| Không hiện số phần trăm, chỉ 3 mức chữ; tâm cơ ≥ 12 thì nêu tên mốc | Đã làm: `driftChip()`, `shiftVariant()` |
+| Không trừ độ lệch khi đi đúng nguyên tác | Đã làm: không có −3 |
+| Lệch chỉ tính theo `drift:N` ở lựa chọn thật sự đổi thế cục, không tính mọi lựa chọn khác `canon` | **Chưa làm:** vẫn +8 mỗi lần chọn khác `canon` (`engine.js:238`) |
+| Bù cho người đi lệch bằng dị số cơ duyên | Có tỉ lệ, nhưng chưa đủ bù (số đo ở trên) |
+| Hồi chiêu sự kiện theo cỡ kho | Đã làm |
+
+Mình đồng ý với hướng của review: ký ức sai phải có hậu quả thật, và không được ngầm đẩy người chơi đi lại đúng truyện. Số đo cho thấy vấn đề không nằm ở hướng này mà ở **liều lượng**: hậu quả quá nặng, cộng dồn quá nhanh, và không có cách phát hiện trước.
+
 ### Cách sửa (PR 0, khoảng 1 buổi)
 
-- **Lệch là đổi rủi ro lấy thứ khác.** Mỗi nhánh lệch lớn phải có phần được: cổ của đối thủ, quan hệ, tin tức, hoặc tránh được một trận nguyên tác nguy hiểm về sau. Rà khoảng 15 lựa chọn có `drift` hoặc lựa chọn không `canon` ở các mốc, gắn phần thưởng tương xứng.
-- **Ký ức sai thì chỉ mất lợi thế.** Khi `varShifted(k)`, lựa chọn ký ức đưa về trận thường (`mod:1`, cho chạy) kèm câu "ký ức không còn đúng". Không phạt thêm.
-- **Hãm vòng xoáy.**
+- **Làm nốt ý review: chỉ `drift:N` mới làm lệch.** Bỏ +8 cho mọi lựa chọn khác `canon`. Gắn `drift:N` cho khoảng 15 lựa chọn thật sự đổi thế cục: giết hoặc cứu người, đổi phe, bán tin. Chọn một câu thoại khác truyện thì không làm lệch.
+- **Ký ức sai vẫn phản tác dụng, nhưng sống sót được.**
+  - Trận do ký ức sai: `mod` tối đa 1.15 (hiện 1.35–1.4), vẫn cho chạy.
+  - Có dấu hiệu trước khi rơi vào bẫy: một câu dẫn lạ ("bờ sông yên tĩnh hơn ngươi nhớ"), để người chơi tinh ý còn kịp rút.
+- **Lệch là đánh đổi, không phải sai.** Mỗi lựa chọn có `drift:N` phải có phần được ngay: cổ của đối thủ, quan hệ, tin tức, hoặc tránh được một trận nguyên tác nguy hiểm về sau. Ở mức "Tương lai mờ mịt", dị số rút 50% cơ duyên / 50% họa.
+- **Hãm vòng xoáy do chết.** Không đẩy người chơi về nguyên tác, chỉ hãm phần lệch không do họ chọn:
   - Thiền quay ngược: +6 → +3.
-  - Chọn đúng nguyên tác: −3 → −5.
-  - Lệch do chết không vượt quá 50 (chỉ lựa chọn của người chơi mới đẩy lên 75+).
-- **Lệch cao có bù.** Ở mức "Tương lai mờ mịt", dị số rút 50% cơ duyên / 50% họa (hiện khoảng 40/60). Mỗi dị số đã gặp cho +1 ngộ tính lần đầu.
+  - Lệch từ quay ngược, hậu quả trễ và dư âm cộng lại không vượt quá 50. Chỉ lựa chọn của người chơi mới đẩy lên 75+.
 - **Dò trước khi liều.** Làm sớm một phần PR 4: lựa chọn phụ "dò xét" ở 7 mốc có biến thể, cho biết mốc đó còn như ký ức không. Tốn 1 tâm cơ hoặc 1 lượt.
 - **Cổng kiểm tra mới.** Thêm vào cổng của mọi PR: `LECH=1 node tools/sim.cjs 300 6` thắng ≥ 12% và không ca kẹt vòng lặp. Bot bám truyện vẫn trong 15–35%.
 

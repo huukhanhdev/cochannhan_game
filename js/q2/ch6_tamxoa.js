@@ -121,7 +121,7 @@ q2_tx_batu:{canon:1,title:'Bá Vương Đương Thời',hint:'Thiết Bá Tu',g:
   ]},
 q2_tx_ket:{canon:1,title:'Danh chấn Nam Cương',hint:'Tiếng tăm lan truyền',g:'名',
   text:()=>S.f.batuChet?'Gần Tam Xoa, Thiết Bá Tu dùng tàn lực kích hoạt Thiết Quỹ cổ, giam kín Nhược Nam để bảo vệ nàng, rồi chết. Tứ lão hủy Thiết Quỹ đang nhốt Bạch Ngưng Băng để giữ Thiết Quỹ của Nhược Nam. Nàng bay tới bên ngươi. Tin Tiểu Thú Vương một mình giết Bá Vương Đương Thời chấn động khắp Nam Cương.':'Thế cục Tam Xoa vẫn căng như dây đàn. Người ta bàn tán về Tiểu Thú Vương, về đôi cánh xương sắt của hắn.',
-  choices:[{t:'Về hang tĩnh dưỡng, chờ kỳ mở kế tiếp',eff:()=>{S.f.baiVay=0;S.f.baiAway=0;q2Ending('q2_tieuthuvuong');return 'Chương sáu kết thúc.'}}]},
+  choices:[{t:'Về hang tĩnh dưỡng, chờ kỳ mở kế tiếp',eff:()=>{S.f.baiVay=0;S.f.baiAway=0;chapEnd('q2_ngu');return 'Chương sáu kết thúc.'}}]},
 
 // truyền thừa
 q2_kv_han:{title:'Hàn Bất Lưu',g:'寒',

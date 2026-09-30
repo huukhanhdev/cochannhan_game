@@ -38,5 +38,16 @@ Nguyên tắc: không đổi số tuần (27) và bảng `CANON`. Chỉ sửa n�
 ## GĐ6. Kiểm tra và phát hành
 - [x] 6.1 `tools/check.cjs`, `tools/sim.cjs` (canon + LECH), `tools/sim2.cjs`.
 - [x] 6.2 Thử trình duyệt (Playwright), không lỗi JS.
-- [ ] 6.3 Cập nhật bản test trên artifact.
-- [ ] 6.4 Commit, push nhánh, đưa lên `main`.
+- [x] 6.3 Cập nhật bản test trên artifact.
+- [x] 6.4 Commit, push nhánh, đưa lên `main`.
+
+## Kết quả (30/09/2026)
+- Bot nguyên tác Quyển 1 (`sim.cjs 100`): thắng trong 8 kiếp ~92–98%. Lúc thắng thường có Cường Thủ, Huyết Lô, Thiên Nguyên, Rết Vàng, Đâu Suất, Thạch Khiếu, Thiên Bồng. Kết `huyetlo_bai` chỉ ~15–25% (bot chọn ngẫu nhiên). Khó/dễ để cân bằng sau.
+- Bot lệch nguyên tác (`LECH=1`): ~83%.
+- Quyển 2 từ kho đầy đủ: 40/40 tới chương cuối. Từ kho tối thiểu: 37/40 (khó hơn, không kẹt).
+- Trình duyệt: các sự kiện mới, trận cuối "Xuân Thu Thiền lần hai" và nút sang Quyển 2 chạy, không lỗi JS.
+
+## Việc còn lại (chưa làm)
+- Cân bằng (DIFF 1.7, Quyển 1 hiện dễ).
+- Huyết Lô vẫn lấy được sớm ở lăng mộ (tuần 24); nguyên tác là cuối trận. Giữ làm nhánh game.
+- Chưa có cảnh Thiên Lý Địa Lang (ch 190), Lôi Dực, Chiếu Ảnh (không mang sang Quyển 2 nên để sau).

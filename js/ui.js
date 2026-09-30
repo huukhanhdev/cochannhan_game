@@ -260,6 +260,7 @@ function renderStage(){
     const id=S.evq[0],ev=EV[id];
     st.innerHTML=`<article class="story ${ev.canon?'canon':''}">
       <div class="story-art" style="background-image:url('${eventArt(id)}')">
+        ${speakerHTML(evSpeaker(id))}
         <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':'Kỳ ngộ'} · Tháng ${month()} · ${tuan()}</span><h2>${ev.title}</h2></div>
       </div>
       <div class="story-body">
@@ -317,10 +318,10 @@ function renderStage(){
   const acts=Object.fromEntries(ACTS.map(a=>[a.id,a]));
   const spots=MAP_SPOTS.filter(s=>s.minor||(acts[s.id]&&(!acts[s.id].show||acts[s.id].show())));
   st.innerHTML=`<div class="mapwrap">
-    <div class="map ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'storm':''}" style="background-image:url('${asset('art/bg_map.jpg')}')">
+    <div class="map ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'storm':''} ${mapMood()}" style="background-image:url('${asset('art/bg_map.jpg')}')">
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i>
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
-        ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}</div>
+        ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
       <div class="map-cap"><span class="label">Tháng ${month()} · ${tuan()}</span><h2>Tuần này đi đâu?</h2></div>
       ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':' · 1 tuần'}</span></button>`).join('')}
     </div>
@@ -340,6 +341,7 @@ function viewKey(){
   return 'map:'+S.turn;
 }
 function render(){
+  if(UI.batch)return;
   $('mainPanel').classList.toggle('in-combat',!!S.combat);
   $('stage').classList.toggle('ff-on',!!S.ff);
   if(!S.combat)Scene.stop();
@@ -352,6 +354,7 @@ function render(){
       el.classList.add('ink-in');el.addEventListener('animationend',()=>el.classList.remove('ink-in'),{once:true});
     }
   }
+  if(kind==='ev'&&UI.lastView!==k)typeStory();
   UI.lastView=k;
   renderTitle();
   showToast();

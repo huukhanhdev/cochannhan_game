@@ -28,9 +28,43 @@ const RIGS={
     ],
     lids:[[[.15,.434,.05,.008],[.15,.446,.05,.02]],[[.24,.434,.05,.008],[.24,.446,.05,.02]]],lidTint:0x3a3f46,
     eyes:[[.175,.457,0x7fb4ff,.32,'beast'],[.265,.457,0x7fb4ff,.32,'beast']]},
+  // Trùm (lộ trình giai đoạn 4). Không có mí mắt: chỉ đầu, hàm, chi và mắt phát sáng.
+  p_wolfking:{kind:'beast',mouth:[.26,.29],
+    bones:[
+      {n:'head',pivot:[.40,.34],caps:[[.28,.27,.42,.30,.07,.05]]},
+      {n:'jaw',parent:'head',pivot:[.30,.30],caps:[[.265,.315,.31,.325,.018,.018]]},
+      {n:'legFL',pivot:[.37,.60],caps:[[.36,.63,.33,.82,.035,.03]]},
+      {n:'legFR',pivot:[.48,.63],caps:[[.47,.66,.43,.84,.035,.03]]},
+      {n:'legBL',pivot:[.76,.66],caps:[[.77,.68,.83,.90,.035,.03]]},
+      {n:'tail',pivot:[.88,.62],caps:[[.89,.60,.96,.49,.035,.045]]},
+    ],
+    eyes:[[.31,.265,0xbfe0ff,.34,'beast']]},
+  p_bear:{kind:'beast',mouth:[.35,.16],
+    bones:[
+      {n:'head',pivot:[.42,.22],caps:[[.33,.12,.45,.16,.075,.05]]},
+      {n:'earR',parent:'head',pivot:[.52,.14],caps:[[.53,.13,.54,.11,.02,.02]]},
+      {n:'jaw',parent:'head',pivot:[.39,.17],caps:[[.34,.18,.39,.19,.02,.02]]},
+      {n:'legFL',pivot:[.32,.34],caps:[[.30,.36,.18,.37,.04,.035]]},
+      {n:'legFR',pivot:[.56,.33],caps:[[.55,.34,.47,.38,.04,.035]]},
+      {n:'legBL',pivot:[.40,.72],caps:[[.39,.74,.35,.92,.045,.03]]},
+      {n:'legBR',pivot:[.71,.72],caps:[[.72,.74,.79,.92,.045,.03]]},
+    ],
+    eyes:[[.38,.112,0xffb070,.3,'beast']]},
+  p_bai:{kind:'human',
+    bones:[
+      {n:'head',pivot:[.39,.33],caps:[[.37,.24,.40,.12,.075,.05]]},
+      {n:'hair',parent:'head',pivot:[.50,.20],caps:[[.55,.35,.80,.55,.05,.06]]},
+    ],
+    eyes:[[.312,.241,0xbfe8ff,.08],[.375,.237,0xbfe8ff,.08]]},
+  p_gialao:{kind:'human',
+    bones:[{n:'head',pivot:[.51,.29],caps:[[.51,.21,.51,.06,.09,.05]]}],
+    eyes:[[.475,.197,0xffe0a0,.08],[.55,.197,0xffe0a0,.08]]},
+  p_madutam:{kind:'human',
+    bones:[{n:'head',pivot:[.51,.30],caps:[[.47,.20,.46,.12,.07,.05]]}],
+    eyes:[[.444,.19,0xff6a50,.09],[.528,.184,0xff6a50,.09]]},
 };
 // Tranh chưa gắn xương: chỉ chọn kiểu uốn (người hay thú)
-const LIVING_KIND={p_boar:'beast',p_bear:'beast',p_wolfking:'beast',p_jar:'beast',p_blood:'human'};
+const LIVING_KIND={p_boar:'beast',p_jar:'beast',p_blood:'human'};
 
 const LIV={
   smooth:x=>x<=0?1:x>=1?0:1-x*x*(3-2*x),

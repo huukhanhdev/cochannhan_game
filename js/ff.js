@@ -121,24 +121,8 @@ function ffFight(){
   if(S.over==='dead'){S.ff=null;return false}
   return ffNext();
 }
-// Cách đánh tự động: giống người chơi máy trong tools/sim.cjs
-function ffCombatAction(){
-  const c=S.combat,hpR=S.hp/maxHp();
-  const gus=S.gu.map((g,i)=>({i,k:g.k,d:GU[g.k]}));
-  const ready=x=>guReady(x.k)&&S.ess>=guCostIdx(x.i);
-  const guard=gus.find(x=>x.d.t==='guard'&&ready(x));
-  const heal=gus.find(x=>x.d.t==='heal'&&ready(x));
-  const atks=gus.filter(x=>x.d.t==='attack'&&ready(x)).sort((a,b)=>b.d.dmg-a.d.dmg);
-  const combo=COMBOS.find(cb=>(META.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k))&&guReady(cb.id)&&S.ess>=costOf(cb.cost)&&cb.dmg);
-  if(hpR<.45&&heal)return playerAct('gu',heal.i);
-  if(hpR<.45&&S.herbs>0&&guReady('herb'))return playerAct('herb');
-  if((c.intent==='heavy'||(c.intent==='skill'&&['thunder','charge','rage'].includes(c.sk)))&&guard&&c.shield<=0)return playerAct('gu',guard.i);
-  if(c.intent==='guard'&&!(c.stun>0)&&guard&&c.shield<=0)return playerAct('gu',guard.i);
-  if(combo)return playerAct('combo',combo.id);
-  if(atks.length)return playerAct('gu',atks[0].i);
-  if(S.stones>=5&&S.ess<10)return playerAct('absorb');
-  return playerAct('strike');
-}
+// Cách đánh tự động: dùng chung với nút Tự đánh (auto.js)
+function ffCombatAction(){return autoAct()}
 
 /* ---------- giao diện ---------- */
 function ffOfferHTML(){

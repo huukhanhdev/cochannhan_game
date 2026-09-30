@@ -101,12 +101,22 @@ function startStone(id){
   log(`Mua khối ${st.n} giá ${st.price} nguyên thạch.`,'gold');
   saveAll();render();
 }
+// Mượn người soi: tốn thêm một lần giá đá, đổi lấy mắt nhìn chính xác hơn khi cắt từng nhát.
+function stoneHire(){
+  const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);
+  if(m.hired)return;
+  if(S.stones<st.price)return log('Không đủ nguyên thạch để mượn người soi.','danger');
+  S.stones-=st.price;if(window.SFX)SFX.coin();
+  m.hired=true;
+  log(`Thuê một thợ đá mắt tinh, trả ${st.price} nguyên thạch. Từ giờ mỗi nhát cắt ngươi nhìn đúng phần lớn vết bên trong.`,'gold');
+}
 function stoneAct(a){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);
   if(a==='cut'){
     if(m.cuts>=m.max)return;
     m.cuts++;if(window.SFX)SFX.crack();
-    const truth=Math.random()<stoneAccuracy();
+    const acc=m.hired?clamp(stoneAccuracy()+.3,.6,.97):stoneAccuracy();
+    const truth=Math.random()<acc;
     const shown=truth?m.content:pick(['phe','thach','co','doc'].filter(k=>k!==m.content));
     m.clues.push({k:shown,t:pick(STONE_CLUE[shown])});
     m.offer=stoneOffer(m,st);
@@ -115,20 +125,11 @@ function stoneAct(a){
     S.stones+=m.offer;log(`Bán khối đá đang cắt dở cho Cổ gia được ${m.offer} nguyên thạch.`,'gold');
     S.mg=null;S.panel='gamble';saveAll();render();return;
   }else if(a==='open'){return stoneOpen()}
-  else if(a==='hire'){
-    m.hired=!m.hired;
-  }
+  else if(a==='hire'){stoneHire();saveAll();render();return}
   saveAll();render();
 }
 function stoneOpen(){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);S.mg=null;S.panel='gamble';
-  const hireBonus = m.hired ? 0.3 : 0;
-  const succRate = m.content==='thach'?0.9: m.content==='co'?0.8: m.content==='doc'?0.3:0;
-  // Hire expert increases success rate for identifying
-  if(m.hired){
-    S.stones -= st.price; // Pay double
-    if(window.SFX)SFX.coin();
-  }
   if(m.content==='thach'){const v=Math.round(st.price*(1.4+Math.random()*1.0));S.stones+=v;if(v>=60)S.f.stoneWin=Math.max(S.f.stoneWin||0,v);learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
   else if(m.content==='co'){
     const k=pick(STONE_POOL[m.id]||STONE_POOL.thach_re);gainGu(k,true);if((GU[k].r||1)>=2||(GU[k].p||0)>=100)S.f.stoneGu=k;learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
@@ -259,17 +260,16 @@ function renderMG(st){
     </div>`;
   }else if(m.type==='stone'){
     const st_=STONES_GAMBLE.find(x=>x.id===m.id);
-    const baseSucc = (m.content==='thach'?0.9: m.content==='co'?0.8: m.content==='doc'?0.3:0);
-    const hireSucc = Math.min(0.95, baseSucc + 0.3);
+    const acc=m.hired?clamp(stoneAccuracy()+.3,.6,.97):stoneAccuracy();
     st.innerHTML=`<div class="paper mg stone">
       <div class="headrow"><div><span class="label">Phường Đoán Thạch · nhát ${m.cuts} / ${m.max}</span><h2 class="title">${st_.n}</h2></div></div>
       <div class="rock"><div class="rock-body cuts-${m.cuts}">${Array.from({length:m.cuts},(_,i)=>`<i class="cut c${i}"></i>`).join('')}</div></div>
-      <div class="clues">${m.clues.length?m.clues.map((c,i)=>`<p><b>Nhát ${i+1}.</b> ${c.t}</p>`).join(''):'<p class="dimt">Khối đá còn nguyên. Độ chính xác nhìn: '+Math.round(stoneAccuracy()*100)+'% (ngộ tính, kinh nghiệm).</p>'}</div>
+      <div class="clues">${m.clues.length?m.clues.map((c,i)=>`<p><b>Nhát ${i+1}.</b> ${c.t}</p>`).join(''):`<p class="dimt">Khối đá còn nguyên. Mắt ngươi nhìn trúng khoảng <b>${Math.round(acc*100)}%</b> (ngộ tính, kinh nghiệm${m.hired?', thợ đá':''}).</p>`}</div>
       <div class="mg-acts">
         <button class="choice" data-mg="cut" ${m.cuts>=m.max?'disabled':''}><span class="ct">${m.cuts?'Cắt nhát tiếp theo':'Cắt nhát đầu'}</span><span class="cmeta"><span class="odds m">Lộ thêm một dấu hiệu</span></span></button>
         <button class="choice" data-mg="sell"><span class="ct">Bán cho người thu mua Cổ gia</span><span class="cmeta"><span class="odds e">Trả ${m.offer} nguyên thạch</span></span></button>
         ${m.cuts?`<button class="choice" data-mg="open"><span class="ct">Bổ đôi, xem luôn lõi đá</span><span class="cmeta"><span class="odds h">Được ăn cả, ngã về không</span></span></button>`:''}
-        <label class="hire-option"><input type="checkbox" data-mg="hire" ${m.hired?'checked':''}> Mượn người soi <span class="text-warning">(+${st_.price} NT, ${Math.round(hireSucc*100)}% thành công)</span></label>
+        ${m.hired?'':`<button class="choice" data-mg="hire" ${S.stones<st_.price?'disabled':''}><span class="ct">Thuê thợ đá mắt tinh, cắt giúp ngươi</span><span class="cmeta"><span class="odds m">Tốn thêm ${st_.price} nguyên thạch</span><span class="odds e">Nhìn trúng ${Math.round(acc*100)}% → ${Math.round(clamp(stoneAccuracy()+.3,.6,.97)*100)}%</span></span></button>`}
       </div></div>`;
   }else if(m.type==='break'){
     const baseRate = BREAK_BASE_SUCC+(S.ngo-6)*.02+((S.tuchat||44)-44)*0.005 + (m.failStreak||0)*0.15;
@@ -283,7 +283,7 @@ function renderMG(st){
         <div class="timing-track"><div id="timing-needle" class="needle"></div><div class="hit-zone"></div></div>
         <div class="mg-hint">Nhấn <kbd>Space</kbd> khi kim vào vùng xanh (+15% thành công)</div>
       </div>
-      <div class="mg-succ-rate">Tỷ lệ ước tính: <b>${Math.round(estSucc*100)}%</b> ${m.timingBonus?`<span class="text-success">(+${m.timingBonus}% timing)</span>`:''}</div>
+      <div class="mg-succ-rate">Tỷ lệ ước tính: <b>${Math.round(estSucc*100)}%</b>${m.timingBonus?` <span class="good">(+${m.timingBonus}% nhịp chuẩn)</span>`:''}</div>
       <div class="mg-acts">${Object.entries(IMPACT).map(([k,v])=>`<button class="choice" data-mg="${k}"><span class="ct">${v.n}</span><span class="cmeta"><span class="odds e">Bích khiếu −${v.dmg[0]}~${v.dmg[1]}</span><span class="odds ${breakRisk(k)>.2?'x':breakRisk(k)>.1?'h':'m'}">Phản phệ ${Math.round(breakRisk(k)*100)}%</span></span></button>`).join('')}</div>
       <div class="mg-log">${m.log.slice(-3).map(l=>`<p>${esc(l)}</p>`).join('')}</div>
       <div class="map-foot"><button class="btn ghost" data-mg="auto">Đột phá nhanh (${Math.round(Math.min(BREAK_MAX_SUCC,baseRate)*100)}%)</button></div>

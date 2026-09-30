@@ -424,6 +424,20 @@
   .spot .stip{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);width:max-content;max-width:220px;padding:6px 9px;border-radius:5px;background:#0b0f11;border:1px solid var(--line);font-size:12px;line-height:1.4;color:var(--dim);white-space:normal;opacity:0;pointer-events:none;transition:opacity .15s}
   .spot:hover .stip,.spot:focus-visible .stip{opacity:1}
   .map-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .result-card{max-width:680px;margin:0 auto;animation:resIn .35s ease-out}
+  .result-card .res-choice{margin:.2em 0 .8em;opacity:.85}
+  .result-card .res-lines{display:flex;flex-direction:column;gap:.45em;margin-bottom:1em}
+  .result-card .res-line{margin:0;line-height:1.55}
+  .result-card .res-line.roll{font-size:.88em;opacity:.7;font-style:italic}
+  .result-card .res-line.danger{color:#e89a8a}
+  .result-card .res-line.good,.result-card .res-line.gold,.result-card .res-line.big{color:#e8cf8a}
+  .result-card .res-line.mem{color:#b9a8e8}
+  .choice small.lock{color:#e8b07a;opacity:.95}
+  .res-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1em}
+  .rchip{padding:3px 10px;border-radius:999px;font-size:.9em;border:1px solid currentColor}
+  .rchip.good{color:#9fd49a}.rchip.bad{color:#e8847a}.rchip.gu{color:#e8cf8a}.rchip.mem{color:#b9a8e8}
+  @keyframes resIn{from{opacity:0;transform:translateY(8px)}}
+  @media (prefers-reduced-motion:reduce){.result-card{animation:none}}
   .map-foot .pend-btn{animation:pendGlow 2.4s ease-in-out infinite}
   @keyframes pendGlow{50%{box-shadow:0 0 14px var(--gold,#c9a45c)}}
   @media (prefers-reduced-motion:reduce){.map-foot .pend-btn{animation:none}}

@@ -135,7 +135,7 @@ function act2(id){
     if(sp.foes&&Math.random()<(sp.foeP??.6))fight2(pick(sp.foes),{elite:Math.random()<.12});
     else log(sp.quiet||'Không có chuyện gì.','sys');
   }
-  spendAct();saveAll();advance();render();return true;
+  spendAct();resEnd();saveAll();advance();render();return true;
 }
 
 /* ---------- Bạch Ngưng Băng đồng hành ---------- */

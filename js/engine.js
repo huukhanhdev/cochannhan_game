@@ -116,7 +116,71 @@ function talentName(tc){
 }
 function month(){return Math.ceil(S.turn/3)}
 function tuan(){return TUAN[(S.turn-1)%3]}
-function log(t,c){if(!t)return;S.log.push({t,c:c||''});if(S.log.length>160)S.log.splice(0,S.log.length-160)}
+/* ---------- điều kiện của lựa chọn ---------- */
+// need:{chuyen, stones, herbs, blood, gu, mem, rel:[npc,giá trị], danh, tamco, ngo, satphat, tuchat, flag, chose, t}
+//  - gu: mã cổ hoặc mảng mã cổ cần có · flag: tên cờ trong S.f ('!x' là phải chưa có)
+//  - chose: 'mã sự kiện:khóa' hoặc mảng, lựa chọn đã chọn trước đó trong kiếp này (khóa = c.k, hoặc nút go của cảnh, hoặc chữ lựa chọn)
+//  - t: câu giải thích thay cho câu tự sinh (dùng cho flag, chose)
+// Không đủ thì lựa chọn vẫn hiện nhưng bị khóa, ghi rõ còn thiếu gì: người chơi biết có nhánh đó để lần sau đi tới.
+const NEED_STAT={danh:'danh vọng',tamco:'tâm cơ',ngo:'ngộ tính',satphat:'sát phạt',tuchat:'tư chất',herbs:'linh dược',blood:'huyết khí'};
+function needMiss(n){
+  if(!n)return [];
+  const m=[],arr=x=>Array.isArray(x)?x:[x];
+  if(n.chuyen&&S.chuyen<n.chuyen)m.push(`Cần ${CH[n.chuyen]} chuyển`);
+  if(n.stones&&S.stones<n.stones)m.push(`Cần ${n.stones} nguyên thạch`);
+  for(const k in NEED_STAT)if(n[k]!==undefined&&(S[k]||0)<n[k])m.push(`Cần ${NEED_STAT[k]} ${n[k]}`);
+  if(n.gu)arr(n.gu).forEach(k=>{if(!hasGu(k))m.push(`Cần ${GU[k]?GU[k].n:k}`)});
+  if(n.mem)arr(n.mem).forEach(k=>{if(!mem(k))m.push(`Cần ký ức: ${MEM[k]?MEM[k].n:k}`)});
+  if(n.rel&&((S.rel||{})[n.rel[0]]||0)<n.rel[1])m.push(`Cần ${NPC[n.rel[0]]?NPC[n.rel[0]].n:n.rel[0]} tin ngươi (${n.rel[1]})`);
+  const flagOk=f=>f[0]==='!'?!S.f[f.slice(1)]:!!S.f[f];
+  if(n.flag&&!arr(n.flag).every(flagOk))m.push(n.t||'Chưa đủ điều kiện');
+  if(n.chose&&!arr(n.chose).every(x=>{const [e,k]=x.split(':');return ((S.chosen||{})[e]||[]).includes(k)}))m.push(n.t||'Cần một lựa chọn trước đó');
+  return m;
+}
+// Gắn need vào req/reqT để giao diện khóa lựa chọn và ghi lý do
+function withNeed(list){
+  return (list||[]).map(c=>{
+    if(!c||!c.need)return c;
+    const miss=needMiss(c.need),r0=c.req;
+    return Object.assign({},c,{req:()=>!needMiss(c.need).length&&(!r0||r0()),reqT:miss.length?miss.join(' · '):c.reqT});
+  });
+}
+// Ghi lại lựa chọn đã chọn trong kiếp này (Thiền quay ngược thì ảnh chụp tuần tự khôi phục)
+function remember(evId,c){if(!c)return;const k=c.k||c.go||c.t;(S.chosen=S.chosen||{})[evId]=((S.chosen||{})[evId]||[]).concat(k)}
+
+/* ---------- thẻ kết quả ---------- */
+// Sau mỗi lựa chọn, cảnh, việc trong tuần, trận thắng: hiện rõ chuyện gì vừa xảy ra và chỉ số đổi thế nào.
+// Nhật ký chỉ để tra lại. Chuỗi sự kiện nối nhau (việc → sự kiện → trận) gom thành một thẻ.
+const RES_STATS=[['stones','nguyên thạch'],['hp','khí huyết'],['ess','chân nguyên'],['prog','tu vi'],['danh','danh vọng'],['susp','hiềm nghi',1],
+  ['tamco','tâm cơ'],['ngo','ngộ tính'],['satphat','sát phạt'],['tuchat','tư chất'],['blood','huyết khí'],['herbs','linh dược'],['wine','tứ vị tửu']];
+function resSnap(){const o={gu:S.gu.map(g=>g.k),mem:Object.keys(S.mem||{}),rel:Object.assign({},S.rel),rank:S.chuyen*4+S.giai};RES_STATS.forEach(([k])=>o[k]=S[k]||0);return o}
+function resBegin(title){if(!S||S.ff)return;if(S.rcap){if(title)S.rcap.title=title;return}S.rcap={q:S.logSeq||0,snap:resSnap(),title:title||'',skip:[],from:null}}
+function resFightStart(){if(S.rcap&&S.rcap.from==null)S.rcap.from=S.logSeq||0}
+function resFightEnd(){if(S.rcap&&S.rcap.from!=null){S.rcap.skip.push([S.rcap.from,S.logSeq||0]);S.rcap.from=null}}
+function resEnd(){
+  const r=S.rcap;if(!r)return;
+  if(S.combat||S.mg||S.traitOpts||S.evq.length)return; // chuyện còn tiếp: gom vào cùng một thẻ
+  S.rcap=null;if(S.over||S.ff)return;
+  const skip=q=>r.skip.some(([a,b])=>q>a&&q<=b);
+  const all=S.log.filter(l=>l.q>r.q&&!skip(l.q)&&l.c!=='day');
+  const choice=all.filter(l=>l.c==='choice').map(l=>l.t.replace(/^【[^】]*】\s*/,''));
+  const lines=all.filter(l=>l.c!=='choice').map(l=>({t:l.t,c:l.c}));
+  const a=r.snap,chips=[],rank=S.chuyen*4+S.giai;
+  for(const [k,n,bad] of RES_STATS){
+    if(k==='prog'&&rank!==a.rank)continue;
+    const d=Math.round((S[k]||0)-a[k]);if(!d)continue;
+    chips.push({t:`${n} ${d>0?'+':'−'}${Math.abs(d)}`,good:bad?d<0:d>0});
+  }
+  if(rank!==a.rank)chips.unshift({t:`Đạt ${rankName()}`,good:rank>a.rank});
+  const had=a.gu.slice();
+  S.gu.forEach(g=>{const i=had.indexOf(g.k);if(i>=0)had.splice(i,1);else chips.push({t:`Nhận ${GU[g.k].n}`,good:true,gu:1})});
+  had.forEach(k=>chips.push({t:`Mất ${GU[k]?GU[k].n:k}`,good:false,gu:1}));
+  Object.keys(S.mem||{}).filter(k=>!a.mem.includes(k)).forEach(k=>chips.push({t:`Ký ức: ${MEM[k]?MEM[k].n:k}`,good:true,mem:1}));
+  for(const k in S.rel){const d=(S.rel[k]||0)-(a.rel[k]||0);if(d)chips.push({t:`${NPC[k]?NPC[k].n:k} ${d>0?'+':'−'}${Math.abs(d)}`,good:d>0,rel:1})}
+  if(!lines.length&&!chips.length)return;
+  S.result={title:r.title,choice:choice[choice.length-1]||'',lines:lines.slice(-8),chips};
+}
+function log(t,c){if(!t)return;S.logSeq=(S.logSeq||0)+1;S.log.push({t,c:c||'',q:S.logSeq});if(S.log.length>160)S.log.splice(0,S.log.length-160)}
 function chance(a,dc,b){return clamp(Math.round((21-(dc-S[a]-(b||0)))/20*100),5,100)}
 function roll(a,dc,b){
   b=b||0;const d=rand(1,20),tot=d+S[a]+b,ok=tot>=dc;
@@ -192,6 +256,8 @@ function startTurn(){
   laterTick();
   const cid=(S.canon||CANON)[S.turn];
   if(cid&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid))S.evq.push(cid);else S.pend=cid}
+  // Nhân tới muộn: có Tửu Trùng sau tuần của mốc, Kim Sinh vẫn tìm tới khi thương đội còn trên núi (một lần)
+  if(!S.pend&&S.f.caravan&&S.turn>canonTurnOf('c_kimsinh')&&EV.c_kimsinh.cond())S.pend='c_kimsinh';
   if((S.f.killedJKS||S.f.jksEscaped)&&!S.f.giaveDone&&S.turn>=14&&(S.susp>=45||S.turn>=18)&&!S.evq.includes('x_giave')){S.f.giaveDone=1;S.evq.push('x_giave')}
   if(S.f.tramthuyAmbush&&S.turn>=22&&!S.evq.length&&Math.random()<.5){S.f.tramthuyAmbush=0;S.evq.push('x_tramthuy')}
   // Dị số chen vào trước tuyến NPC khi tuần này chưa có mốc nguyên tác
@@ -258,6 +324,7 @@ function initScene(id){
   const ev=EV[id];
   if(!ev||!ev.scene)return null;
   if(S.sc&&S.sc.id===id)return S.sc;
+  resBegin(ev.title);
   S.sc={
     id,
     node:ev.scene.start,
@@ -283,7 +350,7 @@ function scChoices(ev){
   if(!node||!node.choices)return [];
   const list=typeof node.choices==='function'?node.choices():node.choices;
   // _i: vị trí gốc trong nút, để đánh dấu lựa chọn dò xét đã dùng không bị lệch khi danh sách co lại
-  return list.map((c,i)=>Object.assign({},c,{_i:i})).filter(c=>{
+  return withNeed(list).map((c,i)=>Object.assign({},c,{_i:i})).filter(c=>{
     if(c.hidden&&(!S.sc.flags||!S.sc.flags[c.hidden]))return false;
     if(c.stay&&((S.sc.budget||0)<=0||(S.sc.picked&&S.sc.picked[S.sc.node+':'+c._i])))return false;
     if(c.mem&&!mem(c.mem))return false;
@@ -329,29 +396,32 @@ function scChoose(i){
     if(S.sc.budget<=0)return;
     S.sc.budget--;
     (S.sc.picked=S.sc.picked||{})[S.sc.node+':'+c._i]=1;
-    if(c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
+    if(c.flag&&!c.check)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
     if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
     if(c.drift)driftAdd(c.drift);
     log(`【${ev.title}】 ${c.t}.`,'choice');
+    const said=[];
     if(c.check){
       const r=roll(c.check[0],c.check[1],c.bonus?c.bonus():0);
-      log(r.text,'roll');
-      const txt=r.ok?(c.ok?c.ok():''):(c.fail?c.fail():'');
-      if(txt)log(txt);
+      log(r.text,'roll');said.push(r.text);
+      const txt=r.ok?(c.ok?c.ok():(typeof c.say==='function'?c.say():c.say)||''):(c.fail?c.fail():'Ngươi không nhận ra điều gì.');
+      if(txt){log(txt);said.push(txt)}
       if(r.ok&&c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
     }else{
-      if(c.say)log(typeof c.say==='function'?c.say():c.say);
-      if(c.eff){const txt=c.eff();if(txt)log(txt)}
+      if(c.say){const t=typeof c.say==='function'?c.say():c.say;log(t);said.push(t)}
+      if(c.eff){const txt=c.eff();if(txt){log(txt);said.push(txt)}}
     }
     if(c.talk){
       S.sc.subTalk=c.talk;
       S.sc.subIdx=0;
+    }else if(said.length){
+      S.sc.subTalk=said.map(t=>['',t]);S.sc.subIdx=said.length-1;
     }
     saveAll();render();
     return;
   }
 
-  log(`【${ev.title}】 ${c.t}.`,'choice');
+  log(`【${ev.title}】 ${c.t}.`,'choice');remember(id,c);
   if(c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
   if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
   if(c.tag==='ma')S.dao=clamp(S.dao+(c.dao||8),-100,100);
@@ -413,7 +483,7 @@ function scFinish(noCheck){
   S.sceneN=(S.sceneN||0)+1;
   S.stones=Math.max(0,S.stones);
   if(S.hp<=0&&!S.combat){die(`${ev?ev.title:'Số mệnh'}`);return}
-  saveAll();advance();render();
+  resEnd();saveAll();advance();render();
 }
 
 /* ---------- sự kiện ---------- */
@@ -424,7 +494,7 @@ function choicesOf(ev){
     if(!chs.length)return [{t:'Tiếp tục',go:null}];
     return chs;
   }
-  let c=typeof ev.choices==='function'?ev.choices():ev.choices;c=typeof probeChoices==='function'?probeChoices(ev,c):c;
+  let c=typeof ev.choices==='function'?ev.choices():ev.choices;c=typeof probeChoices==='function'?probeChoices(ev,c):c;c=withNeed(c);
   // Không lựa chọn nào làm được thì luôn có đường bỏ qua, tránh kẹt
   if(c.length&&c.every(x=>x.stay||(x.req&&!x.req())))c=[...c,{t:'Không làm được gì, đành bỏ qua',eff:()=>'Ngươi đành để cơ hội trôi qua.'}];
   return c}
@@ -437,6 +507,7 @@ function choose(i){
   if(!c||(c.req&&!c.req()))return;
   // Lựa chọn phụ (stay): cảnh vẫn mở, lựa chọn đó biến mất
   if(c.stay){(S.picked=S.picked||{})[id+':'+c.stay]=1;log(`【${ev.title}】 ${c.t}.`,'choice');if(c.check){const r=roll(c.check[0],c.check[1],c.bonus?c.bonus():0);log(r.text,'roll');log(r.ok?c.ok():c.fail())}else log(c.eff());saveAll();render();return}
+  resBegin(ev.title);remember(id,c);
   ffRememberChoice(id,c);
   S.evq.shift();S.sceneN=(S.sceneN||0)+1;
   if(ev.canon&&chs.some(x=>x.canon)){if(c.canon)S.canonHit++;else S.canonMiss++}
@@ -457,7 +528,7 @@ function choose(i){
   if(ev.post)ev.post();
   S.stones=Math.max(0,S.stones);
   if(S.hp<=0&&!S.combat){die(`${ev.title}`);return}
-  saveAll();advance();render();
+  resEnd();saveAll();advance();render();
 }
 // Rút một sự kiện ngẫu nhiên của nơi chốn loc.
 // Chống lặp: sự kiện vừa ra phải chờ hồi chiêu (mặc định nửa cỡ kho, tối đa 6 tuần);
@@ -506,6 +577,7 @@ function act(id){
   if(S.combat||S.over||S.evq.length||S.ap<=0||S.traitOpts||S.mg)return;
   ffRecord('act',{a:id});
   // Quyển 2 chỉ có hành động của chương, cộng bế quan và tĩnh dưỡng
+  resBegin((ACTS.find(a=>a.id===id)||{}).n||'');
   if(S.book===2&&(act2(id)||!['tuluyen','nghi'].includes(id)))return;
   S.panel=null;
   const ci=(S.cache||[]).findIndex(c=>c.loc===id&&!c.done&&S.turn>=c.from&&S.turn<=c.to);
@@ -542,7 +614,7 @@ function act(id){
       log('Ngươi tĩnh dưỡng, nghe gió núi thổi qua rừng trúc.','sys');break;
   }
   spendAct();
-  saveAll();advance();render();
+  resEnd();saveAll();advance();render();
 }
 // Mỗi tuần (Quyển 2: mỗi đơn vị thời gian của chương) có AP_WEEK việc
 function spendAct(all){S.ap=all?0:S.ap-1}
@@ -558,6 +630,7 @@ function absorb(){
 /* ---------- tu luyện ---------- */
 function cultMaxStones(){return Math.ceil(maxEss()/5)}
 function cultivate(st){
+  resBegin('Bế quan');
   S.stones=Math.max(0,S.stones);
   if(st>S.stones||st>cultMaxStones())return;
   ffRecord('cult',{n:st});
@@ -571,7 +644,7 @@ function cultivate(st){
   });
   levelUp();
   S.panel=null;spendAct(true);
-  saveAll();advance();render();
+  resEnd();saveAll();advance();render();
 }
 function levelUp(){
   while(S.prog>=need()){
@@ -687,7 +760,7 @@ function refine(i){
 
 /* ---------- chiến đấu ---------- */
 function fight(k,o){
-  o=o||{};
+  o=o||{};resFightStart();
   const e=EN[k],ai=EAI[k]||{},sc=o.scale?1+.45*(S.chuyen-1):1,elite=!!o.elite;
   // Quyển 1: độ khó tăng dần theo tuần (tuần 1 ×0,8, tuần 27 ×1,2 so với DIFF)
   const f=sc*(o.mod||1)*(elite?1.3:1)*(S.book===2?DIFF.q2:.8+.4*Math.min(1,S.turn/FINAL_TURN));
@@ -773,9 +846,10 @@ function enemySkill(c){
 // Địch chỉ thử tay (spare): khi khí huyết ngươi tụt dưới ngưỡng thì dừng, không giết
 function spared(c){
   if(!c.spare||S.hp>maxHp()*c.spare)return false;
+  resBegin(c.n);resFightEnd();
   S.hp=Math.max(1,S.hp);log(c.spareT||`${c.n} thu tay, bỏ đi.`,'danger');
   if(c.spareAfter&&AFTER[c.spareAfter])AFTER[c.spareAfter]();
-  S.combat=null;checkInjury();saveAll();advance();render();return true;
+  S.combat=null;checkInjury();resEnd();saveAll();advance();render();return true;
 }
 function playerAct(type,arg){
   const c=S.combat;if(!c||FX.busy||c.ko)return;
@@ -867,6 +941,7 @@ function playerAct(type,arg){
   }else if(type==='flee'){
     if(!c.flee)return;
     if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0)){
+      resBegin('Thoát khỏi '+c.n);resFightEnd();
       log('Ngươi rút vào rừng trúc, cắt đuôi được đối thủ.','sys');
       FX.toastMsg={g:'走',t:'Thoát khỏi '+c.n,cls:'run'};
       if(S.sc&&c.sceneFlee){
@@ -875,7 +950,7 @@ function playerAct(type,arg){
           S.sc.node=c.sceneFlee;S.sc.talkIdx=0;S.sc.subTalk=null;
         }
       }
-      S.combat=null;checkInjury();saveAll();advance();render();return;
+      S.combat=null;checkInjury();resEnd();saveAll();advance();render();return;
     }
     log('Chạy trốn thất bại!','danger');
   }
@@ -943,6 +1018,7 @@ function win(){
       S.sc.node=c.sceneWin;S.sc.talkIdx=0;S.sc.subTalk=null;
     }
   }
+  resBegin('Hạ gục '+c.n);resFightEnd();
   const st=Math.round(rand(c.st[0],c.st[1])*((S.mod&&S.mod.win)||1)*(W('linhmach')?.8:1));
   const bl=c.bl+(S.f.hunter&&BEASTS.has(c.k)?1:0);
   S.stones+=st;S.blood+=bl;
@@ -955,7 +1031,7 @@ function win(){
   }
   if(Math.random()<.25){S.satphat++;log('Trận chiến mài giũa bản năng. Sát phạt +1.','good')}
   if(c.after&&AFTER[c.after])AFTER[c.after]();
-  saveAll();advance();render();
+  resEnd();saveAll();advance();render();
 }
 
 function checkInjury(){
@@ -976,6 +1052,7 @@ function pickTrait(k){
   cicadaSnap();saveAll();render();
 }
 function die(cause){
+  S.rcap=null;S.result=null;
   if(S.combat&&!S.combat.pko&&window.PIXI&&$('arena')&&!RM){const c=S.combat;c.pko=1;c.cause=cause;FX.busy=true;FX.q({type:'pdie'});saveAll();render();setTimeout(()=>{FX.busy=false;if(S.combat===c)die(cause)},1100);return}
   const back=cicadaReady()&&(S.snaps||[]).length>0,foe=S.combat&&S.combat.k;
   S.combat=null;S.hp=0;S.evq=[];S.over=back?'rewind':'dead';S.ff=null;FX.queue.length=0;
@@ -1052,7 +1129,8 @@ document.addEventListener('click',ev=>{
   const d=b.dataset;
   if(d.a){
     switch(d.a){
-      case 'close':S.panel=null;saveAll();advance();render();return;
+      case 'close':S.panel=null;resEnd();saveAll();advance();render();return;
+      case 'resok':S.result=null;saveAll();render();return;
       case 'market':S.panel='market';render();return;
       case 'gamble':S.panel='gamble';render();return;
       case 'refine':S.panel='refine';render();return;
@@ -1091,6 +1169,7 @@ document.addEventListener('click',ev=>{
   if(talkBox&&!ev.target.closest('button'))scNextTalk();
 });
 document.addEventListener('keydown',ev=>{
+  if((ev.key===' '||ev.key==='Enter')&&S&&S.result&&!S.combat){ev.preventDefault();S.result=null;saveAll();render();return}
   if((ev.key===' '||ev.key==='Enter')&&S&&S.sc&&!S.combat&&!S.over){
     const scEv=EV[S.sc.id];
     if(scEv&&scEv.scene){

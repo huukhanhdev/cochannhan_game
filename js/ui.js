@@ -19,10 +19,23 @@ const GU_META={
 // Chân dung NPC từ tranh nhân vật
 const NPC_IMG={
   toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
-  phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_tiexueleng',nhatdai:'n_nhatdai',
+  phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',
+  nhuocnam: () => (typeof S !== 'undefined' && S.book === 2 ? 'n_nhuocnam_q2' : 'n_thietnhuocnam'),
+  tiexueleng:'n_tiexueleng',nhatdai:'n_nhatdai',
   tramthuy:'n_tramthuy',hoatuu:'n_hoatuu',
   bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.book === 2) ? 'n_bai_nu' : 'n_bai'),
-  bainu: 'n_bai_nu', gialao: 'n_toctruong'
+  bainu: 'n_bai_nu', gialao: 'n_toctruong',
+  // Quyển 2 (Thương Gia Thành & Tam Vương Phúc Địa)
+  tamtu:'n_shangxinci',shangxinci:'n_shangxinci',
+  yenphi:'n_shangyanfei',shangyanfei:'n_shangyanfei',
+  nguyuong:'n_weiyang',weiyang:'n_weiyang',
+  kimhoang:'n_fengjinhuang',fengjinhuang:'n_fengjinhuang',
+  tieuhotien:'n_littlehu',littlehu:'n_littlehu',hotien:'n_littlehu',
+  baquy:'n_baquy',bagui:'n_baquy',
+  tieumang:'n_xiaomang',xiaomang:'n_xiaomang',
+  himi:'n_humeier',humeier:'n_humeier',
+  phongthienngu:'n_fengtianyu',fengtianyu:'n_fengtianyu',
+  cuucuu:'n_choujiu',choujiu:'n_choujiu'
 };
 const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',
@@ -220,7 +233,7 @@ function choiceBtn(c,i,evId){
     const lbl=S.ngo>=10?`${p}%`:p>=75?'Dễ':p>=50?'Vừa':p>=25?'Khó':'Rất khó';
     chk=`<span class="odds ${p>=75?'e':p>=50?'m':p>=25?'h':'x'}">${ATTR[c.check[0]]} · ${lbl}</span>`;
   }
-  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${!ok&&c.reqT?`<small>${c.reqT}</small>`:''}</span></button>`;
+  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${!ok&&c.reqT?`<small class="lock">🔒 ${esc(c.reqT)}</small>`:''}</span></button>`;
 }
 
 function scChoiceBtn(c, i, sc){
@@ -238,12 +251,12 @@ function scChoiceBtn(c, i, sc){
   if(c.stay && sc.budget <= 0) ok = false;
   if(c.check){
     const bonus = c.bonus ? c.bonus() : 0;
-    const rate = Math.round(chance(c.check[0], c.check[1], bonus) * 100);
-    chk = `<span class="pill ${rate >= 70 ? 'good' : rate >= 40 ? 'gold' : 'danger'}">${c.check[0].toUpperCase()} ${rate}%</span>`;
+    const rate = chance(c.check[0], c.check[1], bonus);
+    chk = `<span class="pill ${rate >= 70 ? 'good' : rate >= 40 ? 'gold' : 'danger'}">${ATTR[c.check[0]]||c.check[0]} ${rate}%</span>`;
   }
   return `<button class="choice ${c.stay ? 'stay' : ''}" data-sc-ch="${i}" ${ok ? '' : 'disabled'}>
     <span class="ct">${esc(c.t)}</span>
-    <span class="cmeta">${chk}${tags}${!ok && c.reqT ? `<small>${c.reqT}</small>` : ''}</span>
+    <span class="cmeta">${chk}${tags}${!ok && c.reqT ? `<small class="lock">🔒 ${esc(c.reqT)}</small>` : ''}</span>
   </button>`;
 }
 
@@ -293,6 +306,20 @@ function renderScene(st, id, ev){
   </article>`;
 }
 
+// Thẻ kết quả: chuyện vừa xảy ra, xúc xắc, chỉ số thay đổi. Nhật ký chỉ để tra lại.
+function resultHTML(){
+  const r=S.result;
+  const line=l=>`<p class="res-line ${l.c||''}">${esc(l.t)}</p>`;
+  const chip=c=>`<span class="rchip ${c.good?'good':'bad'} ${c.gu?'gu':''} ${c.mem?'mem':''}">${esc(c.t)}</span>`;
+  return `<div class="paper result-card">
+    <span class="label">Kết quả · ${timeLabel()}</span>
+    <h2 class="title">${esc(r.title||'Kết quả')}</h2>
+    ${r.choice?`<p class="res-choice">Ngươi chọn: <b>${esc(r.choice)}</b></p>`:''}
+    <div class="res-lines">${r.lines.map(line).join('')}</div>
+    ${r.chips.length?`<div class="res-chips">${r.chips.map(chip).join('')}</div>`:''}
+    <div class="ts-btns"><button class="btn big" data-a="resok">Tiếp tục</button></div>
+  </div>`;
+}
 function renderStage(){
   const st=$('stage');
   if(S.over==='win'&&S.book===2){st.innerHTML=q2WinHTML();return}
@@ -336,6 +363,7 @@ function renderStage(){
     </div>`;
     return;
   }
+  if(S.result&&!S.combat&&!S.mg&&!S.ff){st.innerHTML=resultHTML();return}
   if(S.ffOffer){st.innerHTML=ffOfferHTML();return}
   if(S.mg){renderMG(st);return}
   if(S.evq.length){

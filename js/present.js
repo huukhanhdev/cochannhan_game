@@ -14,11 +14,32 @@ const WHO_ART={
   bainu: 'art/p_bai_female.jpg',
   phuongchinh: 'art/p_phuongchinh.jpg',
   thanhthu: 'art/p_thanhthu.jpg',
-  nhuocnam: 'art/p_thietnhuocnam.jpg',
+  nhuocnam: () => (typeof S !== 'undefined' && S.book === 2 ? 'art/p_nhuocnam_q2.jpg' : 'art/p_thietnhuocnam.jpg'),
   tiexueleng: 'npc/n_tiexueleng.jpg',
   nhatdai: 'art/p_nhatdai.jpg',
   tramthuy: 'npc/n_tramthuy.jpg',
-  hoatuu: 'npc/n_hoatuu.jpg'
+  hoatuu: 'npc/n_hoatuu.jpg',
+  // Quyển 2
+  tamtu: 'art/p_shangxinci.jpg',
+  shangxinci: 'art/p_shangxinci.jpg',
+  yenphi: 'art/p_shangyanfei.jpg',
+  shangyanfei: 'art/p_shangyanfei.jpg',
+  nguyuong: 'art/p_weiyang.jpg',
+  weiyang: 'art/p_weiyang.jpg',
+  kimhoang: 'art/p_fengjinhuang.jpg',
+  fengjinhuang: 'art/p_fengjinhuang.jpg',
+  tieuhotien: 'art/p_littlehu.jpg',
+  littlehu: 'art/p_littlehu.jpg',
+  baquy: 'art/p_baquy.jpg',
+  bagui: 'art/p_baquy.jpg',
+  tieumang: 'art/p_xiaomang.jpg',
+  xiaomang: 'art/p_xiaomang.jpg',
+  himi: 'art/p_humeier.jpg',
+  humeier: 'art/p_humeier.jpg',
+  phongthienngu: 'art/p_fengtianyu.jpg',
+  fengtianyu: 'art/p_fengtianyu.jpg',
+  cuucuu: 'art/p_choujiu.jpg',
+  choujiu: 'art/p_choujiu.jpg'
 };
 function evSpeaker(id){
   const ev=EV[id]||{};

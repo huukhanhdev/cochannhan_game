@@ -184,3 +184,41 @@ Giữ các lựa chọn của bản gốc (`binh_than`, `do_la`, `nghi_binh`, `x
 - Trình duyệt: cảnh `c_lang2` và `c_final` chạy, không lỗi JS.
 
 **Ghi chú cân bằng:** tỉ lệ thắng tụt khi sửa lỗi khe đá (trận Kim Sinh chạy trở lại) và khi gộp lang triều. Nghĩa là con số ~51% trước PR-5 cao giả, vì lỗi cảnh làm mất trận.
+
+---
+
+## Phần D. Thẻ kết quả, lựa chọn có điều kiện, nhân quả (30/09/2026)
+
+**Thẻ kết quả** (`resBegin`/`resEnd` trong `engine.js`, `resultHTML` trong `ui.js`):
+- Hiện sau mỗi lựa chọn, mỗi cảnh, mỗi việc trên bản đồ, mỗi trận thắng hoặc chạy thoát.
+- Thẻ ghi: lựa chọn đã chọn, xúc xắc, diễn biến, chỉ số thay đổi (nguyên thạch, khí huyết, tu vi, danh vọng, hiềm nghi…), cổ nhận hoặc mất, ký ức mới, quan hệ NPC đổi.
+- Chuỗi nối nhau (việc → sự kiện → trận) gom thành một thẻ. Các dòng giữa trận không đưa vào thẻ.
+- Nhật ký chỉ để tra lại. Không hiện thẻ khi tua nhanh.
+- Lựa chọn dò xét trong cảnh hiện kết quả ngay trong khung thoại.
+
+**Lựa chọn có điều kiện** (`need`):
+- Khai báo gọn: `need:{chuyen, stones, gu, mem, rel:[npc,n], danh, tamco, ngo, satphat, tuchat, herbs, blood, flag, chose, t}`.
+- Không đủ thì lựa chọn vẫn hiện nhưng bị khóa, ghi 🔒 và nói rõ còn thiếu gì.
+- `chose:'mốc:khóa'`: lựa chọn trước đó trong kiếp này, ghi ở `S.chosen` bởi `remember()`.
+- Chuỗi đã nối:
+  - Gia sản (mua chuộc Trầm Thúy) → Trầm Thúy thành tai mắt ngay.
+  - Cổng học đường (bảo kê) → gọi đám học trò dọa Kim Sinh, không án mạng.
+  - Kim Sinh (báo tộc trưởng) → tộc trưởng bảo lãnh trước thần bổ.
+  - Khảo hạch (giấu tài) → giả tầm thường trước Bạch Ngưng Băng.
+- Chuyển sang `need`: Xích Thiết Xá Lợi (danh vọng 50), dẫn máu Huyết Cương vào lò (hiện khi có Huyết Lô, khóa nếu thiếu ký ức), Thiền lần hai, đưa bằng chứng qua Nhược Nam.
+
+**Nhân quả và đại sự bắt buộc:**
+- *Đại sự bắt buộc* (không `cond`): khai khiếu, khảo hạch, thương đội, Bạch gia tuần tra, gặp Bạch Ngưng Băng, lang triều, lăng mộ lộ ra, **thần bổ lên núi**, Huyết Cương, trận cuối.
+- *Nhân quả* (có `cond`):
+  - **Kim Sinh chặn đường chỉ khi có Tửu Trùng** (nguyên tác: hắn ép mua rẻ Tửu Trùng). Có Tửu Trùng muộn thì hắn vẫn tìm tới khi thương đội còn trên núi, một lần.
+  - Cổ Phú điều tra (đã giết Kim Sinh).
+  - Vòng vây (thần bổ đang truy).
+- Thần bổ lên núi vì thư Tiên Hạc Môn báo có truyền thừa Huyết Hải; vụ Kim Sinh chỉ là cớ. Đã giết Kim Sinh thì hắn để mắt tới ngươi (`tieHunt`). Không thì hắn lùng truyền thừa (`tieToTomb`) và vẫn đối đầu Huyết Cương.
+
+**Sửa thêm:**
+- Dò xét có xúc xắc: thua thì không mở lựa chọn ẩn (trước đây vẫn mở).
+- Nút lựa chọn trong cảnh: tỉ lệ thành công bị nhân 100 lần (7000%); đã sửa và ghi tên chỉ số.
+
+**Số đo:**
+- `sim.cjs 600 6`: **42,3%**, kiếp đầu 8,3%.
+- `LECH=1 sim.cjs 300 6`: **32,3%**.

@@ -24,10 +24,12 @@ Nguyên tắc: không đổi số tuần (27) và bảng `CANON`. Chỉ sửa n�
 - [x] 3.7 Đâu Suất Hoa: lựa chọn nguyên tác ở phần thưởng sau lang triều (ch 160).
 - [x] 3.8 Thiên Nguyên Bảo Liên: sự kiện mới "Bảo Liên dưới nguyên tuyền" sau lang triều: đổ nguyên thạch nuôi rồi đoạt (ch 162–189).
 
+- [x] 3.9 (thêm) Sự kiện `c_kimngo` (ch 128–129) và `c_muon` (ch 155, mượn khố phòng hợp luyện Thiên Bồng) để mạch nguyên tác chắc chắn có Rết Vàng và Thiên Bồng.
+
 ## GĐ4. Trận cuối theo nguyên tác
-- [ ] 4.1 `c_nhatdai`: thêm Thiên Hạc Thượng Nhân (Hạc Tai, ch 193–198) và hậu thủ Trấn Ma của Thiết Huyết Lãnh.
-- [ ] 4.2 `c_final`: lựa chọn nguyên tác mới "Xuân Thu Thiền lần hai" (ch 201–205): ném Nhất Đại ra lồng máu, nhặt Huyết Lô + Âm Dương Chuyển Thân, dùng Âm cổ cứu BNB. Kết `huyetlo_bai`.
-- [ ] 4.3 Thạch Khiếu xung đột Huyết Lô: có cả hai thì mất Thạch Khiếu (ch 204).
+- [x] 4.1 `c_nhatdai`: thêm Thiên Hạc Thượng Nhân (Hạc Tai, ch 193–198) và hậu thủ Trấn Ma của Thiết Huyết Lãnh.
+- [x] 4.2 `c_final`: lựa chọn nguyên tác mới "Xuân Thu Thiền lần hai" (ch 201–205): ném Nhất Đại ra lồng máu, nhặt Huyết Lô + Âm Dương Chuyển Thân, dùng Âm cổ cứu BNB. Kết `huyetlo_bai`.
+- [x] 4.3 Thạch Khiếu xung đột Huyết Lô: có cả hai thì mất Thạch Khiếu (ch 204).
 
 ## GĐ5. Nối sang Quyển 2
 - [ ] 5.1 `startQ2()`: bỏ phát sẵn. Lấy từ kho Quyển 1: Thiên Nguyên, Đâu Suất, Tửu Trùng/Tứ Vị, Thiên Bồng, Huyết Nguyệt, Rết Vàng, Âm Dương → Dương cổ, Cường Thủ, Địa Thính.

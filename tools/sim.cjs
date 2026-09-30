@@ -88,7 +88,7 @@ for(let n=0;n<N;n++){
     }
     res.lives++;
     const over=run('S.over');(res.drift=res.drift||{win:[],dead:[]})[over==='win'?'win':'dead'].push(run('S.drift||0'));
-    if(over==='win'){won=true;res.wins++;const en=run('S.ending');(res.end=res.end||{})[en]=(res.end[en]||0)+1;res.firstWinLife.push(life);res.lifeWins[life]=(res.lifeWins[life]||0)+1;res.rankEnd.push(run('S.chuyen+S.giai/4'))}
+    if(over==='win'){won=true;res.wins++;for(const k of JSON.parse(run('JSON.stringify(S.gu.map(g=>g.k))')))(res.guWin=res.guWin||{})[k]=(res.guWin[k]||0)+1;const en=run('S.ending');(res.end=res.end||{})[en]=(res.end[en]||0)+1;res.firstWinLife.push(life);res.lifeWins[life]=(res.lifeWins[life]||0)+1;res.rankEnd.push(run('S.chuyen+S.giai/4'))}
     else if(over==='dead'){
       const d=run('META.deaths[META.deaths.length-1]');res.deathTurn.push(d.turn);res.deathRank.push(run('S.chuyen+S.giai/4'));if(d.turn>=27)res.finalDeaths++;
       const key=d.cause+(d.turn>=19&&d.turn<=21?' (lang triều)':'');res.cause[key]=(res.cause[key]||0)+1;
@@ -111,4 +111,5 @@ console.log(`Số tuần phải chơi lại mỗi chiến dịch: trung bình ${
 {const r=run('__rep'),g=Object.entries(r.gaps).sort((a,b)=>a[0]-b[0]);console.log(`Sự kiện ngẫu nhiên: ${r.n} lần; lặp lại sau (tuần: số lần):`,g.slice(0,6).map(x=>x.join(':')).join(' '))}
 {const b=run('__bf');console.log(`Cánh bướm: lệch TB lúc chết ${avg(res.drift.dead)}, lúc thắng ${avg(res.drift.win)}; mỗi kiếp: dị số ${(b.diso/res.lives).toFixed(2)}, hậu quả trễ ${(b.q/res.lives).toFixed(2)}, thế giới xoay chuyển ${(b.shift/res.lives).toFixed(2)}; lựa chọn ký ức đúng ${b.memOk}, phản tác dụng ${b.memBad}`)}
 console.log('Kết cục:',JSON.stringify(res.end||{}));
+console.log('Cổ lúc thắng:',JSON.stringify(Object.entries(res.guWin||{}).sort((a,b)=>b[1]-a[1])));
 console.log('Nguyên nhân chết:',Object.entries(res.cause).sort((a,b)=>b[1]-a[1]).slice(0,12));

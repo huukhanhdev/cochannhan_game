@@ -10,6 +10,13 @@ const REFINE_TELLS=[
   {k:'surge',t:'Linh quang lóe lên trong lò: dung hợp lượt này tăng mạnh.',prog:1.6,stab:1},
   {k:'crack',t:'Nguyên liệu nứt rạn: trấn áp lượt này hiệu quả gấp đôi.',prog:1,stab:1,calm:2},
 ];
+// Random tell events giữa lượt
+const REFINE_MID_EVENTS=[
+  {t:'Cổ trùng hấp thu mạnh, dung hợp tăng vọt', eff: m=>m.prog+=rand(8,15)},
+  {t:'Dung hợp phản ứng gay gắt, ổn định giảm', eff: m=>m.stab-=rand(5,12)},
+  {t:'Kinh nghiệm tích lũy, Ngộ tính tăng', eff: m=>{S.ngo=Math.min(10,S.ngo+1);log('Ngộ tính +1','good')}},
+  {t:'Cổ trùng buồn ngủ, không có gì xảy ra', eff: m=>{}},
+];
 function refineOdds(r){return refineChance(r)}
 function startRefine(i){
   const r=RECIPES[i];if(!canRefine(r))return;
@@ -26,7 +33,6 @@ function refineAct(a){
   const ngo=(S.ngo-6)*1.5;
   let line='';
   if(a==='auto'){
-    // Không chơi: tính theo tỉ lệ cũ
     return refineEnd(Math.random()<refineOdds(r),'Ngươi luyện theo thói quen, không để tâm từng nhịp.');
   }
   if(a==='pour'){
@@ -45,6 +51,11 @@ function refineAct(a){
     S.stones-=5;S.ess=Math.min(maxEss(),S.ess+20);line='Bóp nát 5 nguyên thạch, chân nguyên +20. Lửa lò hơi chùng xuống (ổn định −4).';m.stab-=4;
   }else return;
   m.log.push(line);
+  // Random event giữa lượt (15% cơ hội)
+  if(Math.random()<0.15){
+    const ev=pick(REFINE_MID_EVENTS);
+    line=ev.t; ev.eff(m); m.log.push(line);
+  }
   if(m.stab<=0)return refineEnd(false,'Lò luyện nổ tung. Phản phệ khiến ngươi bị thương.',true);
   if(m.prog>=100)return refineEnd(true,'Ánh sáng thu lại. Cổ trùng mới mở mắt.');
   m.round++;
@@ -86,7 +97,7 @@ function startStone(id){
   const r=Math.random(),good=Math.min(.92,st.goodP+(S.ngo-6)*.015+(mem('doanthach')?.08:0));
   const content=r<good*.55?'thach':r<good?'co':r<good+.1?'doc':'phe';
   S.panel=null;
-  S.mg={type:'stone',id,content,cuts:0,max:3,clues:[],offer:Math.round(st.price*.4)};
+  S.mg={type:'stone',id,content,cuts:0,max:3,clues:[],offer:Math.round(st.price*.4),hired:false};
   log(`Mua khối ${st.n} giá ${st.price} nguyên thạch.`,'gold');
   saveAll();render();
 }
@@ -104,10 +115,20 @@ function stoneAct(a){
     S.stones+=m.offer;log(`Bán khối đá đang cắt dở cho Cổ gia được ${m.offer} nguyên thạch.`,'gold');
     S.mg=null;S.panel='gamble';saveAll();render();return;
   }else if(a==='open'){return stoneOpen()}
+  else if(a==='hire'){
+    m.hired=!m.hired;
+  }
   saveAll();render();
 }
 function stoneOpen(){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);S.mg=null;S.panel='gamble';
+  const hireBonus = m.hired ? 0.3 : 0;
+  const succRate = m.content==='thach'?0.9: m.content==='co'?0.8: m.content==='doc'?0.3:0;
+  // Hire expert increases success rate for identifying
+  if(m.hired){
+    S.stones -= st.price; // Pay double
+    if(window.SFX)SFX.coin();
+  }
   if(m.content==='thach'){const v=Math.round(st.price*(1.4+Math.random()*1.0));S.stones+=v;if(v>=60)S.f.stoneWin=Math.max(S.f.stoneWin||0,v);learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
   else if(m.content==='co'){
     const k=pick(STONE_POOL[m.id]||STONE_POOL.thach_re);gainGu(k,true);if((GU[k].r||1)>=2||(GU[k].p||0)>=100)S.f.stoneGu=k;learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
@@ -118,30 +139,43 @@ function stoneOpen(){
 
 /* ================= ĐỘT PHÁ =================
    Dùng chân nguyên xung kích bích khiếu. Mỗi nhát mạnh hơn thì dễ phản phệ hơn.
-   Ngộ tính giảm rủi ro và cho thấy chỗ bích khiếu mỏng. */
+   Ngộ tính giảm rủi ro và cho thấy chỗ bích khiếu mỏng.
+   Thêm: Timing minigame - nhấn đúng lúc kim vào vùng xanh để tăng % thành công. */
 const IMPACT={
   soft:{n:'Xung kích nhẹ',dmg:[18,26],risk:.05},
   mid:{n:'Xung kích vừa',dmg:[28,40],risk:.15},
   hard:{n:'Toàn lực xung kích',dmg:[42,60],risk:.32},
 };
+const BREAK_BASE_SUCC = 0.65;
+const BREAK_MAX_SUCC = 0.95;
+const BREAK_TIMING_BONUS = 0.15; // +15% nếu timing đúng
 function startBreak(){
-  S.mg={type:'break',wall:100,tries:4,weak:Math.random()<.35+(S.ngo-6)*.04,log:[]};
+  S.mg={type:'break',wall:100,tries:4,weak:Math.random()<.35+(S.ngo-6)*.04,log:[],timingActive:false,timingHit:false};
 }
 function breakRisk(k){return clamp(IMPACT[k].risk-(S.ngo-6)*.015-((S.tuchat||44)-44)*.002,.02,.6)}
 function breakAct(a){
   const m=S.mg;
   if(a==='auto'){
-    const ch=.65+(S.ngo-6)*.02+((S.tuchat||44)-44)*.005;
-    return breakEnd(Math.random()<ch);
+    const ch=BREAK_BASE_SUCC+(S.ngo-6)*.02+((S.tuchat||44)-44)*0.005 + m.failStreak*0.15;
+    return breakEnd(Math.random()<Math.min(BREAK_MAX_SUCC,ch));
   }
   const im=IMPACT[a];if(!im)return;
   let d=rand(im.dmg[0],im.dmg[1]);if(m.weak){d=Math.round(d*1.3)}
   m.tries--;
-  if(Math.random()<breakRisk(a)){
+  // Apply timing bonus if hit
+  const timingBonus = m.timingHit ? BREAK_TIMING_BONUS : 0;
+  m.timingHit = false; // Reset
+  const risk = Math.max(0.02, breakRisk(a) - timingBonus);
+  
+  if(Math.random()<risk){
     const loss=Math.round(maxHp()*.2);S.hp=Math.max(1,S.hp-loss);m.wall=Math.min(100,m.wall+15);
     m.log.push(`${im.n}: chân nguyên phản phệ! Khí huyết −${loss}, bích khiếu liền lại một phần.`);
+    m.failStreak = (m.failStreak||0) + 1;
     triggerShake();
-  }else{m.wall-=d;m.log.push(`${im.n}: bích khiếu −${d}.`)}
+  }else{
+    m.wall-=d;m.log.push(`${im.n}: bích khiếu −${d}.`);
+    m.failStreak = 0;
+  }
   if(m.wall<=0)return breakEnd(true);
   if(m.tries<=0)return breakEnd(false);
   m.weak=Math.random()<.3+(S.ngo-6)*.04;
@@ -161,17 +195,58 @@ function breakEnd(ok){
   saveAll();advance();render();
 }
 
+// Timing minigame handler
+let breakTimingRAF = null;
+function startBreakTiming(){
+  const m=S.mg; if(!m||m.type!=='break') return;
+  m.timingActive = true;
+  const needle = document.getElementById('timing-needle');
+  const bar = document.getElementById('timing-bar');
+  if(!needle||!bar) return;
+  bar.classList.remove('hidden');
+  let pos = 0, dir = 1, speed = 1.5;
+  const hitZone = {start:40, end:60};
+  
+  function animate(){
+    if(!m.timingActive) return;
+    pos += dir * speed;
+    if(pos >= 100){pos=100; dir=-1;}
+    if(pos <= 0){pos=0; dir=1;}
+    needle.style.left = pos + '%';
+    breakTimingRAF = requestAnimationFrame(animate);
+  }
+  animate();
+  
+  // Keydown handler
+  window.breakTimingHandler = (e)=>{
+    if(e.code==='Space' && S.mg===m && m.timingActive){
+      const inZone = pos >= hitZone.start && pos <= hitZone.end;
+      m.timingHit = inZone;
+      m.timingBonus = inZone ? 15 : 0;
+      m.timingActive = false;
+      bar.classList.add('hidden');
+      if(breakTimingRAF) cancelAnimationFrame(breakTimingRAF);
+      window.removeEventListener('keydown', window.breakTimingHandler);
+      renderMG(document.getElementById('stage'));
+    }
+  };
+  window.addEventListener('keydown', window.breakTimingHandler);
+}
+
 /* ================= HIỂN THỊ ================= */
 function mgBar(label,v,cls){return `<div class="mg-bar ${cls}"><div class="mrow"><span>${label}</span><b>${Math.max(0,Math.round(v))}</b></div><div class="mtrack"><i style="width:${clamp(v,0,100)}%"></i></div></div>`}
 function renderMG(st){
   const m=S.mg;
   if(m.type==='refine'){
     const r=RECIPES[m.r],tell=REFINE_TELLS.find(t=>t.k===m.tell);
+    const baseRate = refineOdds(r);
+    const estTurns = Math.ceil((m.max - m.round + 1) / (0.5 + S.ngo*0.1));
     st.innerHTML=`<div class="paper mg refine">
       <div class="headrow"><div><span class="label">Lượt ${m.round} / ${m.max} · Chân nguyên ${Math.floor(S.ess)}</span><h2 class="title">Luyện ${GU[r.id].n}</h2></div>
         ${guEmblem(r.id,'炉','lg')}</div>
       <div class="mg-furnace"><div class="flame" style="--p:${clamp(m.prog,0,100)}%;--s:${clamp(m.stab,0,100)}%"></div></div>
       ${mgBar('Dung hợp',m.prog,'prog')}${mgBar('Ổn định',m.stab,m.stab<30?'stab low':'stab')}
+      <div class="mg-est">Ước tính: <b>~${estTurns} lượt</b> (Ngộ ${S.ngo}) | Tỷ lệ cơ bản: <b>${Math.round(baseRate*100)}%</b></div>
       <p class="mg-tell">${tell.t}</p>
       <div class="mg-acts">
         <button class="choice" data-mg="pour" ${S.ess<8?'disabled':''}><span class="ct">Rót chân nguyên đều tay</span><span class="cmeta"><span class="odds m">8 chân nguyên</span><span class="odds e">Dung hợp +16~24</span><span class="odds h">Ổn định −8~14</span></span></button>
@@ -180,29 +255,41 @@ function renderMG(st){
         <button class="choice" data-mg="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}><span class="ct">Hấp thu 5 nguyên thạch</span><span class="cmeta"><span class="odds m">+20 chân nguyên, ổn định −4</span></span></button>
       </div>
       <div class="mg-log">${m.log.slice(-3).map(l=>`<p>${esc(l)}</p>`).join('')}</div>
-      <div class="map-foot"><button class="btn ghost" data-mg="auto">Luyện nhanh (${Math.round(refineOdds(r)*100)}% theo ngộ tính)</button></div>
+      <div class="map-foot"><button class="btn ghost" data-mg="auto">Luyện nhanh (${Math.round(baseRate*100)}% theo ngộ tính)</button></div>
     </div>`;
   }else if(m.type==='stone'){
     const st_=STONES_GAMBLE.find(x=>x.id===m.id);
+    const baseSucc = (m.content==='thach'?0.9: m.content==='co'?0.8: m.content==='doc'?0.3:0);
+    const hireSucc = Math.min(0.95, baseSucc + 0.3);
     st.innerHTML=`<div class="paper mg stone">
       <div class="headrow"><div><span class="label">Phường Đoán Thạch · nhát ${m.cuts} / ${m.max}</span><h2 class="title">${st_.n}</h2></div></div>
       <div class="rock"><div class="rock-body cuts-${m.cuts}">${Array.from({length:m.cuts},(_,i)=>`<i class="cut c${i}"></i>`).join('')}</div></div>
-      <div class="clues">${m.clues.length?m.clues.map((c,i)=>`<p><b>Nhát ${i+1}.</b> ${c.t}</p>`).join(''):'<p class="dimt">Khối đá còn nguyên. Mắt ngươi nhìn trúng khoảng '+Math.round(stoneAccuracy()*100)+'% (ngộ tính, kinh nghiệm).</p>'}</div>
+      <div class="clues">${m.clues.length?m.clues.map((c,i)=>`<p><b>Nhát ${i+1}.</b> ${c.t}</p>`).join(''):'<p class="dimt">Khối đá còn nguyên. Độ chính xác nhìn: '+Math.round(stoneAccuracy()*100)+'% (ngộ tính, kinh nghiệm).</p>'}</div>
       <div class="mg-acts">
         <button class="choice" data-mg="cut" ${m.cuts>=m.max?'disabled':''}><span class="ct">${m.cuts?'Cắt nhát tiếp theo':'Cắt nhát đầu'}</span><span class="cmeta"><span class="odds m">Lộ thêm một dấu hiệu</span></span></button>
         <button class="choice" data-mg="sell"><span class="ct">Bán cho người thu mua Cổ gia</span><span class="cmeta"><span class="odds e">Trả ${m.offer} nguyên thạch</span></span></button>
         ${m.cuts?`<button class="choice" data-mg="open"><span class="ct">Bổ đôi, xem luôn lõi đá</span><span class="cmeta"><span class="odds h">Được ăn cả, ngã về không</span></span></button>`:''}
+        <label class="hire-option"><input type="checkbox" data-mg="hire" ${m.hired?'checked':''}> Mượn người soi <span class="text-warning">(+${st_.price} NT, ${Math.round(hireSucc*100)}% thành công)</span></label>
       </div></div>`;
   }else if(m.type==='break'){
+    const baseRate = BREAK_BASE_SUCC+(S.ngo-6)*.02+((S.tuchat||44)-44)*0.005 + (m.failStreak||0)*0.15;
+    const estSucc = Math.min(BREAK_MAX_SUCC, baseRate + (m.timingBonus||0)*0.01);
     st.innerHTML=`<div class="paper mg break">
       <div class="headrow"><div><span class="label">${rankName()} · còn ${m.tries} lần xung kích</span><h2 class="title">Xung kích bích khiếu</h2></div></div>
       <div class="aperture-wall"><div class="wall" style="--w:${clamp(m.wall,0,100)}%"></div>${m.weak?'<span class="weak">Có chỗ mỏng</span>':''}</div>
       ${mgBar('Bích khiếu',m.wall,'wall')}
       <p class="mg-tell">${m.weak?'Ngộ tính cho ngươi thấy một chỗ bích khiếu mỏng: nhát này sát thương +30%.':'Bích khiếu dày đặc, chưa thấy kẽ hở.'}</p>
+      <div id="timing-bar" class="mg-timing ${m.timingActive?'':'hidden'}">
+        <div class="timing-track"><div id="timing-needle" class="needle"></div><div class="hit-zone"></div></div>
+        <div class="mg-hint">Nhấn <kbd>Space</kbd> khi kim vào vùng xanh (+15% thành công)</div>
+      </div>
+      <div class="mg-succ-rate">Tỷ lệ ước tính: <b>${Math.round(estSucc*100)}%</b> ${m.timingBonus?`<span class="text-success">(+${m.timingBonus}% timing)</span>`:''}</div>
       <div class="mg-acts">${Object.entries(IMPACT).map(([k,v])=>`<button class="choice" data-mg="${k}"><span class="ct">${v.n}</span><span class="cmeta"><span class="odds e">Bích khiếu −${v.dmg[0]}~${v.dmg[1]}</span><span class="odds ${breakRisk(k)>.2?'x':breakRisk(k)>.1?'h':'m'}">Phản phệ ${Math.round(breakRisk(k)*100)}%</span></span></button>`).join('')}</div>
       <div class="mg-log">${m.log.slice(-3).map(l=>`<p>${esc(l)}</p>`).join('')}</div>
-      <div class="map-foot"><button class="btn ghost" data-mg="auto">Đột phá nhanh (tung xúc xắc)</button></div>
+      <div class="map-foot"><button class="btn ghost" data-mg="auto">Đột phá nhanh (${Math.round(Math.min(BREAK_MAX_SUCC,baseRate)*100)}%)</button></div>
     </div>`;
+    // Start timing animation after render
+    setTimeout(startBreakTiming, 0);
   }
 }
 function mgAct(a){

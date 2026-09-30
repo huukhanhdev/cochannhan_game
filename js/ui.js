@@ -70,6 +70,27 @@ function renderMoon(){
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#3a474d"/>`;
 }
 
+function renderHungerWarning(){
+  const el=$('hunger-warning'); if(!el) return;
+  const hungry = S.gu.filter(g => {
+    const d=GU[g.k]; if(!d||!d.food) return false;
+    const fed = (g.k==='nguyetquang' && S.f.freeMoon) ? 0 : d.food;
+    return (g.h||0) > 0 || S.stones < fed;
+  });
+  if(hungry.length){
+    el.innerHTML = `<div class="hunger-alert pulse">⚠ ${hungry.length} cổ đói/sắp đói! <button class="btn small" data-a="gu">Cho ăn</button></div>`;
+    if(!window.hungerPlayed){ playSfx('hunger'); window.hungerPlayed = true; }
+  }else{
+    el.innerHTML = '';
+    window.hungerPlayed = false;
+  }
+}
+
+function playSfx(name){
+  if(!window.SFX) return;
+  try{ SFX.play(name); }catch(e){}
+}
+
 /* ---------- Thanh trạng thái ---------- */
 function renderHUD(){
   const e=ESS[S.chuyen];
@@ -95,6 +116,10 @@ function renderHUD(){
       ${meter('Hiềm nghi',S.susp,100,'susp'+(S.susp>=70?' hot':''))}
     </div>
     ${S.inj?`<span class="injury" title="${INJURY[S.inj.k].d}">伤 ${INJURY[S.inj.k].n} · ${S.inj.t} tuần</span>`:''}
+    <!-- Mission Bar -->
+    ${S.mission?`<div class="mission-bar"><span class="mission-name">${S.mission.name}</span><div class="mission-progress"><i style="width:${Math.min(100, (S.mission.current||0)/(S.mission.total||1)*100)}%"></i></div><span class="mission-count">${S.mission.current||0}/${S.mission.total||1}</span></div>`:''}
+    <!-- Hunger Warning -->
+    <div id="hunger-warning" class="hunger-warning"></div>
     <div class="hud-time">
       ${hudTimeHTML()}
       <svg id="moon" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"></svg>
@@ -106,6 +131,7 @@ function renderHUD(){
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
     </div>`;
   renderMoon();
+  renderHungerWarning();
 }
 
 /* ---------- Dòng thời gian 27 tuần ---------- */
@@ -582,3 +608,42 @@ document.addEventListener('click',ev=>{
   UI.tab=b.dataset.tab;try{localStorage.setItem('tms-tab',UI.tab)}catch(e){}
   renderSheet();
 });
+
+/* ---------- HOTKEYS ---------- */
+function initHotkeys(){
+  document.addEventListener('keydown',(e)=>{
+    if(e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA') return;
+    // Modal hotkeys
+    if(document.querySelector('.modal-overlay')){
+      if(e.key==='Enter' || e.key===' '){
+        e.preventDefault();
+        const btn=document.querySelector('.modal-content .btn-primary, .modal-content button:not(.btn-secondary):not(.ghost)');
+        if(btn) btn.click();
+      }else if(e.key>='1' && e.key<='4'){
+        e.preventDefault();
+        const btns=document.querySelectorAll('.modal-content .mg-actions button, .modal-content .btn-choice, .modal-content .choice');
+        const idx=parseInt(e.key)-1;
+        if(btns[idx]) btns[idx].click();
+      }else if(e.key==='Escape'){
+        e.preventDefault(); closeMg();
+      }
+      return;
+    }
+    // Global hotkeys
+    switch(e.key.toLowerCase()){
+      case 'm': if(typeof toggleMap==='function') toggleMap(); break;
+      case 'i': if(typeof toggleInventory==='function') toggleInventory(); break;
+      case 'c': if(typeof toggleCodex==='function') toggleCodex(); break;
+      case 's': if(typeof toggleStats==='function') toggleStats(); break;
+      case 'l': if(typeof toggleLog==='function') toggleLog(); break;
+      case 'g': if(typeof toggleGu==='function') toggleGu(); break;
+    }
+  });
+}
+// Initialize on load
+if(typeof document!=='undefined'){
+  document.addEventListener('DOMContentLoaded', initHotkeys);
+  if(document.readyState==='complete' || document.readyState==='interactive'){
+    setTimeout(initHotkeys, 0);
+  }
+}

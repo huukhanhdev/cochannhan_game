@@ -557,6 +557,19 @@ function randomEvent(loc){
       return true;
     }
   }
+  // Fallback pool when main pool exhausted
+  if(!pool.length || tot===0){
+    const fbPool = FALLBACK_EVENTS.filter(e=>e.req());
+    const fbTot = fbPool.reduce((s,e)=>s+e.w,0);
+    let fbR = Math.random()*fbTot;
+    for(const e of fbPool){
+      fbR -= e.w;
+      if(fbR<=0){
+        e.eff();
+        return true;
+      }
+    }
+  }
   return false;
 }
 // Bước tiếp theo của một chuyện nhiều bước: hiện ngay sau lựa chọn vừa rồi
@@ -566,6 +579,21 @@ function evText(id){
   const t=EV[id].text,om=typeof varOmen==='function'?varOmen(id):'';
   if(!Array.isArray(t))return t()+om;
   return t[Math.max(0,((S.evSeen||{})[id]||1)-1)%t.length]()+om;
+}
+
+/* ---------- Fallback Random Events (khi pool cạn) ---------- */
+const FALLBACK_EVENTS = [
+  {id:'r_find_stones', w:30, req:()=>true, eff:()=>{S.stones+=randInt(5)+1; log('Tìm được nguyên thạch rải rác.','info');}},
+  {id:'r_mysterious_merchant', w:20, req:()=>S.turn>10, eff:()=>{S.panel='market'; log('Gặp thương nhân bí ẩn, mở chợ đặc biệt.','good');}},
+  {id:'r_old_memory', w:15, req:()=>META.life>1, eff:()=>{S.ngo=Math.min(10,S.ngo+1); log('Ký ức kiếp trước hiện lên, Ngộ +1.','success','mem');}},
+  {id:'r_wild_gu', w:10, req:()=>S.turn>20, eff:()=>{const g=pickWildGu(); if(g) gainGu(g);}},
+  {id:'r_meditate', w:25, req:()=>true, eff:()=>{S.ess=Math.min(maxEss(),S.ess+10); log('Tĩnh tọa hồi phục chân nguyên.','info');}}
+];
+
+function pickWildGu(){
+  const pool = Object.entries(GU).filter(([k,v])=>v.r<=2 && v.t!=='fate' && !hasGu(k));
+  if(!pool.length) return null;
+  return pick(pool)[0];
 }
 
 /* ---------- hành động ---------- */

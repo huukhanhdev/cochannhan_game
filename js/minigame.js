@@ -102,7 +102,7 @@ function stoneOpen(){
   const m=S.mg,st=STONES_GAMBLE.find(x=>x.id===m.id);S.mg=null;S.panel='gamble';
   if(m.content==='thach'){const v=Math.round(st.price*(1.6+Math.random()*1.4));S.stones+=v;learn('doanthach');log(`Mổ thạch đại hỷ! Lõi đá là tinh thạch thuần, bán được ${v} nguyên thạch.`,'gold');FX.toastMsg={g:'石',t:'Tinh thạch',sub:`+${v} nguyên thạch`,cls:'win'}}
   else if(m.content==='co'){
-    const pool=m.id==='thach_huyet'?['huyetnguyet','thietbi','diathinh']:m.id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi']:['nguyetquang','cuongnham','bachthi'];
+    const pool=m.id==='thach_huyet'?['huyetnguyet','thietbi','diathinh','cuxikimngo','daosihuyetbuc']:m.id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi','toanphong','tieuguang','thuytrao','bangdao']:['nguyetquang','cuongnham','bachthi','dongbi','thanhti'];
     const k=pick(pool);gainGu(k,true);learn('doanthach');log(`Mổ thạch chấn động! Một con ${GU[k].n} còn sống giữa lòng đá.`,'big');FX.toastMsg={g:'蛊',t:GU[k].n,sub:'Còn sống trong lòng đá',cls:'win'};
   }else if(m.content==='doc'){S.hp=Math.max(1,S.hp-20);log('Một con độc cổ ngủ đông trong đá cắn trúng tay ngươi. Khí huyết −20.','danger')}
   else log('Đá vỡ ra toàn vụn vôi. Mất trắng.','danger');

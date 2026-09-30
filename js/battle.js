@@ -31,7 +31,8 @@ const ART={
 };
 const SCENE_NAME={forest:'Rừng trúc Thanh Mao',village:'Cổ Nguyệt sơn trại',tide:'Tường trại · Lang triều',wine:'Động phủ Hoa Tửu',blood:'Huyết động',snow:'Tuyết giữa mùa hạ',fire:'Thanh Mao Sơn bốc cháy'};
 const SKILL_GLYPH={strike:'拳',herb:'药',flee:'走',nguyetquang:'月',huyetnguyet:'血',nguyetmang:'芒',ngocbi:'玉',thietbi:'铁',cuongnham:'岩',thienbong:'蓬',trilieu:'愈',
-  huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护'};
+  tieuguang:'光',toanphong:'风',dongbi:'铜',thanhti:'丝',nguyettoan:'旋',nguyetngan:'银',nguyetnghe:'裳',bangdao:'刀',thuytrao:'水',anlan:'鳞',hoalo:'炉',cuudiep:'草',cuxikimngo:'蜈',mokmi:'魅',daosihuyetbuc:'蝠',
+  huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护',nguyet_toan_xa:'旋',bang_trao_ho:'盾',kim_ngo_tram:'齿',huyet_duc_phong:'吸'};
 const INTENT_SEAL={atk:'攻',heavy:'猛',guard:'守'};
 const BRUSH='"Ma Shan Zheng", "STKaiti", "KaiTi", "Kaiti SC", serif';
 const DISPLAY='"Cormorant Garamond", Georgia, serif';
@@ -102,10 +103,10 @@ function updateCombat(){
   const lock=key=>(c.frozen[key]||0)>0?`Bị băng phong ${c.frozen[key]-1||1} lượt`:(c.cd[key]||0)>0?`Hồi chiêu ${c.cd[key]} lượt`:'';
   const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:'Đánh tay',s:`${baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];
   uniq.forEach(x=>{
-    const cost=costOf(x.d.cost),lk=lock(x.k);
+    const cost=guCostIdx(x.i),lk=lock(x.k);
     const cdInfo=(CD[x.k]||0)>0?` · hồi ${CD[x.k]}`:'';
     sk.push({attr:`data-f="gu" data-i="${x.i}"`,g:SKILL_GLYPH[x.k]||'蛊',img:guImgUrl(x.k),n:x.d.n,cost,dis:!!lk||S.ess<cost,cdl:lk,
-      s:lk||(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${cdInfo}`:`Hồi ${22+12*S.chuyen} khí huyết${cdInfo}`),
+      s:lk||(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${cdInfo}`:`Hồi ${x.d.healAmt||(22+12*S.chuyen)} khí huyết${cdInfo}`),
       cls:x.d.t==='attack'?'atk':x.d.t==='guard'?'grd':'heal'});
   });
   combos.forEach(cb=>{const cost=costOf(cb.cost),lk=lock(cb.id);sk.push({attr:`data-combo="${cb.id}"`,g:SKILL_GLYPH[cb.id]||'招',n:cb.n,cost,dis:!!lk||S.ess<cost,cdl:lk,s:lk||cb.d+` · hồi ${COMBO_CD}`,cls:'combo'})});

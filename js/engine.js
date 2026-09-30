@@ -155,8 +155,9 @@ function startTurn(){
     const essRecover = Math.round(maxEss() * (0.5 + (S.tuchat||44)*0.003) * (S.inj&&S.inj.k==='noi'?.5:1));
     S.ess=Math.min(maxEss(),S.ess+essRecover);
     S.hp=Math.min(maxHp(),S.hp+Math.round(maxHp()*.25));
-    S.susp=Math.max(0,S.susp-(hasGu('liemtuc')?10:5));
+    S.susp=Math.max(0,S.susp-(hasGu('liemtuc')?10:hasGu('anlan')?8:5));
     if(S.inj){S.inj.t--;if(S.inj.t<=0){log(`${INJURY[S.inj.k].n} đã lành.`,'good');S.inj=null}}
+    if(hasGu('cuudiep')){S.herbs=(S.herbs||0)+1;log('Cửu Diệp Sinh Cơ Thảo ngưng kết ra 1 phiến Sinh Cơ Diệp (linh dược).','good')}
     if(S.f.tuulau){const n=S.f.tuulau===2?6:3;S.stones+=n;log(`Tửu lâu nộp ${n} nguyên thạch.`,'gold')}
     if(S.f.blackmailXich){S.stones+=10;log(`Cổ Nguyệt Xích Luyện lén gửi 10 nguyên thạch bịt miệng.`,'gold')}
     if(S.turn%3===1){
@@ -283,6 +284,10 @@ function act(id){
         S.f.freeMoon=(S.f.freeMoon||0)+3;
         break;
       }
+      if(hasGu('anlan')&&Math.random()<.35){
+        log('Ẩn Lân Cổ phát huy tác dụng: thân hình hòa vào vách đá rừng trúc, nhẹ nhàng né tránh một đợt phục kích dã thú.','good');
+        break;
+      }
       if(Math.random()<.55&&randomEvent('nui'))break;
       fight(pick((S.chuyen===1?['heorung','heorung','dienlang','tanbinh']:['dienlang','hachung','tanbinh','loiquan']).concat(W('hunggia')?['hunggia','hunggia']:[])),{scale:1,elite:Math.random()<(S.turn>=12?.3:S.turn>=6?.15:.05)*((S.mod&&S.mod.elite)||1)});break;
     case 'hauson':S.evq.push(['hs_khe','hs_bich','hs_ngam','hs_dong','hs_mo'][Math.min(S.f.hs||0,4)]);break;
@@ -347,7 +352,7 @@ function levelUp(){
 }
 function useGu(i){
   const g=S.gu[i];if(!g||GU[g.k].t!=='use'||S.combat)return;
-  const need_=g.k==='xaloi1'?1:2;
+  const need_=g.k==='xaloi1'?1:g.k==='xaloi2'?2:3;
   if(S.chuyen!==need_){log(`${GU[g.k].n} chỉ dùng được ở ${CH[need_]} chuyển.`,'danger');render();return}
   S.gu.splice(i,1);
   if(window.SFX) SFX.levelUp();
@@ -391,7 +396,7 @@ function gambleStone(id){
       S.stones+=profit;
       log(`Mổ thạch đại hỷ! Khối ${st.n} chứa tinh thạch thuần túy, bán ngay được ${profit} nguyên thạch!`,'gold');
     }else{
-      const pool=id==='thach_huyet'?['huyetnguyet','thietbi','diathinh']:id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi']:['nguyetquang','cuongnham','bachthi'];
+      const pool=id==='thach_huyet'?['huyetnguyet','thietbi','diathinh','cuxikimngo','daosihuyetbuc']:id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi','toanphong','tieuguang','thuytrao','bangdao']:['nguyetquang','cuongnham','bachthi','dongbi','thanhti'];
       const k=pick(pool);
       gainGu(k);
       log(`Mổ thạch chấn động! Một con ${GU[k].n} còn nguyên vẹn nằm giữa lòng đá!`,'big');
@@ -463,6 +468,8 @@ function dmgMult(){
   return m;
 }
 function fury(c){return c.turn>=DIFF.furyTurn?(c.turn-DIFF.furyTurn+1)*.1:0}
+// Chân nguyên thật khi dùng con cổ thứ i (tính cả cơn đói)
+function guCostIdx(i){const g=S.gu[i];return costOf(GU[g.k].cost||0)+(g.h||0)*2}
 function costOf(base){return Math.ceil(base*(S.combat&&S.combat.suppress>0?1.5:1))}
 function guReady(key){const c=S.combat;return !(c&&((c.cd[key]||0)>0||(c.frozen[key]||0)>0))}
 
@@ -519,23 +526,34 @@ function playerAct(type,arg){
     const key=S.gu[arg]&&S.gu[arg].k,g=GU[key];
     if(!g||!guReady(key))return;
     const hung=(S.gu[arg].h||0);
-    const cost=costOf(g.cost)+hung*2;if(S.ess<cost)return;
+    const cost=guCostIdx(arg);if(S.ess<cost)return;
     S.ess-=cost;c.cd[key]=(CD[key]??2)+1;
     if(hung)log(`${g.n} đang đói, sức yếu hẳn đi.`,'danger');
     if(g.t==='attack'){
       if(window.SFX)SFX.blade();
       const d=hitFoe((g.dmg*rankMult()*(1-.25*hung)+passAtk())*vary(),!!g.pierce,{type:'patk',kind:key});
       log(`${g.n}! ${c.n} mất ${d}.${g.pierce?' (Xuyên giáp)':c.def?` (giáp chặn ${c.def})`:''}`,'good');
+      if(g.bleed){c.bleed=(c.bleed||0)+g.bleed;log(`${c.n} bị Chảy Máu dữ dội ${c.bleed} lượt.`,'good')}
+      if(g.slow){c.atkBuff=Math.max(-.4,(c.atkBuff||0)-g.slow);log(`Hàn khí làm chậm! Đòn công của ${c.n} suy giảm.`,'good')}
+      if(g.lifesteal){
+        const heal=Math.max(1,Math.round(d*g.lifesteal));
+        S.hp=Math.min(maxHp(),S.hp+heal);
+        FX.q({type:'heal',amt:heal});
+        log(`Huyết đao hút ${heal} khí huyết phản bổ bản thân.`,'good');
+      }
     }else if(g.t==='guard'){
       if(window.SFX)SFX.bell();
-      c.shield=key==='thienbong'?3:2;c.shieldRed=SHIELD_RED[key]||.4;
-      if(key==='thienbong')c.reflect=.25;
+      c.shield=key==='thienbong'||key==='mokmi'?3:2;
+      c.shieldRed=SHIELD_RED[key]||.4;
+      c.reflect=key==='thienbong'?.25:key==='mokmi'?.3:(g.reflect||0);
       FX.q({type:'shield'});
-      log(`${g.n} hộ thể: chỉ nhận ${Math.round(c.shieldRed*100)}% sát thương trong ${c.shield} lượt.`,'good');
+      log(`${g.n} hộ thể: chỉ nhận ${Math.round(c.shieldRed*100)}% sát thương trong ${c.shield} lượt${c.reflect?` (phản ${Math.round(c.reflect*100)}% sát thương)`:''}.`,'good');
     }else if(g.t==='heal'){
       if(window.SFX)SFX.bell();
-      const h=22+12*S.chuyen;S.hp=Math.min(maxHp(),S.hp+h);if(c.poison)c.poison=Math.max(0,c.poison-2);
-      FX.q({type:'heal',amt:h});log(`${g.n} tỏa ánh xanh. Khí huyết +${h}.`,'good');
+      const h=g.healAmt||(22+12*S.chuyen);
+      S.hp=Math.min(maxHp(),S.hp+h);
+      if(c.poison)c.poison=Math.max(0,c.poison-2);
+      FX.q({type:'heal',amt:h});log(`${g.n} tỏa ánh biếc chữa thương. Khí huyết +${h}.`,'good');
     }
   }else if(type==='combo'){
     const cb=COMBOS.find(x=>x.id===arg);
@@ -543,9 +561,16 @@ function playerAct(type,arg){
     const cost=costOf(cb.cost);if(S.ess<cost)return;
     S.ess-=cost;c.cd[cb.id]=COMBO_CD+1;
     if(window.SFX)SFX.blade();
+    let d=0;
     if(cb.dmg){
-      const d=hitFoe((cb.dmg*rankMult()+passAtk())*vary(),!!cb.pierce,{type:'combo',id:cb.id});
+      d=hitFoe((cb.dmg*rankMult()+passAtk())*vary(),!!cb.pierce,{type:'combo',id:cb.id});
       log(`【Sát chiêu · ${cb.n}】 ${c.n} mất ${d}!`,'good');
+      if(cb.lifesteal){
+        const heal=Math.max(1,Math.round(d*cb.lifesteal));
+        S.hp=Math.min(maxHp(),S.hp+heal);
+        FX.q({type:'heal',amt:heal});
+        log(`Sát chiêu hút ${heal} khí huyết phản bổ bản thân!`,'good');
+      }
     }else FX.q({type:'combo',id:cb.id});
     if(cb.shield){c.shield=Math.max(c.shield,cb.shield);c.shieldRed=Math.min(c.shieldRed,.4);FX.q({type:'shield'})}
     if(cb.bleed){c.bleed+=cb.bleed;log(`${c.n} bị chảy máu ${c.bleed} lượt.`,'good')}
@@ -562,7 +587,7 @@ function playerAct(type,arg){
     log('Giữa trận, ngươi bóp nát 5 viên nguyên thạch. Chân nguyên +20.','sys');
   }else if(type==='flee'){
     if(!c.flee)return;
-    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)){
+    if(Math.random()<.45+S.satphat*.01-(c.boss?.15:0)+((S.mod&&S.mod.flee)||0)+(hasGu('anlan')?.2:0)){
       log('Ngươi rút vào rừng trúc, cắt đuôi được đối thủ.','sys');
       FX.toastMsg={g:'走',t:'Thoát khỏi '+c.n,cls:'run'};
       S.combat=null;checkInjury();saveAll();advance();render();return;

@@ -22,7 +22,7 @@ const bot=`
 function botCombat(){
   const c=S.combat,hpR=S.hp/maxHp();
   const gus=S.gu.map((g,i)=>({i,k:g.k,d:GU[g.k]}));
-  const ready=x=>guReady(x.k)&&S.ess>=costOf(x.d.cost||0);
+  const ready=x=>guReady(x.k)&&S.ess>=guCostIdx(x.i);
   const guard=gus.find(x=>x.d.t==='guard'&&ready(x));
   const heal=gus.find(x=>x.d.t==='heal'&&ready(x));
   const atks=gus.filter(x=>x.d.t==='attack'&&ready(x)).sort((a,b)=>b.d.dmg-a.d.dmg);

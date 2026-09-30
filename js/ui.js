@@ -395,7 +395,7 @@ function renderTitle(){
         <div class="ts-btns">
           <button class="btn big" data-title="${cont?'go':'intro'}">${cont?(S.book===2?`Tiếp tục · ${timeLabel()}`:`Tiếp tục · kiếp ${META.life}, tháng ${month()}`):'Bắt đầu'}</button>
           ${cont?'<button class="btn ghost" data-title="intro">Xem lại mở đầu</button>':''}
-          ${META.q2Unlocked&&S.book!==2?'<button class="btn ghost" data-title="q2">Vào thẳng Quyển hai</button>':''}
+          ${(META.q2Unlocked||Q2_TEST)&&S.book!==2?`<button class="btn ghost" data-title="q2">${META.q2Unlocked?'Vào thẳng Quyển hai':'Thử Quyển hai (bản thử)'}</button>`:''}
         </div>
         <p class="ts-note">Fan game phi thương mại dựa trên Cổ Chân Nhân của Cổ Chân</p>
       </div>`}

@@ -8,6 +8,8 @@ const CHAPTERS={};
 // Kết Quyển 1 dẫn sang Quyển 2 (Phương Nguyên rời núi theo ma đạo hoặc cùng Bạch Ngưng Băng)
 const Q2_GATE=['ma','bai_dong','huyetlo','huyetlo_bai','tien_lo','phan_toc'];
 const Q2_FIRST='q2_hoanglong';
+// Bản thử: hiện nút vào thẳng Quyển 2 ở màn hình mở đầu kể cả khi chưa thắng Quyển 1. Tắt khi phát hành.
+const Q2_TEST=true;
 
 function curChap(){return S&&S.book===2?CHAPTERS[S.chap]:null}
 function curFinal(){const c=curChap();return c?c.turns:FINAL_TURN}

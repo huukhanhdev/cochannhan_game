@@ -30,6 +30,52 @@ Link chơi: https://claude.ai/artifact/JCxtbEtAKCESDM5jjCa6xM
 
 ---
 
+## Lộ trình tiếp theo (từ 30/09/2026)
+
+Hiện trạng: 38 cổ trùng, 98 sự kiện, 33 loại địch. Đấu trường đã có tranh sống (`js/living.js`), nhưng mới gắn xương cho 2 tranh (Phương Nguyên, Điện Lang). 25 cổ chưa có tranh, 22 cổ chưa gắn với sự kiện cốt truyện nào (chỉ có qua chợ, lò luyện, mổ đá), 12/17 NPC chưa có chân dung. Tỉ lệ thắng của người chơi máy 33–35%, sát mức trên của mục tiêu. Giả Kim Sinh và hộ vệ Giả gia là hai nguyên nhân chết nhiều nhất.
+
+Mỗi giai đoạn chỉ coi là xong khi: `node tools/sim.cjs 300 6` cho tỉ lệ thắng 15–35% và không có ca kẹt vòng lặp, chạy thử trong trình duyệt không có lỗi JS, đã đăng lên link chơi để test trên điện thoại.
+
+### Giai đoạn 1: Đồ họa đấu trường
+- [ ] Gắn xương cho các tranh địch quan trọng: Bạch Ngưng Băng, Lôi Quan Lang Vương, Hắc Hùng, heo rừng, gia lão, Huyết Thủ ma tu. Mỗi tranh cần dò tọa độ mắt, đầu, tay hoặc hàm một lần.
+- [ ] Hiệu ứng riêng theo nhóm cổ thay cho viên đạn chung: nguyệt (nguyệt nhận, Nguyệt Toàn bay vòng cung), băng (Băng Đao), huyết (Huyết Nguyệt, bầy dơi Đao Sí Huyết Bức), phong (Toàn Phong), kim (răng cưa Cứ Xỉ Kim Ngô), hộ thể (màn nước, tơ xanh, hỏa lô, thụ tinh Mộc Mị).
+- [ ] Sát chiêu có cảnh cắt: màn mực, chân dung trượt vào, tên chiêu viết từng nét (đã thử ở bản demo 1).
+- [ ] Địch chết tan thành mực thay cho mờ dần.
+- [ ] Chế độ đồ họa thấp tự bật trên máy yếu: lưới thưa hơn, ít hạt, tắt bộ lọc.
+
+### Giai đoạn 2: Giao diện thế giới
+- [ ] Bản đồ sơn trại sống: ngày và đêm theo tuần, thời tiết theo thiên cơ (mưa dầm, hàn khí, đại hạn), trăng máu và mây đen trước lang triều.
+- [ ] Thẻ sự kiện: tiêu đề viết từng nét bút, tranh nền riêng cho các mốc nguyên tác lớn.
+- [ ] Cảnh chết và trùng sinh: con ve vàng vỗ cánh, màn hình tua ngược, nhật ký chạy lùi.
+- [ ] Bản điện thoại: bố cục một cột, thanh trạng thái gọn, nút bấm to hơn, vuốt để đổi tab.
+
+### Giai đoạn 3: Gameplay và cân bằng
+- [ ] Xem lại trận Giả Kim Sinh và hộ vệ Giả gia (đang giết người chơi nhiều nhất), kéo tỉ lệ thắng về khoảng 25–30%.
+- [ ] Cây ký ức: mỗi lần chết được điểm quang âm, dùng mở nhánh Biết trước, Đạo tâm, Nhãn lực, Tàng thạch (Đợt 5).
+- [ ] Chế độ khó: Cổ sư, Ma đầu, Nguyên tác (Đợt 5).
+- [ ] Thành tựu và bảng tổng kết kiếp; mệnh cách hiếm mở bằng thành tựu (Đợt 5).
+- [ ] Minigame bắt cổ hoang (kéo co ý niệm) thay cho tung xúc xắc (Đợt 5).
+
+### Giai đoạn 4: Nội dung gắn với cổ trùng và nhân vật
+- [ ] Sự kiện cốt truyện cho các cổ mới, theo đúng chủ nhân trong nguyên tác: Cứ Xỉ Kim Ngô và Cửu Diệp Sinh Cơ Thảo ở tầng sâu động Hoa Tửu; Đao Sí Huyết Bức ở lăng mộ Nhất Đại; Nguyệt Toàn gắn với Thanh Thư; Hỏa Lô với Xích Sơn; Băng Đao và Ẩn Lân rơi từ Bạch gia; Mộc Mị Cổ gắn với cái chết của Thanh Thư.
+- [ ] Chân dung cho 12 NPC còn thiếu (Phương Chính, Thanh Thư, Trầm Thúy, Mạc Bắc, Mạc Nhan, Hùng Lâm, Thiết Huyết Lãnh, Thiết Nhược Nam...), vẽ bằng Canva AI theo thiết kế riêng, cùng phong cách thủy mặc với tranh hiện có.
+- [ ] Tranh cho 25 cổ chưa có tranh (Canva AI hoặc tranh thảo trùng cổ CC0 ở mục B).
+
+### Giai đoạn 5: Âm thanh
+- [ ] Nhạc nền tổng hợp bằng Web Audio theo cảnh: sơn trại, núi, chiến đấu, lang triều, trận cuối.
+- [ ] Âm hiệu ứng riêng theo nhóm cổ (nguyệt, băng, huyết, kim).
+
+### Giai đoạn 6: Kỹ thuật
+- [ ] Biến `tools/sim.cjs` thành bộ kiểm tra tự động: báo lỗi khi tỉ lệ thắng ra ngoài 15–35%, khi có ca kẹt vòng lặp, hoặc khi dữ liệu tham chiếu tới cổ, địch, sự kiện không tồn tại.
+- [ ] Đánh số phiên bản save và viết hàm chuyển đổi khi đổi cấu trúc dữ liệu.
+- [ ] Tách CSS khỏi `index.html` ra `css/`.
+- [ ] Gỡ `assets/local/_scraped/` khỏi git và thêm vào `.gitignore` (ảnh tải từ mạng chỉ dùng trên máy).
+
+### Sau đó
+Quyển hai, Thương gia thành (Đợt 7), khi quyển một đã ổn định.
+
+---
+
 ## Việc đang dở (làm ngay)
 
 ### A. Ảnh cá nhân (chỉ trên máy)

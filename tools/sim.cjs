@@ -11,7 +11,7 @@ const ctx={
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','battle.js','minigame.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','events.js','living.js','battle.js','minigame.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});

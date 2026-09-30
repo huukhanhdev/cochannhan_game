@@ -80,7 +80,7 @@ const RECIPES=[
   {id:'thuytrao',from:'trilieu',st:45,wine:0,bl:0,extraGu:'ngocbi',ch:.7,d:'Trị Liệu Cổ + Ngọc Bì Cổ + 45 nguyên thạch'},
   {id:'bangdao',from:'nguyetquang',st:60,wine:0,bl:3,extraGu:'cuongnham',ch:.6,d:'Nguyệt Quang Cổ + Cương Nham Cổ + 3 huyết khí + 60 nguyên thạch'},
   {id:'anlan',from:'liemtuc',st:50,wine:0,bl:0,extraGu:'ngocbi',ch:.65,d:'Liễm Tức Cổ + Ngọc Bì Cổ + 50 nguyên thạch'},
-  {id:'thienbong',from:'thietbi',st:100,wine:0,bl:0,extraGu:'hacthi',ch:.6,d:'Thiết Bì Cổ + Hắc Thỉ Cổ + 100 nguyên thạch'},
+  {id:'thienbong',from:'bachngoc',st:100,wine:0,bl:0,extraGu:'thuytrao',ch:.6,d:'Bạch Ngọc Cổ + Thủy Tráo Cổ + 100 nguyên thạch'},
   {id:'cuxikimngo',from:'thietbi',st:120,wine:0,bl:5,extraGu:'hacthi',ch:.55,d:'Thiết Bì Cổ + Hắc Thỉ Cổ + 5 huyết khí + 120 nguyên thạch'},
   {id:'mokmi',from:'thanhti',st:110,wine:0,bl:0,extraGu:'cuongnham',ch:.55,d:'Thanh Ti Cổ + Cương Nham Cổ + 110 nguyên thạch'},
 ];
@@ -285,7 +285,7 @@ SHOP.push('sinhco');
 WILD.push('sinhco');
 
 RECIPES.push(
-  {id:'bachngoc',from:'ngocbi',st:45,wine:0,bl:0,extraGu:'cuongnham',ch:.6,d:'Ngọc Bì Cổ + Cương Nham Cổ + 45 nguyên thạch'},
+  {id:'bachngoc',from:'ngocbi',st:45,wine:0,bl:0,extraGu:'bachthi',ch:.6,d:'Ngọc Bì Cổ + Bạch Thỉ Cổ + 45 nguyên thạch'},
   {id:'trilieu',from:'sinhco',st:10,wine:0,bl:0,hb:3,ch:.75,d:'Sinh Cơ Diệp + 3 linh dược + 10 nguyên thạch'},
 );
 

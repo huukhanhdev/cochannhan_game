@@ -15,14 +15,14 @@ Nguyên tắc: không đổi số tuần (27) và bảng `CANON`. Chỉ sửa n�
 - [x] 2.3 `amduong` Âm Dương Chuyển Thân Cổ (Tứ chuyển, trị liệu): cổ của Nhất Đại (ch 197–205). Sang Quyển 2 tách thành Dương cổ.
 
 ## GĐ3. Nguồn cổ đúng nguyên tác trong Quyển 1
-- [ ] 3.1 Động Hoa Tửu tầng hai: cho Bạch Thỉ (giấu dưới đất, ch 63) thay vì Bạch Ngọc.
-- [ ] 3.2 Bạch Ngọc = Ngọc Bì + Bạch Thỉ (hợp luyện, ch 100).
-- [ ] 3.3 Thiên Bồng = Bạch Ngọc + Thủy Tráo (hợp luyện, ch 155).
-- [ ] 3.4 Rết Vàng: bỏ điều kiện tứ vị tửu, cần Địa Thính (lời khắc "kim ngô… địa thính", ch 128–129); đánh dấu nguyên tác.
-- [ ] 3.5 Thạch Khiếu: nhặt sau trận Thanh Thư đấu BNB (lang triều, ch 143).
-- [ ] 3.6 Cường Thủ: nhặt từ xác Hùng Chiên sau trận Lang Vương (ch 138).
-- [ ] 3.7 Đâu Suất Hoa: lựa chọn nguyên tác ở phần thưởng sau lang triều (ch 160).
-- [ ] 3.8 Thiên Nguyên Bảo Liên: sự kiện mới "Bảo Liên dưới nguyên tuyền" sau lang triều: đổ nguyên thạch nuôi rồi đoạt (ch 162–189).
+- [x] 3.1 Động Hoa Tửu tầng hai: cho Bạch Thỉ (giấu dưới đất, ch 63) thay vì Bạch Ngọc.
+- [x] 3.2 Bạch Ngọc = Ngọc Bì + Bạch Thỉ (hợp luyện, ch 100).
+- [x] 3.3 Thiên Bồng = Bạch Ngọc + Thủy Tráo (hợp luyện, ch 155).
+- [x] 3.4 Rết Vàng: bỏ điều kiện tứ vị tửu, cần Địa Thính (lời khắc "kim ngô… địa thính", ch 128–129); đánh dấu nguyên tác.
+- [x] 3.5 Thạch Khiếu: nhặt sau trận Thanh Thư đấu BNB (lang triều, ch 143).
+- [x] 3.6 Cường Thủ: nhặt từ xác Hùng Chiên sau trận Lang Vương (ch 138).
+- [x] 3.7 Đâu Suất Hoa: lựa chọn nguyên tác ở phần thưởng sau lang triều (ch 160).
+- [x] 3.8 Thiên Nguyên Bảo Liên: sự kiện mới "Bảo Liên dưới nguyên tuyền" sau lang triều: đổ nguyên thạch nuôi rồi đoạt (ch 162–189).
 
 ## GĐ4. Trận cuối theo nguyên tác
 - [ ] 4.1 `c_nhatdai`: thêm Thiên Hạc Thượng Nhân (Hạc Tai, ch 193–198) và hậu thủ Trấn Ma của Thiết Huyết Lãnh.

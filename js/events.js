@@ -12,6 +12,9 @@ function langMod(){
   return m;
 }
 
+// Canon VN 131–138: Hùng Chiên dùng Cường Thủ Cổ cướp cổ của Lang Vương, chết trong lang triều. Phương Nguyên nhặt được con cổ.
+function cuongThuDrop(){if(hasGu('cuongthu'))return;gainGu('cuongthu',true);log('Dọn xác sau trận, ngươi gặp một con bọ cánh cứng đen, đầu mọc càng sắt, đang bò quanh thi thể Hùng Chiên: Cường Thủ Cổ. Khí tức Xuân Thu Thiền tràn ra, ngươi luyện hóa nó trong nháy mắt.','good')}
+
 const EV={
 /* ================= NGUYÊN TÁC ================= */
 c_khaikhieu:{canon:1,title:'Lễ khai khiếu',hint:'Lễ khai khiếu',
@@ -149,10 +152,10 @@ c_lang1:{canon:1,title:'Lang triều',hint:'Lang triều bắt đầu',
 c_lang2:{canon:1,title:'Hàn khí giữa lang triều',hint:'Thanh Thư và Bạch Ngưng Băng',cond:()=>!S.f.tideDone,
   text:()=>'Đêm thứ mười của lang triều. Hàn khí Bắc Minh Băng Phách Thể cắn trả, Bạch Ngưng Băng phát cuồng, băng tiễn giết cả sói lẫn người. Cổ Nguyệt Thanh Thư, con nuôi của tộc trưởng, đứng chắn trước tộc nhân. Trong tay hắn là Mộc Mị Cổ, cấm cổ đổi sinh mệnh lấy sức mạnh.'+((S.rel.thanhthu||0)>=20?' Hắn quay lại nhìn ngươi: "Phương Nguyên, dẫn mọi người lui."':''),
   choices:()=>[
-    {t:'Đứng sau quan sát, chờ thời',tag:'ma',canon:1,dao:10,eff:()=>{meet('thanhthu');S.f.qingshuDead=1;S.f.baiWeak=1;S.stones+=40;gainGu('trilieu');return 'Thanh Thư thiêu đốt sinh mệnh, hóa thành thụ nhân khổng lồ, dùng thân mình giữ chặt Bạch Ngưng Băng cho tới khi hơi thở cuối cùng tắt lịm. Ngươi lặng lẽ nhặt túi cổ hắn đánh rơi (+40 nguyên thạch, Trị Liệu Cổ). Bạch Ngưng Băng bị thương nặng.'}},
+    {t:'Đứng sau quan sát, chờ thời',tag:'ma',canon:1,dao:10,eff:()=>{meet('thanhthu');S.f.qingshuDead=1;S.f.baiWeak=1;S.stones+=40;gainGu('trilieu');gainGu('thachkhieu',true);return 'Thanh Thư thiêu đốt sinh mệnh, hóa thành thụ nhân khổng lồ, dùng thân mình giữ chặt Bạch Ngưng Băng cho tới khi hơi thở cuối cùng tắt lịm. Ngươi lặng lẽ nhặt túi cổ hắn đánh rơi (+40 nguyên thạch, Trị Liệu Cổ). Giữa đống đá vỡ còn một con cổ vuông như viên xúc xắc, xám trắng: Thạch Khiếu Cổ. Ngươi luyện hóa nó, cất vào ngực. Bạch Ngưng Băng bị thương nặng.'}},
     {t:'Xông lên cùng Thanh Thư, không để hắn phải dùng cấm cổ',tag:'chinh',drift:12,eff:()=>{meet('thanhthu');fight('bai',{after:'cuuthanhthu',flee:false,mod:.7,spare:.25,spareAfter:'cuuthanhthu_hong',spareT:'Ngươi ngã xuống tuyết. Thanh Thư lao tới kéo ngươi ra sau lưng, rồi lặng lẽ rút Mộc Mị Cổ.'});return 'Ngươi lao vào bão tuyết. Thanh Thư khựng lại, rồi cất Mộc Mị Cổ đi.'}},
     {t:'Lợi dụng hỗn loạn đoạt cổ của Thanh Thư',tag:'ma',dao:20,check:['tamco',13],
-      ok:()=>{meet('thanhthu');S.f.qingshuDead=1;S.f.baiWeak=1;S.stones+=60;gainGu('trilieu');gainGu('hacthi');S.susp+=10;return 'Khi thụ nhân gục xuống, ngươi là người đầu tiên chạm vào xác hắn. Túi cổ của Thanh Thư giờ là của ngươi. Nguyệt Toàn Cổ đã chết theo chủ. Hiềm nghi +10.'},
+      ok:()=>{meet('thanhthu');S.f.qingshuDead=1;S.f.baiWeak=1;S.stones+=60;gainGu('trilieu');gainGu('hacthi');gainGu('thachkhieu');S.susp+=10;return 'Khi thụ nhân gục xuống, ngươi là người đầu tiên chạm vào xác hắn. Túi cổ của Thanh Thư giờ là của ngươi. Nguyệt Toàn Cổ đã chết theo chủ. Hiềm nghi +10.'},
       fail:()=>{meet('thanhthu');S.f.qingshuDead=1;S.f.baiWeak=1;S.susp+=30;S.danh-=15;return 'Có người thấy ngươi lục xác Thanh Thư. Cả trại căm phẫn. Hiềm nghi +30.'}},
   ]},
 
@@ -167,12 +170,23 @@ c_lang3:{canon:1,title:'Lang Vương',hint:'Lôi Quan Lang Vương',cond:()=>!S.
 
 c_luancong:{canon:1,title:'Sơn trại hoang tàn',hint:'Sau lang triều',cond:()=>S.f.tideDone,
   text:()=>'Lang triều tan. Sơn trại hoang tàn, nguyên tuyền cạn kiệt, trợ cấp từ nay giảm hẳn.'+(S.f.qingshuDead?' Tộc trưởng Cổ Nguyệt Bác đứng lặng trước gốc cây mọc lên từ xác con nuôi.':'')+(S.f.qingshuAlive?' Thanh Thư còn sống nhờ ngươi. Cả trại nhìn ngươi bằng ánh mắt khác.':'')+(S.f.fightKing?' Tin ngươi đối đầu Lang Vương đã truyền khắp trại.':''),
+  post:()=>{if(!S.f.baolienSeen){S.f.baolienSeen=1;later('c_baolien',0,1)}},
   choices:()=>[
+    {t:'Vào kho gia tộc chọn Đâu Suất Hoa',canon:1,req:()=>!hasGu('dausuat'),reqT:'Đã có Đâu Suất Hoa',eff:()=>{gainGu('dausuat');return 'Giữa đống cổ tầm thường có một cây thảo cổ Tam chuyển đỏ như đèn lồng, ba lá mập chỉ ba hướng: Đâu Suất Hoa. Chứa được thức ăn cho cổ, cất được cả nguyên thạch. Ngươi chọn ngay.'}},
     {t:'Nhận 60 nguyên thạch',eff:()=>{S.stones+=60;return '+60 nguyên thạch.'}},
     {t:'Nhận một con Ngọc Bì Cổ',eff:()=>{gainGu('ngocbi');return 'Nhận Ngọc Bì Cổ.'}},
     {t:'Xin Xích Thiết Xá Lợi Cổ',req:()=>S.danh>=50,reqT:'Cần danh vọng 50',eff:()=>{gainGu('xaloi2');return 'Tộc trưởng gật đầu. Nhận Xích Thiết Xá Lợi Cổ.'}},
     {t:'Xin Nguyệt Nghê Thường của học đường',req:()=>S.danh>=35,reqT:'Cần danh vọng 35',eff:()=>{gainGu('nguyetnghe');return 'Học đường gia lão trao cho ngươi dải lụa dệt từ nguyệt quang. Nhận Nguyệt Nghê Thường.'}},
     ...(S.f.qingshuDead?[{t:'Đêm khuya, đào hạt cổ dưới gốc cây Thanh Thư hóa thành',tag:'ma',dao:10,drift:4,eff:()=>{S.susp+=12;later('q_tocnghi',2,4);gainGu('mokmi');return 'Giữa rễ cây còn một con cổ xanh thẫm đang ngủ: Mộc Mị Cổ, cấm cổ đã nuốt sinh mệnh Thanh Thư. Hiềm nghi +12.'}}]:[]),
+  ]},
+
+// Canon VN 162–189: dưới nguyên tuyền Cổ Nguyệt có một gốc Thiên Nguyên Bảo Liên chưa hiện thực thể. Phương Nguyên lén đổ nguyên thạch nuôi nó, đợi lúc sơn trại sụp đổ thì đoạt.
+c_baolien:{title:'Thiên Nguyên Bảo Liên',hint:'Bí mật nguyên tuyền',
+  text:()=>'Nguyên tuyền cạn sau lang triều. Nhìn qua vách thủy tinh dưới đáy, ngươi thấy một bóng sen mờ nhạt đang ngủ: Thiên Nguyên Bảo Liên. Nó sinh ra nguyên thạch, lên Lục chuyển còn quý không kém Xuân Thu Thiền. Muốn nó hiện thực thể thì phải đổ nguyên thạch vào, và nếu phế nguyên tuyền thì không bao giờ trồng lại được.',
+  choices:()=>[
+    {t:'Lén đổ nguyên thạch nuôi Bảo Liên, chờ ngày sơn trại sụp đổ thì đoạt',canon:1,tag:'ma',dao:8,eff:()=>{const n=Math.min(S.stones,40);S.stones-=n;S.f.baolien=1;return `Ngươi thả ${n} nguyên thạch xuống nước. Bóng sen rõ thêm một chút. Ngươi nhớ kỹ chỗ này.`}},
+    {t:'Báo cho tộc trưởng',tag:'chinh',drift:8,eff:()=>{S.danh+=10;S.stones+=30;return 'Tộc trưởng Cổ Nguyệt Bác sững người, rồi thưởng ngươi 30 nguyên thạch và dặn giữ kín. Bảo Liên giờ là của gia tộc.'}},
+    {t:'Để đó',eff:()=>'Ngươi quay đi. Có những thứ chưa đến lúc chạm vào.'},
   ]},
 
 c_thiet:{canon:1,title:'Thần bổ nhập cuộc',hint:'Thiết Huyết Lãnh',
@@ -227,6 +241,7 @@ c_nhatdai:{canon:1,title:'Huyết Cương thức tỉnh',hint:'Cổ Nguyệt Nh�
   ]},
 
 c_final:{canon:1,title:'Thanh Mao Sơn diệt vong',hint:'Kết cục quyển một',
+  post:()=>{if(S.f.baolien&&!hasGu('thiennguyen')){gainGu('thiennguyen',true);log('Giữa hỗn loạn, ngươi lặn xuống nguyên tuyền, phá vách thủy tinh nhổ Thiên Nguyên Bảo Liên. Nguyên tuyền Cổ Nguyệt phế từ đây.','big')}},
   text:()=>'Bạch gia và Hùng gia thừa cơ tập kích, Cổ Nguyệt tộc tan tác. Giữa biển lửa, Bạch Ngưng Băng tự bạo Bắc Minh Băng Phách Thể, băng giá phủ kín cả Thanh Mao Sơn.'+(hasGu('huyetlo')?' Huyết Lô Cổ trong không khiếu rung lên, khát máu đồng tộc.':'')+(S.chuyen<3?' Ngươi chưa đạt Tam chuyển. Đường sống rất hẹp.':''),
   choices:()=>[
     ...(S.f.pcAlly?[{t:'Cùng Phương Chính phá vây, bảo vệ nhau rời núi',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_songhung',flee:false,mod:finalMod()*.98});return 'Hai huynh đệ Phương Nguyên - Phương Chính lưng tựa lưng, nguyệt nhận lam xích hòa quyện chém tan vòng vây!'}}]:[]),
@@ -262,10 +277,10 @@ hs_khe:{title:'Tầng một · Cửa hang',
     {t:'Để sau',eff:()=>'Ngươi ghi nhớ vị trí khe đá.'},
   ]},
 hs_bich:{title:'Tầng hai · Vách đá vôi',
-  text:()=>'Sâu hơn là một vách đá vôi trắng, bề mặt phủ lớp ngọc thạch mỏng. Chữ khắc trên vách là đề thi của Hoa Tửu Hành Giả: ai giải được, được một con Bạch Ngọc Cổ.',
+  text:()=>'Sâu hơn là một vách đá vôi trắng. Chữ khắc trên vách là đề thi của Hoa Tửu Hành Giả, lời giải chỉ xuống nền đất dưới chân.',
   choices:[
     {t:'Giải đề trên vách',canon:1,check:['ngo',12],bonus:()=>(S.f.hsBonus||0)+(mem('hoatuu')?5:0),
-      ok:()=>{S.f.hs=2;gainGu('bachngoc');return 'Lớp ngọc bong ra, một con cổ trắng như sứ bò vào lòng bàn tay ngươi: Bạch Ngọc Cổ, cổ phòng ngự Nhị chuyển.'},
+      ok:()=>{S.f.hs=2;gainGu('bachthi');return 'Ngươi đào đúng chỗ lời giải chỉ. Dưới lớp đất là một con cổ trắng như lợn con: Bạch Thỉ Cổ. Hoa Tửu Hành Giả để sẵn nó cho kẻ có Ngọc Bì, vì hai con hợp luyện thành Bạch Ngọc Cổ.'},
       fail:()=>{S.hp-=12;return 'Đá vôi sụp một mảng, ngươi bị thương (−12 khí huyết). Đề vẫn chưa giải được.'}},
     {t:'Quay về',eff:()=>''},
   ]},
@@ -295,9 +310,9 @@ hs_mo:{title:'Tầng sâu nhất · Thông đạo huyết văn',
     ...(!S.f.hsCuudiep?[{t:'Lục soát mạch nước bên bể đá',check:['ngo',14],bonus:()=>S.f.hsBonus||0,
       ok:()=>{S.f.hsCuudiep=1;gainGu('cuudiep');return 'Nơi mạch nước rỉ ra, một cây cỏ chín lá xanh biếc đang tỏa sinh cơ: Cửu Diệp Sinh Cơ Thảo, kỳ trân Hoa Tửu Hành Giả trồng lại.'},
       fail:()=>{S.f.hsCuudiep=1;gainGu('sinhco');return 'Cây cỏ chín lá đã héo gần hết. Ngươi chỉ cứu được một phiến Sinh Cơ Diệp.'}}]:[]),
-    ...(!S.f.hsKimngo?[{t:'Dùng rượu dụ con rết vàng trong khe đá',req:()=>S.chuyen>=2&&S.wine>=1,reqT:'Cần Nhị chuyển và 1 tứ vị tửu',check:['tamco',14],
-      ok:()=>{S.f.hsKimngo=1;S.wine--;gainGu('cuxikimngo');return 'Cứ Xỉ Kim Ngô, cổ trùng Hoa Tửu Hành Giả nuôi, bò ra uống rượu. Ngươi luyện hóa nó trước khi nó say tỉnh.'},
-      fail:()=>{S.wine--;S.hp-=30;return 'Hai hàng răng cưa vàng kim xẻ một đường trên tay ngươi rồi rút vào khe đá. Khí huyết −30.'}}]:[]),
+    ...(!S.f.hsKimngo?[{t:'Đọc lời khắc trên cửa đá: "kim ngô trong động là họa sát thân, dùng địa thính tránh hung tai". Nghe đường bò của con rết rồi luyện hóa nó',canon:1,req:()=>S.chuyen>=2&&hasGu('diathinh'),reqT:'Cần Nhị chuyển và Địa Thính Nhục Nhĩ Thảo',check:['tamco',12],bonus:()=>S.wine>=1?4:0,
+      ok:()=>{S.f.hsKimngo=1;gainGu('cuxikimngo');return 'Tai thịt nghe rõ từng nhịp chân của con rết vàng dài mấy trượng. Ngươi đón nó ở khúc quanh, rót chân nguyên luyện hóa trước khi nó kịp há hai hàng răng cưa: Cứ Xỉ Kim Ngô, Rết Vàng Răng Cưa của Hoa Tửu Hành Giả.'},
+      fail:()=>{S.hp-=30;return 'Ngươi nghe chậm một nhịp. Hai hàng răng cưa vàng kim xẻ một đường trên tay ngươi rồi rút vào khe đá. Khí huyết −30.'}}]:[]),
   ]},
 
 /* ================= NGẪU NHIÊN: HỌC ĐƯỜNG ================= */
@@ -1093,8 +1108,8 @@ const AFTER={
   baigia:()=>{S.danh+=8;learn('baigia');log('Danh vọng +8.','good')},
   lang:()=>{S.danh+=5;S.susp=Math.max(0,S.susp-10)},
   nhatdai_hong:()=>{S.f.hide=1;log('Ngươi nằm im dưới đống đá vụn tới khi tiếng gào thét tắt dần.','big')},
-  lang3_hong:()=>{S.f.tideDone=1;learn('langtrieu');S.stones+=50;S.danh+=20;S.susp=Math.max(0,S.susp-20);log('Ngươi không giết được Lang Vương, nhưng đã cầm chân nó đủ lâu. Gia lão hạ nó trong trận cuối. Cả trại nhớ mặt kẻ dám liều chết. Gia tộc thưởng 50 nguyên thạch. Danh vọng +20.','big')},
-  lang3:()=>{S.f.tideDone=1;learn('langtrieu');S.stones+=100;S.danh+=15;S.susp=Math.max(0,S.susp-30);log('Lang triều tan. Gia tộc thưởng 100 nguyên thạch. Danh vọng +15.','big')},
+  lang3_hong:()=>{cuongThuDrop();S.f.tideDone=1;learn('langtrieu');S.stones+=50;S.danh+=20;S.susp=Math.max(0,S.susp-20);log('Ngươi không giết được Lang Vương, nhưng đã cầm chân nó đủ lâu. Gia lão hạ nó trong trận cuối. Cả trại nhớ mặt kẻ dám liều chết. Gia tộc thưởng 50 nguyên thạch. Danh vọng +20.','big')},
+  lang3:()=>{cuongThuDrop();S.f.tideDone=1;learn('langtrieu');S.stones+=100;S.danh+=15;S.susp=Math.max(0,S.susp-30);log('Lang triều tan. Gia tộc thưởng 100 nguyên thạch. Danh vọng +15.','big')},
   bai:()=>{rel('bai',20);learn('bai');log('Bạch Ngưng Băng lau vết máu trên môi, bật cười: "Hay lắm. Chúng ta còn gặp lại." Rồi biến mất trong gió tuyết.','big')},
   huyethai:()=>{
     // Kiếp trước đã biết lăng mộ: tìm được hốc đá nơi bầy dơi canh mộ ngủ

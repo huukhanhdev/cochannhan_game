@@ -82,6 +82,7 @@ function maxEss(){
   const tcMod=(S.tuchat||44)/44;
   return Math.round(base*tcMod*((S.mod&&S.mod.ess)||1));
 }
+function injMat(){return S.inj&&S.inj.k==='mat'?2:0}
 function need(){return NEED[S.chuyen][S.giai]}
 function passAtk(){return S.gu.reduce((s,g)=>s+(GU[g.k].atk||0),0)}
 function rankMult(){return 1+.45*(S.chuyen-1)+.05*S.giai}
@@ -111,7 +112,7 @@ function roll(a,dc,b){
 }
 function rollShop(){
   const pool=[...(S.f.caravan?CARAVAN:SHOP)];S.shop=[];
-  for(let i=0;i<4&&pool.length;i++)S.shop.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  for(let i=0;i<(W('thuhoach')?5:4)&&pool.length;i++)S.shop.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
 }
 
 /* ---------- vòng đời ---------- */
@@ -141,7 +142,7 @@ function newLife(){
   S.canon=buildCanon();
   S.tideT=+Object.keys(S.canon).find(t=>S.canon[t]==='c_lang1')||19;
   const locs=['nui','hauson','trai','nhiemvu'];
-  S.cache=Object.keys(CACHE).sort(()=>Math.random()-.5).slice(0,2).map(kind=>{const from=rand(3,20);return {kind,loc:pick(locs),from,to:from+rand(3,6),done:0,rumor:0}});
+  S.cache=Object.keys(CACHE).sort(()=>Math.random()-.5).slice(0,2).map(kind=>{const from=rand(3,20);return {kind,loc:pick(CACHE_LOCS[kind]||locs),from,to:from+rand(3,6),done:0,rumor:0}});
   if(W('muadam'))S.f.hsBonus=(S.f.hsBonus||0)-3;
   S.hp=maxHp();
   rollShop();
@@ -156,13 +157,15 @@ function startTurn(){
     S.ess=Math.min(maxEss(),S.ess+essRecover);
     S.hp=Math.min(maxHp(),S.hp+Math.round(maxHp()*.25));
     S.susp=Math.max(0,S.susp-(hasGu('liemtuc')?10:hasGu('anlan')?8:5));
-    if(S.inj){S.inj.t--;if(S.inj.t<=0){log(`${INJURY[S.inj.k].n} đã lành.`,'good');S.inj=null}}
+    if(S.inj){S.inj.t--;if(S.inj.t<=0)healInjury()}
     if(hasGu('cuudiep')){S.herbs=(S.herbs||0)+1;log('Cửu Diệp Sinh Cơ Thảo ngưng kết ra 1 phiến Sinh Cơ Diệp (linh dược).','good')}
     if(S.f.tuulau){const n=S.f.tuulau===2?6:3;S.stones+=n;log(`Tửu lâu nộp ${n} nguyên thạch.`,'gold')}
     if(S.f.blackmailXich){S.stones+=10;log(`Cổ Nguyệt Xích Luyện lén gửi 10 nguyên thạch bịt miệng.`,'gold')}
     if(S.turn%3===1){
       if(S.susp<60){const n=(S.danh>=30?14:9)-(S.f.tideDone?5:0)+(W('hocnghiem')?4:0)-(W('pcthientai')?4:0);S.stones+=n;log(`Gia tộc phát trợ cấp tháng: ${n} nguyên thạch.`,'gold')}
       if(S.f.phe){S.stones+=6;log(`${S.f.phe} chu cấp 6 nguyên thạch.`,'gold')}
+      if(W('thuhoach')){S.f.freeMoon=Math.max(S.f.freeMoon||0,1)}
+      if(S.f.pcSupply){S.herbs++;log('Phương Chính lén gửi cho ngươi một gốc linh dược.','good')}
       if(!S.f.caravan)rollShop();
     }
     if(S.f.freeMoon)S.f.freeMoon--;
@@ -171,10 +174,10 @@ function startTurn(){
   const cid=(S.canon||CANON)[S.turn];
   if(cid&&(!EV[cid].cond||EV[cid].cond()))S.evq.push(cid);
   if((S.f.killedJKS||S.f.jksEscaped)&&!S.f.giaveDone&&S.turn>=14&&(S.susp>=45||S.turn>=18)&&!S.evq.includes('x_giave')){S.f.giaveDone=1;S.evq.push('x_giave')}
+  if(S.f.tramthuyAmbush&&S.turn>=22&&!S.evq.length&&Math.random()<.5){S.f.tramthuyAmbush=0;S.evq.push('x_tramthuy')}
   if(!S.evq.length){
     if(!S.npcProg)S.npcProg={phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1};
-    const npcPool=['npc_pc_1','npc_pc_2','npc_pc_3','npc_tt_1','npc_tt_2','npc_tt_3','npc_tt_4','npc_bai_1','npc_bai_2','npc_xm_1','npc_xm_2','npc_xm_3','npc_xm_4','npc_cm_1','npc_cm_2','npc_cm_3'];
-    for(const qid of npcPool){
+    for(const qid of NPC_POOL){
       if(EV[qid]&&(!EV[qid].cond||EV[qid].cond())&&!S.f[qid]&&!S.evq.includes(qid)){
         S.evq.push(qid);
         break;
@@ -237,6 +240,7 @@ function choose(i){
   }
   log(txt);
   if(ev.post)ev.post();
+  S.stones=Math.max(0,S.stones);
   if(S.hp<=0&&!S.combat){die(`${ev.title}`);return}
   saveAll();advance();render();
 }
@@ -275,7 +279,7 @@ function act(id){
   switch(id){
     case 'tuluyen':S.panel='tuluyen';render();return;
     case 'hocduong':
-      if(Math.random()<.3){S.ngo++;log('Nghe giảng có chỗ ngộ ra. Ngộ tính +1.','good')}
+      if(Math.random()<(S.f.studious?.5:.3)){S.ngo++;log('Nghe giảng có chỗ ngộ ra. Ngộ tính +1.','good')}
       if(Math.random()<.7)randomEvent('hocduong');else log('Một buổi học bình lặng.','sys');break;
     case 'trai':if(!randomEvent('trai'))log('Sơn trại yên ả. Ngươi uống một chén trà rồi về.','sys');break;
     case 'nui':
@@ -289,7 +293,7 @@ function act(id){
         break;
       }
       if(Math.random()<.55&&randomEvent('nui'))break;
-      fight(pick((S.chuyen===1?['heorung','heorung','dienlang','tanbinh']:['dienlang','hachung','tanbinh','loiquan']).concat(W('hunggia')?['hunggia','hunggia']:[])),{scale:1,elite:Math.random()<(S.turn>=12?.3:S.turn>=6?.15:.05)*((S.mod&&S.mod.elite)||1)});break;
+      fight(pick((S.chuyen===1?['heorung','heorung','dienlang','tanbinh','docxa','bao']:['dienlang','hachung','tanbinh','loiquan','bao']).concat(W('hunggia')?['hunggia','hunggia']:[],W('hanthu')&&S.turn>=8?['baitrinhsat']:[])),{scale:1,elite:Math.random()<(S.turn>=12?.3:S.turn>=6?.15:.05)*((S.mod&&S.mod.elite)||1)});break;
     case 'hauson':S.evq.push(['hs_khe','hs_bich','hs_ngam','hs_dong','hs_mo'][Math.min(S.f.hs||0,4)]);break;
     case 'nhiemvu':
       if(Math.random()<.45&&randomEvent('nhiemvu'))break;
@@ -297,7 +301,7 @@ function act(id){
     case 'robgate':S.dao=clamp(S.dao+3,-100,100);S.susp+=W('hocnghiem')?10:5;S.danh-=3;fight('hoctro',{scale:1});break;
     case 'nghi':
       S.hp=Math.min(maxHp(),S.hp+Math.round(maxHp()*.5));S.ess=Math.min(maxEss(),S.ess+Math.round(maxEss()*.4));
-      if(S.inj){S.inj.t-=2;log(`Tĩnh dưỡng giúp ${INJURY[S.inj.k].n} mau lành.`,'good')}
+      if(S.inj){S.inj.t-=2;log(`Tĩnh dưỡng giúp ${INJURY[S.inj.k].n} mau lành.`,'good');if(S.inj.t<=0)healInjury()}
       log('Ngươi tĩnh dưỡng, nghe gió núi thổi qua rừng trúc.','sys');break;
   }
   S.acted=true;
@@ -314,6 +318,7 @@ function absorb(){
 /* ---------- tu luyện ---------- */
 function cultMaxStones(){return Math.ceil(maxEss()/5)}
 function cultivate(st){
+  S.stones=Math.max(0,S.stones);
   if(st>S.stones||st>cultMaxStones())return;
   const e=Math.floor(S.ess);S.stones-=st;
   const gain=Math.round((e+st*5)*cultMult());
@@ -352,7 +357,7 @@ function levelUp(){
 }
 function useGu(i){
   const g=S.gu[i];if(!g||GU[g.k].t!=='use'||S.combat)return;
-  const need_=g.k==='xaloi1'?1:g.k==='xaloi2'?2:3;
+  const need_={xaloi1:1,xaloi2:2,xaloi3:3}[g.k]||2;
   if(S.chuyen!==need_){log(`${GU[g.k].n} chỉ dùng được ở ${CH[need_]} chuyển.`,'danger');render();return}
   S.gu.splice(i,1);
   if(window.SFX) SFX.levelUp();
@@ -392,12 +397,11 @@ function gambleStone(id){
     learn('doanthach');
     if(window.SFX) SFX.coin();
     if(Math.random()<0.45){
-      const profit=Math.round(st.price*(1.6+Math.random()*1.4));
+      const profit=Math.round(st.price*(1.3+Math.random()*1.0));
       S.stones+=profit;
       log(`Mổ thạch đại hỷ! Khối ${st.n} chứa tinh thạch thuần túy, bán ngay được ${profit} nguyên thạch!`,'gold');
     }else{
-      const pool=id==='thach_huyet'?['huyetnguyet','thietbi','diathinh','cuxikimngo','daosihuyetbuc']:id==='thach_truc'?['uguang','tuutrung','cuongnham','bachthi','toanphong','tieuguang','thuytrao','bangdao']:['nguyetquang','cuongnham','bachthi','dongbi','thanhti'];
-      const k=pick(pool);
+      const k=pick(STONE_POOL[id]||STONE_POOL.thach_re);
       gainGu(k);
       log(`Mổ thạch chấn động! Một con ${GU[k].n} còn nguyên vẹn nằm giữa lòng đá!`,'big');
     }
@@ -414,11 +418,11 @@ function canRefine(r){
   if(!hasGu(r.from)) return false;
   if(r.extraGu && !hasGu(r.extraGu)) return false;
   if(r.id==='tuvi' && !S.f.tuviRecipe) return false;
-  return S.stones>=r.st && S.wine>=(r.wine||0) && S.blood>=(r.bl||0);
+  return S.stones>=r.st && S.wine>=(r.wine||0) && S.blood>=(r.bl||0) && S.herbs>=(r.hb||0);
 }
 function refine(i){
   const r=RECIPES[i];if(!canRefine(r))return;
-  S.stones-=r.st;S.wine-=(r.wine||0);S.blood-=(r.bl||0);S.refined=true;
+  S.stones-=r.st;S.wine-=(r.wine||0);S.blood-=(r.bl||0);S.herbs-=(r.hb||0);S.refined=true;
   S.gu.splice(S.gu.findIndex(g=>g.k===r.from),1);
   if(r.extraGu){
     const idx=S.gu.findIndex(g=>g.k===r.extraGu);
@@ -467,10 +471,15 @@ function dmgMult(){
   if(c.intent==='guard'&&!(c.stun>0))m*=.5;
   return m;
 }
+function chillFoe(c,v){
+  const before=c.atkBuff;c.atkBuff=Math.max(-.3,c.atkBuff-v);
+  if(c.atkBuff<before)log(`Hàn khí làm ${c.n} cứng đờ, lực đánh giảm.`,'good');
+}
+function healAmt(k){const g=GU[k]||{};if(g.healAmt)return g.healAmt;return g.heal?g.heal[0]+g.heal[1]*S.chuyen:22+12*S.chuyen}
 function fury(c){return c.turn>=DIFF.furyTurn?(c.turn-DIFF.furyTurn+1)*.1:0}
-// Chân nguyên thật khi dùng con cổ thứ i (tính cả cơn đói)
-function guCostIdx(i){const g=S.gu[i];return costOf(GU[g.k].cost||0)+(g.h||0)*2}
 function costOf(base){return Math.ceil(base*(S.combat&&S.combat.suppress>0?1.5:1))}
+// Chân nguyên thật khi thúc cổ thứ i: cổ đói tốn thêm 2 mỗi mức đói
+function guCostIdx(i){const g=S.gu[i];return g?costOf(GU[g.k].cost||0)+(g.h||0)*2:0}
 function guReady(key){const c=S.combat;return !(c&&((c.cd[key]||0)>0||(c.frozen[key]||0)>0))}
 
 // Đòn của địch đánh vào người chơi (qua hộ thể nếu có)
@@ -533,13 +542,15 @@ function playerAct(type,arg){
       if(window.SFX)SFX.blade();
       const d=hitFoe((g.dmg*rankMult()*(1-.25*hung)+passAtk())*vary(),!!g.pierce,{type:'patk',kind:key});
       log(`${g.n}! ${c.n} mất ${d}.${g.pierce?' (Xuyên giáp)':c.def?` (giáp chặn ${c.def})`:''}`,'good');
+      if(g.stun&&!hung){c.stun+=g.stun;log(`${c.n} bị trói chặt, choáng ${g.stun} lượt.`,'good')}
+      if(g.chill)chillFoe(c,g.chill);
+      if(g.slow)chillFoe(c,g.slow);
       if(g.bleed){c.bleed=(c.bleed||0)+g.bleed;log(`${c.n} bị Chảy Máu dữ dội ${c.bleed} lượt.`,'good')}
-      if(g.slow){c.atkBuff=Math.max(-.4,(c.atkBuff||0)-g.slow);log(`Hàn khí làm chậm! Đòn công của ${c.n} suy giảm.`,'good')}
       if(g.lifesteal){
         const heal=Math.max(1,Math.round(d*g.lifesteal));
         S.hp=Math.min(maxHp(),S.hp+heal);
         FX.q({type:'heal',amt:heal});
-        log(`Huyết đao hút ${heal} khí huyết phản bổ bản thân.`,'good');
+        log(`${g.n} hút ${heal} khí huyết phản bổ bản thân.`,'good');
       }
     }else if(g.t==='guard'){
       if(window.SFX)SFX.bell();
@@ -550,10 +561,8 @@ function playerAct(type,arg){
       log(`${g.n} hộ thể: chỉ nhận ${Math.round(c.shieldRed*100)}% sát thương trong ${c.shield} lượt${c.reflect?` (phản ${Math.round(c.reflect*100)}% sát thương)`:''}.`,'good');
     }else if(g.t==='heal'){
       if(window.SFX)SFX.bell();
-      const h=g.healAmt||(22+12*S.chuyen);
-      S.hp=Math.min(maxHp(),S.hp+h);
-      if(c.poison)c.poison=Math.max(0,c.poison-2);
-      FX.q({type:'heal',amt:h});log(`${g.n} tỏa ánh biếc chữa thương. Khí huyết +${h}.`,'good');
+      const h=healAmt(key);S.hp=Math.min(maxHp(),S.hp+h);if(c.poison)c.poison=g.cure?0:Math.max(0,c.poison-2);
+      FX.q({type:'heal',amt:h});log(`${g.n} tỏa ánh xanh. Khí huyết +${h}.`,'good');
     }
   }else if(type==='combo'){
     const cb=COMBOS.find(x=>x.id===arg);
@@ -575,6 +584,7 @@ function playerAct(type,arg){
     if(cb.shield){c.shield=Math.max(c.shield,cb.shield);c.shieldRed=Math.min(c.shieldRed,.4);FX.q({type:'shield'})}
     if(cb.bleed){c.bleed+=cb.bleed;log(`${c.n} bị chảy máu ${c.bleed} lượt.`,'good')}
     if(cb.stun){c.stun+=cb.stun;log(`${c.n} bị choáng ${cb.stun} lượt.`,'good')}
+    if(cb.chill)chillFoe(c,cb.chill);
     if(cb.reflect){c.reflect=cb.reflect;log(`Hư ảnh phản phệ ${Math.round(cb.reflect*100)}% sát thương.`,'good')}
   }else if(type==='herb'){
     if(S.herbs<1||!guReady('herb'))return;
@@ -648,13 +658,14 @@ function win(){
   if(c&&!c.ko&&window.PIXI&&$('arena')&&!RM){c.ko=1;c.hp=Math.min(c.hp,0);FX.busy=true;FX.q({type:'ko'});saveAll();render();setTimeout(()=>{FX.busy=false;win()},950);return}
   S.combat=null;
   const st=Math.round(rand(c.st[0],c.st[1])*((S.mod&&S.mod.win)||1)*(W('linhmach')?.8:1));
-  S.stones+=st;S.blood+=c.bl;
+  const bl=c.bl+(S.f.hunter&&BEASTS.has(c.k)?1:0);
+  S.stones+=st;S.blood+=bl;
   checkInjury();
   if(window.SFX) SFX.coin();
-  FX.toastMsg={g:(ART[c.k]||{g:'敌'}).g,t:'Hạ gục '+c.n,sub:[st?`+${st} nguyên thạch`:'',c.bl?`+${c.bl} huyết khí`:''].filter(Boolean).join(' · '),cls:'win'};
-  log(`${c.n} gục ngã.${st?` +${st} nguyên thạch.`:''}${c.bl?` +${c.bl} huyết khí.`:''}`,'gold');
+  FX.toastMsg={g:(ART[c.k]||{g:'敌'}).g,t:'Hạ gục '+c.n,sub:[st?`+${st} nguyên thạch`:'',bl?`+${bl} huyết khí`:''].filter(Boolean).join(' · '),cls:'win'};
+  log(`${c.n} gục ngã.${st?` +${st} nguyên thạch.`:''}${bl?` +${bl} huyết khí.`:''}`,'gold');
   if(c.drop&&Math.random()<c.drop){
-    const k=pick(SHOP);gainGu(k,true);log(`Trên người đối thủ có một con ${GU[k].n}. Ngươi luyện hóa nó.`,'good');
+    const k=pick(DROP_POOL[c.k]||SHOP);gainGu(k,true);log(`Trên người đối thủ có một con ${GU[k].n}. Ngươi luyện hóa nó.`,'good');
   }
   if(Math.random()<.25){S.satphat++;log('Trận chiến mài giũa bản năng. Sát phạt +1.','good')}
   if(c.after&&AFTER[c.after])AFTER[c.after]();
@@ -663,9 +674,14 @@ function win(){
 
 function checkInjury(){
   if(S.hp<maxHp()*.25&&!S.inj){
-    const k=pick(Object.keys(INJURY));S.inj={k,t:3};
+    const k=pick(Object.keys(INJURY));S.inj={k,t:3};if(k==='mat')S.ngo-=2;
     log(`Trận chiến để lại di chứng: ${INJURY[k].n} (${INJURY[k].d}) trong 3 tuần.`,'danger');
   }
+}
+function healInjury(){
+  if(!S.inj)return;
+  if(S.inj.k==='mat')S.ngo+=2;
+  log(`${INJURY[S.inj.k].n} đã lành.`,'good');S.inj=null;
 }
 function pickTrait(k){
   if(!S.traitOpts||!S.traitOpts.includes(k))return;
@@ -775,6 +791,9 @@ function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];META.combos=META.combos||{};
+  // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị
+  S.gu=(S.gu||[]).filter(g=>GU[g.k]);S.shop=(S.shop||[]).filter(k=>GU[k]);META.codex=(META.codex||[]).filter(k=>GU[k]);
+  for(const id in META.combos)if(!COMBOS.some(c=>c.id===id))delete META.combos[id];
   if(S.combat){const c=S.combat;c.cd=c.cd||{};c.frozen=c.frozen||{};c.def=c.def||0;c.turn=c.turn||0;c.atkBuff=c.atkBuff||0;c.poison=c.poison||0;c.suppress=c.suppress||0;c.shieldRed=c.shieldRed||.4}
   // Tải lại giữa lúc đang diễn đòn kết liễu
   if(S.combat&&S.combat.hp<=0){S.combat.ko=1;win();return}

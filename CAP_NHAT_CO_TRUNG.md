@@ -88,3 +88,20 @@
   - **Tỉ lệ thắng kiếp đầu**: `5% – 6%` (đảm bảo độ khó khắc nghiệt đầu game theo đúng tinh thần nguyên tác).
   - **Cảnh giới trung bình lúc lang triều**: ~Nhị chuyển cao giai (2.80).
   - **Cổ Đồ Giám (`codex`)**: Tự động nhận diện đầy đủ 37 cổ trùng khi mở khóa.
+
+---
+
+## 6. Gộp với nhánh bản 13 (30/09/2026)
+
+Danh sách cổ trùng ở trên được giữ làm chuẩn. Khi gộp với nhánh mở rộng nội dung bản 13:
+
+- **Trùng tên:** Thủy Tráo Cổ, Thanh Ti Cổ, Bạch Ngân Xá Lợi Cổ lấy theo định nghĩa ở mục 1.
+- **Bỏ các cổ bản 13 không có trong danh sách nguyên tác:** Đằng Mạn Cổ, Kim Châm Cổ, Băng Tiễn Cổ, Lang Hào Cổ, Tửu Nang Hoa. Mọi chỗ dùng chúng (chợ, rơi đồ, mổ thạch, bí tàng, sát chiêu) chuyển sang cổ trong danh sách chuẩn.
+- **Giữ Sinh Cơ Diệp** (cổ trị thương nhỏ), khớp với Cửu Diệp Sinh Cơ Thảo sinh ra Sinh Cơ Diệp.
+- **Sát chiêu bản 13 còn lại:** Thủy Nguyệt Hộ Trảm (Thủy Tráo + Nguyệt Quang), Băng Huyết Song Trảm (Băng Đao + Huyết Nguyệt).
+- **Kẻ địch rơi cổ theo loại:** Bạch gia rơi Băng Đao Cổ, Ẩn Lân Cổ; Hùng gia rơi Hùng Lực Cổ; học trò rơi Nguyệt Quang, Thanh Ti.
+- **Mổ thạch** dùng bảng `STONE_POOL` theo loại đá (gồm cả cổ mới), và giữ bản sửa lỗ hổng giá thu mua của bản 13.
+- **Cửu Diệp Sinh Cơ Thảo** giờ giải độc hoàn toàn đúng như mô tả.
+- Hàm tính chân nguyên khi cổ đói dùng chung một tên `guCostIdx`.
+
+Kết quả `node tools/sim.cjs 300 6` sau khi gộp: thắng 35,3% trong 6 kiếp, kiếp đầu 2,7%, không có ca kẹt vòng lặp.

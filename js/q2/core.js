@@ -55,7 +55,7 @@ function startQ2(ending){
     dao:Math.max(20,old?old.dao:30),danh:0,susp:0,canonHit:0,canonMiss:0,
     gu:[{k:'xuanthu',h:0},...core.map(k=>({k,h:0})),...keep],
     rel:{bainu:lo||from==='bai_dong'||from==='huyetlo_bai'?10:0},met:{},f:{q2From:from},shop:[],evq:[],combat:null,panel:null,
-    over:null,ending:null,acted:false,refined:false,log:(old?old.log.slice(-6):[]),mod:old?old.mod||{}:{},inj:null,trait:old?old.trait:null,
+    over:null,ending:null,ap:AP_WEEK,pend:null,refined:false,log:(old?old.log.slice(-6):[]),mod:old?old.mod||{}:{},inj:null,trait:old?old.trait:null,
     traitOpts:null,npcProg:{},var:{},world:[],cache:[],path:[],ffOffer:false,
     mem:old?Object.assign({},old.mem):{},combos:old?Object.assign({},old.combos):{},
     cicada:{charge:0},snaps:[],rewinds:0,drift:0,driftStep:0,later:[],evLast:{},evSeen:{}};
@@ -70,7 +70,7 @@ function startQ2(ending){
 // Bắt đầu chương k: đặt lại lượt, lịch mốc, ảnh chụp quay ngược; lưu mốc chơi lại.
 function enterChapter(k){
   const ch=CHAPTERS[k];if(!ch)return;
-  S.chap=k;S.turn=0;S.evq=[];S.panel=null;S.acted=false;S.pendingChap=null;S.snaps=[];S.later=[];S.evLast={};S.over=null;S.combat=null;
+  S.chap=k;S.turn=0;S.evq=[];S.panel=null;S.ap=AP_WEEK;S.pend=null;S.pendingChap=null;S.snaps=[];S.later=[];S.evLast={};S.over=null;S.combat=null;
   S.canon=Object.assign({},ch.canon);
   if(ch.shop)rollShop2();
   log(`— ${ch.title} —`,'big');
@@ -92,7 +92,7 @@ function restartChapter(){
   cicadaSnap();saveAll();render();
 }
 // Gọi trong hiệu ứng lựa chọn hoặc sau trận để kết thúc chương: sang chương k ở lượt kế
-function chapEnd(k){S.pendingChap=k;S.acted=true}
+function chapEnd(k){S.pendingChap=k;S.ap=0;S.pend=null}
 // Kết Quyển 2 (hoặc điểm "còn tiếp")
 function q2Ending(k){S.over='win';S.ending=k}
 
@@ -100,7 +100,7 @@ function q2Ending(k){S.over='win';S.ending=k}
 function startTurn2(){
   if(S.pendingChap){const k=S.pendingChap;S.pendingChap=null;return enterChapter(k)}
   const ch=curChap();
-  S.turn++;S.acted=false;S.refined=false;
+  S.turn++;S.ap=AP_WEEK;S.pend=null;S.refined=false;
   log(timeLabel(),'day');
   if(S.turn>1){
     S.ess=Math.min(maxEss(),S.ess+Math.round(maxEss()*(0.5+(S.tuchat||44)*0.003)*(S.inj&&S.inj.k==='noi'?.5:1)));
@@ -115,11 +115,12 @@ function startTurn2(){
   }
   laterTick();
   const cid=S.canon[S.turn];
-  if(cid&&EV[cid]&&(!EV[cid].cond||EV[cid].cond()))S.evq.push(cid);
+  // Như Quyển 1: mốc chờ người chơi đối mặt, hết việc thì tự tới; mốc trong URGENT hoặc ch.urgent ập tới ngay
+  if(cid&&EV[cid]&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid)||(ch.urgent||[]).includes(cid))S.evq.push(cid);else S.pend=cid}
   // Quá hạn chương mà chưa kết (ví dụ chạy khỏi trận cuối): gặp lại mốc cuối
   if(S.turn>ch.turns&&!S.evq.length&&!S.pendingChap){const last=ch.canon[ch.turns];if(last)S.evq.push(last)}
   // Chuyện bên lề của chương: mỗi chuyện một lần, theo thứ tự, khi tuần này chưa có gì
-  if(!S.evq.length)for(const id of ch.side||[]){const e=EV[id];if(e&&!S.f['ev_'+id]&&(!e.cond||e.cond())){S.f['ev_'+id]=1;S.evq.push(id);break}}
+  if(!S.evq.length&&(!S.pend||Math.random()<.5))for(const id of ch.side||[]){const e=EV[id];if(e&&!S.f['ev_'+id]&&(!e.cond||e.cond())){S.f['ev_'+id]=1;S.evq.push(id);break}}
   cicadaSnap();
 }
 function rollShop2(){const pool=[...(curChap().shop||[])];S.shop=[];for(let i=0;i<4&&pool.length;i++)S.shop.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0])}
@@ -134,7 +135,7 @@ function act2(id){
     if(sp.foes&&Math.random()<(sp.foeP??.6))fight2(pick(sp.foes),{elite:Math.random()<.12});
     else log(sp.quiet||'Không có chuyện gì.','sys');
   }
-  S.acted=true;saveAll();advance();render();return true;
+  spendAct();saveAll();advance();render();return true;
 }
 
 /* ---------- Bạch Ngưng Băng đồng hành ---------- */
@@ -154,12 +155,14 @@ function renderMap2(st){
   st.innerHTML=`<div class="mapwrap">
     <div class="map ${mapMood()}" style="background-image:url('${asset('art/'+(ch.bg||'bg_forest')+'.jpg')}')">
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i></div>
-      <div class="map-cap"><span class="label">${timeLabel()}</span><h2>${ch.ask||'Lượt này làm gì?'}</h2></div>
-      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':' · 1 '+ch.unit}</span></button>`).join('')}
+      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?(ch.ask||'Lượt này làm gì?'):`Còn ${S.ap} việc trong ${ch.unit} này`}</h2></div>
+      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại':' · 1 việc'}</span></button>`).join('')}
     </div>
     <div class="map-foot">
       <button class="btn" data-a="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}>Hấp thu 5 nguyên thạch (+25 chân nguyên)</button>
-      <span class="dimt small">${ch.foot||'Mỗi lượt làm một việc. Chợ và lò luyện không tốn thời gian.'}</span>
+      ${S.pend?`<button class="btn active pend-btn" data-a="pend" title="Hết việc thì chuyện này tự tìm tới">Đối mặt: ${EV[S.pend].hint||EV[S.pend].title}</button>`:''}
+      <button class="btn ghost" data-a="endweek">Qua ${ch.unit}</button>
+      <span class="dimt small">${ch.foot||`Mỗi ${ch.unit} ${AP_WEEK} việc. Chợ và lò luyện không tốn việc.`}</span>
     </div></div>`;
 }
 function q2WinHTML(){

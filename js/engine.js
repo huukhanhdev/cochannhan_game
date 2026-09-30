@@ -78,7 +78,7 @@ function gainGu(k,silent){
   if(window.SFX) SFX.coin();
   if(!silent)log(`Nhận ${GU[k].n}.`,'good');
 }
-function maxHp(){return Math.round((70+40*S.chuyen+S.gu.reduce((s,g)=>s+((GU[g.k]||{}).hp||0),0))*((S.mod&&S.mod.hp)||1))}
+function maxHp(){return Math.round((70+70*S.chuyen+10*(S.giai||0)+S.gu.reduce((s,g)=>s+((GU[g.k]||{}).hp||0),0))*((S.mod&&S.mod.hp)||1))}
 function maxEss(){
   const base=MAXE[S.chuyen];
   const tcMod=(S.tuchat||44)/44;
@@ -89,8 +89,16 @@ function need(){return NEED[S.chuyen][S.giai]}
 function passAtk(){return S.gu.reduce((s,g)=>s+(GU[g.k].atk||0),0)}
 // Tổng một chỉ số bị động của các cổ đang có (pow: tinh luyện chân nguyên, moonAtk: thưởng nguyệt nhận, armor: giáp, refine: luyện cổ)
 function guSum(k){return S.gu.reduce((s,g)=>s+((GU[g.k]||{})[k]||0),0)}
-function rankMult(){return 1+.45*(S.chuyen-1)+.05*S.giai}
-function baseAtk(){return Math.max(1,4+S.satphat+3*S.chuyen+passAtk()-(S.inj&&S.inj.k==='tay'?3:0))}
+// Cảnh giới: mỗi tiểu cảnh giới chân nguyên tinh thuần hơn (cổ +8%), thân thể được tẩm bổ (+10 khí huyết, +1 sát lực).
+// Mỗi đại cảnh giới: chân nguyên đổi chất (cổ +50%), +70 khí huyết, +6 sát lực, không khiếu rộng hơn.
+// Đỉnh phong lên sơ kỳ cảnh giới sau vẫn tăng rõ: +40 khí huyết, +26% uy lực cổ, +3 sát lực.
+function rankMult(){return 1+.5*(S.chuyen-1)+.08*S.giai}
+function realmSnap(){return {hp:maxHp(),atk:baseAtk(),m:rankMult(),e:maxEss()}}
+function realmGain(a){const b=realmSnap(),o=[];
+  if(b.hp>a.hp)o.push(`khí huyết tối đa +${b.hp-a.hp}`);if(b.atk>a.atk)o.push(`sát lực +${b.atk-a.atk}`);
+  if(b.m>a.m)o.push(`uy lực cổ +${Math.round((b.m-a.m)*100)}%`);if(b.e>a.e)o.push(`chân nguyên tối đa +${b.e-a.e}`);
+  return o.length?o.join(', ').replace(/^./,c=>c.toUpperCase())+'.':''}
+function baseAtk(){return Math.max(1,4+S.satphat+6*S.chuyen+(S.giai||0)+passAtk()-(S.inj&&S.inj.k==='tay'?3:0))}
 function cultMult(){
   const tcBonus=((S.tuchat||44)-44)*0.01;
   return (1+S.gu.reduce((s,g)=>s+(GU[g.k].cult||0),0)+tcBonus)*(S.inj&&S.inj.k==='kinh'?.7:1)*(W('linhmach')?1.15:1);
@@ -98,7 +106,7 @@ function cultMult(){
 function foodCost(){
   return S.gu.reduce((s,g)=>s+(g.k==='nguyetquang'&&S.f.freeMoon?0:(GU[g.k].food||0)*(g.k==='nguyetquang'&&W('dathan')?2:1)+(W('dichco')&&GU[g.k].t!=='fate'?1:0)),0)+((S.mod&&S.mod.food)||0);
 }
-function rankName(){return `${CH[S.chuyen]} chuyển ${GIAI[S.giai]} giai`}
+function rankName(){return `${CH[S.chuyen]} chuyển ${GIAI[S.giai]}`}
 function talentName(tc){
   tc=tc||44;
   if(tc>=85) return `Giáp đẳng (${tc}%)`;
@@ -120,12 +128,16 @@ function rollShop(){
 }
 
 /* ---------- vòng đời ---------- */
+// Mỗi tuần (10 ngày) có AP_WEEK việc. Mốc nguyên tác không bật ra đầu tuần mà chờ trong S.pend:
+// người chơi tự đối mặt lúc nào cũng được, hoặc hết việc thì nó tự tới. Mốc trong URGENT ập tới ngay đầu tuần.
+const AP_WEEK=3;
+const URGENT=new Set(['c_khaikhieu','c_lang1','c_lang2','c_lang3','c_thietvay','c_nhatdai','c_final']);
 function newLife(){
   const startTalent = 44;
   S={v:2,turn:0,chuyen:1,giai:0,prog:0,ess:25,hp:90,stones:20,blood:0,wine:0,herbs:1,
     tuchat:startTalent,tamco:8,satphat:3,ngo:6,dao:0,danh:10,susp:0,canonHit:0,canonMiss:0,
     gu:[{k:'xuanthu',h:0}],rel:{},met:{},f:{hs:0},shop:[],evq:[],combat:null,panel:null,
-    over:null,ending:null,acted:false,refined:false,log:[],mod:{},inj:null,
+    over:null,ending:null,ap:AP_WEEK,pend:null,refined:false,log:[],mod:{},inj:null,
     traitOpts:Object.keys(TRAITS).sort(()=>Math.random()-.5).slice(0,3),
     npcProg:{phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1},
     // Mốc nguyên tác: đúng ký ức trừ 1–2 mốc đã lệch (butterfly.js). Tuyến NPC vẫn rút ngẫu nhiên.
@@ -156,7 +168,7 @@ function newLife(){
 
 function startTurn(){
   if(S.book===2)return startTurn2();
-  S.turn++;S.acted=false;S.refined=false;
+  S.turn++;S.ap=AP_WEEK;S.pend=null;S.refined=false;
   log(`Tháng ${month()} · ${tuan()}`,'day');
   if(S.turn>1){
     const essRecover = Math.round(maxEss() * (0.5 + (S.tuchat||44)*0.003) * (S.inj&&S.inj.k==='noi'?.5:1));
@@ -179,12 +191,12 @@ function startTurn(){
   }
   laterTick();
   const cid=(S.canon||CANON)[S.turn];
-  if(cid&&(!EV[cid].cond||EV[cid].cond()))S.evq.push(cid);
+  if(cid&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid))S.evq.push(cid);else S.pend=cid}
   if((S.f.killedJKS||S.f.jksEscaped)&&!S.f.giaveDone&&S.turn>=14&&(S.susp>=45||S.turn>=18)&&!S.evq.includes('x_giave')){S.f.giaveDone=1;S.evq.push('x_giave')}
   if(S.f.tramthuyAmbush&&S.turn>=22&&!S.evq.length&&Math.random()<.5){S.f.tramthuyAmbush=0;S.evq.push('x_tramthuy')}
   // Dị số chen vào trước tuyến NPC khi tuần này chưa có mốc nguyên tác
   disoTick();
-  if(!S.evq.length){
+  if(!S.evq.length&&(!S.pend||Math.random()<.5)){
     if(!S.npcProg)S.npcProg={phuongchinh:1,thanhthu:0,bai:0,xich_mac:0,caumo:1};
     for(const qid of NPC_POOL){
       if(EV[qid]&&(!EV[qid].cond||EV[qid].cond())&&!S.f[qid]&&!S.evq.includes(qid)){
@@ -225,7 +237,20 @@ function endTurn(){
 function advance(){
   if(S.mg)return;
   if(S.over||S.combat||S.evq.length||S.panel==='tuluyen'||S.panel==='gamble')return;
-  if(S.acted)endTurn();
+  // Hết việc trong tuần: đại sự đang chờ tự tìm tới trước khi sang tuần
+  if(S.ap<=0&&S.pend){firePend();if(S.evq.length)return}
+  if(S.ap<=0)endTurn();
+}
+function firePend(){const id=S.pend;S.pend=null;if(id&&EV[id]&&(!EV[id].cond||EV[id].cond()))S.evq.push(id)}
+// Người chơi chủ động đối mặt với đại sự của tuần
+function goPend(){
+  if(!S.pend||S.evq.length||S.combat||S.over||S.mg||S.traitOpts)return;
+  ffRecord('pend',{});S.panel=null;firePend();saveAll();render();
+}
+// Bỏ các việc còn lại trong tuần
+function endWeek(){
+  if(S.combat||S.over||S.evq.length||S.mg||S.traitOpts)return;
+  ffRecord('skip',{});S.panel=null;S.ap=0;saveAll();advance();render();
 }
 
 /* ---------- sự kiện ---------- */
@@ -268,7 +293,7 @@ function choose(i){
 // gặp càng nhiều thì càng hiếm; kiếp sau ưu tiên chuyện chưa từng thấy.
 function randomEvent(loc){
   S.evLast=S.evLast||{};S.evSeen=S.evSeen||{};
-  const all=Object.entries(EV).filter(([id,e])=>e.loc===loc&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id]));
+  const all=Object.entries(EV).filter(([id,e])=>e.loc===loc&&!e.chain&&(!e.cond||e.cond())&&!(e.once&&S.f['ev_'+id]));
   const cd=Math.min(6,Math.ceil(all.length/2));
   const pool=all.filter(([id,e])=>S.evLast[id]===undefined||S.turn-S.evLast[id]>=(e.cd||cd));
   const wt=(id,e)=>(typeof e.w==='function'?e.w():(e.w||1))*(S.world||[]).reduce((m,k)=>m*((WORLD_WEIGHT[k]||{})[id]||1),1)
@@ -286,6 +311,8 @@ function randomEvent(loc){
   }
   return false;
 }
+// Bước tiếp theo của một chuyện nhiều bước: hiện ngay sau lựa chọn vừa rồi
+function thenEv(id){S.evq.unshift(id)}
 // Câu chữ của sự kiện. text có thể là mảng hàm: lần gặp thứ n dùng bản thứ n
 function evText(id){
   const t=EV[id].text,om=typeof varOmen==='function'?varOmen(id):'';
@@ -305,13 +332,13 @@ const ACTS=[
   {id:'nghi',n:'Tĩnh dưỡng',d:'Hồi khí huyết và chân nguyên.'},
 ];
 function act(id){
-  if(S.combat||S.over||S.evq.length||S.acted||S.traitOpts||S.mg)return;
+  if(S.combat||S.over||S.evq.length||S.ap<=0||S.traitOpts||S.mg)return;
   ffRecord('act',{a:id});
   // Quyển 2 chỉ có hành động của chương, cộng bế quan và tĩnh dưỡng
   if(S.book===2&&(act2(id)||!['tuluyen','nghi'].includes(id)))return;
   S.panel=null;
   const ci=(S.cache||[]).findIndex(c=>c.loc===id&&!c.done&&S.turn>=c.from&&S.turn<=c.to);
-  if(ci>=0&&Math.random()<(S.cache[ci].rumor?.85:.4)){S.curCache=ci;S.evq.push('x_cache');S.acted=true;saveAll();advance();render();return}
+  if(ci>=0&&Math.random()<(S.cache[ci].rumor?.85:.4)){S.curCache=ci;S.evq.push('x_cache');S.ap--;saveAll();advance();render();return}
   switch(id){
     case 'tuluyen':S.panel='tuluyen';render();return;
     case 'hocduong':
@@ -330,7 +357,10 @@ function act(id){
       }
       if(Math.random()<.55&&randomEvent('nui'))break;
       fight(pick((S.chuyen===1?['heorung','heorung','dienlang','tanbinh','docxa','bao']:['dienlang','hachung','tanbinh','loiquan','bao']).concat(W('hunggia')?['hunggia','hunggia']:[],W('hanthu')&&S.turn>=8?['baitrinhsat']:[])),{scale:1,elite:Math.random()<(S.turn>=12?.3:S.turn>=6?.15:.05)*((S.mod&&S.mod.elite)||1)});break;
-    case 'hauson':S.evq.push(['hs_khe','hs_bich','hs_ngam','hs_dong','hs_mo'][Math.min(S.f.hs||0,4)]);break;
+    case 'hauson':
+      // Mỗi tuần chỉ xuống sâu thêm một tầng; lần đi thứ hai trong tuần gặp chuyện quanh cửa động
+      if(S.f.hsT===S.turn){if(!randomEvent('hauson'))log('Khe đá im lìm. Tầng sâu hơn phải đợi hôm khác.','sys');break}
+      S.f.hsT=S.turn;S.evq.push(['hs_khe','hs_bich','hs_ngam','hs_dong','hs_mo'][Math.min(S.f.hs||0,4)]);break;
     case 'nhiemvu':
       if(Math.random()<.45&&randomEvent('nhiemvu'))break;
       AFTER.nv();break;
@@ -340,9 +370,12 @@ function act(id){
       if(S.inj){S.inj.t-=2;log(`Tĩnh dưỡng giúp ${INJURY[S.inj.k].n} mau lành.`,'good');if(S.inj.t<=0)healInjury()}
       log('Ngươi tĩnh dưỡng, nghe gió núi thổi qua rừng trúc.','sys');break;
   }
-  S.acted=true;
+  spendAct();
   saveAll();advance();render();
 }
+// Mỗi tuần (Quyển 2: mỗi đơn vị thời gian của chương) có AP_WEEK việc
+function spendAct(all){S.ap=all?0:S.ap-1}
+function apLeft(){return S.ap}
 
 function absorb(){
   if(S.stones<5||S.ess>=maxEss()||S.combat)return;
@@ -358,31 +391,31 @@ function cultivate(st){
   if(st>S.stones||st>cultMaxStones())return;
   ffRecord('cult',{n:st});
   const e=Math.floor(S.ess);S.stones-=st;
-  const gain=Math.round((e+st*5)*cultMult());
+  const gain=Math.round((e+st*5)*cultMult()*(.4+.2*apLeft()));
   S.ess=0;S.prog+=gain;
-  log(`Bế quan mười ngày. Dùng ${e} chân nguyên${st?` và ${st} nguyên thạch`:''}. Tu vi +${gain}.`);
+  log(`Bế quan ${['','ba','bảy','mười'][apLeft()]||'mười'} ngày. Dùng ${e} chân nguyên${st?` và ${st} nguyên thạch`:''}. Tu vi +${gain}.`);
   S.combos=S.combos||{};
   COMBOS.filter(cb=>!S.combos[cb.id]&&cb.req.every(k=>hasGu(k))).forEach(cb=>{
     if(Math.random()<.3+(S.ngo-6)*.05){S.combos[cb.id]=1;log(`Trong lúc bế quan, ngươi ngộ ra sát chiêu【${cb.n}】.`,'mem');FX.toastMsg={g:'悟',t:'Ngộ ra '+cb.n,cls:'win'}}
   });
   levelUp();
-  S.panel=null;S.acted=true;
+  S.panel=null;spendAct(true);
   saveAll();advance();render();
 }
 function levelUp(){
   while(S.prog>=need()){
     if(S.giai<3){
-      S.prog-=need();S.giai++;
+      const a=realmSnap();S.prog-=need();S.giai++;S.hp+=maxHp()-a.hp;
       if(window.SFX) SFX.levelUp();
-      log(`Bích khiếu rung động. Đạt ${rankName()}.`,'good');
+      log(`Bích khiếu rung động. Đạt ${rankName()}. ${realmGain(a)}`,'good');
     }
     else if(S.chuyen<maxChuyen()){
       if(typeof startBreak==='function'){log('Tu vi đã đầy. Đến lúc xung kích bích khiếu.','big');startBreak();break}
       const ch=.65+(S.ngo-6)*.02+((S.tuchat||44)-44)*0.005;
       if(Math.random()<ch){
-        S.chuyen++;S.giai=0;S.prog=0;S.ess=Math.round(maxEss()*.4);S.hp=maxHp();
+        const a=realmSnap();S.chuyen++;S.giai=0;S.prog=0;S.ess=Math.round(maxEss()*.4);S.hp=maxHp();
         if(window.SFX) SFX.levelUp();
-        log(`Đột phá! Chân nguyên hóa thành ${ESS[S.chuyen].n}. ${rankName()}.`,'big');
+        log(`Đột phá! Chân nguyên hóa thành ${ESS[S.chuyen].n}. ${rankName()}. ${realmGain(a)}`,'big');
       }else{
         S.prog=Math.floor(need()*.5);S.hp=Math.max(1,S.hp-Math.round(maxHp()*.3));
         triggerShake();
@@ -485,7 +518,8 @@ function refine(i){
 function fight(k,o){
   o=o||{};
   const e=EN[k],ai=EAI[k]||{},sc=o.scale?1+.45*(S.chuyen-1):1,elite=!!o.elite;
-  const f=sc*(o.mod||1)*(elite?1.3:1)*(S.book===2?DIFF.q2:1);
+  // Quyển 1: độ khó tăng dần theo tuần (tuần 1 ×0,8, tuần 27 ×1,2 so với DIFF)
+  const f=sc*(o.mod||1)*(elite?1.3:1)*(S.book===2?DIFF.q2:.8+.4*Math.min(1,S.turn/FINAL_TURN));
   S.combat={id:Date.now(),k,n:(elite?'Tinh anh · ':'')+e.n,wolf:!!e.wolf,
     hp:Math.round(e.hp*f*DIFF.hp),max:Math.round(e.hp*f*DIFF.hp),
     atk:[Math.round(e.atk[0]*f*DIFF.atk),Math.round(e.atk[1]*f*DIFF.atk)],
@@ -764,7 +798,7 @@ function die(cause){
   S.combat=null;S.hp=0;S.evq=[];S.over=back?'rewind':'dead';S.ff=null;FX.queue.length=0;
   META.deaths.push({life:META.life,turn:S.turn,cause,rewind:back});
   // Chết dưới tay ai thì nhớ được thói quen kẻ đó
-  if(foe&&DEATH_MEM[foe])learn(DEATH_MEM[foe]);
+  if(back&&foe&&DEATH_MEM[foe])learn(DEATH_MEM[foe]);
   log('Mắt ngươi tối sầm. Tiếng tim đập chậm dần.','big');
   if(!back)log(`Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.`,'danger');
   saveAll();render();
@@ -835,11 +869,13 @@ document.addEventListener('click',ev=>{
   const d=b.dataset;
   if(d.a){
     switch(d.a){
-      case 'close':S.panel=null;render();return;
+      case 'close':S.panel=null;saveAll();advance();render();return;
       case 'market':S.panel='market';render();return;
       case 'gamble':S.panel='gamble';render();return;
       case 'refine':S.panel='refine';render();return;
       case 'absorb':absorb();return;
+      case 'pend':goPend();return;
+      case 'endweek':endWeek();return;
       case 'rebirth':cicadaScene('dead',rebirth);return;
       case 'chapretry':cicadaScene('dead',restartChapter);return;
       case 'q2':startQ2(S.ending);return;
@@ -869,6 +905,7 @@ function start(data){
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];S.mem=S.mem||{};S.combos=S.combos||{};
   S.drift=S.drift||0;S.driftStep=S.driftStep||0;S.later=S.later||[];
+  if(S.ap===undefined)S.ap=S.acted?0:AP_WEEK;if(S.pend===undefined)S.pend=null;
   // Tải lại giữa lúc đang tua thì trả quyền điều khiển cho người chơi
   if(S.ff)S.ff=null;
   // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị

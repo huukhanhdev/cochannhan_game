@@ -90,15 +90,24 @@ function ffStep(){
     const n=Math.max(0,Math.min(e?e.n:0,S.stones,cultMaxStones()));
     cultivate(n);return ffNext();
   }
-  if(S.panel){S.panel=null}
+  if(S.panel){S.panel=null;advance()}
   if(S.turn>=S.ff.until)return ffStop(`đã tới tuần ${S.turn}. Từ đây ngươi tự quyết.`),false;
   if(S.hp<maxHp()*.2)return ffStop('khí huyết quá thấp.'),false;
-  const a=(META.lastPath||[]).find(x=>x.k==='act'&&x.t===S.turn);
-  // Máu thấp thì nghỉ một tuần như người chơi thật, rồi đi tiếp đường cũ
-  if(S.hp<maxHp()*.4&&(!a||a.a!=='nghi')){log('Thương thế chưa lành, ký ức bảo ngươi tĩnh dưỡng tuần này.','mem');act('nghi');return ffNext()}
-  if(!a)return ffStop('kiếp trước chưa từng đi tới đây.'),false;
+  // Chuỗi việc kiếp trước đã làm trong tuần này, theo thứ tự: đi đâu, đối mặt đại sự lúc nào, bỏ qua phần còn lại
+  if(S.ff.t!==S.turn){S.ff.t=S.turn;S.ff.j=0}
+  const seq=(META.lastPath||[]).filter(x=>x.t===S.turn&&(x.k==='act'||x.k==='pend'||x.k==='skip'));
+  const a=seq[S.ff.j];
+  // Máu thấp thì nghỉ như người chơi thật, rồi đi tiếp đường cũ
+  if(S.hp<maxHp()*.4&&(!a||a.a!=='nghi')){log('Thương thế chưa lành, ký ức bảo ngươi tĩnh dưỡng.','mem');act('nghi');return ffNext()}
+  if(!a){
+    if(!seq.length)return ffStop('kiếp trước chưa từng đi tới đây.'),false;
+    endWeek();return ffNext();
+  }
+  S.ff.j++;
+  if(a.k==='pend'){goPend();return ffNext()}
+  if(a.k==='skip'){endWeek();return ffNext()}
   const spec=ACTS.find(x=>x.id===a.a);
-  if(!spec||(spec.show&&!spec.show()))return ffStop(`tuần này không thể ${spec?spec.n.toLowerCase():'làm như cũ'}.`),false;
+  if(!spec||(spec.show&&!spec.show()))return ffStop(`lúc này không thể ${spec?spec.n.toLowerCase():'làm như cũ'}.`),false;
   act(a.a);
   if(S.combat)return ffFightStart();
   return ffNext();

@@ -8,7 +8,7 @@ function asset(path){
   return 'assets/'+(m&&m[path]?m[path]:path);
 }
 const CH=['','Nhất','Nhị','Tam','Tứ','Ngũ','Lục'];
-const GIAI=['Sơ','Trung','Cao','Đỉnh'];
+const GIAI=['sơ kỳ','trung kỳ','cao kỳ','đỉnh phong'];
 const ESS=[null,{n:'thanh đồng',c:'#5fae8a'},{n:'xích thiết',c:'#c8664e'},{n:'bạch ngân',c:'#c9d3d6'},{n:'hoàng kim',c:'#e0b64a'}];
 const MAXE=[0,50,100,180,280];
 // Quyển 1 dừng ở Tam chuyển, Quyển 2 lên tới Tứ chuyển
@@ -162,7 +162,7 @@ const MEM={
 // Tranh cổ trùng (Canva AI) trong assets/gu/g_<khóa>.jpg
 // Còn thiếu tranh: nguyetmang, uguang, cuongnham, huyetlo, xaloi1, xaloi2, hungluc, liemtuc (dùng chữ thư pháp tạm)
 const GU_IMG=new Set(['xuanthu','nguyetquang','tuutrung','tuvi','bachthi','hacthi','ngocbi','bachngoc','huyetnguyet','diathinh',
-  'thietbi','thienbong','trilieu']);
+  'thietbi','thienbong','trilieu','cuxikimngo','thiennguyenbaolien','thiennguyen','huyetlo','cotthuong','amduongchuyenthan']);
 function guImgUrl(k){return GU_IMG.has(k)?asset(`gu/g_${k}.jpg`):''}
 // Ô hình cổ trùng; glyph là chữ dự phòng khi chưa có tranh
 function guEmblem(k,glyph,cls){
@@ -172,7 +172,7 @@ function guEmblem(k,glyph,cls){
 }
 
 /* ---------- Chiến đấu: hệ số khó, hồi chiêu, kiểu đánh của địch ---------- */
-const DIFF={hp:1.55,atk:1.55,q2:1.2,furyTurn:8};
+const DIFF={hp:2.52,atk:2.52,q2:.75,furyTurn:8};
 // Hồi chiêu (lượt) sau khi dùng; cổ tấn công yếu dùng liên tục được, cổ mạnh phải chờ
 const CD={cuongthu:4,amduong:4,nguyetquang:0,toanphong:2,huyetnguyet:2,nguyetmang:2,nguyettoan:2,nguyetngan:2,bangdao:2,cuxikimngo:2,daosihuyetbuc:2,ngocbi:3,dongbi:3,thanhti:3,cuongnham:3,thietbi:3,bachngoc:3,thuytrao:3,hoalo:3,nguyetnghe:3,cuudiep:3,thienbong:4,mokmi:4,trilieu:3,herb:2};
 const COMBO_CD=4;

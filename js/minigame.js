@@ -150,9 +150,9 @@ function breakAct(a){
 function breakEnd(ok){
   S.mg=null;
   if(ok){
-    S.chuyen++;S.giai=0;S.prog=0;S.ess=Math.round(maxEss()*.4);S.hp=maxHp();
+    const a=realmSnap();S.chuyen++;S.giai=0;S.prog=0;S.ess=Math.round(maxEss()*.4);S.hp=maxHp();
     if(window.SFX)SFX.levelUp();
-    log(`Đột phá! Chân nguyên hóa thành ${ESS[S.chuyen].n}. ${rankName()}.`,'big');
+    log(`Đột phá! Chân nguyên hóa thành ${ESS[S.chuyen].n}. ${rankName()}. ${realmGain(a)}`,'big');
     FX.toastMsg={g:CH[S.chuyen],t:'Đột phá '+rankName(),cls:'win'};
   }else{
     S.prog=Math.floor(need()*.5);S.hp=Math.max(1,S.hp-Math.round(maxHp()*.15));

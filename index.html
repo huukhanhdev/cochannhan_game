@@ -424,6 +424,9 @@
   .spot .stip{position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);width:max-content;max-width:220px;padding:6px 9px;border-radius:5px;background:#0b0f11;border:1px solid var(--line);font-size:12px;line-height:1.4;color:var(--dim);white-space:normal;opacity:0;pointer-events:none;transition:opacity .15s}
   .spot:hover .stip,.spot:focus-visible .stip{opacity:1}
   .map-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .map-foot .pend-btn{animation:pendGlow 2.4s ease-in-out infinite}
+  @keyframes pendGlow{50%{box-shadow:0 0 14px var(--gold,#c9a45c)}}
+  @media (prefers-reduced-motion:reduce){.map-foot .pend-btn{animation:none}}
   @media (max-width:640px){
     .map{aspect-ratio:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:90px 10px 10px;background-position:center top}
     .spot{position:relative;left:auto!important;top:auto!important;transform:none;border-radius:8px;padding:6px}

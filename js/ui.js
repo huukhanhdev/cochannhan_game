@@ -8,15 +8,20 @@ const GU_META={
   xuanthu:{icon:'蝉',cls:'rank-6'},nguyetquang:{icon:'月',cls:'rank-1'},nguyetmang:{icon:'芒',cls:'rank-2'},
   tuutrung:{icon:'酒',cls:'rank-1'},tuvi:{icon:'味',cls:'rank-2'},bachthi:{icon:'猪',cls:'rank-1'},hacthi:{icon:'黑',cls:'rank-1'},
   thietbi:{icon:'铁',cls:'rank-2'},ngocbi:{icon:'玉',cls:'rank-1'},thienbong:{icon:'蓬',cls:'rank-3'},trilieu:{icon:'愈',cls:'rank-1'},
-  huyetnguyet:{icon:'血',cls:'rank-2'},huyetlo:{icon:'炉',cls:'rank-3'},diathinh:{icon:'耳',cls:'rank-2'},cuongnham:{icon:'岩',cls:'rank-1'},
+  huyetnguyet:{icon:'血',cls:'rank-2'},huyetlo:{icon:'颅',cls:'rank-4'},diathinh:{icon:'耳',cls:'rank-2'},cuongnham:{icon:'岩',cls:'rank-1'},
   uguang:{icon:'幽',cls:'rank-1'},bachngoc:{icon:'瓷',cls:'rank-2'},hungluc:{icon:'熊',cls:'rank-1'},liemtuc:{icon:'隐',cls:'rank-1'},
   xaloi1:{icon:'舍',cls:'rank-1'},xaloi2:{icon:'利',cls:'rank-2'},xaloi3:{icon:'银',cls:'rank-3'},
   sinhco:{icon:'叶',cls:'rank-1'},tieuguang:{icon:'光',cls:'rank-1'},toanphong:{icon:'风',cls:'rank-1'},dongbi:{icon:'铜',cls:'rank-1'},thanhti:{icon:'丝',cls:'rank-1'},
   nguyettoan:{icon:'旋',cls:'rank-2'},nguyetngan:{icon:'银',cls:'rank-2'},nguyetnghe:{icon:'裳',cls:'rank-2'},bangdao:{icon:'刀',cls:'rank-2'},thuytrao:{icon:'水',cls:'rank-2'},
   anlan:{icon:'鳞',cls:'rank-2'},cuongthu:{icon:'钳',cls:'rank-3'},thachkhieu:{icon:'石',cls:'rank-3'},amduong:{icon:'阴',cls:'rank-4'},duongco:{icon:'阳',cls:'rank-4'},hoalo:{icon:'炉',cls:'rank-2'},cuudiep:{icon:'草',cls:'rank-2'},cuxikimngo:{icon:'蜈',cls:'rank-3'},mokmi:{icon:'魅',cls:'rank-3'},daosihuyetbuc:{icon:'蝠',cls:'rank-3'},
+  thiennguyenbaolien:{icon:'莲',cls:'rank-3'},thiennguyen:{icon:'莲',cls:'rank-3'},cotthuong:{icon:'枪',cls:'rank-2'},amduongchuyenthan:{icon:'阳',cls:'rank-4'},
 };
-// Chân dung NPC từ tranh cổ (Met Museum, phạm vi công cộng)
-const NPC_IMG={toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu'};
+// Chân dung NPC từ tranh nhân vật
+const NPC_IMG={
+  toctruong:'n_toctruong',caumo:'n_caumo',mactran:'n_mactran',xichluyen:'n_xichluyen',giaphu:'n_giaphu',
+  phuongchinh:'n_phuongchinh',thanhthu:'n_thanhthu',nhuocnam:'n_thietnhuocnam',tiexueleng:'n_giave',nhatdai:'n_nhatdai',
+  bai: () => (typeof S !== 'undefined' && (S.f?.bai_nu || S.f?.baiNu || S.q >= 2) ? 'n_bai_nu' : 'n_bai')
+};
 const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexueleng:'铁',nhuocnam:'若',phuongchinh:'正',caumo:'舅',tramthuy:'翠',thanhthu:'书',giaphu:'贾',kimsinh:'金',bai:'冰',toctruong:'族',xichluyen:'赤',mactran:'莫',xichthanh:'城'};
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',
   c_dieutra:'查',c_thuongdoiroi:'商',c_baigia:'白',c_lang1:'狼',c_lang2:'木',c_lang3:'王',c_luancong:'荒',c_bai:'冰',c_thiet:'铁',c_huyetdong:'血',c_thietvay:'捕',c_nhatdai:'尸',c_final:'终'};
@@ -176,7 +181,8 @@ function renderSheet(){
     const npcs=Object.keys(S.met).filter(k=>NPC[k]);
     body=`<div class="npc-list">${npcs.map(k=>{
       const v=S.rel[k]||0,col=v>=20?'var(--jade)':v<=-20?'var(--blood)':'var(--dim)';
-      return `<div class="npc-item">${NPC_IMG[k]?`<span class="npc-ava img" style="background-image:url('${asset('npc/'+NPC_IMG[k]+'.jpg')}')"></span>`:`<span class="npc-ava">${NPC_META[k]||'人'}</span>`}
+      const imgName = typeof NPC_IMG[k]==='function' ? NPC_IMG[k]() : NPC_IMG[k];
+      return `<div class="npc-item">${imgName?`<span class="npc-ava img" style="background-image:url('${asset('npc/'+imgName+'.jpg')}')"></span>`:`<span class="npc-ava">${NPC_META[k]||'人'}</span>`}
         <div class="npc-info"><b>${NPC[k].n}</b><small>${NPC[k].d}</small>${npcQuestProgress(k)}</div>
         <div class="npc-rel"><span style="color:${col}">${v>0?'+':''}${v}</span><div class="rel-bar"><i style="width:${clamp((v+100)/2,0,100)}%;background:${col}"></i></div></div></div>`}).join('')}</div>`;
   }else{
@@ -280,7 +286,7 @@ function renderStage(){
     st.innerHTML=`<div class="paper">${head('Bế quan tu luyện','Mười ngày trong phòng kín')}
       <p class="dimt">Chân nguyên hiện có ${Math.floor(S.ess)}. Mỗi viên nguyên thạch hồi 5 chân nguyên; một lần bế quan chỉ hấp thu tới khi không khiếu đầy thêm một lần (tối đa ${cap} viên). Hệ số tu luyện ×${cultMult().toFixed(2)}.${S.inj&&S.inj.k==='kinh'?' Kinh mạch tổn hại làm tu luyện chậm đi.':''}</p>
       <div class="act-grid-rich">${opts.map(n=>`<button class="act-card-rich" data-cult="${n}"><div class="act-icon">修</div>
-        <div class="act-text"><b>${n?`Dùng thêm ${n} nguyên thạch`:'Chỉ dùng chân nguyên'}</b><small class="gold">Tu vi +${Math.round((Math.floor(S.ess)+n*5)*cultMult())}</small></div></button>`).join('')}</div></div>`;
+        <div class="act-text"><b>${n?`Dùng thêm ${n} nguyên thạch`:'Chỉ dùng chân nguyên'}</b><small class="gold">Tu vi +${Math.round((Math.floor(S.ess)+n*5)*cultMult()*(.4+.2*apLeft()))}</small></div></button>`).join('')}</div></div>`;
     return;
   }
   if(S.panel==='gamble'){
@@ -328,12 +334,14 @@ function renderStage(){
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i>
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
         ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
-      <div class="map-cap"><span class="label">${timeLabel()}</span><h2>Tuần này đi đâu?</h2></div>
-      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':' · 1 tuần'}</span></button>`).join('')}
+      <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?'Tuần này đi đâu?':`Còn ${S.ap} việc trong tuần`}</h2></div>
+      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại trong tuần':' · 1 việc'}</span></button>`).join('')}
     </div>
     <div class="map-foot">
       <button class="btn" data-a="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}>Hấp thu 5 nguyên thạch (+25 chân nguyên)</button>
-      <span class="dimt small">Mỗi tuần đi một nơi. Chợ và lò luyện không tốn thời gian.</span>
+      ${S.pend?`<button class="btn active pend-btn" data-a="pend" title="Hết việc trong tuần thì chuyện này tự tìm tới">Đối mặt: ${EV[S.pend].hint||EV[S.pend].title}</button>`:''}
+      <button class="btn ghost" data-a="endweek">Qua tuần</button>
+      <span class="dimt small">Mỗi tuần ${AP_WEEK} việc. ${S.pend?'Đại sự trong tuần sẽ tự tới khi hết việc. ':''}Chợ và lò luyện không tốn việc.</span>
     </div></div>`;
 }
 

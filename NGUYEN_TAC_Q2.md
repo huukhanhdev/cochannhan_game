@@ -1,11 +1,71 @@
-# NGUYÊN TÁC QUYỂN 2 – đối chiếu canon cho game
+# NGUYÊN TÁC QUYỂN 2: đối chiếu canon cho game
 
-> Tóm tắt canon *Cổ Chân Nhân* từ lúc Phương Nguyên rời Thanh Mao Sơn tới hết Tam Vương truyền thừa, kèm đối chiếu các mốc Quyển 1 đang có trong game.
-> Nguồn: bản dịch Việt trên truyenmoiss (số chương theo bản VN; VN ≈ EN + 8…40 do nhiều chương bị tách "(1)(2)"). Chỉ tóm tắt, không chép văn bản gốc.
+> Tóm tắt canon *Cổ Chân Nhân* từ lúc Thanh Mao Sơn diệt vong (VN 190) tới giữa Tam Vương truyền thừa (VN 446, trận "lấy một đối bảy" với Thiết gia), kèm đối chiếu với Quyển 1 đang có trong game.
+> Nguồn: bản dịch Việt trên truyenmoiss. Số chương theo bản VN; bản VN lớn hơn bản EN khoảng 8–40 chương vì nhiều chương bị tách thành "(1)(2)". File chỉ tóm tắt, không chép văn bản gốc.
 >
-> **Trạng thái: ĐANG VIẾT.** Phần "Ghi chép theo chương" được cập nhật dần khi đọc. Bảng mốc tổng hợp, danh sách NPC/cổ/địa danh và gợi ý dùng cho game sẽ được thêm ở đầu file khi đọc xong.
+> **Trạng thái: dừng đọc ở VN 446** theo yêu cầu. Phần sau (kết trận Thiết Bá Tu, Bạo Vương truyền thừa, Bạch Ngưng Băng phản bội, lần dùng Xuân Thu Thiền thứ ba, kết Tam Vương ≈ VN 447–510) chưa đọc. Khi làm tới đó thì đọc tiếp.
 
----
+## A. Bảng mốc canon (dùng làm lịch chương cho game)
+
+| # | Chương VN | Mốc | Nhân vật | Cổ / vật phẩm chính | Nơi | Dùng trong game |
+|---|---|---|---|---|---|---|
+| 0 | 190–206 | Thanh Mao Sơn diệt vong: Hạc Tai, Nhất Đại tàn sát, BNB tự bạo; PN dùng **Xuân Thu Thiền lần 2** (quay lại, ném Nhất Đại ra lồng máu); Huyết Lô → tư chất 9 thành; Âm cổ → **BNB sống lại thành nữ**; Thiên Hạc mang Phương Chính về Trung Châu | PN, BNB, Nhất Đại, Thiên Hạc Thượng Nhân, Phương Chính | Huyết Lô, Âm Dương Chuyển Thân, Thiên Nguyên Bảo Liên, Huyết Mạc Thiên Hoa, Tồn Tức Ngọc Táng | Thanh Mao Sơn | Kết Quyển 1 → cửa sang Quyển 2 (kết `huyetlo_bai`/`bai_dong` gần canon nhất) |
+| 1 | 207–227 | Xuôi **sông Hoàng Long**: cổ chết đói, cá sấu vương 6 chân, cá sấu dung nham, Hiên Viên Thần Kê, nữ ma tu **Trần Thúy Hoa** | PN, BNB (nữ, chưa quen thân), Trần Thúy Hoa | Bối Giáp, Ngạc Lực, Tích Hôi, Tiêu Lôi Thổ Đậu, Đâu Suất Hoa | Sông Hoàng Long | Chương lữ hành: đói cổ, thiếu thuốc, dạy BNB tiết kiệm chân nguyên |
+| 2 | 228–250 | **Bạch Cốt Sơn – Bách gia**: mạo danh "Cổ Nguyệt Phương Chính", đại săn, lấy truyền thừa **Hôi Cốt Tài Tử / Nhục Cốt Thượng Sư**, hiến tế Bách Sinh–Bách Hoa, luyện **Cốt Nhục Đoàn Viên**; trốn bằng Vô Túc Điểu; giết thiếu chủ Thiết gia bằng bẫy Thổ Đậu | Bách gia (nữ tộc trưởng, Bách Chiến Liệp, Bách Liên, Bách Chiến Ôn), Thiết Đao Khổ, Thiết Ngạo Thiên | Cốt Thương, Loa Toàn Cốt Thương, Cốt Thứ, Ngọc Cốt, Thiết Cốt, Cốt Nhục Đoàn Viên, Vô Túc Điểu | Bạch Cốt Sơn | Dungeon truyền thừa nhiều sảnh + hiềm nghi Thiết gia bắt đầu |
+| 3 | 251–257 | Rơi xuống **núi Tử U**, thôn phàm nhân, giả phàm nhân | Trưởng thôn, bà lão | Liễm Tức | Tử U, thôn phàm | Đoạn nghỉ, giới thiệu thương đội |
+| 4 | 258–294 | **Thương đội**: tên giả Hắc Thổ / Bạch Vân; kết giao **Thương Tâm Từ**; vật tay Phỉ Hầu; buôn cỏ Kim gia 8000 thạch; dụ thú tấn công thương đội; giết Trương Trụ, Âu Phi, Âu Dương Công; **Đinh Hạo** và cương thi (mạo danh đệ tử Cương Vương) | Thương Tâm Từ, Tiểu Điệp, Trương Trụ, Trần Hâm, Trần Song Toàn, Âu Dương Công, Đinh Hạo | Thiên Bồng, Huyết Nguyệt, cổ lực (Trư, Ngạc) | Phỉ Hầu, Hoàng Kim, Khiếu Nguyệt, Tượng Nha, Huyết Lệ | Chương hộ tống: danh tiếng, buôn bán, ám sát trong đoàn |
+| 5 | 295–390 | **Thương gia thành**: bán bí phương 90 vạn; Thề Độc với BNB; Tố Thủ y sư; Tử Kinh lệnh; **Lực đạo**; đổ thạch (ký ức lệch: đá Tinh Thần rỗng); Lý Nhiên gián điệp Vũ gia → **Toàn Lực Ứng Phó**; diễn võ trường (Thang Hùng, Lý Hảo, Chu Bát, Viêm Đột, Cự Khai Bi); ép Bách gia 300 vạn; Khổ Lực, Phong Khí → Khí Lực; hạ bệ Thương Nhai Tí | Thương Yến Phi, Ngụy Ương, Tố Thủ, Lý Nhiên, Nhai Tí, Thiết Nhược Nam, Thiết Đao Khổ, Bách Phong, Cự Khai Bi | Toàn Lực Ứng Phó, Khổ Lực, Khí Lực, Tự Lực Cánh Sinh, Nói Không Giữ Lời, Thề Độc, Nguyên Lão | Thương gia thành (5 khu), diễn võ trường, Bảo Giới | "Thành phố" trung tâm: chợ, đổ thạch thật, đấu trường xếp hạng, âm mưu thiếu chủ |
+| 6 | 391–406 | Tin **Tam Vương truyền thừa**; PN độc quyền Ngự Khuyển/Chỉ Hạc/Bạo Đản; đưa **Tâm Từ lên thiếu chủ** (3 anh em Hùng – lệnh bài "Cơm", Vệ Đức Hinh, Chu Toàn); **lên Tứ chuyển** | Tâm Từ, Thương Trào Phong, Thương Nhất Phi, Chu Toàn, Vệ Đức Hinh | Tửu trùng chuỗi (Tứ Vị → Cửu Nhãn), Độc Hạt | Thương gia thành | Chương chính trị: dựng phe cho Tâm Từ |
+| 7 | 407–438 | **Núi Tam Xoa**: lập hung danh (Hoành Mi Bạo Quân, Kim Thành Ân, Tiết Tam Tứ – bội ước); Hồ Mị Nhi, Lý Nhàn, 4 Tứ đỉnh, Dịch Hỏa, Bách Tuế Đồng Tử; **Khuyển Vương truyền thừa** (100 ải chó, Hàn Bất Lưu, Đại Điện Văn); BNB bị 4 lão Thiết gia vây; PN mặc kệ, vào **Tín Vương** | Hồ Mị Nhi, Lý Nhàn, Dịch Hỏa, Long Thanh Thiên, Hàn Bất Lưu, 4 lão Thiết gia | Ngự Khuyển, Lôi Trư (hư ảnh), Tinh Thiết Cốt, Đồng Bì, Cửu Nhãn Tửu Trùng | Tam Xoa Sơn, phúc địa mục nát | Minigame truyền thừa theo ải |
+| 8 | 439–442 | **Tín Vương truyền thừa**: luyện cổ đấu người lông (nịnh bợ, tích nguyên liệu); rút ở ải 40; Hoàng Kim Xá Lợi → **Tứ trung**; luyện **Cốt Dực** | PN, người lông | Thủy Lung, Vô Túc Điểu → Cốt Dực, Hoàng Kim Xá Lợi | Tam Xoa | Minigame luyện cổ theo ải |
+| 9 | 443–446 | **Lấy một đối bảy**: chặn viện binh Thiết gia; giết Thiết Mộc, Thiết Tuyến Hoa, Thiết Đao Khổ, Thiết Ngạo Khai và các đệ tử; còn Thiết Nhược Nam (mất lý trí) và Thiết Bá Tu | Thiết Nhược Nam, Thiết Bá Tu, Thiết Mộc, Thiết Tuyến Hoa, Thiết Đao Khổ, Thiết Ngạo Khai | Cốt Dực, Khổ Lực, Khí Lực, Toàn Lực Ứng Phó; địch: Thảo Khôi, Bá Lực, Thổ Bá Vương, Tán Liên | Đường núi quanh Tam Xoa | Trận trùm nhiều giai đoạn; **điểm dừng hiện tại** |
+| – | 406–416 (xen) | **Phương Chính ở Tiên Hạc Môn**: Tứ trung, vạn Phi Hạc, lên tinh anh, Thiên Thê sơn Hồ Tiên truyền thừa | Phương Chính, hồn Thiên Hạc, Bích Hà tiên tử, Ngụy Vô Thương, Cổ Đình | Ký Hồn Tảo, Ngự Hạc | Trung Châu, Thiên Thê sơn | Tin đồn / cảnh xen, chưa chơi được |
+
+## B. Nhân vật chính Quyển 2 (tới VN 446)
+
+| Nhân vật | Vai | Ghi chú canon |
+|---|---|---|
+| Bạch Ngưng Băng | Đồng hành bị ép (Thề Độc) | Sống lại thành nữ; Bắc Minh Băng Phách đã mất; Băng Tinh bổn mệnh; muốn Dương cổ; tư chất 92%; bị Thiết gia vây ở Tam Xoa |
+| Thương Tâm Từ | Nữ chính phụ, con riêng tộc trưởng | Phàm nhân không tư chất; hiền, có chí; lên thiếu chủ nhờ PN; người hầu Tiểu Điệp |
+| Thương Yến Phi | Tộc trưởng Thương gia, Ngũ cao | Tóc lửa, huyết diễm; tàn nhẫn; cha ruột Tâm Từ |
+| Ngụy Ương | Gia lão Thương gia, quản Phong Vũ lâu | Coi PN là huynh đệ; Quang Hồng cổ |
+| Tố Thủ y sư | Ngũ chuyển trị liệu | Chữa mặt, tai PN; ưa sạch |
+| Thiết Nhược Nam | Truy PN; nô đạo | Cha là Thiết Huyết Lãnh; biết Thanh Mao còn ẩn tình |
+| Thiết Đao Khổ | Đao khách Thiết gia | Mù mắt trái vì BNB; chết ở VN 445 |
+| Thiết Bá Tu | Trụ cột Thiết gia | Bá Lực + Thổ Bá Vương Ngũ; "Bá Vương Đương Thời" |
+| Lý Nhiên | Gián điệp Vũ gia | Bị PN nắm thóp qua tiệm đậu hũ của vợ con |
+| Thương Nhai Tí / Nhất Phi / Trào Phong | Các thiếu chủ | Nhai Tí bị hạ bệ, đày 3 năm |
+| Bách gia | Kẻ thù Quyển 2 | Bị ép 300 vạn phí bịt miệng |
+| Hồ Mị Nhi, Lý Nhàn, Dịch Hỏa, Bách Tuế Đồng Tử | Cường giả Tam Xoa | Mị đạo; ẩn hình; Liệu Nguyên Hỏa; mộc đạo |
+
+## C. Cổ trùng Quyển 2 hợp làm cơ chế game
+
+- **Lực đạo, trục chính của PN:** hư ảnh thú lực (Trư, Hùng, Ngạc, Ngưu, Mã, Quy, Tượng, Mãng, Lôi Trư); **Toàn Lực Ứng Phó** (100% hiện hư ảnh); **Khổ Lực** (càng bị thương càng mạnh); **Khí Lực** (hư ảnh thành thực thể, đánh xa); **Tự Lực Cánh Sinh** (lực càng cao trị càng tốt, tự làm rách cơ).
+- **Phòng thủ và di chuyển:** Thiên Bồng, Kim Cương, Đồng Bì, Thiết Cốt → Tinh Thiết Cốt, Hoành/Trực Xung → Hoành Xung Trực Chàng, **Cốt Dực** (bay, muốn chiến đấu phải có kinh nghiệm).
+- **Mưu:** Thề Độc (khế ước, vi phạm hóa bãi máu), Nói Không Giữ Lời (miễn nhiễm Thề Độc), Liễm Tức, Tâm Âm.
+- **Tài nguyên:** Thiên Nguyên Bảo Liên (50 thạch/ngày), Nguyên Lão, chuỗi Tửu trùng (Tứ Vị → Cửu Nhãn), Xá Lợi (Bạch Ngân, Hoàng Kim).
+- **Của địch:** Thảo Khôi (quân rơm hợp thể), Bá Lực + Thổ Bá Vương (mạnh dần khi đứng trên đất), Tán Liên (khiên), Quán Lực, Hỏa Thủ, Băng Bạo, Tiêu Lôi Thổ Đậu.
+
+## D. Đối chiếu Quyển 1: canon và game
+
+| Mốc game (`CANON`) | Canon | Game hiện tại | Nhận xét |
+|---|---|---|---|
+| `c_nhatdai`, `c_final` | Hạc Tai + Nhất Đại tàn sát cùng lúc; Thiên Hạc Thượng Nhân là kẻ ép Nhất Đại | Chưa có Thiên Hạc | Thêm Thiên Hạc làm biến cố trận cuối |
+| Xuân Thu Thiền | PN dùng lần 2 **ngay trong thảm họa** (VN 201), chưa hồi phục hẳn, <10% thành công | Thiền 12 tuần, quay ngược 3 tuần | Đúng tinh thần. Nên có cảnh canon: dùng Thiền khi chưa hồi phục = cược mạng |
+| Kết cục | BNB tự bạo, được PN hồi sinh thành nữ bằng Âm cổ | `bai_dong`, `huyetlo_bai` | Cần cờ `baiNu` để mở Quyển 2 đúng canon |
+| Phương Chính | Không chết, được Thiên Hạc mang đi Trung Châu | Tuyến PC có kết đồng minh hoặc thù | Kết Q1 nên để PC "mất tích", để Q2 có tin đồn về hắn |
+| Thiết Huyết Lãnh | Chết; trước khi chết gắn Trấn Ma lên Nhất Đại (hậu thủ) | `c_thiet`, `c_thietvay` | Nhược Nam tin cha chết vì Phương Nguyên, nên truy tới Quyển 2 |
+| Tư chất | Bính 4 thành → Giáp 9 thành nhờ Huyết Lô | Có kết `huyetlo` | Khớp |
+
+## E. Ký ức lệch và dị số có sẵn trong canon
+
+Chính nguyên tác đã có chỗ ký ức 500 năm của PN sai. Đây là nền cho cơ chế cánh bướm:
+- **Đá Tinh Thần kê chân (VN 329):** PN nhớ chắc bên trong có cổ truyền kỳ, mổ ra thì rỗng. Cổ thật nằm trong tay Lý Nhiên.
+- **Quán tính đại sự (VN 396+):** chuyện nhỏ lệch được, còn mốc lớn vẫn tới đúng ngày. Tam Vương mở đúng ngày như kiếp trước.
+- **Thiết gia tới muộn / sớm:** kiếp trước và kiếp này cùng có Thiết Bá Tu và Nhược Nam, nhưng lần này PN ra tay trước.
+- **Phương Chính còn sống:** PN không biết. Một "dị số" canon mà ký ức không có.
+
+## F. Ghi chép theo chương
 
 
 ## Kết Quyển 1 (VN 190–206)
@@ -277,3 +337,7 @@
 - 440: PN nhận **Thủy Lung cổ** (bắt cổ hoang). Ải 32. 20 ải đầu dùng nịnh bợ; từ ải 30 người lông khôn hơn phải đấu thật; **nguyên liệu các ải trước được giữ lại tích lũy** (bí mật kiếp trước >1 năm mới lộ). **Từ ải 40 được dùng 1 cổ của mình nhưng phải là cổ luyện đạo**; qua 40 có phần thưởng lớn (cổ luyện đạo, bí phương, nguyên thạch) → PN rút ra. BNB vẫn bị nhốt; cột sáng còn bằng miệng chén. **Mỗi lần mở, mỗi người chỉ vào được mỗi truyền thừa 1 lần.** Lý Nhàn báo viện binh Thiết gia: **Thiết Phách Tu** (lực tu Tứ cao) + **Thiết Nhược Nam** (đã **Tứ sơ**) – giống kiếp trước. Lý Nhàn xúi Hồ Mị Nhi (hai người vẫn tình tứ). Phần thưởng: **Hoàng Kim Xá Lợi** → PN lên **Tứ trung giai** (dùng Cửu Nhãn sẽ ra chân nguyên **Tinh Kim** Tứ cao); vượt BNB; không khiếu chịu được Thiền lâu hơn.
 - 441: Từ **Vô Túc Điểu cổ** (Tam, ngày vạn dặm, bay 1 lần – thưởng Tín Vương) + hoa Cửu Cung, đá Vấn Đỉnh, Kim Ô Lưu Tinh, cỏ Hàn Băng… (tốn 18 vạn) PN luyện **Cốt Dực cổ** (Tứ, như lông vũ bằng xương; gai xương từ sống lưng xuyên thịt thành đôi cánh; nhờ Thiết Cốt + Tinh Thiết Cốt thành **cánh sắt đen**) – người thường cần 2–3 năm tập bay, 5 năm để chiến; PN có kinh nghiệm 500 năm. **Thiết Phách Tu**: mặt chữ quốc, từng bị gia tộc ghẻ lạnh, được truyền thừa lực đạo chính đạo, có **Thổ Bá Vương cổ Ngũ chuyển**, danh "**Bá Vương Đương Thời**", mạnh hơn Tứ đỉnh thường; mang ơn Thiết Huyết Lãnh; cam làm bệ đỡ cho Nhược Nam. **Nhược Nam = "Tiểu Thần Bộ"**, dẫn đội: **Thiết Mộc** (y), **Thiết Ngạo Khai** (Tam cao, trinh sát, mặt ngái ngủ), **Thiết Đao Khổ** (công), **Thiết Tuyến Hoa** (nữ, phòng ngự). Nhược Nam tới vì tình báo cho thấy chuyện Thanh Mao còn ẩn tình.
 - 442: PN một mình chặn đường đội 7 người. Nhược Nam đề nghị cả hai tới Thiết gia chịu xét xử công bằng. PN tiết lộ **thần thâu Lục Toản Phong** (Ngũ chuyển) đang quấy Thiết gia, từng lẻn vào **Trấn Ma Tháp** (bí mật bị phong tỏa) → nhóm Thiết gia sốc. PN nói thẳng "**đánh viện binh**" – lộ khí tức **Tứ trung**; đối chưởng với Thiết Phách Tu bị bật lui. PN: "Thiết gia là cái thá gì… không cứu được Bạch Ngưng Băng thì do nàng xui", "con đường vắng này hợp để giết các ngươi".
+- 443: Chiến đội Thiết gia. Trận hình "cái túi". **Thiết Tuyến Hoa**: **Tán Liên cổ** (sen vàng đen thành dù che). PN: hư ảnh Bạch Tượng. **Thiết Nhược Nam tu nô đạo**: **Thảo Khôi cổ Tam chuyển** tạo **Đằng Giáp Thảo Binh** (giết được nhất chuyển; 10 con + cổ Tứ chuyển hợp thành **Thảo Kiếm Tinh Binh**); lên gần 1000 con. **Thiết Ngạo Khai**: muỗi kim châm. **Thiết Đao Khổ**: Thủ Nhận, Tấn Ảnh. PN cố ý chịu đòn để kích **Khổ Lực cổ** (càng thương càng mạnh), dùng **Kim Cương cổ**, **Tự Lực Cánh Sinh cổ** trị thương. **Thiết Bá Tu** (VN viết "Bá Tu"): **Bá Lực cổ Tứ** (lực bá vương thượng cổ) + **Thổ Bá Vương cổ Ngũ** hút sức từ đất → ngang tay PN. PN thêm hư ảnh **Lôi Trư**, đánh gãy Tán Liên; **Thiết Mộc** (y sư) cứu Tuyến Hoa. PN muốn giết Nhược Nam vì nàng đã biết chuyện Thanh Mao. Nô đạo sợ nhất "chém đầu" nhưng Bá Tu cản.
+- 444: Thiết gia tưởng thắng, khuyên hàng ("mọc cánh cũng khó thoát") → PN mọc **Cốt Dực** bay lên. Bá Tu: bay cần luyện lâu (Thái Nhật Dương Mãng cũng chết vì bay) → PN đã **cố tình tiêu hao/phá cổ viễn chiến** của họ trước (muỗi kim châm hết, **Tinh Tiễn cổ** bị hủy, **Hoa Vũ cổ** còn 2); còn **Đao Khí cổ** và **Tuyết Cầu cổ**. PN bay như cao thủ (sánh **Lam Mi Hạc, Hồng Phi Ngư, Phi Dứu Vương** – danh thủ phi hành Nam Cương). Nhược Nam tưởng PN chạy, cảnh cáo → PN: "trận thật mới bắt đầu" – **Toàn Lực Ứng Phó + Khí Lực**: 5 thú ảnh (thạch ngưu, tuấn mã, thạch quy, bạch tượng, hắc mãng) thành thực thể.
+- 445: Bá Tu không viễn chiến được. PN từ trên lao xuống **xé hai tay Thiết Mộc rồi đập nát đầu**, hưng phấn, ngẫu hứng làm thơ ("để hoa sinh mệnh nở rộ trong máu"). **Chém đầu Thiết Tuyến Hoa** khi nàng lao tới. Đáp xuống đấu tay đôi **Thiết Đao Khổ** (Tấn Ảnh, Thủ Nhận, Thiết Thủ, Liên Trảm, Tốc Chiến Phong, Đao Khí – phá Kim Cương, rạch da đồng) → Đao Khổ (Tam chuyển) cạn chân nguyên → PN **bẻ cổ**. Nhược Nam mất lý trí (nhớ cái chết của cha), thất khiếu chảy máu, dồn mấy ngàn thảo binh → vồ hụt, chen nhau, cản chính Bá Tu. PN: "phân công chi tiết khiến người ỷ lại; dựa vào người không bằng dựa vào mình". Nhắm **Thiết Ngạo Khai** (trinh sát, có thể chạy báo tin).
+- 446: Ngạo Khai bỏ chạy về Tam Xoa → PN đuổi, mang **đầu hắn** về. Bá Tu gào "tội ác tày trời", khích tướng → PN: "giết người khác thì không ai nói… tội nghiệt này ta thích" rồi oanh tạc giết nốt các đệ tử còn lại. Chỉ còn **Nhược Nam** (điên dại, cứ lẩm bẩm "ta sẽ giết ngươi") và **Bá Tu**. PN dừng tay, hồi nguyên thạch + trị thương, tính **dùng Nhược Nam làm gánh nặng để giết Bá Tu** (Bá Tu = đối thủ mạnh nhất kể từ Thanh Mao). Lo tứ lão tới: sát chiêu **Vô Cực Sưu Tỏa** (gieo **Tỏa cổ**, bay đâu cũng bị bắt; kiếp trước đến **Khổng Viết Thiên** cũng thua) – Cốt Dực có khắc chế. Lý do thắng: nhớ kiếp trước về 7 người + tiêu hao viễn chiến. Bá Tu nhận ra đáng sợ nhất là tâm trí PN, tiên cảm hắn sẽ thành họa cho cả Nam Cương; định rút về Tam Xoa hợp với tứ lão. **[Dừng đọc tại đây – ch 446, giữa trận; theo EN kết cục: Bá Tu chạy/đỡ Nhược Nam, PN không giết được cả hai.]**

@@ -255,14 +255,70 @@ c_khaohach:{canon:1,title:'Khảo hạch tháng hai',hint:'Học đường khả
   }},
 
 c_tramthuy:{canon:1,title:'Tỳ nữ Trầm Thúy',hint:'Trầm Thúy trở mặt',
-  text:()=>'Trầm Thúy hầu hạ hai anh em từ nhỏ. Trước lễ khai khiếu, nàng đon đả chăm sóc ngươi. Từ hôm biết ngươi Bính đẳng còn Phương Chính Giáp đẳng, nàng quay sang chăm chút cho em trai ngươi. Chén trà bưng cho ngươi giờ nguội ngắt.',
-  choices:[
-    {t:'Mặc kệ. Kẻ thiển cận không đáng bận tâm',canon:1,eff:()=>{S.tamco++;meet('tramthuy');rel('tramthuy',-10);return 'Năm trăm năm, ngươi đã thấy quá nhiều kẻ như nàng. Tâm cơ +1.'}},
-    {t:'Lợi dụng nàng làm tai mắt bên cạnh Phương Chính',check:['tamco',12],
-      ok:()=>{S.f.tramthuySpy=1;rel('tramthuy',10);return 'Vài viên nguyên thạch và mấy lời hứa hão là đủ. Từ nay chuyện của Phương Chính đều lọt vào tai ngươi.'},
-      fail:()=>{rel('tramthuy',-20);rel('phuongchinh',-10);return 'Trầm Thúy mách lại với Phương Chính. Em trai ngươi nhìn ngươi đầy nghi ngại.'}},
-    {t:'Dằn mặt nàng trước mặt cả nhà',tag:'ma',eff:()=>{rel('tramthuy',-30);S.danh-=3;S.tamco++;later('q_tramthuyhan',5,8,'!tramthuyGone');return 'Trầm Thúy tái mặt, từ đó không dám hỗn nữa, nhưng hận ngươi ra mặt.'}},
-  ]},
+  who:'tramthuy',
+  scene:{
+    start:'chen_tra',budget:2,
+    nodes:{
+      chen_tra:{
+        talk:[
+          ['','Trầm Thúy hầu hạ hai anh em ngươi từ thuở nhỏ. Thuở ngươi còn được xưng là thần đồng, nàng luôn đon đả bưng nước rót trà, dịu dàng săn sóc.'],
+          ['','Nhưng từ sau Khai khiếu đại điển, khi Phương Chính lộ ra tư chất Giáp đẳng còn ngươi chỉ là Bính đẳng, ánh mắt nàng đã đổi khác hoàn toàn.'],
+          ['tramthuy','Phương Nguyên thiếu gia... đây là trà hoa cúc của ngài. Nước sôi vừa cạn, thiếu gia uống tạm. Ta còn phải sang phòng nhị thiếu gia ủi y phục...']
+        ],
+        choices:[
+          {t:'Cầm chén trà lên nếm thử',stay:1,flag:'tra_nguoi',say:'Chén trà nguội ngắt, bã trà nổi lềnh bềnh. Trầm Thúy đứng nép bên cửa, mắt cứ lén nhìn về phía sương phòng của Phương Chính.'},
+          {t:'Mặc kệ, kẻ thiển cận lòng dạ hẹp hòi không đáng bận tâm',tag:'chinh',canon:1,go:'mac_ke'},
+          {t:'Lợi dụng nàng làm tai mắt bên cạnh Phương Chính',go:'cai_cam'},
+          {t:'Quát tháo dằn mặt nàng trước mặt cả phủ',tag:'ma',go:'dan_mat'},
+          {t:'Dụ dỗ bằng tiền tài và lời hứa tương lai',hidden:'tra_nguoi',req:()=>S.stones>=8,reqT:'Cần 8 nguyên thạch',go:'du_do'}
+        ]
+      },
+      mac_ke:{
+        talk:[
+          ['','Ngươi ung dung nhấp một ngụm trà nguội rồi đặt xuống, sắc mặt không một gợn sóng.'],
+          ['','Năm trăm năm gió tanh mưa máu kiếp trước, ngươi đã thấy quá nhiều hạng người đón gió đổi chiều thế này. Kẻ tầm thường như hạt bụi ven đường, sao làm lung lay chí lớn ma đầu?']
+        ],
+        eff:()=>{meet('tramthuy');rel('tramthuy',-10);S.tamco++;return 'Năm trăm năm tâm tính ma đầu: không bận tâm kẻ nhỏ mọn. Tâm cơ +1.';}
+      },
+      cai_cam:{
+        talk:[
+          ['','Ngươi nhìn thẳng vào mắt nàng, nở nụ cười thâm trầm: "Trầm Thúy, đệ đệ ta tính tình nhút nhát, có ngươi ở cạnh chăm sóc ta cũng yên tâm. Chỉ là mỗi tuần, ngươi nhớ ghé qua kể cho ta nghe đệ ấy tu luyện tới đâu rồi."']
+        ],
+        check:['tamco',11],
+        okGo:'cai_thanhcong',failGo:'cai_thatbai'
+      },
+      cai_thanhcong:{
+        talk:[
+          ['tramthuy','Thiếu gia yên tâm... có tin gì của nhị thiếu gia, nô tỳ nhất định bẩm báo trước tiên!'],
+          ['','Nàng khúm núm cúi đầu, nhận lấy túi trà thơm ngươi tiện tay thưởng cho.']
+        ],
+        eff:()=>{meet('tramthuy');S.f.tramthuySpy=1;rel('tramthuy',15);return 'Cài cắm Trầm Thúy thành công: mọi động tĩnh tu luyện của Phương Chính đều lọt vào tai ngươi!';}
+      },
+      cai_thatbai:{
+        talk:[
+          ['tramthuy','Nô tỳ... nô tỳ chỉ là phận tỳ nữ hầu hạ nhị thiếu gia, không dám làm kẻ dòm ngó!'],
+          ['','Trầm Thúy giật mình lùi lại rồi chạy vội sang phòng Phương Chính mách nước.']
+        ],
+        eff:()=>{meet('tramthuy');rel('tramthuy',-20);rel('phuongchinh',-10);return 'Trầm Thúy mách lại với Phương Chính. Em trai nhìn ngươi đầy đề phòng.';}
+      },
+      dan_mat:{
+        talk:[
+          ['','Ngươi hất tung chén trà xuống nền đá vỡ tan tành! Tiếng gốm sứ vỡ vụn làm Trầm Thúy rụng rời chân tay.'],
+          ['','Ngươi bước tới, giọng lạnh như băng tuyết: "Lũ hạ nhân mắt chó xem thường người khác. Dù ta Bính đẳng, giết một tỳ nữ như ngươi gia tộc cũng chẳng thèm phạt nửa câu!"'],
+          ['tramthuy','Thiếu gia tha mạng... tha mạng! Nô tỳ biết tội rồi!']
+        ],
+        eff:()=>{meet('tramthuy');rel('tramthuy',-30);S.danh-=3;S.tamco++;later('q_tramthuyhan',5,8,'!tramthuyGone');return 'Trầm Thúy sợ mất mật, từ đó không dám hỗn hào, nhưng ngấm ngầm ôm hận.';}
+      },
+      du_do:{
+        talk:[
+          ['','Ngươi lấy ra tám khối nguyên thạch sáng lấp lánh đặt lên bàn: "Phương Chính có Giáp đẳng nhưng chưa làm chủ gia tộc được đâu. Tiền này cho ngươi may áo mới. Làm việc cho ai mới có lợi, chắc ngươi tự hiểu."'],
+          ['tramthuy','(Mắt sáng rực, vội vã nhét thạch vào ngực áo) Thiếu gia quả nhiên thấu tình đạt lý... Nô tỳ xin hết lòng vì ngài!']
+        ],
+        eff:()=>{meet('tramthuy');S.stones-=8;S.f.tramthuySpy=1;rel('tramthuy',35);return 'Dùng 8 nguyên thạch mua chuộc trọn vẹn Trầm Thúy: trung thành tuyệt đối, thành tai mắt đắc lực!';}
+      }
+    }
+  }
+},
 
 c_thuongdoi:{canon:1,title:'Thương đội Cổ gia',hint:'Thương đội Cổ Phú đến',
   text:()=>'Tiếng chuông lạc đà vang dưới chân núi. Thương đội Cổ gia do Cổ Phú dẫn đầu lên Thanh Mao Sơn, mang theo cổ trùng hiếm từ khắp nơi và mở quầy mổ thạch.'+(mem('doanthach')?' Ký ức kiếp trước giúp ngươi nhìn thấu vân đá.':''),
@@ -602,12 +658,57 @@ r_xichthanh:{loc:'trai',w:2,once:1,title:'Bí mật của Xích Thành',
     {t:'Lặng lẽ quan sát, chờ thời cơ',eff:()=>{S.tamco+=2;learn('xichgia');return 'Nắm điểm yếu kẻ khác là con dao găm giấu trong tay áo. Tâm cơ +2.'}}
   ]},
 
-r_tuulau:{loc:'trai',w:2,cond:()=>S.f.tuulau,title:'Tửu lâu',
-  text:()=>'Một gã Cổ sư say rượu đập bàn trong tửu lâu của ngươi, không chịu trả tiền.',
-  choices:[
-    {t:'Tống cổ hắn ra',eff:()=>{fight('cosusay',{scale:1});return 'Khách uống rượu dạt vào góc.'}},
-    {t:'Mời thêm chén, hóa giải',tag:'chinh',eff:()=>{S.stones-=5;S.danh+=3;return 'Gã say gục xuống bàn, sáng hôm sau đến xin lỗi. −5 nguyên thạch, danh vọng +3.'}},
-  ]},
+r_tuulau:{loc:'trai',w:2,cond:()=>S.f.tuulau,title:'Tửu lâu gia sản',
+  scene:{
+    start:'quan_ly',budget:2,
+    nodes:{
+      quan_ly:{
+        talk:[
+          ['','Tửu lâu cha mẹ để lại dưới chân núi khách khứa nườm nượp, mùi rượu nếp thơm nồng lan tỏa ra tận đầu ngõ.'],
+          ['','Chưởng quầy cúi chào khi thấy ngươi bước vào: "Đại thiếu gia đến chơi! Hôm nay buôn bán rất khá, nhưng đằng kia có gã Cổ sư say mèm đập bàn quát tháo."']
+        ],
+        choices:[
+          {t:'Kiểm tra sổ sách và thu tiền lời hôm nay',stay:1,flag:'soi_so',say:'Sổ sách ghi chép cẩn thận: trừ chi phí mua rượu ủ và gạo, hôm nay tửu lâu thặng dư được 8 nguyên thạch.'},
+          {t:'Thu lấy 8 nguyên thạch lợi nhuận hôm nay',hidden:'soi_so',eff:()=>{S.stones+=8;return 'Bỏ túi 8 nguyên thạch lợi nhuận ròng!';}},
+          {t:'Xông tới dạy cho gã Cổ sư say rượu một bài học',tag:'ma',go:'danh_say'},
+          {t:'Mời gã say một vò rượu ngon, khéo léo dò hỏi tin tức',tag:'chinh',req:()=>S.stones>=3,reqT:'Cần 3 nguyên thạch',go:'moi_ruou'},
+          {t:'Lắng nghe khách buôn đàm đạo ở góc quán',go:'nghe_ngong'}
+        ]
+      },
+      danh_say:{
+        talk:[
+          ['','Ngươi bước tới nắm cổ áo gã say nhấc bổng lên: "Muốn quỵt tiền ở tửu lâu của họ Cổ Nguyệt ta?"'],
+          ['cosusay','Thằng ranh con miệng còn hôi sữa... dám động vào lão tử?']
+        ],
+        fight:{foe:'cosusay',win:'thang_say',flee:'thua_say'}
+      },
+      thang_say:{
+        talk:[
+          ['','Ngươi ném gã say lăn lóc ra ngoài đường bụi bặm. Cả tửu lâu vỗ tay rầm rộ, đám thực khách vội vã rút tiền trả sòng phẳng.']
+        ],
+        eff:()=>{S.stones+=10;S.danh+=4;return 'Dẹp loạn gọn gàng: thu 10 nguyên thạch tiền bồi thường, danh vọng +4!';}
+      },
+      thua_say:{
+        talk:[
+          ['','Hỗn chiến làm vỡ vài cái bàn gỗ, gã say lảo đảo lách ra cửa trốn mất.']
+        ]
+      },
+      moi_ruou:{
+        talk:[
+          ['','Ngươi đặt vò rượu nếp ngon xuống bàn, cười nhạt: "Vị huynh đài này khẩu khí hào sảng, vò này ta mời."'],
+          ['cosusay','(Gã say hớp một ngụm lớn, mắt sáng lên) Hảo huynh đệ! Ta vừa từ Hùng gia sơn trại sang... nghe nói đám gấu bên đó đang bí mật thu mua độc thảo...']
+        ],
+        eff:()=>{S.stones-=3;S.tamco+=2;S.danh+=2;return 'Tốn 3 thạch mời rượu, đổi lấy tin tức tình báo Hùng gia và danh tiếng trượng nghĩa!';}
+      },
+      nghe_ngong:{
+        talk:[
+          ['','Ngươi ngồi vào bàn góc khuất, rót chén trà nghe đám thương lái rì rầm bàn tán chuyện giá dược thảo và lang triều năm nay.']
+        ],
+        eff:()=>{S.tamco++;return 'Thu thập được nhiều tin đồn hữu ích từ giang hồ. Tâm cơ +1.';}
+      }
+    }
+  }
+},
 r_moboinho:{loc:'trai',w:2,cond:()=>(S.rel.caumo||0)<0,title:'Lời đồn',
   text:()=>'Mợ đi khắp trại kể rằng ngươi vô ơn, bất hiếu, cướp của cậu.',
   choices:[
@@ -779,20 +880,76 @@ k_hd_domdom:{loc:'hocduong',w:1,cond:()=>!hasGu('tieuguang'),title:'Đom đóm t
     {t:'Để yên',eff:()=>'Ngươi đứng xem một lúc rồi về ngủ.'},
   ]},
 k_hd_hocngheo:{loc:'hocduong',w:1,once:1,title:'Học trò nghèo',
-  text:()=>'Một học trò Đinh đẳng gầy nhom níu tay áo ngươi: "Phương huynh, cho đệ mượn mười khối nguyên thạch. Cổ của đệ sắp chết đói. Nửa tháng sau đệ trả gấp đôi."',
-  choices:[
-    {t:'Cho mượn',req:()=>S.stones>=10,reqT:'Cần 10 nguyên thạch',eff:()=>{S.stones-=10;S.f.hocngheo=1;later('k_hd_hocngheo2',4,6,'hocngheo');return 'Hắn cúi đầu cảm tạ rối rít. −10 nguyên thạch.'}},
-    {t:'Bắt hắn làm việc trả nợ trước',tag:'ma',eff:()=>{S.f.hocngheo=2;later('k_hd_hocngheo2',4,6,'hocngheo');S.stones+=4;return 'Hắn đồng ý canh chừng học đường cho ngươi. Hôm nay hắn nộp luôn 4 khối lấy từ phần trợ cấp.'}},
-    {t:'Gạt tay ra',eff:()=>'Hắn lủi đi. Ngươi không nhớ nổi tên hắn.'},
-  ]},
+  who:'hoctro',
+  scene:{
+    start:'hoc_tro',budget:2,
+    nodes:{
+      hoc_tro:{
+        talk:[
+          ['','Dưới chân tường rêu học đường, một thiếu niên Đinh đẳng gầy gò, áo vá chằng vá đụp thập thò nhìn quanh rồi níu lấy tay áo ngươi.'],
+          ['hoctro','Phương Nguyên ca ca... xin huynh thương tình cho đệ mượn mười khối nguyên thạch! Cổ trùng bản mệnh của đệ đã nhịn đói ba hôm, sắp chết héo rồi... Sang tháng đệ trả gấp đôi!']
+        ],
+        choices:[
+          {t:'Gặng hỏi xem hắn nuôi cổ gì mà tốn kém thế',stay:1,flag:'hoi_co',say:'Hắn ngập ngừng xòe tay: là một con Thạch Bì Cổ hạ phẩm ăn bùn khoáng, nhưng do chân nguyên cặn bã của Đinh đẳng nên cổ hấp thụ rất kém.'},
+          {t:'Cho mượn mười khối nguyên thạch cứu ngặt',tag:'chinh',req:()=>S.stones>=10,reqT:'Cần 10 nguyên thạch',go:'cho_muon'},
+          {t:'Bắt nộp 4 thạch trợ cấp trước, thu làm chân chạy canh chừng học đường',tag:'ma',go:'chan_chay'},
+          {t:'Chỉ điểm bí quyết nuôi cổ Đinh đẳng không tốn kém',hidden:'hoi_co',check:['ngo',10],go:'chi_diem'},
+          {t:'Gạt tay bước đi, kẻ yếu không có quyền tồn tại',tag:'ma',go:'gat_tay'}
+        ]
+      },
+      cho_muon:{
+        talk:[
+          ['','Ngươi ném túi mười khối nguyên thạch vào lòng hắn.'],
+          ['hoctro','Đa tạ Phương Nguyên ca ca cứu mạng! Sau này có nhảy vào dầu sôi lửa bỏng, tiểu đệ cũng không chối từ!']
+        ],
+        eff:()=>{S.stones-=10;S.f.hocngheo=1;later('k_hd_hocngheo2',3,5,'hocngheo');S.danh+=2;return 'Cho mượn 10 nguyên thạch cứu nguy. Danh vọng +2.';}
+      },
+      chan_chay:{
+        talk:[
+          ['','Ngươi bóp chặt cổ tay hắn: "Muốn mượn tiền? Đưa bốn khối trợ cấp hôm nay của ngươi đây làm tin. Từ nay mỗi ngày đi theo làm chân chạy canh chừng học đường cho ta!"'],
+          ['hoctro','Vâng... vâng, tiểu đệ xin nghe theo đại ca phân phó!']
+        ],
+        eff:()=>{S.f.hocngheo=2;S.stones+=4;later('k_hd_hocngheo2',3,5,'hocngheo');S.tamco++;return 'Thu 4 nguyên thạch làm tin, biến hắn thành chân chạy canh chừng học đường!';}
+      },
+      chi_diem:{
+        talk:[
+          ['','Ngươi nhặt hòn đá vụn gõ nhẹ lên vỏ con Thạch Bì Cổ, chỉ ra chỗ tích tụ tạp chất trong kinh mạch nó.'],
+          ['','Thiếu niên làm theo lời chỉ dẫn, con cổ lập tức hồi sinh sức sống, không cần nuốt thêm thạch vụn.'],
+          ['hoctro','Trời ơi... Phương Nguyên ca thật là thần nhân! Đệ không dám quên ơn này!']
+        ],
+        eff:()=>{S.danh+=5;S.f.hocngheo=3;later('k_hd_hocngheo2',3,5,'hocngheo');S.ngo++;return 'Chỉ điểm nuôi cổ mà không tốn một xu! Ngộ tính +1, danh vọng +5.';}
+      },
+      gat_tay:{
+        talk:[
+          ['','Ngươi lạnh lùng giật tay áo lại: "Tự sinh tự diệt, đó là quy luật đất trời. Ngươi không nuôi nổi cổ thì đừng làm Cổ sư nữa."'],
+          ['','Thiếu niên bẽ bàng lủi vào bóng tối. Ngươi không buồn ngoái lại.']
+        ],
+        eff:()=>{return 'Không bận tâm kẻ yếu. Tiếp tục tu luyện.';}
+      }
+    }
+  }
+},
 k_hd_hocngheo2:{chain:1,loc:'hocduong',title:'Món nợ cũ',
-  text:()=>S.f.hocngheo===1?'Tên học trò Đinh đẳng tìm tới, mặt mày tươi tỉnh: "Con cổ của đệ sống rồi, còn săn được heo rừng!" Hắn đặt vào tay ngươi một túi vải.':'Tên học trò Đinh đẳng lén lút tới: "Phương huynh, mấy hôm nay có người hỏi về huynh. Đệ nghe thấy hết."',
-  choices:()=>S.f.hocngheo===1?[
-    {t:'Nhận túi',eff:()=>{S.stones+=20;S.danh+=3;return '+20 nguyên thạch. Hắn kể với ai cũng khen Phương huynh tốt bụng. Danh vọng +3.'}},
-    {t:'Bảo hắn giữ lại, đổi lấy một lời hứa',tag:'chinh',eff:()=>{S.danh+=6;S.f.hocngheoAlly=1;return 'Hắn thề sau này ngươi cần gì cứ nói. Danh vọng +6.'}},
-  ]:[
-    {t:'Nghe hắn kể',eff:()=>{S.susp=Math.max(0,S.susp-12);S.tamco++;return 'Ngươi biết trước ai đang nghi mình, kịp xóa dấu vết. Hiềm nghi −12, tâm cơ +1.'}},
-  ]},
+  who:'hoctro',
+  text:()=>{
+    if(S.f.hocngheo===1) return 'Tên học trò Đinh đẳng tìm tới, mặt mày tươi tỉnh: "Con cổ của đệ sống rồi, còn săn được heo rừng!" Hắn đặt vào tay ngươi một túi vải.';
+    if(S.f.hocngheo===2) return 'Tên học trò Đinh đẳng lén lút tới: "Phương huynh, mấy hôm nay có người hỏi về huynh. Đệ nghe thấy hết."';
+    return 'Tên học trò Đinh đẳng cúi gập người trước ngươi: "Nhờ bí quyết của huynh mà cổ của đệ tiến bộ vượt bậc! Đệ biếu huynh một vò Hầu Nhi Tửu đệ nhặt được trên núi."';
+  },
+  choices:()=>{
+    if(S.f.hocngheo===1) return [
+      {t:'Nhận túi 20 nguyên thạch trả nợ',eff:()=>{S.stones+=20;S.danh+=3;return '+20 nguyên thạch. Hắn kể với ai cũng khen Phương huynh tốt bụng. Danh vọng +3.';}},
+      {t:'Bảo hắn giữ lại, đổi lấy một lời hứa tương trợ',tag:'chinh',eff:()=>{S.danh+=6;S.f.hocngheoAlly=1;return 'Hắn thề sau này ngươi cần gì cứ nói. Danh vọng +6.';}}
+    ];
+    if(S.f.hocngheo===2) return [
+      {t:'Nghe hắn báo cáo tình hình các thế lực trong học đường',eff:()=>{S.susp=Math.max(0,S.susp-15);S.tamco+=2;return 'Biết trước kẻ nào đang nghi mình, kịp xóa dấu vết. Hiềm nghi −15, tâm cơ +2.';}}
+    ];
+    return [
+      {t:'Nhận vò rượu Hầu Nhi',eff:()=>{S.wine=(S.wine||0)+1;S.danh+=4;return 'Nhận 1 vò Hầu Nhi Tửu hảo hạng! Danh vọng +4.';}},
+      {t:'Nhận hắn làm đệ tử ngoại môn',tag:'ma',eff:()=>{S.f.hocngheoAlly=1;S.danh+=5;S.tamco++;return 'Có thêm một tay chân trung thành trong học đường. Danh vọng +5, tâm cơ +1.';}}
+    ];
+  }
+},
 k_hd_pcluyendem:{loc:'hocduong',w:1,cond:()=>S.turn>=4&&S.turn<(S.tideT||19),who:'phuongchinh',title:'Phương Chính luyện đêm',
   text:()=>'Sân học đường tối om, chỉ có Phương Chính còn ở lại. Nguyệt Nhận của nó cứ bắn lệch khỏi cọc gỗ. Nó nghiến răng: "Thêm một lần nữa..." rồi quỵ xuống vì cạn chân nguyên.',
   choices:[

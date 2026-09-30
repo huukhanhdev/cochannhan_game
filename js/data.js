@@ -152,7 +152,7 @@ const NPC={
 const MEM={
   hoatuu:{n:'Đường vào động phủ Hoa Tửu',d:'Biết lối vào và cách giải trận pháp cửa động.'},
   giasan:{n:'Điểm yếu của cậu',d:'Biết cậu đã lén bán ruộng trà của cha mẹ. Đòi gia sản dễ hơn.'},
-  jks:{n:'Thói quen Cổ Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, và có thể phục sẵn ở bờ sông, nếu hắn vẫn đi một mình như ký ức.'},
+  jks:{n:'Thói quen Cổ Kim Sinh',d:'Biết hắn tham lam và hay đi một mình. Dụ hắn dễ hơn, và có thể phục sẵn ở khe đá, nếu hắn vẫn đi một mình như ký ức.'},
   langtrieu:{n:'Nhịp lang triều',d:'Đã thấy sói tràn qua tường. Sát thương lên sói +25%, và biết cổng nào sói dồn tới, nếu lang triều không đổi hướng.'},
   bai:{n:'Nỗi lòng Bạch Ngưng Băng',d:'Biết hắn khao khát tự do và thể chất đang giết hắn.'},
   huyethai:{n:'Cửa sinh trong huyết động',d:'Biết điểm yếu của huyết khôi và lối cửa sinh, nếu cấm chế chưa bị ai đánh thức.'},

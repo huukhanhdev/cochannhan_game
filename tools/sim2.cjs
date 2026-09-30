@@ -81,10 +81,10 @@ for(let n=0;n<N;n++){
   run("META=freshMeta();newLife();S.traitOpts=null;S.tamco=14;S.satphat=10;S.ngo=10;S.tuchat=90;S.gu=(__q1min?['xuanthu','nguyetquang']:['xuanthu','huyetnguyet','trilieu','cuongthu','huyetlo','thiennguyen','cuxikimngo','hacthi','dausuat','thienbong','diathinh','tuvi','amduong']).map(k=>({k,h:0}));S.over='win';S.ending='huyetlo_bai';startQ2('huyetlo_bai')");
   let steps=0,tries=0;const seen=new Set();
   while(steps<6000){
-    const ch=run('S.chap');if(!seen.has(ch)){seen.add(ch);res.reach[ch]=(res.reach[ch]||0)+1;tries=0}
+    const ch=run('S.chap');if(!seen.has(ch)){seen.add(ch);res.reach[ch]=(res.reach[ch]||0)+1}
     const o=run('S.over');
     if(o==='rewind'){run('rewindTime(false)');res.rewinds++;steps++;continue}
-    if(o==='win'){const e=run('S.ending');res.end[e]=(res.end[e]||0)+1;break}
+    if(o==='win'){const e=run('S.ending');res.end[e]=(res.end[e]||0)+1;(res.att=res.att||{})[tries+1]=(res.att[tries+1]||0)+1;break}
     if(o==='dead'){const d=run('META.deaths[META.deaths.length-1]');const k=ch+' · '+d.cause;res.cause[k]=(res.cause[k]||0)+1;res.retries[ch]=(res.retries[ch]||0)+1;
       if(++tries>RETRY)break;run('restartChapter()');steps++;continue}
     run('botTurn()');steps++;
@@ -93,7 +93,8 @@ for(let n=0;n<N;n++){
   (res.st=res.st||[]).push(run("({dv:S.f.dvRank||0,kv:(S.f.kv||{}).ai||0,tv:(S.f.tv||{}).ai||0,bv:(S.f.bv||{}).ai||0,batu:+!!S.f.batuChet,duc:+hasGu('cotduc'),toan:+hasGu('toanluc'),beast:beastCount()})"));
   const rk=run('S.chuyen+"."+S.giai');res.rank[rk]=(res.rank[rk]||0)+1;
 }
-console.log(`Chiến dịch: ${N}, làm lại tối đa ${RETRY} lần mỗi chương`);
+console.log(`Chiến dịch: ${N}, chết thật thì làm lại từ đầu Quyển 2, tối đa ${RETRY} lần`);
+console.log('Thắng ở lần thử:',JSON.stringify(res.att||{}));
 console.log('Tới chương:',JSON.stringify(res.reach));
 console.log('Số lần làm lại theo chương:',JSON.stringify(res.retries));
 console.log('Kết:',JSON.stringify(res.end),'· kẹt vòng lặp:',res.stuck,'· Thiền cứu:',res.rewinds);

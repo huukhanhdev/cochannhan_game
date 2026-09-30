@@ -180,11 +180,11 @@ function renderSheet(){
         <div class="npc-info"><b>${NPC[k].n}</b><small>${NPC[k].d}</small>${npcQuestProgress(k)}</div>
         <div class="npc-rel"><span style="color:${col}">${v>0?'+':''}${v}</span><div class="rel-bar"><i style="width:${clamp((v+100)/2,0,100)}%;background:${col}"></i></div></div></div>`}).join('')}</div>`;
   }else{
-    const mems=Object.keys(META.mem);
+    const mems=Object.keys(S.mem||{});
     const deaths=(META.deaths||[]).slice(-5).reverse();
     body=`<div class="mems">${mems.length?mems.map(k=>`<div><b>${MEM[k]?MEM[k].n:k}</b><small class="dimt">${MEM[k]?MEM[k].d:''}</small></div>`).join(''):'<small class="dimt">Chưa có. Mỗi lần chết, những gì đã trải qua sẽ theo ngươi về quá khứ.</small>'}</div>
       <span class="label">Sát chiêu đã ngộ</span>
-      <div class="mems">${COMBOS.filter(cb=>(META.combos||{})[cb.id]).map(cb=>`<div><b>${cb.n}</b><small class="dimt">${cb.req.map(k=>GU[k].n).join(' + ')} · ${cb.d}</small></div>`).join('')||'<small class="dimt">Chưa ngộ ra sát chiêu nào. Có đủ cổ rồi bế quan để lĩnh ngộ.</small>'}</div>
+      <div class="mems">${COMBOS.filter(cb=>(S.combos||{})[cb.id]).map(cb=>`<div><b>${cb.n}</b><small class="dimt">${cb.req.map(k=>GU[k].n).join(' + ')} · ${cb.d}</small></div>`).join('')||'<small class="dimt">Chưa ngộ ra sát chiêu nào. Có đủ cổ rồi bế quan để lĩnh ngộ.</small>'}</div>
       <span class="label">Lưu trữ</span>
       <div class="savebox"><button class="btn" data-save="copy">Sao chép save</button><button class="btn" data-save="paste">Nhập save</button></div>
       <textarea id="saveText" class="savetext" rows="3" placeholder="Dán mã save vào đây rồi bấm Nhập save" hidden></textarea><small class="dimt" id="saveMsg"></small>
@@ -242,7 +242,7 @@ function renderStage(){
     st.innerHTML=`<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">${timeLabel()} · ${rankName()}</span>
       <h3>Phương Nguyên đã chết</h3>
       <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.</p>
-      <p>Mọi thứ bắt đầu lại từ lễ khai khiếu. Chỉ những điều ngươi đã biết là còn lại: ${Object.keys(META.mem).length} ký ức, đạo tâm +5% tu luyện. Thế giới lần này sẽ lệch đi đôi chút.</p>
+      <p>Chết là chết thật. Mọi thứ bắt đầu lại từ lễ khai khiếu: tu vi, cổ trùng, và cả ký ức về những gì đời này đã trải qua đều mất sạch.</p>
       <button class="btn big" data-a="rebirth">Bắt đầu lại từ đầu</button></div>`;
     return;
   }

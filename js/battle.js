@@ -116,7 +116,7 @@ function updateCombat(){
 
   const gus=S.gu.map((g,i)=>({i,k:g.k,d:GU[g.k]})).filter(x=>['attack','guard','heal'].includes(x.d.t));
   const seen=new Set(),uniq=gus.filter(x=>!seen.has(x.k)&&seen.add(x.k));
-  const combos=COMBOS.filter(cb=>(META.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k)));
+  const combos=COMBOS.filter(cb=>(S.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k)));
   // Lý do không dùng được: đang hồi chiêu, bị băng phong
   const lock=key=>(c.frozen[key]||0)>0?`Bị băng phong ${c.frozen[key]-1||1} lượt`:(c.cd[key]||0)>0?`Hồi chiêu ${c.cd[key]} lượt`:'';
   const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:typeof lucName==='function'?lucName():'Đánh tay',s:`${typeof lucShow==='function'?lucShow():baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];

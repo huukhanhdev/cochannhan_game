@@ -32,6 +32,8 @@ function rewindTime(manual){
   const old=S;
   S=JSON.parse(snap.data);
   S.log=old.log;S.snaps=old.snaps.filter(x=>x.turn<=snap.turn);
+  // Chỉ ký ức theo được về quá khứ
+  S.mem=Object.assign({},S.mem,old.mem);S.combos=Object.assign({},S.combos,old.combos);
   S.cicada={charge:0};S.rewinds=(old.rewinds||0)+1;
   // Quang âm bị khuấy động: thế giới lệch thêm
   if(typeof driftAdd==='function')driftAdd(3,'',1);

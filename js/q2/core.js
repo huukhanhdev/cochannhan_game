@@ -1,7 +1,7 @@
 // Quyển 2: khung chương (KE_HOACH_Q2.md, mục 1.3).
 // S.book=2 thì engine chuyển sang startTurn2(), act2(), renderMap2(). Quyển 1 giữ nguyên.
 // Mỗi chương là một mục trong CHAPTERS (khai báo ở events2.js): lịch mốc, nơi chốn, độ dài, chương kế.
-// Đầu mỗi chương lưu một mốc vào META.chapSave: chết thật thì chơi lại từ đầu chương.
+// Đầu mỗi chương lưu một mốc vào META.chapSave (dùng cho Thiền lần ba). Chết thật thì chơi lại từ đầu Quyển 2, mất ký ức.
 // Nạp sau butterfly.js, trước events2.js và engine.js.
 
 const CHAPTERS={};
@@ -57,6 +57,7 @@ function startQ2(ending){
     rel:{bainu:lo||from==='bai_dong'||from==='huyetlo_bai'?10:0},met:{},f:{q2From:from},shop:[],evq:[],combat:null,panel:null,
     over:null,ending:null,acted:false,refined:false,log:(old?old.log.slice(-6):[]),mod:old?old.mod||{}:{},inj:null,trait:old?old.trait:null,
     traitOpts:null,npcProg:{},var:{},world:[],cache:[],path:[],ffOffer:false,
+    mem:old?Object.assign({},old.mem):{},combos:old?Object.assign({},old.combos):{},
     cicada:{charge:0},snaps:[],rewinds:0,drift:0,driftStep:0,later:[],evLast:{},evSeen:{}};
   S.hp=maxHp();S.ess=maxEss();
   S.gu.forEach(g=>discoverGu(g.k));
@@ -80,13 +81,14 @@ function enterChapter(k){
   const {log:_l,snaps:_s,...rest}=S;META.chapSave[k]=JSON.stringify(rest);
   saveAll();render();
 }
-// Chết thật ở Quyển 2: chơi lại từ đầu chương, ký ức giữ lại
+// Chết thật ở Quyển 2: chơi lại từ đầu Quyển 2 với kho cổ nhận từ Quyển 1. Ký ức đời đã chết mất sạch.
 function restartChapter(){
-  const raw=META.chapSave&&META.chapSave[S.chap];
+  const raw=META.chapSave&&META.chapSave[Q2_FIRST];
   if(!raw)return startQ2(META.q2From);
   const lg=S.log;S=JSON.parse(raw);S.log=lg.slice(-20);S.snaps=[];
+  META.chapSave={[Q2_FIRST]:raw};
   META.q2Retry=(META.q2Retry||0)+1;
-  log(`Làm lại từ đầu ${CHAPTERS[S.chap].n}. Những gì ngươi đã thấy vẫn còn trong ký ức.`,'big');
+  log(`Chết là chết thật. Làm lại từ đầu Quyển hai, ngày rời Thanh Mao Sơn. Những gì đời trước đã thấy không còn nhớ.`,'big');
   cicadaSnap();saveAll();render();
 }
 // Gọi trong hiệu ứng lựa chọn hoặc sau trận để kết thúc chương: sang chương k ở lượt kế
@@ -173,6 +175,6 @@ function q2DeadHTML(){
   return `<div class="over has-art dead" style="--art:url('${asset('art/bg_fire.jpg')}')"><span class="label">${timeLabel()} · ${rankName()}</span>
     <h3>Phương Nguyên đã chết</h3>
     <p>Ngươi chết dưới tay ${esc(d?d.cause:'số mệnh')}. Xuân Thu Thiền mới hồi phục ${Math.floor(cicadaCharge())}%, không đủ sức nghịch chuyển quang âm.</p>
-    <p>Làm lại từ đầu ${esc(curChap().n)}. Ký ức vẫn còn.</p>
-    <button class="btn big" data-a="chapretry">Làm lại chương</button></div>`;
+    <p>Chết là chết thật. Làm lại từ đầu Quyển hai, ngày rời Thanh Mao Sơn. Ký ức về đời này mất sạch.</p>
+    <button class="btn big" data-a="chapretry">Làm lại Quyển hai</button></div>`;
 }

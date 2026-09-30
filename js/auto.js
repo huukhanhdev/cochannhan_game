@@ -49,7 +49,7 @@ function autoAct(){
   const warm=guards.find(x=>x.d.warm);
   const guard=(foeHas(c,'han')&&warm)||guards.sort((a,b)=>(SHIELD_RED[a.k]||.4)-(SHIELD_RED[b.k]||.4))[0];
   const heal=gus.find(x=>x.d.t==='heal'&&ready(x));
-  const combos=COMBOS.filter(cb=>(META.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k))&&guReady(cb.id)&&S.ess>=costOf(cb.cost)&&cb.dmg);
+  const combos=COMBOS.filter(cb=>(S.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k))&&guReady(cb.id)&&S.ess>=costOf(cb.cost)&&cb.dmg);
   if(hpR<.45&&heal)return playerAct('gu',heal.i);
   if(hpR<.45&&S.herbs>0&&guReady('herb'))return playerAct('herb');
   const big=c.intent==='heavy'||(c.intent==='skill'&&['thunder','charge','rage'].includes(c.sk));

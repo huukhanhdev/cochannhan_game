@@ -48,7 +48,8 @@ function discoverGu(k){
 }
 
 /* ---------- tra cứu ---------- */
-function mem(k){return !!META.mem[k]}
+// Ký ức chỉ sống trong một đời. Xuân Thu Thiền quay ngược quang âm thì mang theo; chết thật là mất sạch.
+function mem(k){return !!(S&&S.mem&&S.mem[k])}
 function W(k){return !!(S&&S.world&&S.world.includes(k))}
 function guPrice(k){return Math.round(GU[k].p*(W('dichco')?.8:1))}
 function itemPrice(t){return {herb:W('dathan')?3:6,blood:8,wine:15}[t]}
@@ -62,9 +63,10 @@ function buildCanon(){
   return out;
 }
 function learn(k){
-  if(!META.mem[k]){
-    META.mem[k]=1;
-    log(`Ký ức khắc sâu: ${MEM[k]?MEM[k].n:k}. Kiếp sau vẫn còn nhớ.`,'mem');
+  S.mem=S.mem||{};
+  if(!S.mem[k]){
+    S.mem[k]=1;
+    log(`Ký ức khắc sâu: ${MEM[k]?MEM[k].n:k}. Xuân Thu Thiền quay ngược quang âm thì ngươi vẫn nhớ.`,'mem');
   }
 }
 function meet(k){S.met[k]=1;if(S.rel[k]===undefined)S.rel[k]=0}
@@ -91,7 +93,7 @@ function rankMult(){return 1+.45*(S.chuyen-1)+.05*S.giai}
 function baseAtk(){return Math.max(1,4+S.satphat+3*S.chuyen+passAtk()-(S.inj&&S.inj.k==='tay'?3:0))}
 function cultMult(){
   const tcBonus=((S.tuchat||44)-44)*0.01;
-  return (1+S.gu.reduce((s,g)=>s+(GU[g.k].cult||0),0)+.05*Math.min(META.life-1,5)+tcBonus)*(S.inj&&S.inj.k==='kinh'?.7:1)*(W('linhmach')?1.15:1);
+  return (1+S.gu.reduce((s,g)=>s+(GU[g.k].cult||0),0)+tcBonus)*(S.inj&&S.inj.k==='kinh'?.7:1)*(W('linhmach')?1.15:1);
 }
 function foodCost(){
   return S.gu.reduce((s,g)=>s+(g.k==='nguyetquang'&&S.f.freeMoon?0:(GU[g.k].food||0)*(g.k==='nguyetquang'&&W('dathan')?2:1)+(W('dichco')&&GU[g.k].t!=='fate'?1:0)),0)+((S.mod&&S.mod.food)||0);
@@ -136,15 +138,13 @@ function newLife(){
     log('Mở mắt ra, ngươi đang đứng giữa Cổ Nguyệt sơn trại, năm mười lăm tuổi, sáng ngày khai khiếu.','big');
   }else{
     if(window.SFX) SFX.cicada();
-    log(`Lần thử thứ ${META.life}. Xuân Thu Thiền đã không kịp cứu ngươi, mọi thứ bắt đầu lại từ lễ khai khiếu.`,'big');
-    const n=Object.keys(META.mem).length;
-    log(`Tu vi, nguyên thạch, cổ trùng đều tan biến. Chỉ còn ${n} mảnh ký ức và đạo tâm vững hơn (tu luyện +${5*Math.min(META.life-1,5)}%).`,'sys');
+    log(`Lần thử thứ ${META.life}. Phương Nguyên đời trước đã chết thật. Mọi thứ bắt đầu lại từ lễ khai khiếu.`,'big');
+    log('Tu vi, nguyên thạch, cổ trùng, ký ức về những gì đã trải qua: không còn gì cả. Chỉ còn năm trăm năm ký ức Huyết Ma như lần đầu.','sys');
   }
-  S.path=[];S.ffOffer=META.life>1&&ffAvailable();S.cicada={charge:0};S.snaps=[];S.rewinds=0;S.drift=0;S.driftStep=0;S.later=[];
+  S.mem={};S.combos={};S.path=[];S.ffOffer=false;S.cicada={charge:0};S.snaps=[];S.rewinds=0;S.drift=0;S.driftStep=0;S.later=[];
   S.world=Object.keys(WORLD).sort(()=>Math.random()-.5).slice(0,2);
   if(W('thuongsom')&&W('langsom'))S.world[1]='hunggia';
   S.canon=buildCanon();
-  if(META.life>1)echoApply();
   S.tideT=+Object.keys(S.canon).find(t=>S.canon[t]==='c_lang1')||19;
   const locs=['nui','hauson','trai','nhiemvu'];
   S.cache=Object.keys(CACHE).sort(()=>Math.random()-.5).slice(0,2).map(kind=>{const from=rand(3,20);return {kind,loc:pick(CACHE_LOCS[kind]||locs),from,to:from+rand(3,6),done:0,rumor:0}});
@@ -361,9 +361,9 @@ function cultivate(st){
   const gain=Math.round((e+st*5)*cultMult());
   S.ess=0;S.prog+=gain;
   log(`Bế quan mười ngày. Dùng ${e} chân nguyên${st?` và ${st} nguyên thạch`:''}. Tu vi +${gain}.`);
-  META.combos=META.combos||{};
-  COMBOS.filter(cb=>!META.combos[cb.id]&&cb.req.every(k=>hasGu(k))).forEach(cb=>{
-    if(Math.random()<.3+(S.ngo-6)*.05){META.combos[cb.id]=1;log(`Trong lúc bế quan, ngươi ngộ ra sát chiêu【${cb.n}】. Kiếp sau vẫn nhớ.`,'mem');FX.toastMsg={g:'悟',t:'Ngộ ra '+cb.n,cls:'win'}}
+  S.combos=S.combos||{};
+  COMBOS.filter(cb=>!S.combos[cb.id]&&cb.req.every(k=>hasGu(k))).forEach(cb=>{
+    if(Math.random()<.3+(S.ngo-6)*.05){S.combos[cb.id]=1;log(`Trong lúc bế quan, ngươi ngộ ra sát chiêu【${cb.n}】.`,'mem');FX.toastMsg={g:'悟',t:'Ngộ ra '+cb.n,cls:'win'}}
   });
   levelUp();
   S.panel=null;S.acted=true;
@@ -485,7 +485,7 @@ function refine(i){
 function fight(k,o){
   o=o||{};
   const e=EN[k],ai=EAI[k]||{},sc=o.scale?1+.45*(S.chuyen-1):1,elite=!!o.elite;
-  const f=sc*(o.mod||1)*(elite?1.3:1);
+  const f=sc*(o.mod||1)*(elite?1.3:1)*(S.book===2?DIFF.q2:1);
   S.combat={id:Date.now(),k,n:(elite?'Tinh anh · ':'')+e.n,wolf:!!e.wolf,
     hp:Math.round(e.hp*f*DIFF.hp),max:Math.round(e.hp*f*DIFF.hp),
     atk:[Math.round(e.atk[0]*f*DIFF.atk),Math.round(e.atk[1]*f*DIFF.atk)],
@@ -867,13 +867,13 @@ document.addEventListener('click',ev=>{
 function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
-  S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];META.combos=META.combos||{};
+  S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];S.mem=S.mem||{};S.combos=S.combos||{};
   S.drift=S.drift||0;S.driftStep=S.driftStep||0;S.later=S.later||[];
   // Tải lại giữa lúc đang tua thì trả quyền điều khiển cho người chơi
   if(S.ff)S.ff=null;
   // Save cũ có thể còn cổ trùng hoặc sát chiêu đã bị bỏ khỏi dữ liệu: lọc đi để không lỗi khi hiển thị
   S.gu=(S.gu||[]).filter(g=>GU[g.k]);S.shop=(S.shop||[]).filter(k=>GU[k]);META.codex=(META.codex||[]).filter(k=>GU[k]);
-  for(const id in META.combos)if(!COMBOS.some(c=>c.id===id))delete META.combos[id];
+  for(const id in S.combos)if(!COMBOS.some(c=>c.id===id))delete S.combos[id];
   if(S.combat){const c=S.combat;c.tr=c.tr||foeTraits(c.k);c.cd=c.cd||{};c.frozen=c.frozen||{};c.def=c.def||0;c.turn=c.turn||0;c.atkBuff=c.atkBuff||0;c.poison=c.poison||0;c.suppress=c.suppress||0;c.shieldRed=c.shieldRed||.4}
   // Tải lại giữa lúc đang diễn đòn kết liễu
   if(S.combat&&S.combat.hp<=0){S.combat.ko=1;win();return}

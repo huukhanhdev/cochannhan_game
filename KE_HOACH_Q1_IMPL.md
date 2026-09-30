@@ -51,3 +51,10 @@ Nguyên tắc: không đổi số tuần (27) và bảng `CANON`. Chỉ sửa n�
 - Cân bằng (DIFF 1.7, Quyển 1 hiện dễ).
 - Huyết Lô vẫn lấy được sớm ở lăng mộ (tuần 24); nguyên tác là cuối trận. Giữ làm nhánh game.
 - Chưa có cảnh Thiên Lý Địa Lang (ch 190), Lôi Dực, Chiếu Ảnh (không mang sang Quyển 2 nên để sau).
+
+## Đợt 2: luật chết và cân bằng
+- [x] Ký ức chỉ sống trong một đời (`S.mem`, `S.combos`). Xuân Thu Thiền quay ngược thì mang theo; chết khi Thiền chưa hồi phục là chết thật, chơi lại từ lễ khai khiếu, không còn ký ức, không lựa chọn "theo ký ức", không tua nhanh theo đời trước, không cộng tu luyện theo số kiếp.
+- [x] Quyển 2: chết thật thì chơi lại từ đầu Quyển 2 (kho cổ nhận từ Quyển 1), không còn làm lại từng chương. Thiền lần ba (chương cuối) vẫn quay về đầu chương như nguyên tác.
+- [x] Cân bằng: `DIFF` 1.7 → 1.55, thêm `DIFF.q2=1.2` cho Quyển 2.
+  - Quyển 1, tỉ lệ thắng mỗi đời: bot nguyên tác ~40%, bot lệch ~20%.
+  - Quyển 2 (kho đầy đủ), mỗi lần thử: ~45%.

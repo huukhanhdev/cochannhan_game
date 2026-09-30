@@ -33,7 +33,7 @@ CHAPTERS.q2_phanboi={n:'Điện luyện cổ',title:'Quyển hai · Chương ch�
 function thienLan3(){
   learn('q2_phanboi');
   const raw=META.chapSave&&META.chapSave.q2_phanboi;if(!raw)return 'Quang âm không có chỗ để quay về.';
-  const lg=S.log;S=JSON.parse(raw);S.log=lg;S.snaps=[];
+  const lg=S.log,oldMem=S.mem,oldCb=S.combos;S=JSON.parse(raw);S.log=lg;S.snaps=[];S.mem=Object.assign({},S.mem,oldMem);S.combos=Object.assign({},S.combos,oldCb);
   S.cicada={charge:0};S.rewinds=(S.rewinds||0)+1;S.f.thien3=1;
   if(window.SFX)SFX.cicada();
   log('Ngươi tự bạo không khiếu và toàn thân, dùng cả sinh mệnh lẫn linh hồn đẩy Xuân Thu Thiền lao vào Quang Âm Chi Hà.','big');

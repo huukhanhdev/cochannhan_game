@@ -240,3 +240,51 @@ Giữ nguyên thiết kế ở phiên bản trước của file này. Tóm tắt
 | 3 | Dị số chỉ gây khó, hay có cả cơ duyên | Có cả hai, khoảng 60% họa và 40% cơ duyên |
 | 4 | Bám nguyên tác có kéo độ lệch giảm lại không | Có, −3 mỗi lần, để người chơi có lựa chọn "đi lại đúng truyện" |
 | 5 | Biến thể mặc định ở kiếp đầu hay vẫn ngẫu nhiên | Mặc định, kèm 20% nền nếu mô phỏng cho thấy quá dễ |
+
+---
+
+## Đã chốt với chủ dự án (30/09/2026) và đã làm PR 1–3
+
+Những điểm dưới đây thay cho phần tương ứng ở trên.
+
+1. **Không dùng `memB`, tức không cho ký ức phai theo hệ số.** Cánh bướm tác động lên *nội dung* ký ức.
+   - Lựa chọn ký ức có trường `mem:'khóa'` và nhãn "憶 Ký ức". Lựa chọn này dựa trên bản nguyên tác của mốc.
+   - Nếu mốc đã đổi biến thể (`varShifted(k)`), lựa chọn ký ức **phản tác dụng**.
+   - Đã có ở 7 mốc: gia sản, cổng học đường, Giả Kim Sinh, Bạch gia lấn đất, Bạch Ngưng Băng, lang triều, lăng mộ.
+   - Chết dưới tay ai thì nhận ký ức về kẻ đó (bảng `DEATH_MEM` trong `data.js`).
+2. **Mỗi lần chơi lại, 2–3 mốc lệch sẵn** (`initVariants`); độ lệch do người chơi gây ra cộng thêm trên nền đó. Quay ngược 3 tuần thì giữ nguyên dòng thời gian.
+3. **Không hiện số phần trăm.** `S.drift` là số ẩn. Thanh trạng thái chỉ hiện 3 mức: "Ký ức khớp", "Có chỗ lạ", "Tương lai mờ mịt" (`driftChip`). Không dùng chữ "Thiên cơ", để khỏi trùng với thiên cơ kiếp này (`S.world`).
+4. **Không trừ độ lệch khi đi đúng nguyên tác.**
+   - Nguồn làm lệch:
+     - bỏ lựa chọn nguyên tác ở mốc có nguyên tác: +8;
+     - lựa chọn có trường `drift:N`: +N;
+     - mỗi lần Xuân Thu Thiền quay ngược: +6;
+     - mỗi hậu quả trễ nổ ra: +2;
+     - kết quả đổi thế cục lớn (`AFTER_DRIFT`): cộng theo bảng.
+   - Dị số có cả họa lẫn cơ duyên, để đi lệch là một đánh đổi chứ không phải là sai.
+
+### Đã làm
+- **PR 1** (`randomEvent`, `evText` trong `engine.js`):
+  - Hồi chiêu bằng nửa cỡ kho, tối đa 6 tuần.
+  - Trọng số chia cho `1+số lần đã gặp`.
+  - Sự kiện chưa từng thấy ×1,5.
+  - `text` được phép là mảng hàm; hiện có ở `r_giangbai` và `r_tuanbien`.
+- **PR 2** (`js/butterfly.js`): `VARIANTS`, `initVariants`, `driftAdd`, `shiftVariant` (ở các ngưỡng 25/50/75), `shiftSchedule` (khi tới ngưỡng 75, một trong các mốc `MOVABLE` xê dịch một tuần).
+  - Tua nhanh dừng khi thế giới xoay chuyển, và khi lựa chọn cũ là lựa chọn ký ức ở mốc đã đổi.
+  - Dòng thời gian đọc lịch của kiếp này (`S.canon`).
+- **PR 3:**
+  - `later(id,min,max,cờ)` cùng 10 hậu quả trễ `q_*`.
+  - 10 dị số `d_*` (`loc:'diso'`). Dị số xuất hiện khi lệch ≥ 25, xác suất lệch/120 mỗi tuần chưa có mốc; chen trước tuyến NPC.
+  - Đã gặp thì thành ký ức `ds_<id>`.
+  - Dư âm xuyên kiếp: `echoSave` và `echoApply`.
+
+### Số đo
+- `sim.cjs 400 6`: thắng 32%, lần đầu 1,5%.
+  - Độ lệch trung bình: 18 lúc chết, 51 lúc thắng.
+  - Lựa chọn ký ức: 247 lần đúng, 197 lần phản tác dụng.
+  - `DIFF` 1,36.
+- `LECH=1 sim.cjs`, người chơi máy cố tình bỏ lựa chọn nguyên tác ở mốc truyện:
+  - mỗi lần chơi gặp 1,8 dị số và 2,2 lần thế giới xoay chuyển;
+  - nhưng chỉ thắng 0,5%;
+  - **tắt hẳn cơ chế lệch vẫn chỉ 0,5%**. Nguyên nhân là các lựa chọn khác nguyên tác ở mốc truyện vốn đã rất nguy hiểm (đánh Bạch Ngưng Băng, xông vào lang triều...), không phải cơ chế lệch. Cần chủ dự án quyết có làm mềm các nhánh này không.
+- `ff_test.cjs 100`: 0 lỗi, tua tới khoảng 50% tuần mục tiêu.

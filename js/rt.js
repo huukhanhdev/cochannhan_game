@@ -43,6 +43,7 @@ const RT_OBJ={
 };
 // Điểm yếu theo nguyên tác (hiện khi đã dò xét hoặc có ký ức)
 const RT_WEAK={
+  thachhau:{gu:['bachngoc','ngocbi'],t:'Ngọc giáp đỡ được trảo đá; trùm áo phá Ẩn Thạch Cổ tàng hình khiến nó lộ sơ hở',known:()=>mem('thachhau')||S.f.thachhauPrep||hasGu('bachngoc')},
   bai:{gu:['hoalo'],t:'Hỏa Lô Cổ chặn hàn khí; sau mỗi đòn băng hắn khựng nửa nhịp',known:()=>mem('bai')||(S.chosen&&S.chosen.c_lang2)},
   langvuong:{gu:['cuongnham','thietbi'],t:'Giáp hành thổ (Cương Nham, Thiết Bì) đỡ được lôi bạo; chảy máu làm nó ngừng tru gọi bầy',known:()=>mem('langtrieu')||S.f.wolfPrep},
   loiquan:{gu:['cuongnham','thietbi'],t:'Giáp hành thổ đỡ được lôi bạo',known:()=>mem('langtrieu')||S.f.wolfPrep},
@@ -126,6 +127,7 @@ function rtPoise(c,n,why){
     if(r.cast){log(`${c.n} bị phá thế giữa lúc ${r.cast.n.toLowerCase()}!`,'good');r.cast=null}
     log(`SƠ HỞ! ${c.n} lộ sơ hở ${r.stag.toFixed(1)} giây${why?' ('+why+')':''}: không ra tay được, nhận thêm 50% sát thương.`,'big');
     rtEv({type:'text',on:'e',t:'Sơ hở'});
+    if(window.SFX) SFX.stagger();
     const o=r.obj;if(o&&o.brk)return rtObjDone(c);
     if(o&&o.type==='escape')o.prog=Math.min(100,o.prog+12);
   }
@@ -183,7 +185,11 @@ function rtAct(type,arg){
       }
       guWear(arg,1.5,'bị thúc quá sức');
     }else if(g.t==='guard'){
-      if(window.SFX)SFX.bell();
+      if(['bachngoc','thienbong'].includes(key)){
+        if(window.SFX)SFX.jadeGuard();
+      }else{
+        if(window.SFX)SFX.bell();
+      }
       const red=1-(1-(SHIELD_RED[key]||.4))*eff;
       r.guard={k:key,perfect:RT.perfect,left:(g.turns||2)*RT.secPerTurn*.9,red,reflect:g.reflect||0,warm:!!g.warm,drainPct:g.drainPct||0};
       if(g.selfHeal){S.hp=Math.min(maxHp(),S.hp+g.selfHeal);rtEv({type:'heal',amt:g.selfHeal})}
@@ -345,8 +351,13 @@ function rtFoeHit(c,mult,opt){
     const gi=S.gu.findIndex(g=>g.k===G.k);
     const rf=Math.max(.6,1+.4*(r.rank-(GU[G.k]?GU[G.k].r:1)));
     if(gi>=0)guWear(gi,(before-d)/maxHp()*120*rf*(perfect?.3:1),'đỡ đòn quá nặng');
-    if(perfect){log('Hộ thể đúng khoảnh khắc! Đòn đánh gần như vô hiệu.','big');rtEv({type:'text',on:'p',t:'Đỡ chuẩn'});rtPoise(c,40,'đỡ đúng lúc');
-      if(r.obj&&r.obj.type==='escape')r.obj.prog=Math.min(100,r.obj.prog+6)}
+    if(perfect){
+      log('Hộ thể đúng khoảnh khắc! Đòn đánh gần như vô hiệu.','big');
+      rtEv({type:'text',on:'p',t:'Đỡ chuẩn'});
+      rtPoise(c,40,'đỡ đúng lúc');
+      if(G&&['bachngoc','thienbong'].includes(G.k)&&window.SFX) SFX.jadeGuard();
+      if(r.obj&&r.obj.type==='escape')r.obj.prog=Math.min(100,r.obj.prog+6);
+    }
   }else if(G&&opt.pierce){const gi=S.gu.findIndex(g=>g.k===G.k);if(gi>=0)guWear(gi,15,'bị đánh xuyên hộ thể');r.guard=null}
   d*=1-Math.min(.4,guSum('armor'));
   d=Math.max(1,Math.round(d));
@@ -387,8 +398,9 @@ function rtSkill(c){
       const d=rtFoeHit(c,.5,ranged);log(`${c.n} ${nm}: mất ${amt} chân nguyên.${d?' Khí huyết −'+d+'.':''}`,'danger');break}
     case 'regen':{const bl=c.bleed>0,h=Math.round(c.max*((EAI[c.k]||{}).regen||.12)*(bl?.35:1));c.hp=Math.min(c.max,c.hp+h);rtEv({type:'text',on:'e',t:'+'+h});log(`${c.n} ${nm}, hồi ${h} máu.`,bl?'good':'danger');break}
     case 'thunder':{
-      const earth=r.guard&&['cuongnham','thietbi'].includes(r.guard.k);
-      const d=rtFoeHit(c,1.6,{pierce:!earth,heavy:true,reach:2});if(d)log(`${nm}${earth?' đập vào giáp hành thổ, tản bớt lực':' xuyên qua hộ thể'}! Khí huyết −${d}.`,'danger');break}
+      if(window.SFX) SFX.lightning();
+      const earth=r.guard&&['cuongnham','thietbi','bachngoc','thienbong'].includes(r.guard.k);
+      const d=rtFoeHit(c,1.6,{pierce:!earth,heavy:true,reach:2});if(d)log(`${nm}${earth?' đập vào giáp phòng ngự, tản bớt lực':' xuyên qua hộ thể'}! Khí huyết −${d}.`,'danger');break}
     case 'suppress':{c.suppress=3;r.suppT=6;const d=rtFoeHit(c,.5,ranged);log(`${c.n} tỏa ${nm}: cổ trùng run rẩy, tốn gấp rưỡi chân nguyên.${d?' Khí huyết −'+d+'.':''}`,'danger');break}
     default:{const d=rtFoeHit(c,1.2);if(d)log(`${c.n} ${nm}. Khí huyết −${d}.`,'danger')}
   }
@@ -524,8 +536,9 @@ function rtRender(){
   const hint=!cast?'':cast.k==='guard'?'Thủ thế: đánh vào chỉ nửa sức. Tranh thủ hồi phục, dựng hộ thể.':
     cast.k==='atk'?(r.d>(rtRangedFoe(c.k)?2:0)?'Ngoài tầm với của nó.':'Đòn thường. Có thể chịu, hoặc lùi ra.'):
     (rtRangedFoe(c.k)||c.sk==='thunder'?'':'Lùi ra xa để né, hoặc ')+'dựng hộ thể đúng lúc thanh đầy. Cổ có choáng hoặc xuyên giáp đánh vào lúc này sẽ phá thế.';
-  $('rtCast').innerHTML=r.phase!=='fight'?'':cast?`<div class="cast ${cast.k}"><b>${esc(cast.n)}</b><div class="cbar"><i style="width:${clamp((1-cast.left/cast.dur)*100,0,100)}%"></i>${cast.left<=RT.perfect&&cast.k!=='guard'?'<span class="now">ĐỠ!</span>':''}</div><small>${esc(hint)}</small></div>`:
-    r.stag>0?`<div class="cast stag"><b>Địch lộ sơ hở</b><small>Dồn sát chiêu ngay bây giờ.</small></div>`:`<div class="cast idle"><small>${esc(c.n)} đang dò xét…</small></div>`;
+  const badge=cast?`<div class="windup-badge">${cast.k==='skill'?'⚡ SÁT CHIÊU':cast.k==='heavy'?'⚠️ ĐÒN NẶNG':cast.k==='guard'?'🛡️ THỦ THẾ':'⚔️ ĐÒN ĐÁNH'}</div>`:'';
+  $('rtCast').innerHTML=r.phase!=='fight'?'':cast?`<div class="cast ${cast.k}">${badge}<b>${esc(cast.n)}</b><div class="cbar"><i style="width:${clamp((1-cast.left/cast.dur)*100,0,100)}%"></i>${cast.left<=RT.perfect&&cast.k!=='guard'?'<span class="now pulse">ĐỠ!</span>':''}</div><small>${esc(hint)}</small></div>`:
+    r.stag>0?`<div class="cast stag"><b class="stagger-active">⚡ ĐỊCH LỘ SƠ HỞ (${r.stag.toFixed(1)}s)</b><small>Sát lực ×1.5! Dồn sát chiêu ngay lúc này.</small></div>`:`<div class="cast idle"><small>${esc(c.n)} đang dò xét…</small></div>`;
   $('rtCast').insertAdjacentHTML('beforeend',objH);
   // dải khoảng cách
   $('rtRange').innerHTML=[0,1,2].map(i=>`<span class="slot ${r.d===i?'on':''} ${r.moveTo===i?'to':''}"><em>${RANGE_N[i]}</em></span>`).join('')+`<span class="foe" title="${esc(c.n)}">${(ART[c.k]||{g:'敌'}).g}</span>`;

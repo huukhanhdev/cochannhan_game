@@ -33,7 +33,14 @@ CHAPTERS.q2_phanboi={n:'Điện luyện cổ',title:'Quyển hai · Chương ch�
 function thienLan3(){
   learn('q2_phanboi');
   const raw=META.chapSave&&META.chapSave.q2_phanboi;if(!raw)return 'Quang âm không có chỗ để quay về.';
-  const lg=S.log,oldMem=S.mem,oldCb=S.combos;S=JSON.parse(raw);S.log=lg;S.snaps=[];S.mem=Object.assign({},S.mem,oldMem);S.combos=Object.assign({},S.combos,oldCb);
+  const lg=S.log,oldMem=S.mem,oldCb=S.combos,oldStory=S.story;
+  S=JSON.parse(raw);
+  S.log=lg;S.snaps=[];S.mem=Object.assign({},S.mem,oldMem);S.combos=Object.assign({},S.combos,oldCb);
+  if(oldStory){
+    S.story=oldStory;
+    if(Array.isArray(S.story.pending)) S.story.pending=[];
+  }
+  if(typeof storySetOutcome==='function') storySetOutcome('cicada_rewind3','rewind3_executed',{choiceText:'Tự bạo không khiếu kích hoạt Xuân Thu Thiền lần 3 nghịch chuyển quang âm',isLech:false,note:'Lần thứ 3 chuyển sinh, mang theo ký ức tử cục phản kích lật bàn.'});
   S.cicada={charge:0};S.rewinds=(S.rewinds||0)+1;S.f.thien3=1;
   if(window.SFX)SFX.cicada();
   log('Ngươi tự bạo không khiếu và toàn thân, dùng cả sinh mệnh lẫn linh hồn đẩy Xuân Thu Thiền lao vào Quang Âm Chi Hà.','big');
@@ -61,8 +68,14 @@ q2_pb_luyen:{canon:1,title:'Luyện tiên cổ',hint:'Điện luyện cổ',g:'�
 q2_pb_phanboi:{title:'Phản bội',g:'叛',who:'bainu',sc:'snow',
   text:()=>'Đúng lúc phôi thai tiên cổ sắp thành, Bạch Ngưng Băng ngừng truyền chân nguyên, lùi lại, cười lạnh. Định Tinh cổ trên tay trái ngươi sáng rực. Từ ngoài khe nứt hư không, Tứ lão Thiết gia phát động Vô Cực Sưu Tỏa: xích sắt khóa tứ chi, đâm xuyên không khiếu. Vách phúc địa nổ tung. Thiết Nhược Nam dẫn liên quân tràn vào, kể từng tội: Thanh Mao Sơn, Thiết Huyết Lãnh, Thiết Bá Tu, Thiết Mộc, Thiết Đao Khổ. Phôi thai Đệ Nhị Không Khiếu sắp nổ vì thiếu chân nguyên.',
   choices:[
-    {t:'Tự bạo, đẩy Xuân Thu Thiền vào Quang Âm Chi Hà',req:()=>cicadaReady(),reqT:'Xuân Thu Thiền chưa hồi phục',eff:()=>thienLan3()},
-    {t:'Chịu trói',eff:()=>{learn('q2_phanboi');q2Ending('q2_tranmathap');return 'Nhược Nam tuyên bố: đưa ngươi về Trấn Ma Tháp, chịu muôn kiếp tra tấn.'}},
+    {t:'Tự bạo, đẩy Xuân Thu Thiền vào Quang Âm Chi Hà',req:()=>cicadaReady(),reqT:'Xuân Thu Thiền chưa hồi phục',eff:()=>{
+      if(typeof storySetOutcome==='function') storySetOutcome('bai_betrayal','star_pinned_trapped',{choiceText:'Bạch Ngưng Băng kích hoạt Định Tinh Cổ liên thủ Thiết gia vây hãm',isLech:false,note:'Rơi vào tử cục tuyệt cảnh của kiếp này, phôi thai tiên cổ rạn nứt.'});
+      return thienLan3();
+    }},
+    {t:'Chịu trói',eff:()=>{
+      if(typeof storySetOutcome==='function') storySetOutcome('bai_betrayal','star_pinned_trapped',{choiceText:'Bạch Ngưng Băng kích hoạt Định Tinh Cổ liên thủ Thiết gia vây hãm',isLech:false,note:'Rơi vào tử cục tuyệt cảnh của kiếp này, phôi thai tiên cổ rạn nứt.'});
+      learn('q2_phanboi');q2Ending('q2_tranmathap');return 'Nhược Nam tuyên bố: đưa ngươi về Trấn Ma Tháp, chịu muôn kiếp tra tấn.';
+    }},
   ]},
 q2_pb_catdinh:{title:'Không có xích',g:'锁',who:'bainu',
   text:()=>'Vô Cực Sưu Tỏa bắn ra từ hư không nhưng không có tọa độ để bám. Xích sắt quất trượt. Bạch Ngưng Băng vẫn ngừng tay: phôi thai lung lay. Vách phúc địa nổ tung, liên quân tràn vào.',
@@ -76,14 +89,22 @@ q2_pb_dinhtien:{title:'Định Tiên Du',g:'蝶',
 q2_pb_tho:{title:'Minh triều thành tiên',g:'诗',
   text:()=>'Giữa kim quang, ngươi cất giọng:\n"Thanh Mao sơn thượng ngạo phong tuyết,\nHoàng Long giang bạn độc bộ hành.\nTam Xoa đỉnh thượng mưu thâm toán,\nBá Quy điện tiền đoạt thiên công.\nKim triêu tạm thả giương cánh khứ,\nMinh triều thành tiên quất Phượng Hoàng!"\nMột con bướm ngọc bích bay ra, đậu trên tay ngươi: Định Tiên Du. Bạch Ngưng Băng, Thiết Nhược Nam và quần hùng vừa ùa vào đứng sững.',
   choices:()=>[
-    {t:'Nghĩ tới đỉnh Đãng Hồn Sơn, nơi có một bé gái tai hồ ly',canon:1,req:()=>S.f.dangHonNho,reqT:'Chưa từng "thấy" nơi này',eff:()=>{gainGu('dinhtiendu');S.evq.push('q2_pb_hotien');return 'Thân ảnh ngươi tan vào hư không ngay trước mắt họ. Sau lưng, Tam Vương phúc địa nổ tung, sụp đổ, chôn vùi mọi dấu tích.'}},
+    {t:'Nghĩ tới đỉnh Đãng Hồn Sơn, nơi có một bé gái tai hồ ly',canon:1,req:()=>S.f.dangHonNho,reqT:'Chưa từng "thấy" nơi này',eff:()=>{
+      gainGu('dinhtiendu');
+      if(typeof storySetOutcome==='function') storySetOutcome('dinhtiendu_refined','immortal_gu_born',{choiceText:'Mượn thần quang Tiêu Mang và sinh mệnh Phong Thiên Ngữ luyện thành Tiên Cổ Lục Chuyển Định Tiên Du',isLech:false,note:'Tiên cổ cái thế xuất thế, chấn động thiên địa.'});
+      S.evq.push('q2_pb_hotien');return 'Thân ảnh ngươi tan vào hư không ngay trước mắt họ. Sau lưng, Tam Vương phúc địa nổ tung, sụp đổ, chôn vùi mọi dấu tích.';
+    }},
     {t:'Nghĩ tới Thương gia thành',eff:()=>{gainGu('dinhtiendu');q2Ending('q2_dinhtien_thanh');return 'Ngươi hiện ra giữa phố Thương gia thành.'}},
     {t:'Nghĩ tới Thanh Mao Sơn',eff:()=>{gainGu('dinhtiendu');q2Ending('q2_dinhtien_thanhmao');return 'Chỉ còn băng và tro.'}},
   ]},
 q2_pb_hotien:{title:'Đỉnh Đãng Hồn Sơn',g:'狐',who:'kimhoang',sc:'snow',
   text:()=>'Trung Châu. Phượng Kim Hoàng nằm kiệt sức cách Địa linh Tiểu Hồ Tiên chỉ một bước chân. Hư không dao động, một thiếu niên Nam Cương đáp xuống.',
   choices:[
-    {t:'Tát văng Phượng Kim Hoàng, đặt tay lên đầu Địa linh',tag:'ma',canon:1,eff:()=>{meet('tieuhotien');meet('kimhoang');rel('kimhoang',-100);q2Ending('q2_hotien');return 'Tiểu Hồ Tiên vui mừng nhận chủ. Bên ngoài Thiên Thê Sơn, các Cổ Tiên mười đại phái và Phương Chính chết lặng.'}},
+    {t:'Tát văng Phượng Kim Hoàng, đặt tay lên đầu Địa linh',tag:'ma',canon:1,eff:()=>{
+      meet('tieuhotien');meet('kimhoang');rel('kimhoang',-100);
+      if(typeof storySetOutcome==='function') storySetOutcome('hotien_claimed','hotien_master',{choiceText:'Định Tiên Du truyền tống tới đỉnh Đãng Hồn Sơn, đoạt Hồ Tiên Phúc Địa',isLech:false,note:'Tát văng Phượng Kim Hoàng, tiếp quản 78.5 quả Thanh Đề Tiên Nguyên, kết thúc hoàn mỹ Quyển 2!'});
+      q2Ending('q2_hotien');return 'Tiểu Hồ Tiên vui mừng nhận chủ. Bên ngoài Thiên Thê Sơn, các Cổ Tiên mười đại phái và Phương Chính chết lặng.';
+    }},
     {t:'Bước qua nàng, chạm vào Địa linh',eff:()=>{meet('tieuhotien');meet('kimhoang');q2Ending('q2_hotien');return 'Tiểu Hồ Tiên nhận chủ.'}},
   ]},
 q2_pb_sup:{canon:1,title:'Phúc địa sụp đổ',hint:'Phúc địa sụp',g:'崩',cond:()=>!S.over,

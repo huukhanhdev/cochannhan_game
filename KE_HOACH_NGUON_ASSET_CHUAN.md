@@ -84,6 +84,7 @@ assets/v2_xianxia/
 
 | Nhân vật | Khóa Game | Nguồn File Gốc | Đặc điểm mỹ thuật V2 | Vị trí runtime trong Game |
 |---|---|---|---|---|
+| **Phương Nguyên (Quyển 1)** | `p_hero` / `p_hero_q1` | `media_1790821937248.png` (577×1024) | Ma tôn tóc đen dài, đạo bào đen tuyền, kết thủ ấn bí ẩn, phong thái thâm trầm lãnh khốc | `assets/local/art/p_hero.png`<br>`assets/art/p_hero.jpg`<br>`assets/v2_xianxia/avatars/p_hero_q1_avatar.jpg` |
 | **Cổ Nguyệt Phương Chính** | `phuongchinh` | `fangzheng.png` (2048×1152) | Thiếu niên ngạo khí, trán đeo ngọc đới, đạo bào Cổ Nguyệt | `assets/npc/n_phuongchinh.jpg`<br>`assets/art/p_phuongchinh.jpg` |
 | **Cổ Nguyệt Thanh Thư** | `thanhthu` | `qingshu.jpg` (2560×1440) | Công tử nho nhã, tóc xanh lam bay trong gió, ôn nhu như ngọc | `assets/npc/n_thanhthu.jpg`<br>`assets/art/p_thanhthu.jpg` |
 | **Thiết Nhược Nam** | `nhuocnam` | `tieruonan.png` (2560×1440) | Nữ bổ khoái kiên cường, mắt đao sắc sảo, giáp da cổ trang | `assets/npc/n_thietnhuocnam.jpg`<br>`assets/art/p_thietnhuocnam.jpg` |

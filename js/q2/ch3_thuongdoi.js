@@ -11,9 +11,33 @@ function tamtuVisit(){
 }
 // Buôn bán dọc đường: kinh nghiệm trăm năm làm thủ lĩnh thương đội ở kiếp trước
 function tradeRun(){
-  const p=chance('tamco',12,(S.rel.tamtu||0)>=30?3:0);
-  if(Math.random()*100<p){const n=rand(15,30)+((S.rel.tamtu||0)>=30?10:0);S.stones+=n;log(`Mua rẻ ở trại này, bán đắt ở trại sau. Lời ${n} nguyên thạch.`,'gold')}
-  else{const n=rand(4,10);S.stones=Math.max(0,S.stones-n);log(`Hàng ế. Lỗ ${n} nguyên thạch.`,'danger')}
+  const goodsList = [
+    { n: 'Than tinh phẩm Giả gia', cost: 15, minProfit: 10, maxProfit: 25, herb: false },
+    { n: 'Dược liệu núi Tử U', cost: 25, minProfit: 20, maxProfit: 45, herb: true },
+    { n: 'Da gấu và xương thú Bạch Cốt Sơn', cost: 30, minProfit: 25, maxProfit: 55, herb: false },
+    { n: 'Cỏ quý Kim gia', cost: 40, minProfit: 35, maxProfit: 80, herb: true }
+  ];
+  const g = pick(goodsList);
+  const p = chance('tamco', 11, (S.rel.tamtu||0)>=30 ? 4 : 0);
+  if(S.stones < g.cost){
+    log(`Không đủ nguyên thạch mua kiện ${g.n} (cần ${g.cost} thạch). Đi gom góp vụn vặt được ít lời nhỏ.`,'sys');
+    S.stones += rand(5, 12);
+    return;
+  }
+  S.stones -= g.cost;
+  if(Math.random()*100 < p){
+    const profit = rand(g.minProfit, g.maxProfit) + ((S.rel.tamtu||0)>=30 ? 15 : 0);
+    const total = g.cost + profit;
+    S.stones += total;
+    if(g.herb) S.f.tdHerbGoods = (S.f.tdHerbGoods || 0) + 1;
+    log(`Gom kiện [${g.n}] ở trại trước, sang sơn trại kế tiếp bán đứt tay! Vốn ${g.cost}, thu về ${total} (lời ${profit} nguyên thạch).`,'gold');
+    if(window.SFX) SFX.coin();
+  }else{
+    const loss = rand(5, Math.min(g.cost, 15));
+    const ret = Math.max(0, g.cost - loss);
+    S.stones += ret;
+    log(`Kiện [${g.n}] gặp mưa ẩm mốc hoặc bị thương đội khác ép giá. Lỗ ${loss} nguyên thạch.`,'danger');
+  }
 }
 
 CHAPTERS.q2_thuongdoi={n:'Thương đội',title:'Quyển hai · Chương ba · Thương đội',unit:'tuần',turns:12,bg:'bg_village',cap:2,
@@ -50,8 +74,16 @@ q2_td_vao:{canon:1,title:'Hắc Thổ và Bạch Vân',hint:'Vào thương độ
 q2_td_tamtu:{canon:1,title:'Máu trước lều',hint:'Tới lều Thương Tâm Từ',g:'血',who:'tamtu',
   text:()=>'Người phó thủ lĩnh tối nào cũng phát bánh cho gia nô là một cô gái phàm nhân không có tư chất. Ngươi nhận ra nàng: Thương Tâm Từ, con riêng của tộc trưởng Thương gia, lần đầu theo thương đội. Kiếp trước nàng là một nhân vật lớn.',
   choices:()=>[
-    {t:'Ném nguyên thạch cho nhóm Cường ca tranh nhau, tự rạch mình rồi đẫm máu tới gõ cửa lều nàng',canon:1,dao:10,eff:()=>{meet('tamtu');meet('tieudiep');meet('truongtru');rel('tamtu',25);S.hp=Math.max(1,S.hp-25);S.f.tamtuThuong=1;return 'Lão tổng quản bắt được Cường ca cầm nguyên thạch, tát cả nhóm. Còn ngươi, người đầy máu, quỳ trước lều Tâm Từ. Trương Trụ, cổ sư trị liệu Tam chuyển, được gọi tới chữa. Tâm Từ nhìn ngươi rất lâu. Khí huyết −25.'}},
-    {t:'Tới xin làm việc cho nàng, nói thật mình biết buôn bán',check:['tamco',13],ok:()=>{meet('tamtu');meet('tieudiep');rel('tamtu',15);return 'Tâm Từ đồng ý thử. Tiểu Điệp khó chịu ra mặt.'},fail:()=>{meet('tamtu');meet('tieudiep');rel('tieudiep',-10);return 'Tiểu Điệp đuổi ngươi ra.'}},
+    {t:'Ném nguyên thạch cho nhóm Cường ca tranh nhau, tự rạch mình rồi đẫm máu tới gõ cửa lều nàng',canon:1,dao:10,eff:()=>{
+      meet('tamtu');meet('tieudiep');meet('truongtru');rel('tamtu',25);S.hp=Math.max(1,S.hp-25);S.f.tamtuThuong=1;
+      if(typeof storySetOutcome==='function') storySetOutcome('tamtu_route','ally',{choiceText:'Dùng khổ nhục kế tiếp cận Thương Tâm Từ (Canon)',isLech:false,note:'Tâm Từ hết lòng tin tưởng Hắc Thổ, xem như người thân cận duy nhất.'});
+      return 'Lão tổng quản bắt được Cường ca cầm nguyên thạch, tát cả nhóm. Còn ngươi, người đầy máu, quỳ trước lều Tâm Từ. Trương Trụ, cổ sư trị liệu Tam chuyển, được gọi tới chữa. Tâm Từ nhìn ngươi rất lâu. Khí huyết −25.';
+    }},
+    {t:'Tới xin làm việc cho nàng, nói thật mình biết buôn bán',check:['tamco',13],ok:()=>{
+      meet('tamtu');meet('tieudiep');rel('tamtu',15);
+      if(typeof storySetOutcome==='function') storySetOutcome('tamtu_route','partner',{choiceText:'Hợp tác làm ăn sòng phẳng với Thương Tâm Từ',isLech:true,driftAmount:6,note:'Tâm Từ xem ngươi như đối tác buôn bán.'});
+      return 'Tâm Từ đồng ý thử. Tiểu Điệp khó chịu ra mặt.';
+    },fail:()=>{meet('tamtu');meet('tieudiep');rel('tieudiep',-10);return 'Tiểu Điệp đuổi ngươi ra.'}},
   ]},
 q2_td_phihau:{canon:1,title:'Vật tay với Phỉ Hầu',hint:'Núi Phỉ Hầu',g:'猴',
   text:()=>'Núi Phỉ Hầu sương dày. Bầy khỉ khổng lồ chặn đường đòi "phí": chúng thích lụa và thích vật tay. Giả gia che than tinh phẩm dưới lụa. Giả Bình, gầy như que củi, có Song Hùng lực, đã thắng hai ván.',
@@ -62,7 +94,11 @@ q2_td_phihau:{canon:1,title:'Vật tay với Phỉ Hầu',hint:'Núi Phỉ Hầu
 q2_td_kimgia:{canon:1,title:'Cỏ của Kim gia',hint:'Buôn cỏ Kim gia',g:'金',who:'tamtu',
   text:()=>'Qua núi Hoàng Kim, một tiểu thiếu chủ Kim gia lén bán mấy xe cỏ. Ngươi biết: tộc trưởng Kim gia trồng loại cỏ này bốn năm để giữ bí mật một kế hoạch. Họ sẽ quay lại mua với bất cứ giá nào.',
   choices:()=>[
-    {t:'Mượn tiền Tâm Từ mua hết ba xe, bán dần cho người khác để Kim gia không cướp được',canon:1,check:['tamco',14],bonus:()=>(S.rel.tamtu||0)>=30?4:0,ok:()=>{S.stones+=380;rel('tamtu',15);S.danh+=10;return 'Sáng hôm sau thân vệ Kim gia tìm tới. Ba nghìn, năm nghìn, bảy nghìn... ngươi chốt ở tám nghìn. Chia đôi với Tâm Từ, phần của ngươi đổi ra được 380 nguyên thạch. Nàng nhìn ngươi như nhìn một ông thầy.'},fail:()=>{S.stones+=90;return 'Kim gia ép giá. Vẫn lời 90 nguyên thạch.'}},
+    {t:'Mượn tiền Tâm Từ mua hết ba xe, bán dần cho người khác để Kim gia không cướp được',canon:1,check:['tamco',14],bonus:()=>(S.rel.tamtu||0)>=30?4:0,ok:()=>{
+      S.stones+=380;rel('tamtu',15);S.danh+=10;
+      if(typeof storySetOutcome==='function') storySetOutcome('td_kimgia','kim_herb_profit',{choiceText:'Dùng mưu bán cỏ Kim gia lãi 8000 nguyên thạch',isLech:false,note:'Tâm Từ thán phục kinh nghiệm thương đạo, thu nhập bùng nổ.'});
+      return 'Sáng hôm sau thân vệ Kim gia tìm tới. Ba nghìn, năm nghìn, bảy nghìn... ngươi chốt ở tám nghìn. Chia đôi với Tâm Từ, phần của ngươi đổi ra được 380 nguyên thạch. Nàng nhìn ngươi như nhìn một ông thầy.';
+    },fail:()=>{S.stones+=90;return 'Kim gia ép giá. Vẫn lời 90 nguyên thạch.'}},
     {t:'Báo cho Kim gia để lấy lòng',tag:'chinh',eff:()=>{S.stones+=40;S.danh+=5;return 'Kim gia tặng 40 nguyên thạch cảm tạ.'}},
   ]},
 q2_td_duthu:{canon:1,title:'Thú dữ theo đoàn',hint:'Dụ thú tấn công',g:'兽',who:'bainu',
@@ -74,7 +110,12 @@ q2_td_duthu:{canon:1,title:'Thú dữ theo đoàn',hint:'Dụ thú tấn công',
 q2_td_phituong:{canon:1,title:'Bạch Vũ Phi Tượng',hint:'Núi Tượng Nha',g:'象',sc:'snow',who:'truongtru',
   text:()=>'Núi Tượng Nha: chân núi mưa rừng, đỉnh núi tuyết phủ. Một con voi lông trắng bay được bổ nhào xuống đoàn. Giữa hỗn loạn, Trương Trụ đứng ngay trước mặt ngươi, quay lưng lại. Hắn là người duy nhất trong đoàn đủ sức phá vỡ kế hoạch của ngươi.',
   choices:()=>[
-    {t:'Bắn hai Loa Toàn Cốt Thương vào lưng Trương Trụ, để voi giẫm nát xác',tag:'ma',canon:1,dao:20,req:()=>hasGu('loatoan')||hasGu('cotthuong'),reqT:'Cần cổ cốt thương',eff:()=>{S.f.truongtruChet=1;S.susp+=10;later('q2_td_tamtunghi',1,2);fight2('phituong',{after:'q2_td_voi'});return 'Cốt thương tan thành bụi trắng sau khi bắn. Không dấu vết. Còn con voi thì vẫn ở đó.'}},
+    {t:'Bắn hai Loa Toàn Cốt Thương vào lưng Trương Trụ, để voi giẫm nát xác',tag:'ma',canon:1,dao:20,req:()=>hasGu('loatoan')||hasGu('cotthuong'),reqT:'Cần cổ cốt thương',eff:()=>{
+      S.f.truongtruChet=1;S.susp+=10;later('q2_td_tamtunghi',1,2);
+      if(typeof storySetOutcome==='function') storySetOutcome('truong_tru','assassinated_canon',{choiceText:'Dùng Loa Toàn Cốt Thương ám sát nội gián Trương Trụ trong trận voi tuyết',isLech:false,note:'Cốt thương tan thành bụi trắng phi tang, loại trừ mắt xích nguy hiểm.'});
+      fight2('phituong',{after:'q2_td_voi'});
+      return 'Cốt thương tan thành bụi trắng sau khi bắn. Không dấu vết. Còn con voi thì vẫn ở đó.';
+    }},
     {t:'Cùng Trương Trụ đánh voi',tag:'chinh',eff:()=>{rel('truongtru',15);fight2('phituong',{after:'q2_td_voi',mod:.85});return 'Trương Trụ phóng quang cầu trắng cầm máu cho ngươi giữa trận.'}},
   ]},
 q2_td_auphi:{canon:1,title:'Âu Phi',hint:'Âu Phi xông lều',g:'欧',who:'tamtu',
@@ -87,15 +128,35 @@ q2_td_cuongthi:{canon:1,title:'Đêm cương thi',hint:'Đinh Hạo',g:'尸',sc:
   text:()=>'Đêm ở núi Huyết Lệ, hàng nghìn cương thi Bạch Mao vây đoàn. Sau chúng là Hắc Mao. Kẻ điều khiển là Đinh Hạo, một thôn phu bị thương đội bỏ làm mồi, trốn vào hang và nhặt được truyền thừa cương thi.'+(mem('q2_dinhhao')?' Ngươi nhớ: hắn nhận truyền thừa của Cương Vương đời hai, và sợ bị đại sư huynh tìm tới.':''),
   choices:()=>[
     {t:'Phá vây, tìm Đinh Hạo, mạo danh đại đệ tử "Hắc Thổ" của Cương Vương đời hai',canon:1,check:['tamco',15],bonus:()=>mem('q2_dinhhao')?6:0,
-      ok:()=>{meet('dinhhao');learn('q2_dinhhao');S.stones+=650;S.danh+=20;return 'Đinh Hạo quỳ xuống gọi "đại sư huynh", nộp mười ba nghìn nguyên thạch tích góp và năm xác cổ sư Tam chuyển. Đổi ra được 650 nguyên thạch. Cương thi rút đi. Cả đoàn tưởng Hắc Thổ đại nhân một mình đánh lui ma tu.'},
+      ok:()=>{
+        meet('dinhhao');learn('q2_dinhhao');S.stones+=650;S.danh+=20;
+        if(typeof storySetOutcome==='function') storySetOutcome('dinh_hao','tricked_and_slain',{choiceText:'Mạo danh đại sư huynh Sở Thuật, tước đoạt tài nguyên và tiêu diệt Đinh Hạo',isLech:false,note:'Thu nạp vạn nguyên thạch và dọn sạch dấu vết thương đội.'});
+        return 'Đinh Hạo quỳ xuống gọi "đại sư huynh", nộp mười ba nghìn nguyên thạch tích góp và năm xác cổ sư Tam chuyển. Đổi ra được 650 nguyên thạch. Cương thi rút đi. Cả đoàn tưởng Hắc Thổ đại nhân một mình đánh lui ma tu.';
+      },
       fail:()=>{meet('dinhhao');fight2('hacmao',{after:'q2_td_hacmao'});return 'Hắn không tin. Một con Hắc Mao lao tới.'}},
     {t:'Giữ đoàn, đánh cương thi tới sáng',tag:'chinh',eff:()=>{fight2('bachmao',{after:'q2_td_bachmao'});return 'Bạch Mao chậm và sợ nắng. Chỉ cần sống tới sáng.'}},
   ]},
 q2_td_thuongluong:{canon:1,title:'Núi Thương Lượng',hint:'Tới Thương gia thành',g:'商',who:'tamtu',
-  text:()=>'Qua núi Huyết Lệ, Thiên Quật, Cự Nhân, Lục Tảo, cuối cùng là núi Thương Lượng. Trước cổng thành, Tâm Từ quay lại nhìn ngươi. Nàng chưa biết thân phận thật của Hắc Thổ, hoặc đã biết mà không nói.',
+  text:()=>'Qua núi Huyết Lệ, Thiên Quật, Cự Nhân, Lục Tảo, cuối cùng là núi Thương Lượng. Trước cổng thành, Tâm Từ quay lại nhìn ngươi. Nàng chưa biết thân phận thật của Hắc Thổ, hoặc đã biết mà không nói.'+((S.rel.tamtu||0)>=30?' Nàng kín đáo dúi vào tay ngươi một miếng lệnh bài gỗ tử kinh: "Đây là lệnh bài phụ thân để lại cho ta. Hắc Thổ ca ca hãy cầm lấy."':''),
   choices:()=>[
-    {t:'Chia tay trước cổng, hẹn sẽ gặp lại',canon:1,eff:()=>{rel('tamtu',10);chapEnd('q2_thanh');return 'Thương gia thành: thế lực buôn bán số một Nam Cương. Chính đạo, nhưng là nơi ma đạo tiêu thụ tang vật.'}},
-    {t:'Đi cùng nàng vào thành',eff:()=>{rel('tamtu',15);S.f.cungTamTu=1;chapEnd('q2_thanh');return 'Tiểu Điệp lườm, nhưng không phản đối.'}},
+    {t:'Chia tay trước cổng, hẹn sẽ gặp lại',canon:1,eff:()=>{
+      rel('tamtu',10);
+      if((S.rel.tamtu||0)>=30||(typeof storyHasOutcome==='function'&&storyHasOutcome('tamtu_route','ally'))){
+        S.f.tuKinhLenh=1;
+        if(typeof storySetOutcome==='function') storySetOutcome('tu_kinh_lenh','granted',{choiceText:'Nhận Tử Kinh Lệnh trước cổng thành',isLech:false,note:'Tâm Từ tặng Tử Kinh Lệnh hộ thân khi bước vào Thương gia thành.'});
+      }
+      chapEnd('q2_thanh');
+      return 'Thương gia thành: thế lực buôn bán số một Nam Cương. Chính đạo, nhưng là nơi ma đạo tiêu thụ tang vật.';
+    }},
+    {t:'Đi cùng nàng vào thành',eff:()=>{
+      rel('tamtu',15);S.f.cungTamTu=1;
+      if((S.rel.tamtu||0)>=30||(typeof storyHasOutcome==='function'&&storyHasOutcome('tamtu_route','ally'))){
+        S.f.tuKinhLenh=1;
+        if(typeof storySetOutcome==='function') storySetOutcome('tu_kinh_lenh','granted',{choiceText:'Đi cùng Tâm Từ vào thành, nhận Tử Kinh Lệnh',isLech:true,driftAmount:4,note:'Được Tâm Từ dẫn thẳng vào phủ đệ, nhận Tử Kinh Lệnh.'});
+      }
+      chapEnd('q2_thanh');
+      return 'Tiểu Điệp lườm, nhưng không phản đối. Hai người sóng bước cùng nàng vào thành.';
+    }},
   ]},
 
 // bên lề

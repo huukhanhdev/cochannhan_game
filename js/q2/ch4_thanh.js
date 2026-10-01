@@ -5,7 +5,7 @@ Q2_SHOP.thanh=['hacthi','hungluc','nguluc','maluc','quyluc','tuongluc','mangluc'
 
 /* ---------- diễn võ trường ---------- */
 // Leo từ nội thành 5 (hạng 0–9) lên nội thành 4 (10–19) và nội thành 3 (20–29). Đối thủ có tên ở các mốc hạng.
-const DV_NAMED={4:'thanghung',9:'lyhao',14:'chubat',19:'daokhodv',24:'viemdot'};
+var DV_NAMED={4:'thanghung',9:'lyhao',14:'chubat',19:'daokhodv',24:'viemdot'};
 function dvRank(){return S.f.dvRank||0}
 function dvZone(){const r=dvRank();return r<10?5:r<20?4:3}
 function dvFight(){
@@ -19,15 +19,37 @@ function dvFight(){
 // Phong Vũ lâu, Thực Thiên Lâu, phố xá
 function tamtuCity(){
   meet('tamtu');rel('tamtu',5);
-  if(S.f.dvReg&&(S.rel.tamtu||0)>=40&&!S.f.tamtuTinBao){S.f.tamtuTinBao=1;log('Tâm Từ gợi ý: tình báo diễn võ trường đáng giá hơn vàng. Nàng muốn làm ăn thứ đó.','good');return}
+  const isAlly = typeof storyHasOutcome === 'function' && storyHasOutcome('tamtu_route','ally');
+  if(S.f.dvReg&&(S.rel.tamtu||0)>=40&&!S.f.tamtuTinBao){
+    S.f.tamtuTinBao=1;
+    log('Tâm Từ gợi ý: tình báo diễn võ trường đáng giá hơn vàng. Nàng muốn làm ăn thứ đó.','good');
+    return;
+  }
+  if(isAlly && !S.f.tamtuAllyGreet){
+    S.f.tamtuAllyGreet = 1;
+    log('Tâm Từ đón tiếp ngươi thân tình: "Hắc Thổ ca ca, ở Thương gia thành nếu có việc gì cần, cứ phân phó muội."','good');
+  }
   log(pick(['Tâm Từ kể chuyện trong phủ: các anh chị em nàng không ai coi nàng là người Thương gia.','Tiểu Điệp pha trà, lần này không lườm ngươi.','Tâm Từ đưa ngươi xem sổ sách của một cửa hàng lỗ vốn. Ngươi chỉ ra ba chỗ gian lận.']),'sys');
-  if(Math.random()<.4){S.stones+=20;log('Nàng chia cho ngươi 20 nguyên thạch tiền lãi.','gold')}
+  if(Math.random()<.4){
+    const bonusStones = isAlly ? 30 : 20;
+    S.stones+=bonusStones;
+    log(`Nàng chia cho ngươi ${bonusStones} nguyên thạch tiền lãi.`,'gold');
+  }
 }
 
 CHAPTERS.q2_thanh={n:'Thương gia thành',title:'Quyển hai · Chương bốn · Thương gia thành',unit:'tháng',turns:14,bg:'bg_village',cap:3,
   intro:'Thương gia thành đào vào lòng núi Thương Lượng, mười bốn tầng đường, năm khu. Khu ngoài có khách điếm nửa viên thạch một đêm; khu trong là con cháu Thương gia.',
   ask:'Tháng này làm gì?',shop:Q2_SHOP.thanh,
-  start:()=>{S.stones+=200;log('Bán Cốt Thương, Loa Toàn và mấy con cổ dư: được 200 nguyên thạch.','gold')},
+  start:()=>{
+    let bonus = 200;
+    if(S.f && S.f.tuKinhLenh){
+      bonus += 300;
+      log('Nhờ mang Tử Kinh Lệnh của Thương Tâm Từ / Thương gia tộc trưởng, ngươi được đặc quyền ngụ tại Nam Thu Uyển và cấp thêm 300 nguyên thạch chi tiêu!','good');
+      if(typeof storySetOutcome==='function') storySetOutcome('tu_kinh_lenh_applied','nam_thu_uyen',{choiceText:'Hưởng đặc quyền Tử Kinh Lệnh tại Nam Thu Uyển',isLech:false,note:'Bố trí phủ đệ và hỗ trợ vốn ban đầu tại Thương gia thành.'});
+    }
+    S.stones+=bonus;
+    log(`Bán Cốt Thương, Loa Toàn và mấy con cổ dư: thu được tổng cộng ${bonus} nguyên thạch.`,'gold');
+  },
   canon:{1:'q2_tt_nhaiti1',2:'q2_tt_giayen',3:'q2_tt_lucdao',4:'q2_tt_tinhthan',5:'q2_tt_lynhien',6:'q2_tt_dienvo',7:'q2_tt_bachgia',8:'q2_tt_amvan',9:'q2_tt_nhuocnam',10:'q2_tt_daugia',11:'q2_tt_nhaiti2',12:'q2_tt_viemdot',13:'q2_tt_cukhaibi',14:'q2_tt_ket'},
   side:['q2_tt_nguyuong','q2_tt_baogioi','q2_tt_noikhong','q2_tt_lyhao','q2_tt_tucgia'],
   spots:[
@@ -107,13 +129,21 @@ q2_tt_lynhien:{canon:1,title:'Lý Nhiên',hint:'Gián điệp Vũ gia',g:'然',w
 q2_tt_dienvo:{canon:1,title:'Diễn võ trường',hint:'Đăng ký diễn võ',g:'武',who:'nguyuong',
   text:()=>'Ngụy Ương, vốn là ma tu xuất thân từ diễn võ trường, dẫn ngươi tới xem. Đánh từ khu 5 lên khu 3, giữ được mười tám trận là được thiếu chủ chiêu mộ. Luật: giết đối thủ thì được toàn bộ đồ trên người.'+(S.f.lynhienNam?' Lý Nhiên đang chờ ngươi ở cửa.':''),
   choices:()=>[
-    ...(S.f.lynhienNam?[{t:'Ép Lý Nhiên ký Thề Độc, dàn dựng một trận, "cược" ra cổ truyền kỳ',tag:'ma',canon:1,eff:()=>{S.f.dvReg=1;gainGu('toanluc');S.stones=Math.max(0,S.stones-80);S.danh+=15;return 'Ngươi giả làm nội ứng của một gia tộc khác, nhìn tiệm đậu hũ bằng ánh mắt "ta cũng có người nhà". Lý Nhiên ký Thề Độc, ngươi miễn nhiễm. Ba ngày sau ngươi "cược" ra Toàn Lực Ứng Phó. Trả hắn 20 vạn, nợ 12 vạn. Cả thành truyền nhau: Hắc Thổ ân oán rõ ràng.'}}]:[]),
+    ...(S.f.lynhienNam?[{t:'Ép Lý Nhiên ký Thề Độc, dàn dựng một trận, "cược" ra cổ truyền kỳ',tag:'ma',canon:1,eff:()=>{
+      S.f.dvReg=1;gainGu('toanluc');S.stones=Math.max(0,S.stones-80);S.danh+=15;
+      if(typeof storySetOutcome==='function') storySetOutcome('toan_luc_ung_pho','acquired_canon',{choiceText:'Dàn dựng cược ra Toàn Lực Ứng Phó Cổ từ Lý Nhiên',isLech:false,note:'Sở hữu cổ hạch tâm tối thượng của Lực đạo.'});
+      return 'Ngươi giả làm nội ứng của một gia tộc khác, nhìn tiệm đậu hũ bằng ánh mắt "ta cũng có người nhà". Lý Nhiên ký Thề Độc, ngươi miễn nhiễm. Ba ngày sau ngươi "cược" ra Toàn Lực Ứng Phó. Trả hắn 20 vạn, nợ 12 vạn. Cả thành truyền nhau: Hắc Thổ ân oán rõ ràng.';
+    }}]:[]),
     {t:'Đăng ký diễn võ (500 thạch, được mượn Đằng Tấn cổ ghi hồ sơ)',eff:()=>{S.f.dvReg=1;S.stones=Math.max(0,S.stones-25);return 'Tên ngươi lên bảng nội thành 5.'}},
   ]},
 q2_tt_bachgia:{canon:1,title:'Đội truy bắt Bách gia',hint:'Bách gia tới thành',g:'百',who:'daokho',
   text:()=>'Gia lão Bách Phong dẫn đội truy bắt tới thành, đi cùng Thiết Đao Khổ. Tử Kinh lệnh che chở ngươi, họ không bắt được. Đao Khổ đề xuất đăng ký diễn võ để giết ngươi hợp lệ.',
   choices:()=>[
-    {t:'Đòi Bách gia ba trăm vạn phí bịt miệng, dọa bán tin cho Phong Vũ lâu',tag:'ma',canon:1,check:['tamco',15],ok:()=>{S.stones+=300;rel('daokho',-20);S.f.bachgiaRut=1;return 'Ta cũng là người bị hại: Bách gia cướp truyền thừa, truy sát ta rơi xuống Tử U. Bách Phong trả trước năm mươi vạn trong một ngày, rồi rút khỏi thành. Bách gia bỏ Thiết Đao Khổ lại một mình. +300 nguyên thạch.'},fail:()=>{S.stones+=80;S.susp+=15;return 'Bách Phong chỉ trả một phần. Hiềm nghi +15.'}},
+    {t:'Đòi Bách gia ba trăm vạn phí bịt miệng, dọa bán tin cho Phong Vũ lâu',tag:'ma',canon:1,check:['tamco',15],ok:()=>{
+      S.stones+=300;rel('daokho',-20);S.f.bachgiaRut=1;
+      if(typeof storySetOutcome==='function') storySetOutcome('bach_blackmail','extorted_300w',{choiceText:'Tống tiền Bách gia 300 vạn nguyên thạch phí bịt miệng',isLech:false,note:'Bách gia nộp tiền rút quân, Thiết Đao Khổ bị cô lập.'});
+      return 'Ta cũng là người bị hại: Bách gia cướp truyền thừa, truy sát ta rơi xuống Tử U. Bách Phong trả trước năm mươi vạn trong một ngày, rồi rút khỏi thành. Bách gia bỏ Thiết Đao Khổ lại một mình. +300 nguyên thạch.';
+    },fail:()=>{S.stones+=80;S.susp+=15;return 'Bách Phong chỉ trả một phần. Hiềm nghi +15.'}},
     {t:'Tránh mặt',eff:()=>{S.susp+=10;return 'Họ vẫn ở đó.'}},
   ]},
 q2_tt_amvan:{canon:1,title:'Mài hư ảnh',hint:'Âm Vân Dương Vân',g:'云',
@@ -141,8 +171,8 @@ q2_tt_daugia:{canon:1,title:'Hội đấu giá',hint:'Khổ Lực và Phong Khí
 q2_tt_nhaiti2:{canon:1,title:'Kẽ hở của Thề Độc',hint:'Hạ bệ Nhai Tí',g:'誓',who:'nhaiti',
   text:()=>'Nhai Tí từng ép ngươi ký Thề Độc không tiết lộ bí mật của hắn cho "người thứ ba không biết". Nhưng ngươi đã kể cho Bạch Ngưng Băng trước khi thề.'+(hasGu('phongkhi')?' Phong Khí cổ trong khiếu ngươi chờ được nghịch luyện.':''),
   choices:()=>[
-    {t:'Để Bạch Ngưng Băng tung tin; nói với Nhai Tí "thật ra ta là người lương thiện"',tag:'ma',canon:1,eff:()=>{learn('q2_nhaiti');S.f.nhaitiDo=1;S.stones+=200;if(!hasGu('kholuc'))gainGu('kholuc');return 'Nhai Tí lật bàn, Thề Độc làm hắn chảy máu mũi. Ngươi giả vờ tha rồi quay đi; hắn dâng cả Khổ Lực cổ để cầu xin. Yến Phi phán: Nhai Tí mất chức thiếu chủ, bị đày vào đội bắt nô ba năm. Nhưng bà ta giận người ngoài dám tính kế con mình.'}},
-    ...(hasGu('phongkhi')?[{t:'Nghịch luyện Phong Khí thành Khí Lực cổ',check:['ngo',15],ok:()=>{loseGu('phongkhi');gainGu('khiluc');return 'Khí đạo thượng cổ đã tuyệt, sống lại trong tay ngươi. Hư ảnh thú hóa thực.'},fail:()=>{loseGu('phongkhi');S.stones+=60;return 'Luyện hỏng. Phong Khí cổ tan. Bán xác cổ được 60 nguyên thạch.'}}]:[]),
+    {t:'Để Bạch Ngưng Băng tung tin; nói với Nhai Tí "thật ra ta là người lương thiện"',tag:'ma',canon:1,eff:()=>{learn('q2_nhaiti');S.f.nhaitiDo=1;S.stones+=200;if(!hasGu('kholuc'))gainGu('kholuc');storySetOutcome('lucdao_trinity','trinity_assembled','Hạ bệ Nhai Tí đoạt Khổ Lực cổ, phục hưng Lực Đạo viễn cổ');return 'Nhai Tí lật bàn, Thề Độc làm hắn chảy máu mũi. Ngươi giả vờ tha rồi quay đi; hắn dâng cả Khổ Lực cổ để cầu xin. Yến Phi phán: Nhai Tí mất chức thiếu chủ, bị đày vào đội bắt nô ba năm. Nhưng bà ta giận người ngoài dám tính kế con mình.'}},
+    ...(hasGu('phongkhi')?[{t:'Nghịch luyện Phong Khí thành Khí Lực cổ',check:['ngo',15],ok:()=>{loseGu('phongkhi');gainGu('khiluc');storySetOutcome('lucdao_trinity','trinity_assembled','Nghịch luyện Phong Khí thành công tạo ra Khí Lực cổ, phục hưng Lực Đạo viễn cổ');return 'Khí đạo thượng cổ đã tuyệt, sống lại trong tay ngươi. Hư ảnh thú hóa thực.'},fail:()=>{loseGu('phongkhi');S.stones+=60;return 'Luyện hỏng. Phong Khí cổ tan. Bán xác cổ được 60 nguyên thạch.'}}]:[]),
   ]},
 q2_tt_viemdot:{canon:1,title:'Bạch Ngưng Băng và Viêm Đột',hint:'Trận của Bạch Ngưng Băng',g:'炎',who:'bainu',
   text:()=>'Viêm Đột, Tứ chuyển, tư chất Ất, đấu với Bạch Ngưng Băng. Hắn đốt biển lửa bằng Nhiên Du cổ, gọi hai con giao lửa. Nàng hóa Băng Tinh xông lên. Nàng sẽ thua, và hắn sẽ đòi Băng Tinh cổ bổn mệnh của nàng.',
@@ -202,6 +232,6 @@ Object.assign(AFTER,{
     if(r===20){S.danh+=15;log('Danh hiệu: "ngôi sao phục hưng lực đạo". Người ta bắt đầu gọi ngươi là Tiểu Thú Vương.','big');S.f.tieuThuVuong=1}},
   q2_dv_thua:()=>{S.danh=Math.max(0,S.danh-3);log('Thua một trận. Hạng không đổi.','danger')},
   q2_tt_viem:()=>{S.danh+=25;S.stones+=120;baiRel(15);log('Viêm Đột ngã. Cả diễn võ trường đứng dậy.','big')},
-  q2_tt_cukhai:()=>{S.danh+=40;S.stones+=300;S.f.cukhaiThang=1;learn('q2_cukhaibi');log('Cự Khai Bi quỳ một gối trên sàn. Tiểu Thú Vương. Thương gia hơn mười năm chưa có gia lão khác họ, giờ họ phải nghĩ lại.','big')},
+  q2_tt_cukhai:()=>{S.danh+=40;S.stones+=300;S.f.cukhaiThang=1;learn('q2_cukhaibi');storySetOutcome('cu_khai_bi','defeated_canon','Đánh bại Cự Khai Bi tại diễn võ trường nội thành, vang danh Tiểu Thú Vương');log('Cự Khai Bi quỳ một gối trên sàn. Tiểu Thú Vương. Thương gia hơn mười năm chưa có gia lão khác họ, giờ họ phải nghĩ lại.','big')},
   q2_tt_cukhai_thua:()=>{S.danh+=15;log('Ngươi thua trận cuối nhưng không mất Bảo Liên. Cả thành vẫn nhớ tám hư ảnh thú trên đầu ngươi.','big')},
 });

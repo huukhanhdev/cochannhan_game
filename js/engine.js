@@ -32,6 +32,7 @@ function loadAll(){
     const s=JSON.parse(localStorage.getItem('tms2-save'));
     if(m&&s&&s.v===2){
       if(!m.codex) m.codex=['xuanthu','nguyetquang'];
+      if(typeof initStoryState==='function') initStoryState(s);
       return {m,s};
     }
   }catch(e){}
@@ -51,7 +52,11 @@ function discoverGu(k){
 // Ký ức chỉ sống trong một đời. Xuân Thu Thiền quay ngược quang âm thì mang theo; chết thật là mất sạch.
 function mem(k){return !!(S&&S.mem&&S.mem[k])}
 function W(k){return !!(S&&S.world&&S.world.includes(k))}
-function guPrice(k){return Math.round(GU[k].p*(W('dichco')?.8:1))}
+function guPrice(k){
+  let mult=(W('dichco')?.8:1);
+  if(typeof S!=='undefined'&&S&&S.f&&S.f.tuKinhLenh)mult*=.8;
+  return Math.round(GU[k].p*mult);
+}
 function itemPrice(t){return {herb:W('dathan')?3:6,blood:8,wine:15}[t]}
 // Lịch mốc nguyên tác của kiếp này (thiên cơ có thể đẩy sớm)
 function buildCanon(){
@@ -221,6 +226,7 @@ function newLife(){
     log('Tu vi, nguyên thạch, cổ trùng, ký ức về những gì đã trải qua: không còn gì cả. Chỉ còn năm trăm năm ký ức Huyết Ma như lần đầu.','sys');
   }
   S.mem={};S.combos={};S.path=[];S.ffOffer=false;S.cicada={charge:0};S.snaps=[];S.rewinds=0;S.drift=0;S.driftStep=0;S.later=[];
+  if(typeof initStoryState==='function') initStoryState(S);
   S.world=Object.keys(WORLD).sort(()=>Math.random()-.5).slice(0,2);
   if(W('thuongsom')&&W('langsom'))S.world[1]='hunggia';
   S.canon=buildCanon();
@@ -236,6 +242,13 @@ function newLife(){
 function startTurn(){
   if(S.book===2)return startTurn2();
   S.turn++;S.ap=AP_WEEK;S.pend=null;S.refined=false;
+  if(typeof storyCheckPending==='function'){
+    const ready=storyCheckPending(S.book||1, S.chuyen, S.turn);
+    for(const p of ready){
+      if(p.eventId) S.evq.push(p.eventId);
+      if(typeof p.payload==='function') p.payload(S);
+    }
+  }
   log(`Tháng ${month()} · ${tuan()}`,'day');
   if(S.turn>1){
     const essRecover = Math.round(maxEss() * (0.5 + (S.tuchat||44)*0.003) * (S.inj&&S.inj.k==='noi'?.5:1));
@@ -245,7 +258,7 @@ function startTurn(){
     if(S.inj){S.inj.t--;if(S.inj.t<=0)healInjury()}
     if(hasGu('cuudiep')){S.herbs=(S.herbs||0)+1;log('Cửu Diệp Sinh Cơ Thảo ngưng kết ra 1 phiến Sinh Cơ Diệp (linh dược).','good')}
     if(S.f.tuulau){const n=S.f.tuulau===2?6:3;S.stones+=n;log(`Tửu lâu nộp ${n} nguyên thạch.`,'gold')}
-    if(S.f.blackmailXich){S.stones+=10;log(`Cổ Nguyệt Xích Luyện lén gửi 10 nguyên thạch bịt miệng.`,'gold')}
+    if(S.f.blackmailXich||S.f.xichLuyenStones){const st=S.f.xichLuyenStones||10;S.stones+=st;log(`Gia lão Xích Luyện lén chu cấp ${st} nguyên thạch bịt miệng.`,'gold')}
     if(S.turn%3===1){
       if(S.susp<60){const n=(S.danh>=30?14:9)-(S.f.tideDone?5:0)+(W('hocnghiem')?4:0)-(W('pcthientai')?4:0);S.stones+=n;log(`Gia tộc phát trợ cấp tháng: ${n} nguyên thạch.`,'gold')}
       if(S.f.phe){S.stones+=6;log(`${S.f.phe} chu cấp 6 nguyên thạch.`,'gold')}
@@ -583,7 +596,7 @@ function evText(id){
 
 /* ---------- Fallback Random Events (khi pool cạn) ---------- */
 const FALLBACK_EVENTS = [
-  {id:'r_find_stones', w:30, req:()=>true, eff:()=>{S.stones+=randInt(5)+1; log('Tìm được nguyên thạch rải rác.','info');}},
+  {id:'r_find_stones', w:30, req:()=>true, eff:()=>{S.stones+=rand(1,5); log('Tìm được nguyên thạch rải rác.','info');}},
   {id:'r_mysterious_merchant', w:20, req:()=>S.turn>10, eff:()=>{S.panel='market'; log('Gặp thương nhân bí ẩn, mở chợ đặc biệt.','good');}},
   {id:'r_old_memory', w:15, req:()=>META.life>1, eff:()=>{S.ngo=Math.min(10,S.ngo+1); log('Ký ức kiếp trước hiện lên, Ngộ +1.','success','mem');}},
   {id:'r_wild_gu', w:10, req:()=>S.turn>20, eff:()=>{const g=pickWildGu(); if(g) gainGu(g);}},
@@ -668,14 +681,50 @@ function absorb(){
   log(`Hấp thu 5 nguyên thạch. Chân nguyên ${ESS[S.chuyen].n} +25.`);saveAll();render();
 }
 
+function cultCapped(){
+  if(!S) return false;
+  const mc = typeof maxChuyen === 'function' ? maxChuyen() : 3;
+  if(S.chuyen >= mc && S.giai >= 3 && S.prog >= need()){
+    return {
+      type: 'cap',
+      msg: S.book === 2 
+        ? `Cảnh giới đã chạm trần chương này (${CH[mc]} chuyển đỉnh phong). Cần tiến triển cốt truyện sang chương sau mới có thể đột phá tiếp!`
+        : `Cảnh giới đã đạt cực hạn Quyển 1 (Tam chuyển đỉnh phong). Hãy chuẩn bị đối phó biến cố lớn!`
+    };
+  }
+  if(S.giai >= 3 && S.prog >= need()){
+    return {
+      type: 'break',
+      msg: `Tu vi đã đầy 100%, đang ở bình cảnh chờ cơ duyên đột phá ${CH[S.chuyen + 1]} chuyển! Bế quan tiếp sẽ không tăng thêm tu vi.`
+    };
+  }
+  return false;
+}
+
 /* ---------- tu luyện ---------- */
 function cultMaxStones(){return Math.ceil(maxEss()/5)}
 function cultivate(st){
+  const cc = cultCapped();
+  if(cc){
+    S.panel = null;
+    log(cc.msg, 'warning');
+    if(typeof showToast === 'function') showToast({t: cc.msg, cls: 'warning'});
+    saveAll(); render();
+    return;
+  }
+  const e = Math.floor(S.ess);
+  if(e === 0 && st === 0){
+    S.panel = null;
+    log('Chân nguyên đã cạn và không dùng nguyên thạch, bế quan không có tác dụng!', 'warning');
+    if(typeof showToast === 'function') showToast({t: 'Chân nguyên đã cạn, không thể bế quan!', cls: 'warning'});
+    saveAll(); render();
+    return;
+  }
   resBegin('Bế quan');
   S.stones=Math.max(0,S.stones);
   if(st>S.stones||st>cultMaxStones())return;
   ffRecord('cult',{n:st});
-  const e=Math.floor(S.ess);S.stones-=st;
+  S.stones-=st;
   const gain=Math.round((e+st*5)*cultMult()*(.4+.2*apLeft()));
   S.ess=0;S.prog+=gain;
   log(`Bế quan ${['','ba','bảy','mười'][apLeft()]||'mười'} ngày. Dùng ${e} chân nguyên${st?` và ${st} nguyên thạch`:''}. Tu vi +${gain}.`);
@@ -880,7 +929,7 @@ function enemySkill(c){
       const d=enemyHit(c,.6);log(`Hàn khí thấu xương. Khí huyết −${d}.`,'danger');break}
     case 'drain':{const amt=Math.min(Math.floor(S.ess),Math.round(maxEss()*.2));S.ess-=amt;const d=enemyHit(c,.5);log(`${c.n} ${nm}: mất ${amt} chân nguyên, khí huyết −${d}.`,'danger');break}
     case 'regen':{const bl=c.bleed>0,h=Math.round(c.max*((EAI[c.k]||{}).regen||.12)*(bl?.35:1));c.hp=Math.min(c.max,c.hp+h);FX.q({type:'text',on:'e',t:'+'+h});log(`${c.n} ${nm}, hồi ${h} máu.${bl?' Vết thương chảy máu không chịu khép lại.':''}`,bl?'good':'danger');break}
-    case 'thunder':{const d=enemyHit(c,1.6,{pierce:true,heavy:true});log(`${nm} xuyên qua hộ thể! Khí huyết −${d}.`,'danger');break}
+    case 'thunder':{if(window.SFX)SFX.lightning();const d=enemyHit(c,1.6,{pierce:true,heavy:true});log(`${nm} xuyên qua hộ thể! Khí huyết −${d}.`,'danger');break}
     case 'suppress':{c.suppress=3;const d=enemyHit(c,.5);log(`${c.n} tỏa ${nm}: cổ trùng run rẩy, tốn gấp rưỡi chân nguyên. Khí huyết −${d}.`,'danger');break}
   }
 }
@@ -951,7 +1000,11 @@ function playerAct(type,arg){
         log(`${g.n} hút ${heal} khí huyết phản bổ bản thân.`,'good');
       }}
     }else if(g.t==='guard'){
-      if(window.SFX)SFX.bell();
+      if(['bachngoc','thienbong'].includes(key)){
+        if(window.SFX)SFX.jadeGuard();
+      }else{
+        if(window.SFX)SFX.bell();
+      }
       c.shield=g.turns||2;c.drainPct=g.drainPct||0;
       if(g.selfHeal){S.hp=Math.min(maxHp(),S.hp+g.selfHeal);FX.q({type:'heal',amt:g.selfHeal})}
       c.shieldRed=SHIELD_RED[key]||.4;
@@ -1168,6 +1221,10 @@ document.addEventListener('click',ev=>{
   }
   if(b.id==='codexBtn'){
     renderCodexModal();
+    return;
+  }
+  if(b.id==='journalBtn'){
+    renderJournalModal();
     return;
   }
   if(b.id==='closeModalBtn'||b.id==='modalBackdrop'){

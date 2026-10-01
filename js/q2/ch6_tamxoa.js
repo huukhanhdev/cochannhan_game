@@ -165,7 +165,11 @@ q2_tx_lynhan:{title:'Không Thương, Thương Không',g:'空',who:'lynhan',cond
 q2_tx_cotduc:{title:'Cốt Dực',g:'翼',cond:()=>S.f.votucTv&&!hasGu('cotduc'),
   text:()=>'Vô Túc Điểu, hoa Cửu Cung, đá Vấn Đỉnh, Kim Ô Lưu Tinh, cỏ Hàn Băng. Mười tám vạn nguyên thạch nguyên liệu. Luyện thành, gai xương từ sống lưng sẽ xuyên thịt mọc thành cánh.',
   choices:[
-    {t:'Luyện Cốt Dực (180 thạch)',req:()=>S.stones>=180,reqT:'Cần 180 nguyên thạch',check:['ngo',13],bonus:()=>hasGu('tinhthietcot')?3:0,ok:()=>{S.stones-=180;gainGu('cotduc');return 'Đôi cánh sắt đen. Át chủ bài mới.'},fail:()=>{S.stones-=90;return 'Thất bại, mất nửa nguyên liệu. Có thể thử lại.'}},
+    {t:'Luyện Cốt Dực (180 thạch)',req:()=>S.stones>=180,reqT:'Cần 180 nguyên thạch',check:['ngo',13],bonus:()=>hasGu('tinhthietcot')?3:0,ok:()=>{
+      S.stones-=180;gainGu('cotduc');
+      if(typeof storySetOutcome==='function') storySetOutcome('cotduc_refined','iron_wings_crafted',{choiceText:'Luyện thành Cốt Dực Cổ từ Vô Túc Điểu và xương sắt đen',isLech:false,note:'Sở hữu đôi cánh bay ba chiều, nắm giữ ưu thế không chiến tuyệt đối.'});
+      return 'Đôi cánh sắt đen. Át chủ bài mới.';
+    },fail:()=>{S.stones-=90;return 'Thất bại, mất nửa nguyên liệu. Có thể thử lại.'}},
     {t:'Để sau',eff:()=>'Ngươi cất Vô Túc Điểu đi.'},
   ]},
 q2r_tx_xac:{loc:'tx_nui',title:'Xác trên sườn núi',g:'尸',text:()=>'Một cổ sư chết chưa lâu, túi cổ còn nguyên.',
@@ -175,7 +179,11 @@ q2r_tx_ruou:{loc:'tx_nui',title:'Rượu Kim Cương Hầu',g:'酒',text:()=>'M�
 });
 
 Object.assign(AFTER,{
-  q2_tx_hoanhmi:()=>{S.danh+=20;S.f.hungDanh=1;log('Hoành Mi nát dưới sáu thú ảnh thực thể. Ngươi giết luôn Kim Thành Ân đứng xem. Không ai trên sườn núi dám nhìn thẳng vào ngươi.','big')},
+  q2_tx_hoanhmi:()=>{
+    S.danh+=20;S.f.hungDanh=1;
+    if(typeof storySetOutcome==='function') storySetOutcome('tamxoa_reputation','hoanhmi_slain',{choiceText:'Chém đầu Hoành Mi Bạo Quân trước mặt quần hùng lập hung danh',isLech:false,note:'Tiểu Thú Vương danh chấn Tam Xoa Sơn, không ai dám khinh nhờn.'});
+    log('Hoành Mi nát dưới sáu thú ảnh thực thể. Ngươi giết luôn Kim Thành Ân đứng xem. Không ai trên sườn núi dám nhìn thẳng vào ngươi.','big');
+  },
   q2_tx_tiet:()=>{S.danh+=15;learn('q2_tietamtu');log('Tiết Tam Tứ gục. Thành tín chỉ là công cụ.','big')},
   q2_kv_han:()=>{kvState().cho+=8;log('Bầy chó của Hàn Bất Lưu thành của ngươi. +8 con.','good')},
   q2_kv_dien:()=>{kvState().cho+=6;log('Đại Điện Văn chết. Bầy chó điện tan rã, ngươi thu được một phần.','good')},
@@ -185,7 +193,11 @@ Object.assign(AFTER,{
   q2_bay2:()=>{S.evq.push('q2_bay3')},
   q2_bay3:()=>{S.evq.push('q2_bay4')},
   q2_bay_lui:()=>{S.f.bayLui=1;log('Ngươi bay đi. Thiết gia đếm xác người của mình.','danger')},
-  q2_tx_batu:()=>{S.f.batuChet=1;S.danh+=40;S.stones+=200;log('Thiết Bá Tu toàn thân nát bấy. Trong gang tấc cuối cùng ông ta dùng Thiết Quỹ cổ giam kín Nhược Nam.','big')},
+  q2_tx_batu:()=>{
+    S.f.batuChet=1;S.danh+=40;S.stones+=200;
+    if(typeof storySetOutcome==='function') storySetOutcome('thiet_ba_tu','batu_slain_canon',{choiceText:'Truy sát hạ gục Thiết Bá Tu ("Bá Vương Đương Thời")',isLech:false,note:'Một mình đồ sát đội viện binh Thiết gia, Thiết Bá Tu tử trận, danh chấn Nam Cương.'});
+    log('Thiết Bá Tu toàn thân nát bấy. Trong gang tấc cuối cùng ông ta dùng Thiết Quỹ cổ giam kín Nhược Nam.','big');
+  },
   q2_tx_batu_hong:()=>{S.f.batuSong=1},
 });
 ENDINGS.q2_tieuthuvuong={t:'Tiểu Thú Vương',d:'Một mình giết đội bảy người Thiết gia. Khắp Nam Cương gọi ngươi là Đệ nhất tân tinh Ma đạo. Còn tiếp: Ngũ chuyển giáng lâm Tam Xoa, Địa linh Bá Quy, Bạch Ngưng Băng phản bội, Xuân Thu Thiền lần ba.'};

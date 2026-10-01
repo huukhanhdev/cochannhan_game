@@ -56,7 +56,11 @@ q2_bc_thietgia:{canon:1,title:'Hố Tiêu Lôi',hint:'Đội Thiết gia',g:'铁
   text:()=>'Đội Thiết gia đã mất người vì cá sấu và Hiên Viên Thần Kê. Họ đi tìm hố cổ thảo trên sườn dốc, nơi còn đất thật. Công tử Thiết Ngạo Thiên dẫn đầu.'+(hasGu('tieuloi')?' Trong không khiếu ngươi, Tiêu Lôi Thổ Đậu khẽ động.':''),
   choices:()=>[
     {t:'Chôn Tiêu Lôi Thổ Đậu quanh hố, chờ họ tới',tag:'ma',canon:1,dao:12,req:()=>hasGu('tieuloi'),reqT:'Cần Tiêu Lôi Thổ Đậu',
-      eff:()=>{S.f.thietNo=1;S.susp+=20;S.stones+=40;meet('daokho');later('q2_bc_daokho2',1,2);return 'Hơn trăm hạt đậu nổ cùng lúc. Thiết Ngạo Thiên chết không còn nguyên xác. Chỉ Thiết Đao Khổ sống nhờ một con cổ biến thân. Ngươi nhặt túi của người chết: +40 nguyên thạch. Hiềm nghi +20.'}},
+      eff:()=>{
+        S.f.thietNo=1;S.susp+=20;S.stones+=40;meet('daokho');later('q2_bc_daokho2',1,2);
+        if(typeof storySetOutcome==='function') storySetOutcome('tiep_ngao_thien','slain_by_mine',{choiceText:'Dùng Tiêu Lôi Thổ Đậu nổ chết thiếu chủ Thiết gia Thiết Ngạo Thiên',isLech:false,note:'Thiết Đao Khổ sống sót thề báo thù, gieo mầm truy sát.'});
+        return 'Hơn trăm hạt đậu nổ cùng lúc. Thiết Ngạo Thiên chết không còn nguyên xác. Chỉ Thiết Đao Khổ sống nhờ một con cổ biến thân. Ngươi nhặt túi của người chết: +40 nguyên thạch. Hiềm nghi +20.';
+      }},
     {t:'Tránh xa đội Thiết gia',eff:()=>{S.tamco++;return 'Chuyện của họ, để họ tự lo. Tâm cơ +1.'}},
     {t:'Đánh úp một mình tên đi cuối',tag:'ma',drift:6,eff:()=>{fight2('thietgiadoi',{after:'q2_bc_thiet',mod:.75});return 'Ngươi chọn kẻ tụt lại xa nhất.'}},
   ]},
@@ -121,14 +125,23 @@ q2_bc_sanh:{canon:1,title:'Truyền thừa Hôi Cốt Tài Tử',hint:'Chọn c�
 q2_bc_suho:{canon:1,title:'Kim tự tháp sư hổ',hint:'Cốt Nhục Đoàn Viên',g:'肉',
   text:()=>'Sảnh lớn nhất, sáu mẫu, giữa là kim tự tháp xương và tượng đầu sư hổ mắt hồng ngọc: "Song Tử đồng tâm, Tam Linh hợp nhất." Ngươi và Bạch Ngưng Băng đặt tay lên, cửa không mở. Hai người không đồng tâm. Lò luyện bên trong cần huyết nhục tươi.'+(S.f.bachSinh?' Bách Sinh và Bách Hoa đứng co ro trong góc.':''),
   choices:()=>[
-    ...(S.f.bachSinh?[{t:'Ném Bách Sinh và Bách Hoa vào lò, rồi cắt thịt mình và nàng',tag:'ma',canon:1,dao:25,eff:()=>{S.f.bachSinhChet=1;gainGu('cotnhuc');baiRel(-5);S.hp=Math.max(1,S.hp-30);S.susp+=15;return 'Hai đứa trẻ không phải cổ sư, lửa chưa đủ. Ngươi cắt thịt mình, Bạch Ngưng Băng cắn răng cắt thịt nàng. Lửa hóa đỏ tím. Cốt Nhục Đoàn Viên thành hình: cổ đổi được thiên hạ. Ngươi vừa bóp chết "chính đạo song tinh" của Bách gia.'}}]:[]),
+    ...(S.f.bachSinh?[{t:'Ném Bách Sinh và Bách Hoa vào lò, rồi cắt thịt mình và nàng',tag:'ma',canon:1,dao:25,eff:()=>{
+      S.f.bachSinhChet=1;gainGu('cotnhuc');baiRel(-5);S.hp=Math.max(1,S.hp-30);S.susp+=15;
+      if(typeof storySetOutcome==='function') storySetOutcome('cotnhuc','refined_with_twins',{choiceText:'Hiến tế Bách Sinh, Bách Hoa và máu thịt bản thân luyện thành Cốt Nhục Đoàn Viên Cổ',isLech:false,note:'Đoạt được cổ song tu tuyệt phẩm, bóp chết Song Tinh Bách gia.'});
+      return 'Hai đứa trẻ không phải cổ sư, lửa chưa đủ. Ngươi cắt thịt mình, Bạch Ngưng Băng cắn răng cắt thịt nàng. Lửa hóa đỏ tím. Cốt Nhục Đoàn Viên thành hình: cổ đổi được thiên hạ. Ngươi vừa bóp chết "chính đạo song tinh" của Bách gia.';
+    }}]:[]),
     {t:'Chỉ dùng máu thịt của mình và nàng',drift:8,check:['ngo',14],ok:()=>{gainGu('cotnhuc');S.hp=Math.max(1,S.hp-45);baiRel(8);return 'Lửa cháy yếu nhưng đủ. Cốt Nhục Đoàn Viên thành hình. Khí huyết −45.'},fail:()=>{S.hp=Math.max(1,S.hp-40);S.stones+=20;return 'Lửa tắt. Ngươi chỉ vơ được ít nguyên thạch quanh tháp. Khí huyết −40.'}},
     {t:'Bỏ tháp, rời truyền thừa',eff:()=>{S.stones+=20;return 'Ngươi mang theo những gì đã có.'}},
   ]},
 q2_bc_tron:{canon:1,title:'Vách núi',hint:'Trốn khỏi Bạch Cốt Sơn',g:'逃',sc:'fire',
   text:()=>'Bách gia chặn cửa ra. Nữ tộc trưởng phóng Hàn Ngư cổ, một gia lão bóp vỡ cổ trong khiếu ngươi từ xa. Gia lão Bách Chiến Ôn bước ra, Hỏa Nhân cổ cháy quanh người.'+(S.f.bachSinhChet?' Họ đã biết hai đứa trẻ chết thế nào.':''),
   choices:()=>[
-    {t:'Chạy ra vách núi, cưỡi Vô Túc Điểu',canon:1,need:{gu:'votucdieu',t:'Cần Vô Túc Điểu (Bách Hoa gõ ra ở Nhục Nang Bí Các)'},eff:()=>{S.f.inHoiCot=0;S.f.votuc=1;later('q2_bc_roi',0,0);return 'Vô Túc Điểu một ngày vạn dặm, không có chân, chạm đất là chết. Không bay thì chết.'}},
+    {t:'Chạy ra vách núi, cưỡi Vô Túc Điểu',canon:1,need:{gu:'votucdieu',t:'Cần Vô Túc Điểu (Bách Hoa gõ ra ở Nhục Nang Bí Các)'},eff:()=>{
+      S.f.inHoiCot=0;S.f.votuc=1;
+      if(typeof storySetOutcome==='function') storySetOutcome('escape_bachcot','escape_votucdieu',{choiceText:'Cưỡi Vô Túc Điểu bay vạn dặm trốn thoát khỏi Bạch Cốt Sơn',isLech:false,note:'Bị bỏng mặt rơi xuống núi Tử U, tạo lớp ngụy trang phàm nhân tự nhiên.'});
+      later('q2_bc_roi',0,0);
+      return 'Vô Túc Điểu một ngày vạn dặm, không có chân, chạm đất là chết. Không bay thì chết.';
+    }},
     {t:'Nhảy vực theo Bạch Ngưng Băng, bật Khiêu Khiêu Thảo',need:{gu:'khieukhieu'},check:['satphat',13],ok:()=>{S.f.inHoiCot=0;S.hp=Math.max(1,S.hp-40);chapEnd('q2_thuongdoi');return 'Rễ lò xo bật ngươi qua khe vực. Hai người lăn xuống sườn núi, gãy mấy chiếc xương sườn. Khí huyết −40.'},fail:()=>{S.hp=Math.max(1,S.hp-30);fight2('bachchienon',{after:'q2_bc_on',spare:.25,spareAfter:'q2_bc_on_hong',spareT:'Hỏa Nhân cổ lao tới. Bạch Ngưng Băng kéo ngươi nhảy khỏi vách núi.'});return 'Nhảy hụt. Khí huyết −30. Bách Chiến Ôn đã tới.'}},
     {t:'Đánh mở đường',eff:()=>{S.f.inHoiCot=0;fight2('bachchienon',{after:'q2_bc_on',spare:.25,spareAfter:'q2_bc_on_hong',spareT:'Hỏa Nhân cổ lao tới định đồng quy vu tận. Bạch Ngưng Băng kéo ngươi nhảy khỏi vách núi.'});return 'Lửa và xương va nhau.'}},
   ]},

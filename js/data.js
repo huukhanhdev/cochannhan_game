@@ -24,6 +24,7 @@ const GU={
   tuutrung:{n:'Tửu Trùng',r:1,food:3,fn:'rượu',pow:0.25,t:'passive',cult:.5,p:45,d:'Thực đạo, ăn rượu, bay được. Tinh luyện chân nguyên Nhất chuyển lên nửa cảnh giới. Tu luyện +50%, uy lực chiêu +25%.'},
   tuvi:{n:'Tứ Vị Tửu Trùng',r:3,food:5,fn:'tứ vị tửu',pow:0.3,t:'passive',cult:1.2,p:150,d:'Hợp luyện từ hai Tửu Trùng và bốn vị rượu chua, cay, ngọt, đắng. Tinh luyện chân nguyên lên một tiểu cảnh. Tu luyện +120%, uy lực chiêu +30%.'},
   bachthi:{n:'Bạch Thỉ Cổ',r:1,food:2,fn:'thịt thú',t:'passive',atk:5,p:30,d:'Lực đạo, dùng một lần là tăng vĩnh viễn sức một con lợn rừng trắng. Truyền thừa Hoa Tửu Hành Giả. Mọi đòn +5, thêm hư ảnh Trư.'},
+  laitho:{n:'Lại Thổ Cáp Mô',r:1,food:1,fn:'bùn đất',t:'passive',def:2,p:60,d:'Cóc đất lười mở ra từ đá tím ở phường đổ thạch Cổ gia. Bụng chứa đồ vật, bùn đất hộ thể (+2 giáp phòng thủ).'},
   hacthi:{n:'Hắc Thỉ Cổ',r:1,food:3,fn:'thịt thú',t:'passive',atk:5,p:55,d:'Sức một con lợn rừng đen. Cùng Bạch Thỉ thành Song Trư chi lực. Mọi đòn +5, thêm hư ảnh Trư.'},
   ngocbi:{n:'Ngọc Bì Cổ',r:1,food:3,fn:'ngọc thạch vụn',t:'guard',cost:8,p:45,d:'Ngọc đạo, phòng ngự hơn Đồng Bì mà tốn ít chân nguyên hơn, da tỏa ánh ngọc. Chỉ nhận 50% sát thương trong 2 lượt.'},
   thietbi:{n:'Thiết Bì Cổ',r:2,food:4,fn:'thiết vụn',t:'guard',cost:10,p:120,d:'Bản nâng cấp của Đồng Bì, da hóa sắt xám đen. Chỉ nhận 40% sát thương trong 2 lượt.'},
@@ -60,6 +61,7 @@ const GU={
   xaloi3:{n:'Bạch Ngân Xá Lợi Cổ',r:3,food:0,fn:'không cần',t:'use',p:480,d:'Dùng một lần: Tam chuyển tăng một tiểu cảnh giới.'},
   cuongthu:{n:'Cường Thủ Cổ',r:3,food:5,fn:'sắt vụn',t:'attack',dmg:18,cost:22,chill:.35,stun:1,p:400,d:'Bọ cánh cứng đen, đầu mọc càng sắt, lưng lốm đốm trắng. Của Hùng Chiên. Cưỡng ép bắt lấy cổ trùng sống nhờ trên người địch: tỷ lệ thành công thấp, nhưng trúng thì địch choáng 1 lượt và yếu đi 35%.'},
   thachkhieu:{n:'Thạch Khiếu Cổ',r:3,food:0,fn:'không cần',t:'use',p:300,d:'Hình như viên xúc xắc, xám trắng, cực cứng. Dùng một lần: nổ thành bột đá tràn khắp biển chân nguyên, tu vi lập tức đầy. Không khiếu hóa vách đá, tiềm lực bị ép khô, về sau khó lên Tứ chuyển. Xung đột với Huyết Lô.'},
+  nhanthutangsinh:{n:'Nhân Thú Táng Sinh Cổ',r:3,food:0,fn:'không cần',t:'use',p:450,d:'Cấm cổ ma đạo Tam chuyển tiêu hao. Dùng người sống và ngự thú hợp luyện, chân nguyên đỏ đen xé toạc khiếu bích, giúp cổ sư Nhị chuyển đỉnh phong đột phá Tam chuyển sơ kỳ.'},
   amduong:{n:'Âm Dương Chuyển Thân Cổ',r:4,food:0,fn:'chân nguyên',t:'heal',healAmt:90,cure:1,cost:30,p:900,d:'Cổ trị liệu Tứ chuyển Cổ Nguyệt Nhất Đại mưu tính gần ngàn năm. Âm cổ từ dương sinh âm, khiến người chết thoát thai hoán cốt. Dương cổ giữ lại để khống chế kẻ được cứu.'},
   duongco:{n:'Dương cổ',r:4,food:0,fn:'không cần',t:'passive',p:0,d:'Nửa còn lại của Âm Dương Chuyển Thân. Âm cổ đã dùng lên Bạch Ngưng Băng. Một ý niệm của ngươi là Dương cổ tan, và nàng chết theo.'},
   tienlydilang:{n:'Thiên Lý Địa Lang',r:5,food:10,fn:'đất bùn',t:'passive',move:1,fleeMod:0.5,p:1200,d:'Cổ Ngũ Chuyển của Hoa Tửu Hành Giả. Dùng đất làm thức ăn, di chuyển dưới đất cực nhanh. Cưỡi thoát thân: chạy trốn +50%, không bị tập kích. Nuôi: 10 đất / tuần.'},
@@ -149,6 +151,8 @@ const NPC={
   nhatdai:{n:'Cổ Nguyệt Nhất Đại',d:'Thủy tổ khai sơn Cổ Nguyệt, Huyết Quỷ'},
   hoctro:{n:'Đồng học học đường',d:'Bạn học cùng khóa ở học đường Cổ Nguyệt'},
   hoatuu:{n:'Hoa Tửu Hành Giả',d:'Ma đầu ngũ chuyển, lưu lại di tàng khe đá'},
+  duocnhac:{n:'Cổ Nguyệt Dược Nhạc',d:'Cháu gái Dược Cơ, thiếu nữ trị liệu gia tộc'},
+  duocco:{n:'Cổ Nguyệt Dược Cơ',d:'Gia lão Dược đường, bà nội Dược Nhạc'},
 };
 
 // Ký ức mang qua các kiếp (nhận được khi đã trải qua sự kiện)
@@ -168,10 +172,14 @@ const MEM={
 // Tranh cổ trùng (Canva AI) trong assets/gu/g_<khóa>.jpg
 // Còn thiếu tranh: nguyetmang, uguang, cuongnham, huyetlo, xaloi1, xaloi2, hungluc, liemtuc (dùng chữ thư pháp tạm)
 const GU_IMG=new Set(['xuanthu','nguyetquang','tuutrung','tuvi','bachthi','hacthi','ngocbi','bachngoc','huyetnguyet','diathinh',
-  'thietbi','thienbong','trilieu','cuxikimngo','thiennguyenbaolien','thiennguyen','huyetlo','cotthuong','amduongchuyenthan','amduong','duongco']);
+  'thietbi','thienbong','trilieu','cuxikimngo','thiennguyenbaolien','thiennguyen','huyetlo','cotthuong','amduongchuyenthan','amduong','duongco',
+  'tienlydilang','dinhtiendu','cotduc','denhikhikhi']);
 function guImgUrl(k){
   if(k==='amduong'||k==='duongco') return asset('gu/g_amduongchuyenthan.jpg');
   if(k==='thiennguyen'||k==='thiennguyenbaolien') return asset('gu/g_thiennguyenbaolien.jpg');
+  if(k==='tienlydilang') return asset('gu/g_tienlydilang.jpg');
+  if(k==='dinhtiendu') return asset('gu/g_dinhtiendu.jpg');
+  if(k==='cotduc'||k==='votuc') return asset('gu/g_cotduc.jpg');
   return GU_IMG.has(k)?asset(`gu/g_${k}.jpg`):'';
 }
 // Ô hình cổ trùng; glyph là chữ dự phòng khi chưa có tranh

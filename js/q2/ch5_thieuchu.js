@@ -47,7 +47,7 @@ q2_tc_banlai:{title:'Giá lên trời',g:'商',
 q2_tc_phe:{canon:1,title:'Ba phe thiếu chủ',hint:'Chọn phe cho Tâm Từ',g:'派',who:'tamtu',
   text:()=>'Yến Phi phong Tâm Từ làm thiếu chủ tập sự. Thiếu chủ chia ba phe: phe một và phe hai đang đấu nhau; phe ba của Thương Trào Phong đứng ngoài. Kiếp trước, Trào Phong là đối thủ lớn nhất của Tâm Từ.',
   choices:()=>[
-    {t:'Để nàng tự chọn',canon:1,eff:()=>{meet('traophong');rel('tamtu',10);S.f.pheTrao=1;S.tamco++;return 'Tâm Từ chọn phe Trào Phong: theo phe một hay phe hai đều đắc tội với phe kia. Ngươi gật gù. Nàng đã biết nghĩ. Tâm cơ +1.'}},
+    {t:'Để nàng tự chọn',canon:1,eff:()=>{meet('traophong');rel('tamtu',10);S.f.pheTrao=1;S.tamco++;storySetOutcome('tamtu_young_master','enthroned_canon','Định hướng Thương Tâm Từ tự lập đoạt ngôi thiếu chủ Thương gia');return 'Tâm Từ chọn phe Trào Phong: theo phe một hay phe hai đều đắc tội với phe kia. Ngươi gật gù. Nàng đã biết nghĩ. Tâm cơ +1.'}},
     {t:'Bảo nàng theo phe mạnh nhất',eff:()=>{rel('tamtu',-5);S.f.pheManh=1;return 'Nàng nghe theo, nhưng bị cuốn vào cuộc chiến của người khác.'}},
   ]},
 q2_tc_com:{canon:1,title:'Lệnh bài chữ Cơm',hint:'Ba anh em họ Hùng',g:'饭',who:'hungdai',
@@ -65,13 +65,13 @@ q2_tc_vedh:{canon:1,title:'Nữ vệ quân',hint:'Vệ Đức Hinh',g:'卫',who:
 q2_tc_chutoan:{canon:1,title:'Chu Toàn',hint:'Quân thần tương ngộ',g:'周',who:'chutoan',
   text:()=>'Chu Toàn, chưởng quỹ giỏi nhất của Nhai Tí, hơn trăm tuổi, từng là tộc trưởng Chu gia Tứ chuyển. Nhất Phàm tung tin Chu Toàn sắp theo phe khác. Ngươi đạp cửa cửa hàng, Bạch Ngưng Băng ném năm trăm thạch "tiền phạt ứng trước" vào mặt đội trưởng thành vệ.',
   choices:()=>[
-    {t:'Đánh Chu Toàn trước mặt đám đông, để Tâm Từ ra xin tha',tag:'ma',canon:1,eff:()=>{meet('chutoan');rel('tamtu',20);rel('chutoan',20);S.f.chuToan=1;S.danh+=15;return 'Tâm Từ xin tha, kể (bịa) chuyện Chu Toàn gánh chí phục dựng Chu gia, lời trăng trối của vợ lão. Tin đồn của Nhất Phàm hóa thành màn "quân thần tương ngộ". Chu Toàn quỳ trước Tâm Từ.'}},
+    {t:'Đánh Chu Toàn trước mặt đám đông, để Tâm Từ ra xin tha',tag:'ma',canon:1,eff:()=>{meet('chutoan');rel('tamtu',20);rel('chutoan',20);S.f.chuToan=1;S.danh+=15;storySetOutcome('tamtu_young_master','enthroned_canon','Thu phục Chu Toàn, củng cố vị thế thiếu chủ vững chắc cho Thương Tâm Từ');return 'Tâm Từ xin tha, kể (bịa) chuyện Chu Toàn gánh chí phục dựng Chu gia, lời trăng trối của vợ lão. Tin đồn của Nhất Phàm hóa thành màn "quân thần tương ngộ". Chu Toàn quỳ trước Tâm Từ.'}},
     {t:'Mời Chu Toàn một chén, nói chuyện Chu gia',check:['tamco',16],ok:()=>{meet('chutoan');rel('chutoan',30);S.f.chuToan=1;return 'Lão uống cạn chén, nhìn ngươi rất lâu. "Được."'},fail:()=>{meet('chutoan');rel('chutoan',-10);return 'Lão cười nhạt: "Tiểu bối miệng còn hôi sữa."'}},
   ]},
 q2_tc_ket:{canon:1,title:'Tứ chuyển',hint:'Lên đường Tam Xoa',g:'四',who:'bainu',
   text:()=>'Tâm Từ đứng vững ở ghế thiếu chủ. Kinh doanh tình báo diễn võ khai trương, bảy ngày từ ba mươi vạn lên bốn mươi lăm vạn. Đêm trước khi đi, Bạch Ngưng Băng bơm chân nguyên Hoàng Kim vào khiếu ngươi theo Thề Độc.'+(S.chuyen>=3&&S.giai>=3?' Bích khiếu của ngươi đã căng tới cực hạn.':''),
   choices:()=>[
-    {t:'Phá bích khiếu, lên Tứ chuyển',canon:1,eff:()=>{if(S.chuyen===3&&S.giai===3){S.chuyen=4;S.giai=0;S.prog=0;S.hp=maxHp();S.ess=maxEss();log('Màng không khiếu hóa ánh bạc. Chân nguyên Đạm Kim. Tứ chuyển: nhiều tộc trưởng cả đời chỉ tới đây.','big')}else{S.prog+=300;levelUp();log('Chưa đủ để phá bích khiếu, nhưng tu vi tăng vọt.','good')}baiRel(5);chapEnd('q2_tamxoa');return 'Chương năm kết thúc.'}},
+    {t:'Phá bích khiếu, lên Tứ chuyển',canon:1,eff:()=>{if(S.chuyen===3&&S.giai===3){S.chuyen=4;S.giai=0;S.prog=0;S.hp=maxHp();S.ess=maxEss();log('Màng không khiếu hóa ánh bạc. Chân nguyên Đạm Kim. Tứ chuyển: nhiều tộc trưởng cả đời chỉ tới đây.','big')}else{S.prog+=300;levelUp();log('Chưa đủ để phá bích khiếu, nhưng tu vi tăng vọt.','good')}baiRel(5);storySetOutcome('rank4_breakthrough','rank4_initial','Bạch Ngưng Băng truyền chân nguyên Hoàng Kim, đột phá Tứ chuyển sơ kỳ');chapEnd('q2_tamxoa');return 'Chương năm kết thúc.'}},
   ]},
 
 q2_tc_trao:{title:'Cấm khu',g:'潮',who:'traophong',cond:()=>S.met.traophong,

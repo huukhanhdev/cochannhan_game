@@ -52,7 +52,11 @@ q2_hl_be:{canon:1,title:'Bè gỗ trên sông Hoàng Long',hint:'Cá Toa Tiễn'
 q2_hl_codoi:{canon:1,title:'Cổ trùng chết đói',hint:'Cổ chết đói',g:'饿',
   text:()=>{const n=S.gu.filter(g=>g.h>0).length;return `Nguyên thạch không đủ nuôi tất cả. Trong không khiếu, ${n?'mấy con cổ mang từ Thanh Mao Sơn':'đám cổ trùng'} bắt đầu lịm đi. Đâu Suất Hoa còn chứa thuốc phàm, băng vải, nồi sắt, thịt khô.`},
   choices:()=>[
-    {t:'Bỏ mặc cổ yếu, giữ nguyên thạch cho Tửu trùng và Bảo Liên',canon:1,eff:()=>{const dead=S.gu.filter(g=>g.h>0&&GU[g.k].t!=='fate');dead.forEach(g=>loseGu(g.k));S.tamco++;return dead.length?`Ngươi để ${dead.map(g=>GU[g.k].n).join(', ')} chết. Năm trăm năm ma đầu biết thứ gì đáng giữ. Tâm cơ +1.`:'Không có con nào đáng tiếc. Tâm cơ +1.'}},
+    {t:'Bỏ mặc cổ yếu, giữ nguyên thạch cho Tửu trùng và Bảo Liên',canon:1,eff:()=>{
+      const dead=S.gu.filter(g=>g.h>0&&GU[g.k].t!=='fate');dead.forEach(g=>loseGu(g.k));S.tamco++;
+      if(typeof storySetOutcome==='function') storySetOutcome('hl_starve','preserve_core',{choiceText:'Bỏ mặc cổ yếu chết đói, dồn nguyên thạch nuôi Tứ Vị Tửu Trùng và Bảo Liên',isLech:false,note:'Quản lý tài nguyên chuẩn xác, giữ vững cổ trùng hạch tâm.'});
+      return dead.length?`Ngươi để ${dead.map(g=>GU[g.k].n).join(', ')} chết. Năm trăm năm ma đầu biết thứ gì đáng giữ. Tâm cơ +1.`:'Không có con nào đáng tiếc. Tâm cơ +1.';
+    }},
     {t:'Bỏ 20 nguyên thạch nuôi cho hết',req:()=>S.stones>=20,reqT:'Cần 20 nguyên thạch',eff:()=>{S.stones-=20;S.gu.forEach(g=>g.h=0);return 'Cổ trùng no. Túi nguyên thạch vơi hẳn.'}},
     {t:'Lấy đồ trong Đâu Suất Hoa bán cho thuyền buôn đi ngang',check:['tamco',12],ok:()=>{S.stones+=18;S.herbs++;return 'Nồi sắt và than đổi được 18 nguyên thạch, thêm một gốc linh dược.'},fail:()=>{S.stones+=6;return 'Thuyền buôn ép giá. Chỉ được 6 nguyên thạch.'}},
   ]},
@@ -145,7 +149,15 @@ q2r_hl_tro:{loc:'hl_rung',once:1,title:'Tro lửa',g:'火',text:()=>'Một đố
 
 Object.assign(AFTER,{
   q2_toatien:()=>{S.stones+=6;log('Xác cá chất đầy bè. Bạch Ngưng Băng nhóm lửa.','good')},
-  q2_casau:()=>{gainGu('boigiap');gainGu('ngacluc');learn('q2_casau');S.danh+=5;log('Trên người cá sấu vương có hai con cổ: Bối Giáp Cổ và Ngạc Lực Cổ.','big')},
+  q2_casau:()=>{
+    gainGu('boigiap');gainGu('ngacluc');learn('q2_casau');S.danh+=5;
+    if(typeof storySetOutcome==='function') storySetOutcome('hoanglong_crocodile','crocodile_slain',{choiceText:'Tiêu diệt cá sấu vương sáu chân, đoạt Bối Giáp Cổ và Ngạc Lực Cổ',isLech:false,note:'Đoạt Bối Giáp phòng thủ lưng và một Ngạc chi lực.'});
+    log('Trên người cá sấu vương có hai con cổ: Bối Giáp Cổ và Ngạc Lực Cổ.','big');
+  },
   q2_dungnham:()=>{gainGu('tichhoi');log('Trong xác cá sấu dung nham còn Tích Hôi Cổ.','big')},
-  q2_thuyhoa:()=>{gainGu('tieuloi');S.stones+=30;log('Trên người Trần Thúy Hoa có một túi Tiêu Lôi Thổ Đậu và ít nguyên thạch. Bà ta lấy truyền thừa từ một thi thể; giờ tới lượt ngươi.','big')},
+  q2_thuyhoa:()=>{
+    gainGu('tieuloi');S.stones+=30;
+    if(typeof storySetOutcome==='function') storySetOutcome('thuyhoa','thuyhoa_eliminated',{choiceText:'Phục kích tiêu diệt Trần Thúy Hoa, đoạt Tiêu Lôi Thổ Đậu',isLech:false,note:'Thu được bí khí Tiêu Lôi Thổ Đậu phục vụ bẫy rập Bạch Cốt Sơn.'});
+    log('Trên người Trần Thúy Hoa có một túi Tiêu Lôi Thổ Đậu và ít nguyên thạch. Bà ta lấy truyền thừa từ một thi thể; giờ tới lượt ngươi.','big');
+  },
 });

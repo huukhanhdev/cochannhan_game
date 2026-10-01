@@ -11,7 +11,7 @@ const ctx={
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','events.js','living.js','battle.js','minigame.js','auto.js','rt.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','story.js','events.js','living.js','battle.js','minigame.js','auto.js','rt.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
@@ -50,7 +50,7 @@ function botTurn(){
   if(S.mg)return botMG();
   if(S.combat)return botCombat();
   if(S.evq.length)return botEvent();
-  if(S.panel==='tuluyen'){const keep=foodCost()*2+10;const cap=cultMaxStones();const n=[cap,Math.ceil(cap/2),0].find(n=>S.stones-n>=keep)||0;return cultivate(n)}
+  if(S.panel==='tuluyen'){const keep=foodCost()*2+10;const cap=cultMaxStones();const n=[cap,Math.ceil(cap/2),0].find(n=>S.stones-n>=keep)||0;if(cultCapped()||(S.ess===0&&n===0)){S.panel=null;advance();return}return cultivate(n)}
   if(S.panel){S.panel=null;advance();return}
   // Việc phụ: mua cổ, luyện cổ
   if(S.stones>90){const k=S.shop.find(k=>['attack','guard','heal'].includes(GU[k].t)&&!hasGu(k)&&guPrice(k)<S.stones-40);if(k){buyGu(S.shop.indexOf(k))}}
@@ -58,7 +58,7 @@ function botTurn(){
   if(S.herbs<2&&S.stones>30)buyItem('herb');
   const hpR=S.hp/maxHp();
   if(hpR<.45||(S.inj&&Math.random()<.5))return act('nghi');
-  if(S.ess>=maxEss()*.7)return act('tuluyen');
+  if(!cultCapped()&&S.ess>=maxEss()*.7)return act('tuluyen');
   if(!S.f.hoatuu&&Math.random()<.35)return act('hauson');
   return act(pick(['nui','nui','nhiemvu','nhiemvu','hocduong','trai'].filter(a=>a!=='hocduong'||S.turn<=18)));
 }

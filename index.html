@@ -130,6 +130,34 @@
   .codex-card{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--panel2);display:grid;gap:4px}
   .codex-card.locked{opacity:0.4;filter:grayscale(1)}
 
+  /* Modal Nhân Quả Lục (Journal) */
+  .journal-list{display:flex;flex-direction:column;gap:12px}
+  .journal-card{border:1px solid var(--line);border-radius:6px;padding:12px 14px;background:var(--panel2);display:grid;gap:6px;transition:border-color .15s}
+  .journal-card:hover{border-color:var(--gold)}
+  .journal-card.diso{border-left:3px solid #8e2f22}
+  .journal-card.canon{border-left:3px solid var(--gold)}
+  .journal-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .journal-ev{font-family:var(--display);font-size:16px;font-weight:700;color:var(--moon)}
+  .journal-choice{font-size:13px;color:var(--gold);line-height:1.4}
+  .journal-choice b{color:var(--text);font-weight:500}
+  .journal-impact{font-size:12.5px;color:var(--dim);background:rgba(0,0,0,0.25);border-radius:4px;padding:6px 10px;line-height:1.45}
+  .journal-impact b{color:#dae2dc}
+  .journal-empty{text-align:center;padding:32px 16px;color:var(--dim);font-style:italic}
+
+  /* HUD Dự báo Nguy cơ & Chi phí nuôi cổ */
+  .hud-forecast{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .fc-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:2px 8px;border-radius:4px;background:var(--panel2);border:1px solid var(--line);color:var(--dim)}
+  .fc-chip b{color:var(--moon);font-weight:600}
+  .fc-chip.danger{background:rgba(107,51,41,0.25);border-color:#7a3328;color:#ff9e8f}
+  .fc-chip.danger b{color:#ffc5bc}
+  .fc-chip.warn{background:rgba(107,90,41,0.2);border-color:#6e5828;color:#e8cf8a}
+  .fc-chip.good{border-color:#2a4537;color:#9dd4b5}
+
+  /* Choice badges: Điều kiện & Giá phải trả */
+  .pill.cost{border-color:#7a3328;color:#f08a78;background:rgba(107,51,41,0.2)}
+  .pill.risk{border-color:#8a5e28;color:#f5b864;background:rgba(138,94,40,0.18)}
+  .pill.req-ok{border-color:#2a5540;color:#88e0b0;background:rgba(42,85,64,0.15)}
+
   @media (prefers-reduced-motion:reduce){.bar i{transition:none}.shake{animation:none}}
 
   /* ===== Đấu trường PixiJS ===== */
@@ -449,12 +477,21 @@
   #rtHud{margin:8px 0}
   .cast{border:1px solid var(--line);border-radius:5px;padding:7px 10px;background:#11171a}
   .cast b{font-size:14px}.cast small{display:block;color:var(--dim);font-size:12px;margin-top:4px}
+  .cast .windup-badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-bottom:3px;letter-spacing:.05em}
+  .cast.atk .windup-badge{background:#3a2d1d;color:#d8b88a}
+  .cast.heavy .windup-badge{background:#5a2318;color:#ff9e8f;border:1px solid #8e3222}
+  .cast.skill .windup-badge{background:#3d1a5a;color:#d8a8ff;border:1px solid #7835b0;animation:pulse .8s infinite alternate}
+  .cast.guard .windup-badge{background:#1a3d35;color:#8ad8c8}
   .cast .cbar{position:relative;height:10px;background:#000;border-radius:3px;overflow:hidden;margin-top:5px}
   .cast .cbar i{display:block;height:100%;background:linear-gradient(90deg,#6a3a1a,#e8844a)}
   .cast.atk .cbar i{background:linear-gradient(90deg,#5a3a2a,#c89a6a)}
+  .cast.heavy .cbar i{background:linear-gradient(90deg,#8e2815,#ff6a42)}
+  .cast.skill .cbar i{background:linear-gradient(90deg,#4a187a,#b86aff)}
   .cast.guard .cbar i{background:linear-gradient(90deg,#2a4a5a,#6ab8d8)}
   .cast .now{position:absolute;right:6px;top:-2px;font-size:10px;font-weight:700;color:#fff1b8;animation:crack .2s infinite alternate}
-  .cast.stag{border-color:#b58a2a;background:#2a200e}
+  .cast .now.pulse{background:#8e2f22;padding:1px 5px;border-radius:2px;border:1px solid #ffca36;box-shadow:0 0 8px #ff6a42}
+  .cast.stag{border-color:#b58a2a;background:#2a200e;box-shadow:inset 0 0 12px rgba(214,174,96,0.25)}
+  .stagger-active{color:#ffde7a;letter-spacing:.06em;text-shadow:0 0 8px rgba(232,196,90,0.6)}
   .cast.idle{opacity:.7}
   .rt-obj{margin-top:8px;font-size:12.5px;color:#cfe8c0;display:grid;gap:4px}
   .rt-obj .nodes{display:flex;gap:6px}.rt-obj .nodes span{flex:1;height:8px;background:#200;border:1px solid #6a241f;border-radius:2px;overflow:hidden}.rt-obj .nodes span i{display:block;height:100%;background:#e8664f}.rt-obj .nodes span.off{opacity:.3}
@@ -782,6 +819,7 @@
   <script src="assets/local/manifest.js"></script>
   <script src="js/sound.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/story.js"></script>
   <script src="js/events.js"></script>
   <script src="js/living.js"></script>
   <script src="js/battle.js"></script>

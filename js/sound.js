@@ -184,8 +184,64 @@ const SFX = (function(){
     osc.stop(now + 0.1);
   }
 
+  // Tiếng ngọc giáp Bạch Ngọc Cổ / Thiên Bồng va chạm (Jade / crystal shield resonance)
+  function jadeGuard(){
+    if(muted) return;
+    const c = getCtx(); if(!c) return;
+    const now = c.currentTime;
+    [1760, 2640].forEach((freq, idx) => {
+      const osc = c.createOscillator();
+      const gain = c.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now + idx * 0.03);
+      gain.gain.setValueAtTime(0.18, now + idx * 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.03 + 0.45);
+      osc.connect(gain);
+      gain.connect(c.destination);
+      osc.start(now + idx * 0.03);
+      osc.stop(now + idx * 0.03 + 0.5);
+    });
+  }
+
+  // Tiếng phá vỡ thế phòng ngự / lộ sơ hở (Stagger / poise break)
+  function stagger(){
+    if(muted) return;
+    const c = getCtx(); if(!c) return;
+    const now = c.currentTime;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(450, now);
+    osc.frequency.exponentialRampToValueAtTime(90, now + 0.25);
+    gain.gain.setValueAtTime(0.3, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.3);
+  }
+
+  // Tiếng lôi điện / sấm sét cao tần xé gió (Lightning crackle)
+  function lightning(){
+    if(muted) return;
+    const c = getCtx(); if(!c) return;
+    const now = c.currentTime;
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.exponentialRampToValueAtTime(120, now + 0.22);
+    gain.gain.setValueAtTime(0.35, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.connect(gain);
+    gain.connect(c.destination);
+    osc.start(now);
+    osc.stop(now + 0.26);
+  }
+
   return {
     blade, hit, cicada, coin, levelUp, thunder, bell, crack,
+    jadeGuard, stagger, lightning,
     isMuted, toggleMute
   };
 })();

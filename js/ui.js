@@ -85,6 +85,92 @@ function renderHungerWarning(){
   }
 }
 
+/* ---------- Cảnh báo nguy cơ & Dự báo nuôi cổ ---------- */
+function hudForecastHTML(){
+  if(typeof S==='undefined'||!S) return '';
+  const cost=typeof foodCost==='function'?foodCost():0;
+  const hungry=(S.gu||[]).filter(g=>(g.h||0)>0);
+  let foodChip='';
+  if(hungry.length){
+    foodChip=`<span class="fc-chip danger" title="${hungry.map(g=>GU[g.k]?GU[g.k].n:g.k).join(', ')} đang đói!">⚠ <b>${hungry.length} cổ đói</b></span>`;
+  }else if(S.stones<cost){
+    foodChip=`<span class="fc-chip danger" title="Nuôi cần ${cost} thạch, hiện có ${S.stones} thạch">⚠ Nuôi tuần tới: <b>thiếu ${cost-S.stones} thạch</b></span>`;
+  }else{
+    foodChip=`<span class="fc-chip ${cost>15?'warn':'good'}" title="Dự kiến tiêu hao ${cost} nguyên thạch mỗi tuần">Nuôi tuần tới: <b>${cost} thạch</b></span>`;
+  }
+
+  let dangerChip='';
+  if(S.susp>=70){
+    dangerChip=`<span class="fc-chip danger" title="Hiềm nghi gia tộc cao (${S.susp}/100), dễ bị bắt bớ hoặc điều tra!">⚠ <b>Hiềm nghi nguy cấp</b></span>`;
+  }else if(S.inj){
+    const injName=INJURY[S.inj.k]?INJURY[S.inj.k].n:'Trọng thương';
+    dangerChip=`<span class="fc-chip warn" title="${INJURY[S.inj.k]?INJURY[S.inj.k].d:injName}">⚠ <b>${injName}</b></span>`;
+  }else{
+    const cal=S.canon||CANON;
+    const nextTurn=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>t>=S.turn);
+    if(nextTurn){
+      const evId=cal[nextTurn];
+      const ev=EV[evId];
+      const diff=nextTurn-S.turn;
+      const dLabel=diff===0?'tuần này':`còn ${diff} tuần`;
+      dangerChip=`<span class="fc-chip" title="Biến cố: ${ev?.hint||ev?.title||evId} (${dLabel})">Biến cố tới: <b>${ev?.hint||ev?.title||evId}</b> (${dLabel})</span>`;
+    }else if(S.story&&S.story.pending&&S.story.pending.length){
+      const p=S.story.pending[0];
+      dangerChip=`<span class="fc-chip warn" title="Nhân quả sắp chuyển dời">Sắp tới: <b>${p.evId}</b></span>`;
+    }else{
+      dangerChip=`<span class="fc-chip good">Thiên cơ: <b>Bình yên</b></span>`;
+    }
+  }
+  return `<div class="hud-forecast">${dangerChip}${foodChip}</div>`;
+}
+
+/* ---------- Nhân Quả Lục Modal ---------- */
+function renderJournalModal(){
+  const story=S.story||{journal:[],outcomes:{}};
+  const list=(story.journal||[]).slice().reverse();
+  let content='';
+  if(!list.length){
+    content=`<div class="journal-empty">
+      <p>Thiên đạo mịt mờ, dòng sông thời gian phẳng lặng trôi...</p>
+      <small class="dimt">Chưa có biến cố nhân quả lớn nào được ghi nhận. Những quyết định trọng đại nghịch thiên hay thuận theo số mệnh sẽ khắc sâu dấu vết tại đây.</small>
+    </div>`;
+  }else{
+    content=`<div class="journal-list">
+      ${list.map(e=>{
+        const ev=EV[e.evId]||{};
+        const title=ev.title||e.title||e.evId;
+        const isCanon=!e.isLech;
+        const timeStr=`Tuần ${e.turn||'?'} · Tháng ${Math.ceil((e.turn||1)/3)}`;
+        return `<div class="journal-card ${isCanon?'canon':'diso'}">
+          <div class="journal-top">
+            <span class="journal-ev">${esc(title)}</span>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="pill">${timeStr}</span>
+              <span class="pill ${isCanon?'canonp':'danger'}">${isCanon?'Nguyên tác':'Dị số'}</span>
+            </div>
+          </div>
+          <div class="journal-choice">Ngươi đã định: <b>${esc(e.choiceText||e.outcomeId||'Đã định đoạt')}</b></div>
+          ${e.note?`<div class="journal-impact">${esc(e.note)}</div>`:''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  $('modalContainer').innerHTML=`
+    <div class="modal-overlay" id="modalBackdrop">
+      <div class="modal-box">
+        <div class="modal-head">
+          <h2>Nhân Quả Lục · Dấu Vết Luân Hồi (${list.length})</h2>
+          <button class="btn" id="closeModalBtn">Đóng</button>
+        </div>
+        <div class="modal-body">
+          <p class="dimt">Ghi chép những bước ngoặt số mệnh, lựa chọn sinh tử và dị số thiên cơ ngươi đã tạo ra trong kiếp này.</p>
+          ${content}
+        </div>
+      </div>
+    </div>`;
+}
+
 /* ---------- Thanh trạng thái ---------- */
 function renderHUD(){
   const e=ESS[S.chuyen];
@@ -111,12 +197,14 @@ function renderHUD(){
     </div>
     ${S.inj?`<span class="injury" title="${INJURY[S.inj.k].d}">伤 ${INJURY[S.inj.k].n} · ${S.inj.t} tuần</span>`:''}
     <div id="hunger-warning" class="hunger-warning"></div>
+    ${hudForecastHTML()}
     <div class="hud-time">
       ${hudTimeHTML()}
       <svg id="moon" width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"></svg>
     </div>
     <div class="hud-btns">
       ${S.ff?'<button class="btn warn" data-ff="stop">Dừng tua</button>':''}
+      <button class="btn ghost" id="journalBtn" title="Xem lịch sử các lựa chọn và biến cố nhân quả">Nhân Quả Lục</button>
       <button class="btn ghost" id="codexBtn">Cổ Đồ Giám</button>
       <button class="btn ghost" data-a="fightmode" title="Đổi kiểu chiến đấu cho các trận sau">${META.opt&&META.opt.turn?'Đánh: theo lượt':'Đánh: thời gian thực'}</button>
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
@@ -241,6 +329,36 @@ function renderLog(){
   el.scrollTop=el.scrollHeight;
 }
 
+/* ---------- Huy hiệu điều kiện & Giá phải trả của lựa chọn ---------- */
+function choiceExtraMeta(c, ok){
+  let res = '';
+  // Cái giá phải trả (Cost)
+  if(c.costT){
+    res += `<span class="pill cost">Tiêu hao: ${esc(c.costT)}</span>`;
+  }else if(c.cost && typeof c.cost === 'object'){
+    const costs = [];
+    if(c.cost.stones) costs.push(`−${c.cost.stones} thạch`);
+    if(c.cost.hp) costs.push(`−${c.cost.hp} khí huyết`);
+    if(c.cost.ess) costs.push(`−${c.cost.ess} chân nguyên`);
+    if(c.cost.blood) costs.push(`−${c.cost.blood} huyết khí`);
+    if(c.cost.susp) costs.push(`+${c.cost.susp} hiềm nghi`);
+    if(costs.length) res += `<span class="pill cost">${costs.join(' · ')}</span>`;
+  }
+  // Mức độ rủi ro (Risk)
+  if(c.riskT){
+    res += `<span class="pill risk">Nguy cơ: ${esc(c.riskT)}</span>`;
+  }else if(c.risk === 'high' || c.risk === true){
+    res += `<span class="pill risk">Hiểm nguy cao</span>`;
+  }
+  // Điều kiện tiên quyết
+  if(!ok && c.reqT){
+    res += `<small class="lock">🔒 ${esc(c.reqT)}</small>`;
+  }else if(ok && c.reqHint){
+    res += `<span class="pill req-ok">✓ ${esc(c.reqHint)}</span>`;
+  }
+  return res;
+}
+
 /* ---------- Sân khấu chính ---------- */
 function choiceBtn(c,i,evId){
   const ok=!c.req||c.req();
@@ -253,7 +371,8 @@ function choiceBtn(c,i,evId){
     const lbl=S.ngo>=10?`${p}%`:p>=75?'Dễ':p>=50?'Vừa':p>=25?'Khó':'Rất khó';
     chk=`<span class="odds ${p>=75?'e':p>=50?'m':p>=25?'h':'x'}">${ATTR[c.check[0]]} · ${lbl}</span>`;
   }
-  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${!ok&&c.reqT?`<small class="lock">🔒 ${esc(c.reqT)}</small>`:''}</span></button>`;
+  const extra = choiceExtraMeta(c, ok);
+  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${extra}</span></button>`;
 }
 
 function scChoiceBtn(c, i, sc){
@@ -272,9 +391,10 @@ function scChoiceBtn(c, i, sc){
     const rate = chance(c.check[0], c.check[1], bonus);
     chk = `<span class="pill ${rate >= 70 ? 'good' : rate >= 40 ? 'gold' : 'danger'}">${ATTR[c.check[0]]||c.check[0]} ${rate}%</span>`;
   }
+  const extra = choiceExtraMeta(c, ok);
   return `<button class="choice ${c.stay ? 'stay' : ''}" data-sc-ch="${i}" ${ok ? '' : 'disabled'}>
     <span class="ct">${esc(c.t)}</span>
-    <span class="cmeta">${chk}${tags}${!ok && c.reqT ? `<small class="lock">🔒 ${esc(c.reqT)}</small>` : ''}</span>
+    <span class="cmeta">${chk}${tags}${extra}</span>
   </button>`;
 }
 
@@ -406,10 +526,16 @@ function renderStage(){
   const head=(t,sub)=>`<div class="headrow"><div><span class="label">${sub||''}</span><h2 class="title">${t}</h2></div><button class="btn" data-a="close">Quay lại bản đồ</button></div>`;
   if(S.panel==='tuluyen'){
     const cap=cultMaxStones(),opts=[...new Set([0,Math.ceil(cap/2),cap])].filter(n=>n<=S.stones);
+    const cc=typeof cultCapped==='function'&&cultCapped();
     st.innerHTML=`<div class="paper">${head('Bế quan tu luyện','Mười ngày trong phòng kín')}
+      ${cc?`<div class="banner warning" style="padding:10px 14px;margin-bottom:12px;border-radius:6px;background:rgba(210,140,30,0.18);border:1px solid #d93;color:#ffd866;font-size:13px;line-height:1.5"><b>⚠️ CẢNH BÁO:</b> ${cc.msg}</div>`:''}
       <p class="dimt">Chân nguyên hiện có ${Math.floor(S.ess)}. Mỗi viên nguyên thạch hồi 5 chân nguyên; một lần bế quan chỉ hấp thu tới khi không khiếu đầy thêm một lần (tối đa ${cap} viên). Hệ số tu luyện ×${cultMult().toFixed(2)}.${S.inj&&S.inj.k==='kinh'?' Kinh mạch tổn hại làm tu luyện chậm đi.':''}</p>
-      <div class="act-grid-rich">${opts.map(n=>`<button class="act-card-rich" data-cult="${n}"><div class="act-icon">修</div>
-        <div class="act-text"><b>${n?`Dùng thêm ${n} nguyên thạch`:'Chỉ dùng chân nguyên'}</b><small class="gold">Tu vi +${Math.round((Math.floor(S.ess)+n*5)*cultMult()*(.4+.2*apLeft()))}</small></div></button>`).join('')}</div></div>`;
+      <div class="act-grid-rich">${opts.map(n=>{
+        const g=Math.round((Math.floor(S.ess)+n*5)*cultMult()*(.4+.2*apLeft()));
+        const dis=cc||g<=0;
+        return `<button class="act-card-rich ${dis?'exhausted':''}" data-cult="${n}" ${dis?'disabled':''} style="${dis?'opacity:0.55;cursor:not-allowed':''}"><div class="act-icon">修</div>
+        <div class="act-text"><b>${n?`Dùng thêm ${n} nguyên thạch`:'Chỉ dùng chân nguyên'}</b><small class="gold">${cc?'(Bị chặn bởi cảnh giới)':g<=0?'(Chân nguyên cạn)':`Tu vi +${g}`}</small></div></button>`;
+      }).join('')}</div></div>`;
     return;
   }
   if(S.panel==='gamble'){
@@ -458,7 +584,13 @@ function renderStage(){
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
         ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
       <div class="map-cap"><span class="label">${timeLabel()} · việc ${Math.min(AP_WEEK,AP_WEEK-S.ap+1)}/${AP_WEEK}</span><h2>${S.ap>=AP_WEEK?'Tuần này đi đâu?':S.ap>0?`Còn ${S.ap} việc trong tuần`:(S.pend?'Đã hết việc · Bấm Đối mặt để tiếp tục':'Đã hết việc · Bấm Qua tuần để tiếp tục')}</h2></div>
-      ${spots.map(s=>`<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${s.n}</span><span class="stip">${s.d}${s.minor?'':s.id==='tuluyen'?' · dùng hết việc còn lại trong tuần':' · 1 việc'}</span></button>`).join('')}
+      ${spots.map(s=>{
+        const isTuLuyen = s.id==='tuluyen';
+        const cc = isTuLuyen && typeof cultCapped==='function' && cultCapped();
+        const lbl = cc ? `${s.n} (Viên mãn)` : s.n;
+        const tip = cc ? cc.msg : `${s.d}${s.minor?'':isTuLuyen?' · dùng hết việc còn lại trong tuần':' · 1 việc'}`;
+        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
+      }).join('')}
     </div>
     <div class="map-foot">
       <button class="btn" data-a="absorb" ${S.stones<5||S.ess>=maxEss()?'disabled':''}>Hấp thu 5 nguyên thạch (+25 chân nguyên)</button>
@@ -621,6 +753,9 @@ document.addEventListener('keydown',ev=>{
   }
   if(ev.key==='c'||ev.key==='C'){
     const b=document.getElementById('codexBtn');if(b){ev.preventDefault();b.click()}
+  }
+  if(ev.key==='j'||ev.key==='J'){
+    const b=document.getElementById('journalBtn');if(b){ev.preventDefault();b.click()}
   }
   if(ev.key==='m'||ev.key==='M'){
     if(S.panel||S.mg){ev.preventDefault();S.panel=null;S.mg=null;saveAll();render()}

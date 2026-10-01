@@ -62,7 +62,11 @@ Object.assign(EV,{
 q2_bq_lo:{canon:1,title:'Địa linh Bá Quy',hint:'Rùa đá trong sương',g:'龟',who:'baquy',
   text:()=>'Một con rùa đá khổng lồ, mai phủ rêu, cất tiếng trong đầu ngươi. Nó là Địa linh, linh thể chấp niệm của chủ nhân phúc địa. Nó tìm ngươi vì trên người ngươi có bí phương Đệ Nhị Không Khiếu cổ.',
   choices:()=>[
-    {t:'Nhận hợp tác',canon:1,eff:()=>{meet('baquy');rel('baquy',30);S.f.baquy=1;S.f.baquyTin=2;return 'Tam Vương khi xưa chỉ là ba đệ tử kế thừa thất bại. Mục đích thật của phúc địa là luyện Đệ Nhị Không Khiếu cổ: tiên cổ Lục chuyển cho cổ sư một không khiếu thứ hai.'}},
+    {t:'Nhận hợp tác',canon:1,eff:()=>{
+      meet('baquy');rel('baquy',30);S.f.baquy=1;S.f.baquyTin=2;
+      if(typeof storySetOutcome==='function') storySetOutcome('baquy_spirit','cooperation_established',{choiceText:'Tiếp xúc và đạt thỏa thuận bí mật với Địa linh Bá Quy',isLech:false,note:'Nắm giữ quyền kiểm soát một phần phúc địa, chuẩn bị đại kế nghịch thiên.'});
+      return 'Tam Vương khi xưa chỉ là ba đệ tử kế thừa thất bại. Mục đích thật của phúc địa là luyện Đệ Nhị Không Khiếu cổ: tiên cổ Lục chuyển cho cổ sư một không khiếu thứ hai.';
+    }},
     {t:'Đòi nó trả giá trước',tag:'ma',check:['tamco',15],ok:()=>{meet('baquy');S.f.baquy=1;S.f.baquyTin=1;S.stones+=200;return 'Nó mở kho còn sót của phúc địa. +200 nguyên thạch.'},fail:()=>{meet('baquy');S.f.baquy=1;S.f.baquyTin=0;return 'Nó im lặng rất lâu rồi mới đồng ý.'}},
   ]},
 q2_bq_chapniem:{canon:1,title:'Chấp niệm',hint:'Nguyên liệu tiên cổ',g:'鼎',who:'baquy',
@@ -117,8 +121,16 @@ Object.assign(AFTER,{
   q2_bq_san:()=>{const n=rand(80,150);S.stones+=n;log(`Túi của kẻ lạc đường: ${n} nguyên thạch.`,'gold')},
   q2_bq_hut:()=>{S.f.bqHut=(S.f.bqHut||0)+1;log('Cự đầu kia thoát được. Phúc địa ngày càng nguy hiểm.','danger')},
   q2_bq_lynhan:()=>{S.stones+=300;log('Lý Nhàn bị lột sạch gia tài. +300 nguyên thạch.','big')},
-  q2_bq_mobach:()=>{S.f.giet_mobach=1;S.stones+=400;gainGu('kimquang');gainGu('hoangkimnhan');S.danh+=30;log('Thiết Mộ Bạch, Ngũ chuyển đỉnh phong, chết không kịp quay đầu. Kim Quang cổ, Hoàng Kim Nhãn về tay ngươi; không khiếu và huyết nhục của lão vào vạc.','big');S.f.bqThach=(S.f.bqThach||0)+300},
-  q2_bq_ocat:()=>{S.f.giet_ocat=1;S.stones+=300;gainGu('hondao');S.f.bqThach=(S.f.bqThach||0)+250;S.evq.push('q2_bq_khomac2');log('Ô Cật chết tại chỗ. Ngươi thu hồn phách và hồn đạo cổ của lão.','big')},
+  q2_bq_mobach:()=>{
+    S.f.giet_mobach=1;S.stones+=400;gainGu('kimquang');gainGu('hoangkimnhan');S.danh+=30;
+    if(typeof storySetOutcome==='function') storySetOutcome('assassinate_mobach','mobach_slain',{choiceText:'Địa linh khóa cổ, đánh vỡ gáy Thiết Mộ Bạch Ngũ chuyển đỉnh phong',isLech:false,note:'Đoạt Kim Quang Cổ, Hoàng Kim Nhãn, thu thập không khiếu cự đầu làm dược dẫn.'});
+    log('Thiết Mộ Bạch, Ngũ chuyển đỉnh phong, chết không kịp quay đầu. Kim Quang cổ, Hoàng Kim Nhãn về tay ngươi; không khiếu và huyết nhục của lão vào vạc.','big');S.f.bqThach=(S.f.bqThach||0)+300;
+  },
+  q2_bq_ocat:()=>{
+    S.f.giet_ocat=1;S.stones+=300;gainGu('hondao');S.f.bqThach=(S.f.bqThach||0)+250;S.evq.push('q2_bq_khomac2');
+    if(typeof storySetOutcome==='function') storySetOutcome('assassinate_heads','heads_harvested',{choiceText:'Liên hoàn tàn sát Vu Quỷ Ô Cật, Khổ Mặc và thu phục Cừu Cửu',isLech:false,note:'Xóa sổ toàn bộ cự đầu Ngũ chuyển trong phúc địa, gom đủ tài nguyên luyện tiên cổ.'});
+    log('Ô Cật chết tại chỗ. Ngươi thu hồn phách và hồn đạo cổ của lão.','big');
+  },
   q2_bq_khomac:()=>{S.f.giet_khomac=1;S.stones+=300;S.f.bqThach=(S.f.bqThach||0)+250;log('Khổ Mặc bị đánh nát xương tủy.','big')},
   q2_bq_cuucuu:()=>{S.f.bqThach=(S.f.bqThach||0)+150;log('Quỷ Y chết. Sinh Tử Môn mất một môn đồ, và sẽ không quên.','danger')},
 });

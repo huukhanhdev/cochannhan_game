@@ -28,7 +28,7 @@ function baiLesson(){
   if(Math.random()<.3){S.satphat++;log('Đối luyện với nàng mài giũa bản năng. Sát phạt +1.','good')}
 }
 
-CHAPTERS.q2_hoanglong={n:'Sông Hoàng Long',title:'Quyển hai · Chương một · Sông Hoàng Long',unit:'tuần',turns:9,bg:'bg_forest',cap:1,
+CHAPTERS.q2_hoanglong={n:'Sông Hoàng Long',title:'Quyển hai · Chương một · Sông Hoàng Long',unit:'tuần',turns:9,bg:'scene_hoang_long_river',cap:1,
   intro:'Bè gỗ trôi theo dòng Hoàng Long, xa dần Thanh Mao Sơn đã chìm trong băng.',
   ask:'Tuần này làm gì?',
   canon:{1:'q2_hl_be',2:'q2_hl_codoi',3:'q2_hl_muon',4:'q2_hl_casau',6:'q2_hl_phonghan',7:'q2_hl_dungnham',8:'q2_hl_thuyhoa',9:'q2_hl_ket'},

@@ -1,7 +1,7 @@
 // Quyển 2 · Chương 2.2: Bạch Cốt Sơn và Bách gia (canon VN 228–257)
 // Mạo danh "Cổ Nguyệt Phương Chính", đại săn, truyền thừa Hôi Cốt Tài Tử, Cốt Nhục Đoàn Viên, trốn bằng Vô Túc Điểu.
 
-CHAPTERS.q2_bachcot={n:'Bạch Cốt Sơn',title:'Quyển hai · Chương hai · Bạch Cốt Sơn',unit:'tuần',turns:10,bg:'bg_snow',cap:2,
+CHAPTERS.q2_bachcot={n:'Bạch Cốt Sơn',title:'Quyển hai · Chương hai · Bạch Cốt Sơn',unit:'tuần',turns:10,bg:'scene_bach_cot',cap:2,
   intro:'Bách gia dựng trại dưới chân núi xương. Láng giềng của họ là Phương gia, Liêu gia, Phạm gia.',
   ask:'Tuần này làm gì?',shop:Q2_SHOP.bachcot,
   canon:{1:'q2_bc_toi',2:'q2_bc_maodanh',3:'q2_bc_daisan',4:'q2_bc_tiec',5:'q2_bc_dausan',6:'q2_bc_thietgia',7:'q2_bc_hang',8:'q2_bc_sanh',9:'q2_bc_suho',10:'q2_bc_tron'},

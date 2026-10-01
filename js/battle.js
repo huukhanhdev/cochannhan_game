@@ -67,15 +67,20 @@ const PORTRAIT={heorung:'p_boar',dienlang:'p_wolf',hachung:'p_bear',tanbinh:'p_c
   docxa:'p_boar',bao:'p_wolf',hauquan:'p_jar',hunglam:'p_cultivator',sontacvuong:'p_cultivator',bachmaon:'p_bear',tramthuysat:'p_giave',
   phuongchinh:'p_phuongchinh',thanhthu:'p_thanhthu',nhuocnam:'p_thietnhuocnam',macnhan:'p_cultivator'};
 const PTINT={docxa:0xa8f0a0,bao:0xffd890,bachmaon:0xf4fbff,hunglam:0xeed0b0,phuongchinh:0xcfe8ff,tramthuysat:0xffb0b0,tiexueleng:0xd8dde2,nhatdai:0xff8a70,loiquan:0xcfe2ff,dlbay:0xdde6ee,kimsinh:0xf2e0b4,hunggia:0xeed0b0,baitrinhsat:0xe4edf4,baicosu:0xe4edf4,cosusay:0xf0dcc0,madutam:0xffc2b4};
-const BGIMG={forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_wine',blood:'bg_blood',snow:'bg_snow',fire:'bg_fire'};
+const BGIMG={
+  forest:'bg_forest',village:'bg_village',tide:'bg_tide',wine:'bg_wine',blood:'bg_blood',snow:'bg_snow',fire:'bg_fire',
+  shang_city:'scene_shang_city',tam_xoa:'scene_tam_xoa_mountain',hutien:'scene_hutien_blessed',hoang_long:'scene_hoang_long_river',bach_cot:'scene_bach_cot'
+};
 // Tranh minh họa kinh điển cho các mốc sự kiện lớn (Quyển 1 & Quyển 2)
 const EVENT_ILLUSTRATIONS={
   c_khaikhieu:'scene_fy_moonlight',
+  c_nhanthu:'scene_yaole_bear',
   c_lang2:'scene_qingshu_vs_bai',
   c_bai:'scene_fy_bnb_vol1',
   c_nhatdai:'scene_first_ancestor_blood',
   c_final:'scene_bnb_ice',
   q2_hl_be:'scene_fy_bnb_vol2',
+  q2_td_cuu:'scene_kindness_shang',
   q2_tc_phe:'scene_fy_shangxinci',
   q2_bc_tron:'scene_footless_bird_fly',
   q2_tx_himi:'scene_three_kings_entrance',
@@ -93,8 +98,8 @@ const EV_SCENE={
 // Phông nền theo vị trí
 const LOC_SCENE={
   hocduong:'village',trai:'village',nui:'forest',nhiemvu:'forest',diso:'forest',
-  hl_song:'forest',hl_rung:'forest',bc_nui:'snow',bc_dong:'snow',td_doan:'forest',
-  tc_thanh:'village',tx_nui:'forest',ng_hotien:'forest',bq_dong:'blood',pb_phuc:'forest'
+  hl_song:'hoang_long',hl_rung:'forest',bc_nui:'bach_cot',bc_dong:'bach_cot',td_doan:'forest',
+  tc_thanh:'shang_city',tx_nui:'tam_xoa',ng_hotien:'hutien',bq_dong:'blood',pb_phuc:'hutien'
 };
 function eventArt(id){
   const ev=EV[id]||{};

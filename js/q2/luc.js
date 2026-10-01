@@ -13,7 +13,7 @@ Object.assign(GU,{
   quyluc:{n:'Thạch Quy Phụ Lực Cổ',r:3,food:5,fn:'đá vụn',t:'passive',atk:9,beast:'Quy',p:320,d:'Thể lực trầm tĩnh như rùa đá cõng bia. Mọi đòn +9, thêm hư ảnh Quy.'},
   tuongluc:{n:'Bạch Tượng Bổn Lực Cổ',r:3,food:6,fn:'lá chuối',t:'passive',atk:10,beast:'Tượng',p:420,d:'Sức voi trắng nghiền nát vạn vật. Mọi đòn +10, thêm hư ảnh Tượng.'},
   mangluc:{n:'Hắc Mãng Triền Lực Cổ',r:3,food:6,fn:'trứng rắn',t:'passive',atk:9,beast:'Mãng',p:400,d:'Sức siết của trăn đen. Mọi đòn +9, thêm hư ảnh Mãng.'},
-  toanluc:{n:'Toàn Lực Ứng Phó',r:3,food:6,fn:'thịt thú tươi',t:'passive',p:900,d:'Cổ lực đạo thượng cổ đã tuyệt tích. Mọi quyền đều hiện đủ hư ảnh thú lực.'},
+  toanluc:{n:'Toàn Lực Dĩ Phó Cổ',r:3,food:6,fn:'thịt thú tươi',t:'passive',p:900,d:'Cổ lực đạo thượng cổ đã tuyệt tích (Toàn Lực Ứng Phó / Toàn Lực Dĩ Phó). 100% mọi quyền đều phát huy toàn bộ hư ảnh thú lực.'},
   kholuc:{n:'Khổ Lực Cổ',r:4,food:8,fn:'máu tươi',t:'passive',p:1600,d:'Càng bị thương nặng, càng đau, lực càng lớn. Mất bao nhiêu phần trăm khí huyết thì mọi đòn nặng thêm bấy nhiêu, tối đa 80%.'},
   khiluc:{n:'Khí Lực Cổ',r:3,food:5,fn:'gió núi',t:'attack',cost:18,pierce:1,p:1200,get dmg(){return 20+11*beastCount()},d:'Tôi luyện từ Phong Khí Cổ, sinh lực chi khí kình: hư ảnh vô hình hóa thực, lao ra xa công sát. Sát thương theo số hư ảnh.'},
   tulucsinh:{n:'Tự Lực Cánh Sinh',r:3,food:5,fn:'thịt tươi',t:'heal',cost:14,p:450,get healAmt(){return 30+10*beastCount()},d:'Cổ trị liệu lực đạo độc nhất: lực càng lớn, hồi phục càng nhanh. Hồi khí huyết theo sức mạnh và số hư ảnh.'},

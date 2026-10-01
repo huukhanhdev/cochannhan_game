@@ -1,7 +1,7 @@
 // Quyển 2 · Chương 2.5: Thiếu chủ (canon VN 391–406)
 // Độc quyền cổ vào truyền thừa, đưa Thương Tâm Từ lên thiếu chủ, thu người cho nàng, lên Tứ chuyển.
 
-CHAPTERS.q2_thieuchu={n:'Thiếu chủ',title:'Quyển hai · Chương năm · Thiếu chủ',unit:'tháng',turns:6,bg:'bg_village',cap:4,
+CHAPTERS.q2_thieuchu={n:'Thiếu chủ',title:'Quyển hai · Chương năm · Thiếu chủ',unit:'tháng',turns:6,bg:'scene_shang_city',cap:4,
   intro:'Còn nửa năm trước khi Tam Vương truyền thừa mở. Trước khi đi, ngươi còn nợ Tâm Từ một lời hứa.',
   ask:'Tháng này làm gì?',shop:Q2_SHOP.thanh,
   canon:{1:'q2_tc_tin',2:'q2_tc_phe',3:'q2_tc_com',4:'q2_tc_vedh',5:'q2_tc_chutoan',6:'q2_tc_ket'},

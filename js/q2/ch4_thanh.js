@@ -37,7 +37,7 @@ function tamtuCity(){
   }
 }
 
-CHAPTERS.q2_thanh={n:'Thương gia thành',title:'Quyển hai · Chương bốn · Thương gia thành',unit:'tháng',turns:14,bg:'bg_village',cap:3,
+CHAPTERS.q2_thanh={n:'Thương gia thành',title:'Quyển hai · Chương bốn · Thương gia thành',unit:'tháng',turns:14,bg:'scene_shang_city',cap:3,
   intro:'Thương gia thành đào vào lòng núi Thương Lượng, mười bốn tầng đường, năm khu. Khu ngoài có khách điếm nửa viên thạch một đêm; khu trong là con cháu Thương gia.',
   ask:'Tháng này làm gì?',shop:Q2_SHOP.thanh,
   start:()=>{

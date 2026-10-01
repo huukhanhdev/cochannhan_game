@@ -18,7 +18,7 @@ function triggerShake(){
 
 /* ---------- lưu trữ ---------- */
 function freshMeta(){
-  return {life:1,mem:{},deaths:[],wins:[],codex:['xuanthu','nguyetquang']};
+  return {life:1,mem:{},deaths:[],wins:[],codex:['xuanthu','nguyetquang'],opt:{fightMode:'tactical',turn:true}};
 }
 function saveAll(){
   try{
@@ -904,6 +904,7 @@ function dmgMult(){
   m*=1+guSum('pow');
   // Khổ Lực: mất bao nhiêu phần trăm khí huyết thì đòn nặng thêm bấy nhiêu, tối đa 80%
   if(hasGu('kholuc'))m*=1+Math.min(.8,Math.max(0,1-S.hp/maxHp()));
+  if(c.tactical&&c.tactical.stagger>0)m*=1.3;
   return m;
 }
 function chillFoe(c,v){
@@ -917,13 +918,37 @@ function costOf(base){return Math.ceil(base*(S.combat&&S.combat.suppress>0?1.5:1
 function guCostIdx(i){const g=S.gu[i];return g?costOf(GU[g.k].cost||0)+(g.h||0)*2:0}
 function guReady(key){const c=S.combat;return !(c&&((c.cd[key]||0)>0||(c.frozen[key]||0)>0))}
 
+// Một công thức dùng chung cho resolver và dự báo. Hàm này chỉ đọc state.
+function enemyDamageFromRaw(c,raw,mult,opt,guardStance){
+  opt=opt||{};
+  let d=raw*mult*(1+c.atkBuff+fury(c));
+  if(guardStance&&!opt.pierce)d*=.65;
+  if(c.shield>0&&!opt.pierce)d*=c.shieldRed;
+  d*=1-Math.min(.4,guSum('armor'));
+  return Math.max(1,Math.round(d));
+}
+function enemyIntentSpec(c){
+  if((c.stun||0)>0||c.intent==='guard')return null;
+  if(c.intent==='heavy')return {mult:2,opt:{heavy:true}};
+  if(c.intent!=='skill'||!c.sk)return {mult:1,opt:{}};
+  return {
+    charge:{mult:1.7,opt:{heavy:true}},howl:{mult:.6,opt:{}},rage:{mult:1.5,opt:{heavy:true}},
+    poison:{mult:.6,opt:{}},freeze:{mult:.6,opt:{}},drain:{mult:.5,opt:{}},regen:null,
+    thunder:{mult:1.6,opt:{pierce:true,heavy:true}},suppress:{mult:.5,opt:{}}
+  }[c.sk]||{mult:1,opt:{}};
+}
+function enemyIntentRange(c,guardStance){
+  const sp=enemyIntentSpec(c);if(!sp)return null;
+  return [enemyDamageFromRaw(c,c.atk[0],sp.mult,sp.opt,guardStance),enemyDamageFromRaw(c,c.atk[1],sp.mult,sp.opt,guardStance)];
+}
+
 // Đòn của địch đánh vào người chơi (qua hộ thể nếu có)
 function enemyHit(c,mult,opt){
   opt=opt||{};
-  let d=rand(c.atk[0],c.atk[1])*mult*(1+c.atkBuff+fury(c));
-  if(c.shield>0&&!opt.pierce){d*=c.shieldRed;c.shield--}
-  d*=1-Math.min(.4,guSum('armor'));
-  d=Math.max(1,Math.round(d));
+  const stance=!!(c.tactical&&c.tactical.guardStance);
+  const d=enemyDamageFromRaw(c,rand(c.atk[0],c.atk[1]),mult,opt,stance);
+  if(c.shield>0&&!opt.pierce)c.shield--;
+  if(c.tactical)c.tactical.guardStance=false;
   S.hp-=d;
   FX.q({type:'eatk',dmg:d,heavy:!!opt.heavy});
   if(window.SFX)SFX.hit();
@@ -979,6 +1004,9 @@ function playerAct(type,arg){
   const c=S.combat;if(!c||FX.busy||c.ko)return;
   // Trận thời gian thực: lệnh cũ (tua nhanh, bot) chạy người chơi máy một đoạn
   if(c.rt){rtRun(type==='flee'?3:1.5);return}
+  if(typeof TacticalBattle!=='undefined'&&TacticalBattle.isEnabled()&&(!c.tactical||c.tactical.phase!=='resolving')){
+    return TacticalBattle.executeTacticalTurn(type,arg);
+  }
   const vary=()=>.85+Math.random()*.3;
   let attacked=false;
   const hitFoe=(raw,pierce,ev,aoe)=>{
@@ -988,11 +1016,16 @@ function playerAct(type,arg){
       log(`${c.n} lách người, đòn đánh trượt.`,'danger');return 0;
     }
     let d=raw*(pierce?1:dmgMult())*counterMult(c,aoe);
-    if(!pierce)d-=c.def;
+    if(!pierce)d-=c.def*((c.tactical&&c.tactical.stagger>0)?.5:1);
     d=Math.max(1,Math.round(d));
     c.hp-=d;ev.dmg=d;FX.q(ev);return d;
   };
-  if(type==='strike'){
+  if(type==='guard_stance'){
+    if(!c.tactical)return;
+    c.tactical.guardStance=true;
+    FX.q({type:'shield',k:'stance'});
+    log('Ngươi thu thế giữ trọng tâm: đòn trực tiếp kế tiếp giảm 35% sát thương.','good');
+  }else if(type==='strike'){
     if(window.SFX)SFX.blade();
     const lm=typeof lucStrike==='function'?lucStrike():{m:1};
     const d=hitFoe(baseAtk()*vary()*lm.m,false,{type:'patk',kind:'fist'});
@@ -1065,9 +1098,12 @@ function playerAct(type,arg){
     FX.q({type:'heal',amt:30});if(window.SFX)SFX.bell();
     log('Nhai một gốc linh dược. Khí huyết +30, giải độc.','good');
   }else if(type==='absorb'){
-    if(S.stones<5||S.ess>=maxEss())return;
-    S.stones-=5;S.ess=Math.min(maxEss(),S.ess+20);if(window.SFX)SFX.coin();
-    log('Giữa trận, ngươi bóp nát 5 viên nguyên thạch. Chân nguyên +20.','sys');
+    const ts=c.tactical,cap=ts?ts.essCycleCap:maxEss();
+    if(S.stones<5||(S.ess>=cap&&cap>=maxEss()))return;
+    S.stones-=5;
+    if(ts)ts.essCycleCap=Math.min(maxEss(),ts.essCycleCap+20);
+    S.ess=Math.min(ts?ts.essCycleCap:maxEss(),S.ess+20);if(window.SFX)SFX.coin();
+    log(`Giữa trận, ngươi bóp nát 5 viên nguyên thạch. Chân nguyên +20${ts?`, trần tuần hoàn ${ts.essCycleCap}`:''}.`,'sys');
   }else if(type==='flee'){
     if(!c.flee)return;
     const fleeBonus=(hasGu('anlan')?.2:0)+(hasGu('tienlydilang')?.5:0);
@@ -1262,7 +1298,27 @@ document.addEventListener('click',ev=>{
       case 'breakthrough':beginBreakthrough();return;
       case 'absorb':absorb();return;
       case 'pend':goPend();return;
-      case 'fightmode':(META.opt=META.opt||{}).turn=!META.opt.turn;saveAll();render();return;
+      // === [BATTLE-01/02: TACTICAL TURN-BASED] START ===
+      case 'fightmode': {
+        if(S.combat)return;
+        META.opt = META.opt || {};
+        const cur = META.opt.fightMode || (META.opt.turn ? 'turn' : 'rt');
+        if (cur === 'rt') {
+          META.opt.fightMode = 'tactical';
+          META.opt.turn = true;
+          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Đấu trí】 — theo lượt, có ý đồ và chân nguyên tuần hoàn.', 'good');
+        } else if (cur === 'tactical') {
+          META.opt.fightMode = 'turn';
+          META.opt.turn = true;
+          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Theo Lượt Cổ Điển】.', 'sys');
+        } else {
+          META.opt.fightMode = 'rt';
+          META.opt.turn = false;
+          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Thời Gian Thực (RT)】.', 'sys');
+        }
+        saveAll();render();return;
+      }
+      // === [BATTLE-01/02: TACTICAL TURN-BASED] END ===
       case 'endweek':endWeek();return;
       case 'rebirth':cicadaScene('dead',rebirth);return;
       case 'chapretry':cicadaScene('dead',restartChapter);return;
@@ -1316,6 +1372,12 @@ function start(data){
   if(data&&data.S&&data.META){S=data.S;META=data.META}
   else{const l=loadAll();if(l){S=l.s;META=l.m}else{META=freshMeta();newLife()}}
   S.mod=S.mod||{};S.var=S.var||{};S.world=S.world||[];S.cache=S.cache||[];S.mem=S.mem||{};S.combos=S.combos||{};
+  META.opt=META.opt||{};
+  if(!META.opt.fightMode){
+    if(META.opt.turn===true)META.opt.fightMode='turn';
+    else if(META.opt.turn===false)META.opt.fightMode='rt';
+    else{META.opt.fightMode='tactical';META.opt.turn=true}
+  }
   S.drift=S.drift||0;S.driftStep=S.driftStep||0;S.later=S.later||[];
   if(S.combat&&S.combat.rt)S.combat.rt.paused=true;
   if(S.ap===undefined)S.ap=S.acted?0:AP_WEEK;if(S.pend===undefined)S.pend=null;

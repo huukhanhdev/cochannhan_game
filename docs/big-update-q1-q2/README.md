@@ -24,7 +24,9 @@ Giữ bản sắc tu luyện, cổ trùng, mưu kế và trùng sinh. Bản nân
 | [05_CONTENT_QUYEN_2.md](05_CONTENT_QUYEN_2.md) | Nâng cấp cả chín chương, ba truyền thừa, đồng hành, phản bội và kết cục |
 | [06_KE_HOACH_TRIEN_KHAI.md](06_KE_HOACH_TRIEN_KHAI.md) | Thứ tự PR, file cần sửa, hợp đồng dữ liệu, kiểm tra canon, save và nghiệm thu |
 | [07_REVIEW_IMPLEMENTATION.md](07_REVIEW_IMPLEMENTATION.md) | Review triển khai gameplay/UI và trạng thái sửa các lỗi R1–R7 |
-| [08_UI_ART_DIRECTION_V2.md](08_UI_ART_DIRECTION_V2.md) | Đề xuất thay bố cục ba cột bằng sân khấu lớn; mỹ thuật, màn hình, tương tác, asset và lộ trình UI V2 |
+| [08_UI_ART_DIRECTION_V2.md](08_UI_ART_DIRECTION_V2.md) | Đề xuất thay khung đã dừng; giữ làm lịch sử tham khảo |
+| [09_UI_POLISH_GIU_KHUNG_HIEN_TAI.md](09_UI_POLISH_GIU_KHUNG_HIEN_TAI.md) | **Hướng UI hiện hành:** giữ khung game, nâng art/ánh sáng/thẻ cổ/combat; chia PR nhỏ, preview trên game thật |
+| [10_BATTLE_THEO_LUOT_CHIEN_THUAT.md](10_BATTLE_THEO_LUOT_CHIEN_THUAT.md) | **Battle:** theo lượt làm trọng tâm; ý đồ, tạo/phá thế, bộ cổ, mục tiêu riêng, VFX/audio và 6 PR triển khai |
 
 ## 3. Hiện trạng đã đọc trong mã
 

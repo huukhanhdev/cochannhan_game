@@ -1,5 +1,7 @@
 # UI V2 — Sân khấu sơn thủy, hành trình nghịch mệnh
 
+> **Đã dừng theo phản hồi người dùng.** Không tiếp tục hướng thay khung hoặc prototype Nghịch Mệnh. Kế hoạch hiện hành: [09 — Giữ khung hiện tại, polish UI](09_UI_POLISH_GIU_KHUNG_HIEN_TAI.md). Nội dung bên dưới chỉ lưu lại lịch sử đề xuất.
+
 Ngày: 01/10/2026. **Trạng thái: kế hoạch thiết kế; chưa triển khai UI V2.**
 
 Đề xuất thay bố cục ba cột hiện tại bằng giao diện lấy cảnh và hành động làm trung tâm. Bản này thay định hướng bố cục ở [02_UI_UX.md](02_UI_UX.md); tiếp tục dùng các yêu cầu về tính dễ hiểu, mobile và accessibility của tài liệu đó, cùng nguyên tắc hiệu ứng ở [03_EFFECT_AUDIO.md](03_EFFECT_AUDIO.md).

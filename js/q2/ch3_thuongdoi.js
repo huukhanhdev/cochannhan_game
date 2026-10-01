@@ -40,7 +40,7 @@ function tradeRun(){
   }
 }
 
-CHAPTERS.q2_thuongdoi={n:'Thương đội',title:'Quyển hai · Chương ba · Thương đội',unit:'tuần',turns:12,bg:'bg_village',cap:2,
+CHAPTERS.q2_thuongdoi={n:'Thương đội',title:'Quyển hai · Chương ba · Thương đội',unit:'tuần',turns:12,bg:'bg_forest',cap:2,
   intro:'Dưới chân núi Tử U có một thôn phàm nhân. Tường đá thấp, người trong thôn không ưa người lạ.',
   ask:'Tuần này làm gì trong đoàn?',shop:Q2_SHOP.thuongdoi,
   start:()=>{S.stones=Math.max(S.stones,20)},

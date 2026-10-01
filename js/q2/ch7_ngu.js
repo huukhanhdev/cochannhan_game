@@ -2,7 +2,7 @@
 // Thiết Mộ Bạch quét Tam Xoa, Ô Cật, Khổ Mặc, Cừu Cửu, Tiêu Mang. Phương Nguyên ẩn nhẫn, gom nguyên thạch.
 // Cảnh xen Trung Châu: Hồ Tiên phúc địa mở, Phương Chính và Phượng Kim Hoàng leo Đãng Hồn Sơn.
 
-CHAPTERS.q2_ngu={n:'Ngũ chuyển giáng lâm',title:'Quyển hai · Chương bảy · Ngũ chuyển giáng lâm',unit:'tuần',turns:8,bg:'bg_forest',cap:4,
+CHAPTERS.q2_ngu={n:'Ngũ chuyển giáng lâm',title:'Quyển hai · Chương bảy · Ngũ chuyển giáng lâm',unit:'tuần',turns:8,bg:'scene_tam_xoa_mountain',cap:4,
   intro:'Tin Thiết Bá Tu chết lan khắp Nam Cương. Những kẻ thật sự đứng trên đỉnh bắt đầu để mắt tới Tam Xoa Sơn.',
   ask:'Tuần này làm gì?',
   canon:{1:'q2_ng_hotien',2:'q2_ng_nhuocnam',3:'q2_ng_mobach',4:'q2_ng_dangHon',5:'q2_ng_suybai',6:'q2_ng_ocat',7:'q2_ng_tieumang',8:'q2_ng_ket'},

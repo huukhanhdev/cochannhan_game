@@ -4,14 +4,25 @@ const fs=require('fs'),vm=require('vm'),path=require('path');
 const root=path.join(__dirname,'..');
 const noop=()=>{};
 const store={};
+let simSeed=(Number(process.env.SEED)||Date.now())>>>0;
+const simMath=Object.create(Math);
+simMath.random=()=>{simSeed=(simSeed*1664525+1013904223)>>>0;return simSeed/4294967296};
 const ctx={
-  console,Math,JSON,Date,setTimeout:(f)=>f(),clearTimeout:noop,
+  console,Math:simMath,JSON,Date,setTimeout:(f)=>f(),clearTimeout:noop,
   localStorage:{getItem:k=>store[k]??null,setItem:(k,v)=>{store[k]=v},removeItem:k=>{delete store[k]}},
   document:{getElementById:()=>null,addEventListener:noop,querySelectorAll:()=>[],createElement:()=>({getContext:()=>null})},
   matchMedia:()=>({matches:true}),performance:{now:()=>Date.now()},
 };
 ctx.window=ctx;vm.createContext(ctx);
-for(const f of ['data.js','story.js','events.js','living.js','battle.js','minigame.js','auto.js','rt.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js'])vm.runInContext(fs.readFileSync(path.join(root,'js',f),'utf8'),ctx,{filename:f});
+for(const f of ['data.js','story.js','events.js','living.js','battle.js','minigame.js','auto.js','rt.js','ff.js','cicada.js','butterfly.js','q2/core.js','q2/data2.js','q2/luc.js','q2/truyenthua.js','q2/ch1_hoanglong.js','q2/ch2_bachcot.js','q2/ch3_thuongdoi.js','q2/ch4_thanh.js','q2/ch5_thieuchu.js','q2/ch6_tamxoa.js','q2/ch7_ngu.js','q2/ch8_baquy.js','q2/ch9_phanboi.js','tactical_battle.js']){
+  let src=fs.readFileSync(path.join(root,'js',f),'utf8');
+  if(f==='tactical_battle.js'&&process.env.TACTICAL_REGEN){
+    const v=process.env.TACTICAL_REGEN.split(',').map(Number);
+    if(v.length!==4||v.some(n=>!Number.isFinite(n)||n<0))throw new Error('TACTICAL_REGEN cần dạng 2,3,4,5');
+    src=src.replace(/ESS_REGEN:\{1:\d+,2:\d+,3:\d+,4:\d+\}/,`ESS_REGEN:{1:${v[0]},2:${v[1]},3:${v[2]},4:${v[3]}}`);
+  }
+  vm.runInContext(src,ctx,{filename:f});
+}
 // Giao diện không cần trong mô phỏng
 vm.runInContext('function render(){} function showToast(){}',ctx);
 vm.runInContext(fs.readFileSync(path.join(root,'js/engine.js'),'utf8').replace(/window\.claude\?\.hot[\s\S]*$/,''),ctx,{filename:'engine.js'});
@@ -71,9 +82,10 @@ run(`var __bf={diso:0,q:0,memOk:0,memBad:0,lives:0,shift:0};const __ch=choose;ch
 run(`var __rep={n:0,gaps:{}};const __re=randomEvent;randomEvent=function(loc){const ok=__re(loc);if(ok){const id=S.evq[S.evq.length-1];S.__ev=S.__ev||{};if(S.__ev[id]!==undefined){const g=S.turn-S.__ev[id];__rep.gaps[g]=(__rep.gaps[g]||0)+1}S.__ev[id]=S.turn;__rep.n++}return ok}`);
 
 const N=process.env.STORY?0:(+process.argv[2]||200),MAXLIFE=+process.argv[3]||8;
+const SIM_MODE=process.env.TACTICAL?'tactical':process.env.TURN?'turn':'rt';
 const res={drift:{win:[],dead:[]},r11:[],deathRank:[],reach27:0,finalDeaths:0,lives:0,wins:0,firstWinLife:[],deathTurn:[],cause:{},rankAt19:[],rankEnd:[],lifeWins:{},replay:[],firstWin:[]};
 for(let n=0;n<N;n++){
-  run('META=freshMeta();META.opt={turn:'+(!!process.env.TURN)+'};newLife();');
+  run(`META=freshMeta();META.opt={fightMode:'${SIM_MODE}',turn:${SIM_MODE!=='rt'}};newLife();`);
   let won=false,replay=0;
   for(let life=1;life<=MAXLIFE&&!won;life++){
     let steps=0;

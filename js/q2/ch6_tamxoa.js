@@ -1,7 +1,7 @@
 // Quyển 2 · Chương 2.6: Tam Xoa Sơn (canon VN 407–449)
 // Lập hung danh, Khuyển Vương, bỏ mặc Bạch Ngưng Băng bị vây, Tín Vương, Cốt Dực, lấy một đối bảy, Thiết Bá Tu.
 
-CHAPTERS.q2_tamxoa={n:'Tam Xoa Sơn',title:'Quyển hai · Chương sáu · Tam Xoa Sơn',unit:'tuần',turns:14,bg:'bg_forest',cap:4,
+CHAPTERS.q2_tamxoa={n:'Tam Xoa Sơn',title:'Quyển hai · Chương sáu · Tam Xoa Sơn',unit:'tuần',turns:14,bg:'scene_tam_xoa_mountain',cap:4,
   intro:'Tam Xoa Sơn nằm giữa Tả gia và Xa gia. Ba trăm năm trước Vương gia bị Ô gia diệt; ba đứa con sống sót thành Khuyển Vương, Tín Vương, Bạo Vương, rồi đánh thẳng vào Ô gia. Truyền thừa của họ nằm trong một phúc địa Cổ Tiên đã mục nát.',
   ask:'Tuần này làm gì?',
   canon:{1:'q2_tx_toi',2:'q2_tx_himi',3:'q2_tx_tiet',4:'q2_tx_mo',6:'q2_tx_baivay',11:'q2_tx_vien',12:'q2_tx_bay',13:'q2_tx_batu',14:'q2_tx_ket'},

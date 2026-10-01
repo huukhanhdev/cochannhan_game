@@ -80,13 +80,17 @@ const EVENT_ILLUSTRATIONS={
   c_nhatdai:'scene_first_ancestor_blood',
   c_final:'scene_bnb_ice',
   q2_hl_be:'scene_fy_bnb_vol2',
-  q2_td_cuu:'scene_kindness_shang',
+  q2_td_tamtu:'scene_kindness_shang',
+  q2_td_thuongluong:'scene_shang_city',
   q2_tc_phe:'scene_fy_shangxinci',
+  q2_tc_ket:'scene_tam_xoa_mountain',
   q2_bc_tron:'scene_footless_bird_fly',
   q2_tx_himi:'scene_three_kings_entrance',
   q2_tx_toi:'scene_three_kings_entrance',
   q2_bq_phong:'scene_refine_fixed_immortal',
   q2_pb_luyen:'scene_refine_fixed_immortal',
+  q2_pb_phanboi:'scene_blood_skull_refine',
+  q2_ng_hotien:'scene_hutien_blessed',
   q2_ng_dangHon:'scene_danghun_mountain',
   q2_pb_hotien:'scene_little_hu_danghun'
 };
@@ -117,9 +121,14 @@ function combatId(c){return String(c.id||c.k)}
 function renderCombat(st){
   if(S.combat.rt)return renderRT(st);
   const c=S.combat,art=Object.assign({k:c.k},ART[c.k]||{g:'敌',sc:'forest',c:'#ddd6c0'});
+  // === [BATTLE-01/02: TACTICAL TURN-BASED] START ===
+  const isTac=typeof TacticalBattle!=='undefined'&&TacticalBattle.isEnabled();
+  if(isTac)TacticalBattle.ensure(c);
+  // === [BATTLE-01/02: TACTICAL TURN-BASED] END ===
   let arena=$('arena');
   if(!arena||arena.dataset.cid!==combatId(c)){
     st.innerHTML=`
+      ${isTac?TacticalBattle.renderTacticalBar():''}
       <div class="arena" id="arena" data-cid="${esc(combatId(c))}" style="--foe:${art.c}">
         <div class="scene-name">${SCENE_NAME[art.sc]}</div>
         <div class="seal" id="eIntent"></div>
@@ -137,15 +146,24 @@ function renderCombat(st){
 
 function updateCombat(){
   const c=S.combat,e=ESS[S.chuyen];
+  // === [BATTLE-01/02: TACTICAL TURN-BASED] START ===
+  const isTac=typeof TacticalBattle!=='undefined'&&TacticalBattle.isEnabled();
+  if(isTac){
+    TacticalBattle.ensure(c);
+    const th=$('tacticalHud');
+    if(th)th.outerHTML=TacticalBattle.renderTacticalBar();
+  }
+  // === [BATTLE-01/02: TACTICAL TURN-BASED] END ===
   const pc=[];
   if(c.shield>0)pc.push(`<span class="chip shield">玉 Hộ thể ${c.shield} lượt · nhận ${Math.round(c.shieldRed*100)}%${c.reflect?` · phản ${Math.round(c.reflect*100)}%`:''}</span>`);
   if(c.poison>0)pc.push(`<span class="chip bleed">毒 Trúng độc ${c.poison}</span>`);
   if(c.suppress>0)pc.push(`<span class="chip stun">压 Uy áp ${c.suppress}: cổ tốn ×1.5</span>`);
   $('pPlate').innerHTML=`<b>Phương Nguyên</b><span class="rk">${rankName()}</span>
     <div class="mbar hp"><i style="width:${clamp(S.hp/maxHp()*100,0,100)}%"></i><em>${Math.max(0,S.hp)} / ${maxHp()}</em></div>
-    <div class="mbar es" style="--c:${e.c}"><i style="width:${clamp(S.ess/maxEss()*100,0,100)}%"></i><em>${Math.floor(S.ess)} / ${maxEss()} chân nguyên</em></div>
+    ${isTac&&c.tactical?`<div class="mbar es" style="--c:${e.c}"><i style="width:${clamp(S.ess/c.tactical.essCycleCap*100,0,100)}%"></i><em>${Math.floor(S.ess)} / ${c.tactical.essCycleCap} (tuần hoàn)</em></div>`:`<div class="mbar es" style="--c:${e.c}"><i style="width:${clamp(S.ess/maxEss()*100,0,100)}%"></i><em>${Math.floor(S.ess)} / ${maxEss()} chân nguyên</em></div>`}
     ${pc.length?`<div class="chips">${pc.join('')}</div>`:''}`;
   const st=[];
+  if(isTac&&c.tactical&&c.tactical.stagger>0)st.push(`<span class="chip trait" style="background:#78350f;color:#fde68a;">🎯 Lộ Sơ Hở (+30% ST)</span>`);
   if(c.bleed>0)st.push(`<span class="chip bleed">血 Chảy máu ${c.bleed}</span>`);
   if(c.stun>0)st.push(`<span class="chip stun">晕 Choáng ${c.stun}</span>`);
   if(c.atkBuff>0)st.push(`<span class="chip bleed">狂 Lực +${Math.round(c.atkBuff*100)}%</span>`);
@@ -165,18 +183,25 @@ function updateCombat(){
   const combos=COMBOS.filter(cb=>(S.combos||{})[cb.id]&&cb.req.every(k=>hasGu(k)));
   // Lý do không dùng được: đang hồi chiêu, bị băng phong
   const lock=key=>(c.frozen[key]||0)>0?`Bị băng phong ${c.frozen[key]-1||1} lượt`:(c.cd[key]||0)>0?`Hồi chiêu ${c.cd[key]} lượt`:'';
-  const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:typeof lucName==='function'?lucName():'Đánh tay',s:`${typeof lucShow==='function'?lucShow():baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''}`,cls:''}];
+  const energyHint=cost=>isTac?TacticalBattle.energyHint(cost):'';
+  const withEnergy=(text,cost)=>{const hint=energyHint(cost);return hint?`${text} · ${hint}`:text};
+  const sk=[{attr:'data-f="strike"',g:SKILL_GLYPH.strike,n:typeof lucName==='function'?lucName():'Đánh tay',s:`${typeof lucShow==='function'?lucShow():baseAtk()} sát thương${c.def?` (−${c.def} giáp)`:''} · không tốn chân nguyên`,cls:''}];
+  if(isTac){
+    const guarded=typeof enemyIntentRange==='function'?enemyIntentRange(c,true):null;
+    sk.push({attr:'data-f="guard_stance"',g:'守',n:'Thủ thế cơ bản',s:`Không tốn chân nguyên · giảm 35% đòn trực tiếp kế tiếp${guarded?` · dự kiến nhận ${guarded[0]}–${guarded[1]}`:''}`,cls:'stance'});
+  }
   uniq.forEach(x=>{
     const cost=guCostIdx(x.i),lk=lock(x.k),hungry=(S.gu[x.i].h||0)>0;
     const cdInfo=(CD[x.k]||0)>0?` · hồi ${CD[x.k]}`:'';
     sk.push({attr:`data-f="gu" data-i="${x.i}"`,g:SKILL_GLYPH[x.k]||'蛊',img:guImgUrl(x.k),n:x.d.n,cost,dis:!!lk||S.ess<cost,cdl:lk,
-      s:lk||(hungry?'Đang đói · ':'')+(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${x.d.aoe?' · diện rộng':''}${x.d.stun?' · choáng':''}${x.d.chill||x.d.slow?' · giảm lực địch':''}${x.d.bleed?' · chảy máu':''}${x.d.lifesteal?' · hút máu':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${x.d.warm?' · chặn hàn khí':''}${cdInfo}`:`Hồi ${healAmt(x.k)} khí huyết${x.d.cure?' · giải độc':''}${cdInfo}`),
+      s:lk||withEnergy((hungry?'Đang đói · ':'')+(x.d.t==='attack'?`${Math.round(x.d.dmg*rankMult()+passAtk())} sát thương${x.d.pierce?' · xuyên giáp':''}${x.d.aoe?' · diện rộng':''}${x.d.stun?' · choáng':''}${x.d.chill||x.d.slow?' · giảm lực địch':''}${x.d.bleed?' · chảy máu':''}${x.d.lifesteal?' · hút máu':''}${cdInfo}`:x.d.t==='guard'?`Nhận ${Math.round((SHIELD_RED[x.k]||.4)*100)}% sát thương${x.d.warm?' · chặn hàn khí':''}${cdInfo}`:`Hồi ${healAmt(x.k)} khí huyết${x.d.cure?' · giải độc':''}${cdInfo}`),cost),
       cls:x.d.t==='attack'?'atk':x.d.t==='guard'?'grd':'heal'});
   });
-  combos.forEach(cb=>{const cost=costOf(cb.cost),lk=lock(cb.id);sk.push({attr:`data-combo="${cb.id}"`,g:SKILL_GLYPH[cb.id]||'招',n:cb.n,cost,dis:!!lk||S.ess<cost,cdl:lk,s:lk||cb.d+` · hồi ${COMBO_CD}`,cls:'combo'})});
+  combos.forEach(cb=>{const cost=costOf(cb.cost),lk=lock(cb.id);sk.push({attr:`data-combo="${cb.id}"`,g:SKILL_GLYPH[cb.id]||'招',n:cb.n,cost,dis:!!lk||S.ess<cost,cdl:lk,s:lk||withEnergy(cb.d+` · hồi ${COMBO_CD}`,cost),cls:'combo'})});
   const hl=lock('herb');
   sk.push({attr:'data-f="herb"',g:SKILL_GLYPH.herb,n:'Linh dược',s:hl||`Hồi 30, giải độc · còn ${S.herbs}`,dis:S.herbs<1||!!hl,cdl:hl,cls:'heal'});
-  sk.push({attr:'data-f="absorb"',g:'石',n:'Hấp thu nguyên thạch',s:`5 thạch → +20 chân nguyên · còn ${S.stones}`,dis:S.stones<5||S.ess>=maxEss(),cls:''});
+  const absorbCap=isTac?c.tactical.essCycleCap:maxEss(),absorbFull=S.ess>=absorbCap&&absorbCap>=maxEss();
+  sk.push({attr:'data-f="absorb"',g:'石',n:'Hấp thu nguyên thạch',s:isTac?`5 thạch → +20 chân nguyên và mở trần tuần hoàn · còn ${S.stones}`:`5 thạch → +20 chân nguyên · còn ${S.stones}`,dis:S.stones<5||absorbFull,cls:''});
   if(c.flee)sk.push({attr:'data-f="flee"',g:SKILL_GLYPH.flee,n:'Bỏ chạy',s:`${Math.round((.45+S.satphat*.01-(c.boss?.15:0))*100)}% thành công`,cls:'run'});
   if(autoEligible(c))sk.push({attr:'data-auto="1"',g:'自',n:'Tự đánh',s:S.hp<maxHp()*AUTO_STOP?'Khí huyết quá thấp':`Đánh nhanh trận thường, dừng khi khí huyết dưới ${AUTO_STOP*100}%`,dis:S.hp<maxHp()*AUTO_STOP,cls:'auto'});
   $('skillbar').innerHTML=sk.map((x,n)=>`<button class="skill ${x.cls}${x.cdl?' cooling':''}" ${x.attr} ${x.dis||FX.busy?'disabled':''}>

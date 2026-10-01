@@ -1,0 +1,40 @@
+/* Battle theo lượt chiến thuật — bổ sung trực tiếp cho khung game hiện tại. */
+.tactical-hud{display:grid;gap:8px;margin-bottom:8px;padding:10px 12px;border:1px solid var(--line,#2a363c);border-radius:7px;background:linear-gradient(135deg,#121b1f,#172126);box-shadow:inset 0 0 18px rgba(0,0,0,.35);color:var(--text,#dae2dc)}
+.tac-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tac-badge{font-family:var(--display,serif);font-size:16px;font-weight:700;color:var(--moon,#ece8cf)}
+.tac-phase{padding:2px 8px;border:1px solid #365a49;border-radius:99px;background:#14251e;color:#9bd1b4;font-size:10.5px;letter-spacing:.04em}
+.tac-phase.resolving{color:#e4c47c;border-color:#65522c;background:#271f11}
+.tac-grid{display:grid;grid-template-columns:minmax(150px,.7fr) minmax(260px,1.5fr);gap:8px}
+.tac-energy,.tac-intent,.tac-opening{min-width:0;border:1px solid #2b3b42;border-radius:6px;background:rgba(8,14,17,.48)}
+.tac-energy{display:grid;grid-template-columns:1fr auto;gap:1px 8px;align-items:center;padding:8px 10px}
+.tac-energy span{font-size:10.5px;color:var(--dim,#8b9a95)}
+.tac-energy b{grid-column:2;grid-row:1/3;color:#8fd4b4;font-size:16px;font-variant-numeric:tabular-nums}
+.tac-energy small{font-size:10.5px;color:#6fa98e}
+.tac-intent{display:grid;grid-template-columns:36px minmax(0,1fr);gap:8px;align-items:center;padding:7px 9px}
+.tac-intent>i,.tac-opening>i{width:34px;height:34px;display:grid;place-items:center;border-radius:5px;background:#68261f;color:#ffe1d5;font:normal 23px/1 var(--brush,serif)}
+.tac-intent>span{display:grid;gap:1px;min-width:0}
+.tac-intent small,.tac-opening small{color:var(--dim,#8b9a95);font-size:10px}
+.tac-intent b,.tac-opening b{font-size:12.5px;color:var(--moon,#ece8cf)}
+.tac-intent em{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#aab7b3;font-size:10.5px;font-style:normal}
+.tac-intent.threat-high{border-color:#75362d;background:#241513}
+.tac-intent.threat-high>i{animation:tacThreat 1.7s ease-in-out infinite}
+.tac-intent.threat-medium{border-color:#66552f;background:#221e13}
+.tac-intent.threat-medium>i{background:#5b4b25;color:#f5df9a}
+.tac-opening{grid-column:1/-1;display:grid;grid-template-columns:36px 1fr;gap:8px;align-items:center;padding:7px 9px;border-color:#526c37;background:#182313}
+.tac-opening>i{background:#385223;color:#dff2ad}
+.tac-opening>span{display:grid;gap:1px}
+.tac-summary{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06);font-size:11px}
+.tac-summary span{color:var(--dim,#8b9a95)}
+.tac-summary b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#cbd5d1;font-weight:500}
+.skill.stance{border-color:#3e6655;background:linear-gradient(135deg,#13241d,var(--panel2,#1a2328))}
+.skill.stance:hover:not(:disabled){border-color:#76b798;box-shadow:0 0 10px rgba(95,174,138,.24)}
+@keyframes tacThreat{50%{box-shadow:0 0 12px rgba(208,96,75,.65);transform:scale(1.04)}}
+@media(max-width:700px){
+  .tactical-hud{padding:8px;margin-bottom:6px}
+  .tac-grid{grid-template-columns:1fr}
+  .tac-opening{grid-column:auto}
+  .tac-summary{grid-template-columns:1fr;gap:2px}
+  .tac-summary b{white-space:normal}
+  .tac-intent em{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.tac-intent.threat-high>i{animation:none}}

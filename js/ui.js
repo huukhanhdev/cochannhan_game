@@ -41,23 +41,49 @@ const NPC_META={hunglam:'熊',thuongtam:'猎',macnhan:'颜',xichson:'山',tiexue
 const CANON_GLYPH={c_khaikhieu:'启',c_giasan:'家',c_conghocduong:'劫',c_khaohach:'考',c_tramthuy:'婢',c_thuongdoi:'商',c_kimsinh:'贾',
   c_dieutra:'查',c_thuongdoiroi:'商',c_baigia:'白',c_lang1:'狼',c_lang2:'木',c_lang3:'王',c_luancong:'荒',c_bai:'冰',c_thiet:'铁',c_huyetdong:'血',c_thietvay:'捕',c_nhatdai:'尸',c_final:'终'};
 
-// Điểm trên bản đồ sơn trại (tọa độ % trên tranh bg_village)
+// Điểm trên bản đồ sơn trại (tọa độ % trên tranh bg_village_day/bg_village).
+// Hai biến thể dùng cùng bố cục để pin không nhảy khi đổi thời điểm trong ngày.
 const MAP_SPOTS=[
-  {id:'hocduong',x:23,y:34,g:'学',n:'Học đường',d:'Nghe giảng, gặp bạn học. Có thể tăng ngộ tính.'},
-  {id:'robgate',x:36,y:46,g:'劫',n:'Cổng học đường',d:'Cướp nguyên thạch bạn học. Danh vọng giảm.',tag:'demon'},
-  {id:'trai',x:11,y:58,g:'寨',n:'Sơn trại',d:'Tửu lâu, tin đồn, đấu đá nội bộ.'},
-  {id:'nhiemvu',x:48,y:56,g:'令',n:'Nhiệm vụ đường',d:'Nguyên thạch và danh vọng. Có khi gặp sơn tặc.'},
-  {id:'tuluyen',x:28,y:78,g:'修',n:'Bế quan',d:'Dồn chân nguyên và nguyên thạch vào tu vi.'},
-  {id:'nghi',x:50,y:82,g:'息',n:'Tĩnh dưỡng',d:'Hồi khí huyết, chân nguyên, mau lành thương.'},
-  {id:'hauson',x:62,y:20,g:'洞',n:'Hậu sơn',d:'Khe đá thoang thoảng mùi rượu.'},
-  {id:'nui',x:84,y:34,g:'山',n:'Núi Thanh Mao',d:'Săn thú, tìm cổ hoang. Có thể gặp kẻ mạnh hơn nhiều.'},
-  {id:'market',x:70,y:68,g:'市',n:'Chợ',d:'Mua bán cổ trùng. Không tốn thời gian.',minor:1},
-  {id:'refine',x:88,y:66,g:'炉',n:'Lò luyện cổ',d:'Hợp luyện cổ bậc cao. Không tốn thời gian.',minor:1},
+  {id:'hocduong',x:24,y:65,g:'学',n:'Học đường',d:'Nghe giảng, gặp bạn học. Có thể tăng ngộ tính.'},
+  {id:'robgate',x:38,y:73,g:'劫',n:'Cổng học đường',d:'Cướp nguyên thạch bạn học. Danh vọng giảm.',tag:'demon'},
+  {id:'trai',x:12,y:79,g:'寨',n:'Sơn trại',d:'Tửu lâu, tin đồn, đấu đá nội bộ.'},
+  {id:'nhiemvu',x:48,y:66,g:'令',n:'Nhiệm vụ đường',d:'Nguyên thạch và danh vọng. Có khi gặp sơn tặc.'},
+  {id:'tuluyen',x:28,y:87,g:'修',n:'Bế quan',d:'Dồn chân nguyên và nguyên thạch vào tu vi.'},
+  {id:'nghi',x:50,y:86,g:'息',n:'Tĩnh dưỡng',d:'Hồi khí huyết, chân nguyên, mau lành thương.'},
+  {id:'hauson',x:62,y:48,g:'洞',n:'Hậu sơn',d:'Khe đá thoang thoảng mùi rượu.'},
+  {id:'nui',x:84,y:39,g:'山',n:'Núi Thanh Mao',d:'Săn thú, tìm cổ hoang. Có thể gặp kẻ mạnh hơn nhiều.'},
+  {id:'market',x:69,y:77,g:'市',n:'Chợ',d:'Mua bán cổ trùng. Không tốn thời gian.',minor:1},
+  {id:'refine',x:87,y:73,g:'炉',n:'Lò luyện cổ',d:'Hợp luyện cổ bậc cao. Không tốn thời gian.',minor:1},
 ];
 
 function bar(v,m,c){return `<div class="bar"><i style="width:${clamp(v/m*100,0,100)}%;background:${c}"></i></div>`}
-function meter(label,v,m,cls,extra){
-  return `<div class="meter ${cls||''}"><div class="mrow"><span>${label}</span><b>${Math.max(0,Math.floor(v))}<small> / ${m}</small></b></div><div class="mtrack"><i style="width:${clamp(v/m*100,0,100)}%"></i></div>${extra||''}</div>`;
+function hudDeltaBadge(change,suffix=''){
+  if(!change||!change.v)return '';
+  const gain=change.v>0,amount=Math.abs(Math.round(change.v));
+  return `<span class="hud-delta ${gain?'gain':'loss'}" aria-label="${gain?'Tăng':'Giảm'} ${amount}${suffix?' '+suffix:''}">${gain?'+':'−'}${amount}${suffix?` ${suffix}`:''}</span>`;
+}
+function captureHudChanges(values){
+  const context=`${META.life}:${S.book||1}`;
+  const now=Date.now();
+  UI.hudDelta=UI.hudDelta||{};
+  if(UI.hudPrev&&UI.hudContext===context){
+    Object.keys(values).forEach(k=>{
+      const from=Number(UI.hudPrev[k]),to=Number(values[k]);
+      if(Number.isFinite(from)&&Number.isFinite(to)&&from!==to)UI.hudDelta[k]={v:to-from,from,to,at:now};
+    });
+  }else UI.hudDelta={};
+  Object.keys(UI.hudDelta).forEach(k=>{if(now-UI.hudDelta[k].at>2600)delete UI.hudDelta[k]});
+  UI.hudPrev=Object.assign({},values);UI.hudContext=context;
+  return UI.hudDelta;
+}
+function meter(label,v,m,cls,extra,change){
+  const current=clamp(v/m*100,0,100);
+  let trail='';
+  if(change&&change.v){
+    const from=clamp(change.from/m*100,0,100),left=Math.min(from,current),width=Math.abs(from-current);
+    trail=`<b class="meter-change ${change.v>0?'gain':'loss'}" style="left:${left}%;width:${width}%"></b>`;
+  }
+  return `<div class="meter ${cls||''}"><div class="mrow"><span>${label}</span><b>${Math.max(0,Math.floor(v))}<small> / ${m}</small>${hudDeltaBadge(change)}</b></div><div class="mtrack"><i style="width:${current}%"></i>${trail}</div>${extra||''}</div>`;
 }
 
 function renderMoon(){
@@ -180,29 +206,40 @@ function renderJournalModal(){
     </div>`;
 }
 
+// === [BATTLE-01/02: TACTICAL TURN-BASED] START ===
+function fightModeLabel() {
+  const m = (META && META.opt && META.opt.fightMode) || (META && META.opt && META.opt.turn ? 'turn' : 'rt');
+  if (m === 'tactical') return 'Đánh: đấu trí';
+  if (m === 'turn') return 'Đánh: theo lượt';
+  return 'Đánh: thời gian thực';
+}
+// === [BATTLE-01/02: TACTICAL TURN-BASED] END ===
+
 /* ---------- Thanh trạng thái ---------- */
 function renderHUD(){
   const e=ESS[S.chuyen];
   const res=[['石',S.stones,'Nguyên thạch','gold'],['药',S.herbs,'Linh dược',''],['血',S.blood,'Huyết khí',''],['酒',S.wine,'Tứ vị tửu','']];
+  const changes=captureHudChanges({hp:S.hp,ess:S.ess,stones:S.stones,herbs:S.herbs,blood:S.blood,wine:S.wine,prog:S.prog,rank:S.chuyen*10+S.giai,danh:S.danh,susp:S.susp});
+  const rankUp=changes.rank&&changes.rank.v>0;
   $('hud').innerHTML=`
     <div class="hud-id">
-      <div class="avatar" style="--ring:${e.c}"><span style="background-image:url('${asset('art/p_hero.jpg')}')"></span><b>${CH[S.chuyen]}</b></div>
+      <div class="avatar ${rankUp?'rank-up':''}" style="--ring:${e.c}"><span style="background-image:url('${asset('art/p_hero.jpg')}')"></span><b title="${CH[S.chuyen]} chuyển">${CH[S.chuyen]}</b></div>
       <div class="who">
         <div class="nm">Phương Nguyên <small>kiếp ${META.life}</small></div>
-        <div class="rk">${rankName()}</div>
-        <div class="xp" title="Tu vi ${S.prog}/${need()}"><i style="width:${clamp(S.prog/need()*100,0,100)}%"></i></div>
+        <div class="rk">${rankName()} ${hudDeltaBadge(changes.prog,'tu vi')}</div>
+        <div class="xp" title="Tu vi ${S.prog}/${need()}"><i style="width:${clamp(S.prog/need()*100,0,100)}%"></i><span>${Math.floor(S.prog)}/${need()}</span></div>
       </div>
     </div>
     <div class="hud-bars">
-      ${meter('Khí huyết',S.hp,maxHp(),'hp')}
-      ${meter('Chân nguyên <em>'+e.n+'</em>',S.ess,maxEss(),'es')}
+      ${meter('Khí huyết',S.hp,maxHp(),'hp','',changes.hp)}
+      ${meter('Chân nguyên <em>'+e.n+'</em>',S.ess,maxEss(),'es','',changes.ess)}
     </div>
     ${cicadaChip()}
     ${driftChip()}
-    <div class="hud-res">${res.map(r=>`<span class="res ${r[3]}" title="${r[2]}"><i>${r[0]}</i>${r[1]}</span>`).join('')}</div>
+    <div class="hud-res">${res.map((r,i)=>{const k=['stones','herbs','blood','wine'][i];return `<span class="res ${r[3]}" title="${r[2]}"><i>${r[0]}</i><span>${r[1]}</span>${hudDeltaBadge(changes[k])}</span>`}).join('')}</div>
     <div class="hud-social">
-      ${meter('Danh vọng',Math.max(0,S.danh),100,'danh')}
-      ${meter('Hiềm nghi',S.susp,100,'susp'+(S.susp>=70?' hot':''))}
+      ${meter('Danh vọng',Math.max(0,S.danh),100,'danh','',changes.danh)}
+      ${meter('Hiềm nghi',S.susp,100,'susp'+(S.susp>=70?' hot':''),'',changes.susp)}
     </div>
     ${S.inj?`<span class="injury" title="${INJURY[S.inj.k].d}">伤 ${INJURY[S.inj.k].n} · ${S.inj.t} tuần</span>`:''}
     <div id="hunger-warning" class="hunger-warning"></div>
@@ -215,7 +252,9 @@ function renderHUD(){
       ${S.ff?'<button class="btn warn" data-ff="stop">Dừng tua</button>':''}
       <button class="btn ghost" id="journalBtn" title="Xem lịch sử các lựa chọn và biến cố nhân quả">Nhân Quả Lục</button>
       <button class="btn ghost" id="codexBtn">Cổ Đồ Giám</button>
-      <button class="btn ghost" data-a="fightmode" title="Đổi kiểu chiến đấu cho các trận sau">${META.opt&&META.opt.turn?'Đánh: theo lượt':'Đánh: thời gian thực'}</button>
+      <!-- === [BATTLE-01/02: TACTICAL TURN-BASED] START === -->
+      <button class="btn ghost" data-a="fightmode" ${S.combat?'disabled':''} title="Đổi kiểu chiến đấu cho các trận sau">${fightModeLabel()}</button>
+      <!-- === [BATTLE-01/02: TACTICAL TURN-BASED] END === -->
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
     </div>`;
   renderMoon();
@@ -227,11 +266,13 @@ function renderTimeline(){
   let cells='';
   for(let t=1;t<=curFinal();t++){
     const cid=(S.canon||CANON)[t],m=Math.ceil(t/3),tu=TUAN[(t-1)%3];
-    const cls=[t<S.turn?'past':'',t===S.turn?'now':'',cid?'ev':'',t%3===1?'mstart':''].join(' ');
-    cells+=`<div class="tl ${cls}" title="Tháng ${m} · ${tu}${cid?': '+EV[cid].hint:''}">${t%3===1?`<span class="mlab">T${m}</span>`:''}${cid?`<i>${CANON_GLYPH[cid]||EV[cid].g||'事'}</i>`:''}</div>`;
+    const waiting=t===S.turn&&S.pend;
+    const cls=[t<S.turn?'past':'',t===S.turn?'now':'',cid?'ev':'',waiting?'waiting':'',t%3===1?'mstart':''].join(' ');
+    const title=`Tháng ${m} · ${tu}${cid?': '+EV[cid].hint:''}${waiting?' · đang chờ đối mặt':''}`;
+    cells+=`<div class="tl ${cls}" title="${esc(title)}" ${t===S.turn?'aria-current="step"':''}>${t%3===1?`<span class="mlab">T${m}</span>`:''}${cid?`<i>${CANON_GLYPH[cid]||EV[cid].g||'事'}</i>`:''}${waiting?'<b class="wait-dot" aria-label="Đang chờ"></b>':''}</div>`;
   }
   const cal=S.canon||CANON,next=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>t>=S.turn);
-  const nx=next?`<span class="next">Ký ức tương lai: <b>${EV[cal[next]].hint}</b>${next===S.turn?' · tuần này':` · còn ${next-S.turn} tuần`}</span>`:'';
+  const nx=next?`<span class="next"><i aria-hidden="true">憶</i><span>Ký ức tương lai: <b>${EV[cal[next]].hint}</b>${next===S.turn?' · tuần này':` · còn ${next-S.turn} tuần`}</span></span>`:'';
   $('timeline').innerHTML=`<div class="tl-track">${cells}</div>${nx}`;
 }
 
@@ -243,9 +284,10 @@ function renderSheet(){
     const tot=S.canonHit+S.canonMiss,dev=tot?Math.round(S.canonMiss/tot*100):0;
     const daoLbl=S.dao>=40?'Ma đạo':S.dao>=15?'Nghiêng ma':S.dao<=-40?'Chính đạo':S.dao<=-15?'Nghiêng chính':'Trung dung';
     body=`
+      <div class="cultivation-state" style="--ess:${ESS[S.chuyen].c}"><span class="cult-seal" aria-label="${CH[S.chuyen]} chuyển">${['','一','二','三','四'][S.chuyen]||CH[S.chuyen]}</span><div><span class="label">Cảnh giới hiện tại</span><b>${rankName()}</b><small>Tu vi ${Math.floor(S.prog)}/${need()} · ${talentName(S.tuchat)}</small></div></div>
       ${S.trait?`<div class="trait-chip"><i>${TRAITS[S.trait].g}</i><div><b>${TRAITS[S.trait].n}</b><small>+ ${TRAITS[S.trait].up} · − ${TRAITS[S.trait].down}</small></div></div>`:''}
       ${(S.world||[]).map(k=>`<div class="world-chip"><i>${WORLD[k].g}</i><div><b>${WORLD[k].n}</b><small>${WORLD[k].d}</small></div></div>`).join('')}
-      <div class="aperture-wrap"><canvas id="apertureCanvas"></canvas><div class="aperture-overlay">Không khiếu · ${talentName(S.tuchat)}</div></div>
+      <div class="aperture-wrap rank-${S.chuyen}" style="--ess:${ESS[S.chuyen].c}"><canvas id="apertureCanvas"></canvas><div class="aperture-overlay"><b>${Math.floor(S.ess)}/${maxEss()} chân nguyên</b><span>Không khiếu · ${ESS[S.chuyen].n}</span></div></div>
       <div class="attrs">
         <div><span class="label">Tâm cơ</span><b>${S.tamco}</b></div>
         <div><span class="label">Sát phạt</span><b>${S.satphat}</b></div>
@@ -265,10 +307,14 @@ function renderSheet(){
   }else if(UI.tab==='co'){
     body=`<div class="gu">${S.gu.map((g,i)=>{
       const d=GU[g.k],gm=GU_META[g.k]||{icon:'蛊',cls:'rank-1'};
-      return `<div class="gucard-rich ${gm.cls}">
+      const role={attack:['Công kích','atk'],guard:['Hộ thể','guard'],heal:['Trị liệu','heal'],passive:['Thụ động','passive'],use:['Tiêu hao','use'],fate:['Kỳ cổ','fate']}[d.t]||['Cổ trùng','passive'];
+      const hp=d.t==='fate'?100:guHp(g),state=g.h>=3?'Đói kiệt':g.h?'Đang đói':hp<35?'Trọng thương':hp<70?'Bị thương':'Ổn định';
+      const stateTone=state==='Ổn định'?'ok':state==='Đang đói'||state==='Bị thương'?'warn':'bad';
+      return `<div class="gucard-rich ${gm.cls} gu-${role[1]} ${g.h?'is-hungry':''} ${hp<35?'is-wounded':''}">
         <div class="gu-emblem">${guEmblem(g.k,gm.icon,'fill')}</div>
         <div class="gu-body">
           <div class="gu-top"><span class="gu-name">${d.n}</span><span class="pill">${CH[d.r]} chuyển</span></div>
+          <div class="gu-tags"><span class="gu-role ${role[1]}">${role[0]}</span><span class="gu-state ${stateTone}">${state}</span></div>
           <div class="gu-desc">${d.d}</div>
           <div class="gu-footer"><small class="dimt">${d.food?`Ăn ${d.fn} · ${(g.k==='nguyetquang'&&S.f.freeMoon)?'miễn phí':d.food+' thạch'}`:'Ăn '+d.fn}${d.cost?` · ${d.cost} chân nguyên`:''}${CD[g.k]?` · hồi ${CD[g.k]}`:''}</small>
             ${g.h?`<span class="hunger-pill hunger-bad">Đói ${g.h}/3</span>`:''}</div>
@@ -381,7 +427,7 @@ function choiceBtn(c,i,evId){
     chk=`<span class="odds ${p>=75?'e':p>=50?'m':p>=25?'h':'x'}">${ATTR[c.check[0]]} · ${lbl}</span>`;
   }
   const extra = choiceExtraMeta(c, ok);
-  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'}><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${extra}</span></button>`;
+  return `<button class="choice" data-ch="${i}" ${ok?'':'disabled'} aria-label="Lựa chọn ${i+1}: ${esc(c.t)}"><span class="choice-mark" aria-hidden="true">${ok?'›':'锁'}</span><span class="choice-copy"><span class="ct">${esc(c.t)}</span><span class="cmeta">${chk}${tags}${extra}</span></span><kbd>${i+1}</kbd></button>`;
 }
 
 function scChoiceBtn(c, i, sc){
@@ -402,8 +448,9 @@ function scChoiceBtn(c, i, sc){
   }
   const extra = choiceExtraMeta(c, ok);
   return `<button class="choice ${c.stay ? 'stay' : ''}" data-sc-ch="${i}" ${ok ? '' : 'disabled'}>
-    <span class="ct">${esc(c.t)}</span>
-    <span class="cmeta">${chk}${tags}${extra}</span>
+    <span class="choice-mark" aria-hidden="true">${ok?(c.stay?'察':'›'):'锁'}</span>
+    <span class="choice-copy"><span class="ct">${esc(c.t)}</span>
+    <span class="cmeta">${chk}${tags}${extra}</span></span><kbd>${i+1}</kbd>
   </button>`;
 }
 
@@ -419,9 +466,11 @@ function renderScene(st, id, ev){
   const speakerKey = currLine[0] || (node.who || ev.who);
   const tenseCls = sc.tense >= 3 ? 'tense-3' : sc.tense === 2 ? 'tense-2' : sc.tense === 1 ? 'tense-1' : '';
 
-  const historyLines = talk.slice(0, Math.min(activeIdx + 1, talk.length)).map(([spk, line]) => {
+  const visibleTalk = talk.slice(0, Math.min(activeIdx + 1, talk.length));
+  const historyLines = visibleTalk.map(([spk, line], lineIdx) => {
     const spkName = spk && NPC[spk] ? NPC[spk].n : '';
-    return `<div class="talk-line ${spk ? 'has-spk' : 'narr'}">${spkName ? `<b class="talk-spk">${esc(spkName)}:</b> ` : ''}<span>${esc(line)}</span></div>`;
+    const current = lineIdx === visibleTalk.length - 1 ? 'current' : '';
+    return `<div class="talk-line ${spk ? 'has-spk' : 'narr'} ${current}">${spkName ? `<b class="talk-spk">${esc(spkName)}:</b> ` : ''}<span>${esc(line)}</span></div>`;
   }).join('');
 
   const chs = scChoices(ev);
@@ -536,9 +585,11 @@ function renderStage(){
   if(S.panel==='tuluyen'){
     const cap=cultMaxStones(),opts=[...new Set([0,Math.ceil(cap/2),cap])].filter(n=>n<=S.stones);
     const cc=typeof cultCapped==='function'&&cultCapped();
+    const progPct=clamp(S.prog/need()*100,0,100);
     st.innerHTML=`<div class="paper">${head('Bế quan tu luyện','Mười ngày trong phòng kín')}
-      ${cc?`<div class="banner warning" style="padding:10px 14px;margin-bottom:12px;border-radius:6px;background:rgba(210,140,30,0.18);border:1px solid #d93;color:#ffd866;font-size:13px;line-height:1.5"><b>⚠️ CẢNH BÁO:</b> ${cc.msg}</div>`:''}
-      ${cc&&cc.type==='break'?`<button class="btn big wide" data-a="breakthrough">Xung kích bích khiếu ${CH[S.chuyen+1]} chuyển</button>`:''}
+      <div class="cult-overview" style="--ess:${ESS[S.chuyen].c}"><div><span class="label">${rankName()}</span><b>${Math.floor(S.prog)} / ${need()} tu vi</b></div><span>${Math.round(progPct)}%</span><div class="cult-track"><i style="width:${progPct}%"></i></div></div>
+      ${cc?`<div class="banner warning"><b>${cc.type==='break'?'Bình cảnh đã tới':'Cảnh giới bị giới hạn'}</b><span>${cc.msg}</span></div>`:''}
+      ${cc&&cc.type==='break'?`<button class="btn big wide breakthrough-cta" data-a="breakthrough"><i>破</i><span>Xung kích bích khiếu <b>${CH[S.chuyen+1]} chuyển</b><small>Tiêu toàn bộ việc còn lại trong tuần</small></span></button>`:''}
       <p class="dimt">Chân nguyên hiện có ${Math.floor(S.ess)}. Mỗi viên nguyên thạch hồi 5 chân nguyên; một lần bế quan chỉ hấp thu tới khi không khiếu đầy thêm một lần (tối đa ${cap} viên). Hệ số tu luyện ×${cultMult().toFixed(2)}.${S.inj&&S.inj.k==='kinh'?' Kinh mạch tổn hại làm tu luyện chậm đi.':''}</p>
       <div class="act-grid-rich">${opts.map(n=>{
         const g=Math.round((Math.floor(S.ess)+n*5)*cultMult()*(.4+.2*apLeft()));
@@ -574,22 +625,36 @@ function renderStage(){
     return;
   }
   if(S.panel==='refine'){
+    const refineMissing=r=>{
+      const miss=[];
+      if(S.refined)miss.push('đã luyện trong tuần');
+      if(!hasGu(r.from))miss.push(`thiếu ${GU[r.from].n}`);
+      if(r.extraGu&&!hasGu(r.extraGu))miss.push(`thiếu ${GU[r.extraGu].n}`);
+      if(r.id==='tuvi'&&!S.f.tuviRecipe)miss.push('chưa có bí phương');
+      if(S.stones<r.st)miss.push(`thiếu ${r.st-S.stones} thạch`);
+      if(S.wine<(r.wine||0))miss.push(`thiếu ${(r.wine||0)-S.wine} tứ vị tửu`);
+      if(S.blood<(r.bl||0))miss.push(`thiếu ${(r.bl||0)-S.blood} huyết khí`);
+      if(S.herbs<(r.hb||0))miss.push(`thiếu ${(r.hb||0)-S.herbs} linh dược`);
+      return miss;
+    };
     st.innerHTML=`<div class="paper">${head('Lò luyện cổ','Mỗi tuần luyện được một lần')}
       <p class="dimt">Thất bại thì cổ gốc chết, nguyên liệu mất.</p>
       <div class="refine-grid">${RECIPES.map((r,i)=>{
-        const t=GU[r.id],src=GU[r.from],ex=r.extraGu?GU[r.extraGu]:null,ch=Math.round(refineChance(r)*100);
+        const t=GU[r.id],src=GU[r.from],ex=r.extraGu?GU[r.extraGu]:null,ch=Math.round(refineChance(r)*100),missing=refineMissing(r),ready=!missing.length;
         return `<div class="refine-card"><div>
             <div class="formula"><span class="f-box">${src.n}</span> + ${ex?`<span class="f-box">${ex.n}</span> + `:''}${r.st?`<span class="f-box">${r.st} thạch</span> + `:''}${r.bl?`<span class="f-box">${r.bl} huyết khí</span> + `:''}${r.wine?`<span class="f-box">${r.wine} tứ vị tửu</span> + `:''}${r.hb?`<span class="f-box">${r.hb} linh dược</span> + `:''}<span class="gold">➔</span> <span class="f-box out">${t.n}</span></div>
-            <small class="dimt">${t.d}</small></div>
-          <div class="rc-side"><span class="pill ${ch>=70?'good':ch>=50?'gold':'danger'}">${ch}%</span><button class="btn" data-refine="${i}" ${canRefine(r)?'':'disabled'}>Luyện</button></div></div>`}).join('')}</div></div>`;
+            <small class="dimt">${t.d}</small><span class="refine-status ${ready?'ready':'missing'}">${ready?'Đủ nguyên liệu':missing.join(' · ')}</span></div>
+          <div class="rc-side"><span class="pill ${ch>=70?'good':ch>=50?'gold':'danger'}">${ch}%</span><button class="btn" data-refine="${i}" ${ready?'':'disabled'}>Luyện</button></div></div>`}).join('')}</div></div>`;
     return;
   }
   if(S.book===2){renderMap2(st);return}
   // Bản đồ sơn trại
   const acts=Object.fromEntries(ACTS.map(a=>[a.id,a]));
   const spots=MAP_SPOTS.filter(s=>s.minor||(acts[s.id]&&(!acts[s.id].show||acts[s.id].show())));
+  const mood=mapMood();
+  const mapArt=mood.includes('tod-dem')?'bg_village':'bg_village_day';
   st.innerHTML=`<div class="mapwrap">
-    <div class="map ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'storm':''} ${mapMood()}" style="background-image:url('${asset('art/bg_map.jpg')}')">
+    <div class="map q1-map ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'storm':''} ${mood}" style="background-image:url('${asset('art/'+mapArt+'.jpg')}')">
       <div class="map-fx" aria-hidden="true"><i class="mist m1"></i><i class="mist m2"></i><i class="mist m3"></i>
         ${[[6,52],[10.5,47],[3,60],[92.5,60],[96,66],[57,43]].map(([x,y],i)=>`<b class="lantern" style="left:${x}%;top:${y}%;animation-delay:${i*.37}s"></b>`).join('')}
         ${S.turn>=(S.tideT||19)-3&&!S.f.tideDone?'<i class="rain"></i><i class="flash"></i>':''}${mapFxHTML()}</div>
@@ -599,7 +664,9 @@ function renderStage(){
         const cc = isTuLuyen && typeof cultCapped==='function' && cultCapped();
         const lbl = cc ? (cc.type==='break'?'Xung kích bích khiếu':`${s.n} (Viên mãn)`) : s.n;
         const tip = cc ? cc.msg : `${s.d}${s.minor?'':isTuLuyen?' · dùng hết việc còn lại trong tuần':' · 1 việc'}`;
-        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc&&cc.type==='cap'?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
+        const blocked=!s.minor&&S.ap<=0;
+        const state=cc&&cc.type==='cap'?'Đã viên mãn':blocked?'Hết việc':s.minor?'Tự do':'1 việc';
+        return `<button class="spot ${s.minor?'minor':'primary'} ${s.tag||''} ${blocked?'exhausted':''} ${cc&&cc.type==='cap'?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%" aria-label="${esc(lbl)} · ${esc(state)}" aria-disabled="${blocked||!!(cc&&cc.type==='cap')}"><span class="sseal">${s.g}</span><span class="slines"><span class="slbl">${lbl}</span><span class="smeta">${state}</span></span><span class="stip">${tip}</span></button>`;
       }).join('')}
     </div>
     <div class="map-foot">
@@ -621,8 +688,8 @@ function viewKey(){
 }
 function render(){
   if(UI.batch)return;
-  $('mainPanel').classList.toggle('in-combat',!!S.combat);
-  $('stage').classList.toggle('ff-on',!!S.ff);
+  if($('mainPanel'))$('mainPanel').classList.toggle('in-combat',!!S.combat);
+  if($('stage'))$('stage').classList.toggle('ff-on',!!S.ff);
   if(!S.combat)Scene.stop();
   renderHUD();renderTimeline();renderSheet();renderLog();renderStage();
   // Mực loang khi đổi cảnh

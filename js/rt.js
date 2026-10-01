@@ -85,7 +85,10 @@ function guWearKey(k,amt,why){const i=S.gu.findIndex(g=>g.k===k);if(i>=0)guWear(
 function guRecover(n){for(const g of S.gu){if(g.hp===undefined||g.hp>=100)continue;if(!(g.h>0))g.hp=Math.min(100,g.hp+n)}}
 
 /* ---------- vào trận ---------- */
-function rtOn(){return !(META&&META.opt&&META.opt.turn)}
+function rtOn(){
+  if(typeof TacticalBattle!=='undefined'&&TacticalBattle.isEnabled())return false;
+  return !(META&&META.opt&&META.opt.turn);
+}
 function rtFoeRank(c){return clamp(Math.round(c.atk[1]/(12*DIFF.atk))+(c.boss?1:0),1,6)}
 function rtInit(c,o){
   const art=ART[c.k]||{sc:'forest'},beast=rtIsBeast(c.k);

@@ -144,6 +144,7 @@ q2_td_thuongluong:{canon:1,title:'Núi Thương Lượng',hint:'Tới Thương g
       if((S.rel.tamtu||0)>=30||(typeof storyHasOutcome==='function'&&storyHasOutcome('tamtu_route','ally'))){
         S.f.tuKinhLenh=1;
         if(typeof storySetOutcome==='function') storySetOutcome('tu_kinh_lenh','granted',{choiceText:'Nhận Tử Kinh Lệnh trước cổng thành',isLech:false,note:'Tâm Từ tặng Tử Kinh Lệnh hộ thân khi bước vào Thương gia thành.'});
+        if(typeof storySchedulePending==='function')storySchedulePending({id:'tu_kinh_vao_thanh',chainId:'tu_kinh_lenh',targetBook:2,targetChap:'q2_thanh',minTurn:1,maxTurn:2,eventId:'q2_tt_tukinhvao'});
       }
       chapEnd('q2_thanh');
       return 'Thương gia thành: thế lực buôn bán số một Nam Cương. Chính đạo, nhưng là nơi ma đạo tiêu thụ tang vật.';
@@ -153,6 +154,7 @@ q2_td_thuongluong:{canon:1,title:'Núi Thương Lượng',hint:'Tới Thương g
       if((S.rel.tamtu||0)>=30||(typeof storyHasOutcome==='function'&&storyHasOutcome('tamtu_route','ally'))){
         S.f.tuKinhLenh=1;
         if(typeof storySetOutcome==='function') storySetOutcome('tu_kinh_lenh','granted',{choiceText:'Đi cùng Tâm Từ vào thành, nhận Tử Kinh Lệnh',isLech:true,driftAmount:4,note:'Được Tâm Từ dẫn thẳng vào phủ đệ, nhận Tử Kinh Lệnh.'});
+        if(typeof storySchedulePending==='function')storySchedulePending({id:'tu_kinh_vao_thanh',chainId:'tu_kinh_lenh',targetBook:2,targetChap:'q2_thanh',minTurn:1,maxTurn:2,eventId:'q2_tt_tukinhvao'});
       }
       chapEnd('q2_thanh');
       return 'Tiểu Điệp lườm, nhưng không phản đối. Hai người sóng bước cùng nàng vào thành.';

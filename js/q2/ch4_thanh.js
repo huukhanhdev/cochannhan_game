@@ -96,6 +96,9 @@ Object.assign(MEM,{
 Object.assign(DEATH_MEM,{cukhaibi:'q2_cukhaibi'});
 
 Object.assign(EV,{
+q2_tt_tukinhvao:{title:'Tử Kinh nhập thành',hint:'Tử Kinh Lệnh phát huy tác dụng',g:'紫',who:'tamtu',
+  text:()=>'Lệnh bài gỗ tử kinh vừa đưa ra, thành vệ đổi hẳn sắc mặt. Hai người được dẫn qua khu Tạp đẳng tới Nam Thu Uyển; lời hứa trước cổng thành đã biến thành chỗ đứng thật sự giữa Thương gia thành.',
+  choices:[{t:'Cất kỹ Tử Kinh Lệnh',canon:1,eff:()=>{if(typeof storyAddJournal==='function')storyAddJournal('Tử Kinh Lệnh đưa ngươi vào Nam Thu Uyển.','consequence','tu_kinh',{title:'Tử Kinh nhập thành',isLech:false});return 'Một lựa chọn trong thương đội đã theo ngươi tới tận thành.'}}]},
 q2_tt_nhaiti1:{canon:1,title:'Thiếu chủ đòi chia',hint:'Thương Nhai Tí',g:'崖',who:'nhaiti',
   text:()=>'Ngươi bán hàng xong chưa kịp ra khỏi cửa tiệm. Chưởng quầy đã báo qua gương đồng cho Thương Nhai Tí, thiếu chủ mười tám tuổi quản cả khu này. Hắn biết chuyện Bách gia, biết Thiết gia đang tìm hai người, và đòi năm mươi vạn.',
   choices:()=>[

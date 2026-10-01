@@ -23,6 +23,8 @@ Giữ bản sắc tu luyện, cổ trùng, mưu kế và trùng sinh. Bản nân
 | [04_CONTENT_QUYEN_1.md](04_CONTENT_QUYEN_1.md) | Sáu cụm nội dung, tám chuỗi phụ, ba cảnh mẫu, kết cục và bàn giao Q2 |
 | [05_CONTENT_QUYEN_2.md](05_CONTENT_QUYEN_2.md) | Nâng cấp cả chín chương, ba truyền thừa, đồng hành, phản bội và kết cục |
 | [06_KE_HOACH_TRIEN_KHAI.md](06_KE_HOACH_TRIEN_KHAI.md) | Thứ tự PR, file cần sửa, hợp đồng dữ liệu, kiểm tra canon, save và nghiệm thu |
+| [07_REVIEW_IMPLEMENTATION.md](07_REVIEW_IMPLEMENTATION.md) | Review triển khai gameplay/UI và trạng thái sửa các lỗi R1–R7 |
+| [08_UI_ART_DIRECTION_V2.md](08_UI_ART_DIRECTION_V2.md) | Đề xuất thay bố cục ba cột bằng sân khấu lớn; mỹ thuật, màn hình, tương tác, asset và lộ trình UI V2 |
 
 ## 3. Hiện trạng đã đọc trong mã
 

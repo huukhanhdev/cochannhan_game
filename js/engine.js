@@ -242,13 +242,6 @@ function newLife(){
 function startTurn(){
   if(S.book===2)return startTurn2();
   S.turn++;S.ap=AP_WEEK;S.pend=null;S.refined=false;
-  if(typeof storyCheckPending==='function'){
-    const ready=storyCheckPending(S.book||1, S.chuyen, S.turn);
-    for(const p of ready){
-      if(p.eventId) S.evq.push(p.eventId);
-      if(typeof p.payload==='function') p.payload(S);
-    }
-  }
   log(`Tháng ${month()} · ${tuan()}`,'day');
   if(S.turn>1){
     const essRecover = Math.round(maxEss() * (0.5 + (S.tuchat||44)*0.003) * (S.inj&&S.inj.k==='noi'?.5:1));
@@ -273,6 +266,9 @@ function startTurn(){
   laterTick();
   const cid=(S.canon||CANON)[S.turn];
   if(cid&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid))S.evq.push(cid);else S.pend=cid}
+  queueStoryPending(S.book||1,'',S.turn);
+  // Hợp luyện Bạch Ngọc mở khi đã thực sự có đủ hai nguyên liệu và tu vi Nhị chuyển.
+  if(!S.pend&&!S.evq.length&&S.chuyen>=2&&EV.c_bachngoc&&EV.c_bachngoc.cond())S.pend='c_bachngoc';
   // Nhân tới muộn: có Tửu Trùng sau tuần của mốc, Kim Sinh vẫn tìm tới khi thương đội còn trên núi (một lần)
   if(!S.pend&&S.f.caravan&&S.turn>canonTurnOf('c_kimsinh')&&EV.c_kimsinh.cond())S.pend='c_kimsinh';
   if((S.f.killedJKS||S.f.jksEscaped)&&!S.f.giaveDone&&S.turn>=14&&(S.susp>=45||S.turn>=18)&&!S.evq.includes('x_giave')){S.f.giaveDone=1;S.evq.push('x_giave')}
@@ -287,6 +283,17 @@ function startTurn(){
   }
   if(S.turn>1)cicadaTick();
   cicadaSnap();
+}
+
+function queueStoryPending(book,chap,turn){
+  if(typeof storyCheckPending!=='function')return;
+  const ready=storyCheckPending(book,chap,turn);
+  for(const p of ready){
+    if(typeof storyApplyPending==='function')storyApplyPending(p);
+    if(p.eventId&&EV[p.eventId]&&!S.evq.includes(p.eventId)&&S.pend!==p.eventId)S.evq.push(p.eventId);
+  }
+  // choose() lưu trước khi advance sang lượt mới; ghi lại ngay để pending đã resolve không phát lại sau reload.
+  if(ready.length&&typeof saveAll==='function')saveAll();
 }
 
 function endTurn(){
@@ -701,11 +708,24 @@ function cultCapped(){
   return false;
 }
 
+function beginBreakthrough(){
+  const cc=cultCapped();
+  if(!cc||cc.type!=='break'||S.combat||S.mg)return false;
+  S.panel=null;
+  resBegin('Xung kích bích khiếu');
+  log(`Tu vi đã viên mãn. Ngươi điều động toàn bộ chân nguyên xung kích bích khiếu ${CH[S.chuyen+1]} chuyển.`,'big');
+  if(typeof startBreak==='function')startBreak();
+  else levelUp();
+  spendAct(true);resEnd();saveAll();render();
+  return true;
+}
+
 /* ---------- tu luyện ---------- */
 function cultMaxStones(){return Math.ceil(maxEss()/5)}
 function cultivate(st){
   const cc = cultCapped();
   if(cc){
+    if(cc.type==='break')return beginBreakthrough();
     S.panel = null;
     log(cc.msg, 'warning');
     if(typeof showToast === 'function') showToast({t: cc.msg, cls: 'warning'});
@@ -1239,6 +1259,7 @@ document.addEventListener('click',ev=>{
       case 'market':S.panel='market';render();return;
       case 'gamble':S.panel='gamble';render();return;
       case 'refine':S.panel='refine';render();return;
+      case 'breakthrough':beginBreakthrough();return;
       case 'absorb':absorb();return;
       case 'pend':goPend();return;
       case 'fightmode':(META.opt=META.opt||{}).turn=!META.opt.turn;saveAll();render();return;

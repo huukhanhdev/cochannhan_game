@@ -38,7 +38,7 @@ ctx.S = { v: 2, turn: 1, stones: 0 };
 ctx.initStoryState(ctx.S);
 assert('S.story được khởi tạo đầy đủ các trường', 
   ctx.S.story && 
-  ctx.S.story.version === 1 &&
+  ctx.S.story.version === 2 &&
   typeof ctx.S.story.outcomes === 'object' &&
   Array.isArray(ctx.S.story.pending) &&
   typeof ctx.S.story.applied === 'object' &&
@@ -49,7 +49,7 @@ assert('S.story được khởi tạo đầy đủ các trường',
 const oldSave = { v: 2, turn: 10, stones: 100, hp: 80 };
 ctx.initStoryState(oldSave);
 assert('Save cũ v2 được migrate bổ sung S.story không mất dữ liệu', 
-  oldSave.story && oldSave.stones === 100 && oldSave.story.version === 1
+  oldSave.story && oldSave.stones === 100 && oldSave.story.version === 2
 );
 
 // Test 3: Ghi nhận quyết định & Anti-duplicate payload
@@ -68,6 +68,18 @@ ctx.storySetOutcome('kimsinh', 'kill', (s) => {
   s.stones += 35;
 });
 assert('Anti-duplicate: không lặp lại phần thưởng khi gọi trùng outcome', ctx.S.stones === 35 && payloadRunCount === 1);
+
+// Metadata lựa chọn phải được lưu cùng drift, và cũng chỉ áp dụng một lần.
+ctx.driftAdd = (n) => { ctx.S.drift = (ctx.S.drift || 0) + n; };
+ctx.storySetOutcome('nga_re', 'refuse', {
+  choiceText: 'Từ chối thiên mệnh', isLech: true, driftAmount: 9, note: 'Thiên ý bắt đầu chú ý.'
+});
+ctx.storySetOutcome('nga_re', 'refuse', {
+  choiceText: 'Từ chối thiên mệnh', isLech: true, driftAmount: 9
+});
+const lechEntry = ctx.S.story.journal.find(j => j.chainId === 'nga_re');
+assert('Outcome object lưu đủ lựa chọn, ghi chú và cờ dị số', lechEntry && lechEntry.choiceText === 'Từ chối thiên mệnh' && lechEntry.note === 'Thiên ý bắt đầu chú ý.' && lechEntry.isLech === true);
+assert('Drift của outcome dị số chỉ cộng đúng một lần', ctx.S.drift === 9);
 
 // Test 4: Lên lịch Pending Event và quét kích hoạt đúng lượt
 const scheduled = ctx.storySchedulePending({
@@ -98,9 +110,21 @@ assert('Đúng minTurn: kích hoạt pending event', ready.length === 1 && ready
 ready = ctx.storyCheckPending(1, 1, 6);
 assert('Pending event đã lấy ra thì không bị kích hoạt lại', ready.length === 0);
 
+// Pending xuyên chương không được hết hạn khi vẫn còn ở chương nguồn.
+ctx.storySchedulePending({
+  id: 'pend_tukinh_vao_thanh', targetBook: 2, targetChap: 'q2_thanh',
+  minTurn: 1, maxTurn: 2, eventId: 'q2_tt_tukinhvao'
+});
+ready = ctx.storyCheckPending(2, 'q2_thuongdoi', 8);
+assert('Pending xuyên chương được giữ nguyên khi chưa tới chương đích', ready.length === 0 && ctx.S.story.pending.some(p => p.id === 'pend_tukinh_vao_thanh'));
+ready = ctx.storyCheckPending(2, 'q2_thanh', 1);
+assert('Pending xuyên chương kích hoạt trong cửa sổ của chương đích', ready.length === 1 && ready[0].eventId === 'q2_tt_tukinhvao');
+
 // Test 5: Journal nhân quả
+const journalBefore = ctx.S.story.journal.length;
 ctx.storyAddJournal('Chém đầu Cổ Kim Sinh trong khe đá', 'decision', 'kimsinh');
-assert('Journal ghi nhận entry chính xác', ctx.S.story.journal.length === 1 && ctx.S.story.journal[0].tag === 'kimsinh');
+const journalLast = ctx.S.story.journal[ctx.S.story.journal.length - 1];
+assert('Journal ghi nhận entry chính xác', ctx.S.story.journal.length === journalBefore + 1 && journalLast.tag === 'kimsinh' && journalLast.choiceText.includes('Cổ Kim Sinh'));
 
 // Test 6: Xuân Thu Thiền reset timeline
 ctx.storySchedulePending({ id: 'temp_event', minTurn: 10, maxTurn: 20 });
@@ -133,6 +157,7 @@ assert('choiceExtraMeta hiển thị ổ khóa điều kiện', metaWithLock.inc
 // Test 9: renderJournalModal
 ctx.renderJournalModal();
 assert('renderJournalModal render giao diện vào modalContainer', modalContainer.innerHTML.includes('Nhân Quả Lục'));
+assert('Journal UI không rò chuỗi undefined từ schema cũ', !modalContainer.innerHTML.includes('undefined'));
 
 console.log('--- KIỂM TRA TUYẾN MẪU CỔ KIM SINH & ĐIỀU TRA (PR-04) ---');
 // Nạp thêm events.js
@@ -382,7 +407,7 @@ const oldQ1 = {
   story: {
     version: 1,
     outcomes: { duocnhac: 'nhanthu_refined', kimngo: 'captured_diathinh', muon_kho: 'thienbong_borrowed' },
-    pending: [{ id: 'old_pending', minTurn: 10 }],
+    pending: [{ id: 'old_pending', targetBook: 2, targetChap: 'q2_thanh', minTurn: 1, maxTurn: 2, eventId: 'q2_tt_tukinhvao', status: 'pending' }],
     applied: { 'duocnhac:nhanthu_refined': true },
     journal: [{ text: 'Chiến tích Q1' }]
   },
@@ -394,7 +419,7 @@ assert('Chuyển sang Q2: S.book === 2', ctx.S.book === 2);
 assert('Chuyển sang Q2: Mang theo đúng Tứ Vị Tửu Trùng (tuvi)', ctx.S.gu.some(g => g.k === 'tuvi'));
 assert('Chuyển sang Q2: Mang theo Dương Cổ (duongco) do đã dùng Âm Cổ lên BNB', ctx.S.gu.some(g => g.k === 'duongco'));
 assert('Chuyển sang Q2: S.story được kế thừa từ Q1', ctx.S.story && ctx.S.story.outcomes.duocnhac === 'nhanthu_refined');
-assert('Chuyển sang Q2: S.story.pending được reset rỗng sau khi dùng Thiền', ctx.S.story.pending.length === 0);
+assert('Chuyển sang Q2: pending nhắm chương sau được giữ để trả nhân quả', ctx.S.story.pending.some(p => p.id === 'old_pending'));
 assert('Chuyển sang Q2: S.story.journal lưu giữ các chiến tích hào hùng từ Q1', ctx.S.story.journal.length > 0);
 
 // Nạp các module Q2 cho PR-08

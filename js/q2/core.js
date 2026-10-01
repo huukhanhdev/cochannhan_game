@@ -61,7 +61,6 @@ function startQ2(ending){
     cicada:{charge:0},snaps:[],rewinds:0,drift:0,driftStep:0,later:[],evLast:{},evSeen:{}};
   if(old&&old.story){
     S.story=JSON.parse(JSON.stringify(old.story));
-    S.story.pending=[];
   }
   if(typeof initStoryState==='function') initStoryState(S);
   S.hp=maxHp();S.ess=maxEss();
@@ -122,6 +121,7 @@ function startTurn2(){
   const cid=S.canon[S.turn];
   // Như Quyển 1: mốc chờ người chơi đối mặt, hết việc thì tự tới; mốc trong URGENT hoặc ch.urgent ập tới ngay
   if(cid&&EV[cid]&&(!EV[cid].cond||EV[cid].cond())){if(URGENT.has(cid)||(ch.urgent||[]).includes(cid))S.evq.push(cid);else S.pend=cid}
+  queueStoryPending(S.book||2,S.chap,S.turn);
   // Quá hạn chương mà chưa kết (ví dụ chạy khỏi trận cuối): gặp lại mốc cuối
   if(S.turn>ch.turns&&!S.evq.length&&!S.pendingChap){const last=ch.canon[ch.turns];if(last)S.evq.push(last)}
   // Chuyện bên lề của chương: mỗi chuyện một lần, theo thứ tự, khi tuần này chưa có gì
@@ -163,9 +163,9 @@ function renderMap2(st){
       ${spots.map(s=>{
         const isTuLuyen = s.id==='tuluyen';
         const cc = isTuLuyen && typeof cultCapped==='function' && cultCapped();
-        const lbl = cc ? `${s.n} (Trần cảnh giới)` : s.n;
+        const lbl = cc ? (cc.type==='break'?'Xung kích bích khiếu':`${s.n} (Trần cảnh giới)`) : s.n;
         const tip = cc ? cc.msg : `${s.d}${s.minor?'':isTuLuyen?' · dùng hết việc còn lại':' · 1 việc'}`;
-        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
+        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc&&cc.type==='cap'?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
       }).join('')}
     </div>
     <div class="map-foot">

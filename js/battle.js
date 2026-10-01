@@ -43,12 +43,15 @@ const SCENE_NAME={forest:'Rừng trúc Thanh Mao',village:'Cổ Nguyệt sơn tr
 const SKILL_GLYPH={strike:'拳',herb:'药',flee:'走',nguyetquang:'月',huyetnguyet:'血',nguyetmang:'芒',ngocbi:'玉',thietbi:'铁',cuongnham:'岩',thienbong:'蓬',trilieu:'愈',
   cuongthu:'钳',thachkhieu:'石',amduong:'阴',duongco:'阳',tieuguang:'光',toanphong:'风',dongbi:'铜',thanhti:'丝',nguyettoan:'旋',nguyetngan:'银',nguyetnghe:'裳',bangdao:'刀',thuytrao:'水',anlan:'鳞',hoalo:'炉',cuudiep:'草',cuxikimngo:'蜈',mokmi:'魅',daosihuyetbuc:'蝠',sinhco:'叶',
   huyet_tram:'斩',hung_tram:'劈',bachngoc:'瓷',man_luc:'撞',nguyet_xa:'射',thien_khue:'护',nguyet_toan_xa:'旋',bang_trao_ho:'盾',kim_ngo_tram:'齿',huyet_duc_phong:'吸',
-  thuy_nguyet:'澜',bang_huyet:'霜',tienlydilang:'蛛'};
+  thuy_nguyet:'澜',bang_huyet:'霜',tienlydilang:'蛛',
+  boigiap:'甲',cotthuong:'枪',loatoan:'锥',cotthu:'刺',tichhoi:'灰',thanhnhiet:'清',khieukhieu:'跳',
+  khiluc:'气',tulucsinh:'苏',kimcuong:'刚',trucxung:'冲',baodan:'爆',dochat:'蝎',hoathu:'焰',baoviem:'炎',
+  kimquang:'芒',hondao:'魂',cotduc:'翼'};
 const INTENT_SEAL={atk:'攻',heavy:'猛',guard:'守'};
 // Nhóm cổ quyết định hình dạng đòn đánh trong đấu trường
 const GU_EL={nguyetquang:'nguyet',tieuguang:'nguyet',nguyetmang:'beam',nguyetngan:'ngan',nguyettoan:'toan',huyetnguyet:'huyet',
-  bangdao:'bang',toanphong:'phong',cuxikimngo:'kim',daosihuyetbuc:'buc'};
-const EL_TINT={nguyet:0x9fd8ff,ngan:0xeef4ff,toan:0x9ff0c8,huyet:0xff5a44,bang:0xbfe8ff,phong:0xd8f0e8,kim:0xf0c46a,buc:0xd8342a,beam:0xbfe6ff,fist:0xece8cf};
+  bangdao:'bang',toanphong:'phong',cuxikimngo:'kim',daosihuyetbuc:'buc',cotthuong:'beam',loatoan:'beam',cotthu:'kim',khiluc:'phong',hoathu:'fire',baoviem:'fire',kimquang:'beam',hondao:'buc',baodan:'fire'};
+const EL_TINT={nguyet:0x9fd8ff,ngan:0xeef4ff,toan:0x9ff0c8,huyet:0xff5a44,bang:0xbfe8ff,phong:0xd8f0e8,kim:0xf0c46a,buc:0xd8342a,beam:0xbfe6ff,fist:0xece8cf,fire:0xff6a3a};
 // Màu hộ thể theo cổ
 const SHIELD_TINT={thuytrao:0x6ab8ff,thanhti:0x9fe0a0,hoalo:0xff8a3a,mokmi:0x6fbf5a,thienbong:0xf0e0c0,bachngoc:0xf4f4ea,nguyetnghe:0xbfd8ff,thietbi:0xb8c2c8,dongbi:0xd89a5a,cuongnham:0xa89a88};
 const BRUSH='"Ma Shan Zheng", "STKaiti", "KaiTi", "Kaiti SC", serif';

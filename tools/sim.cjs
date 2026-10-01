@@ -50,7 +50,7 @@ function botTurn(){
   if(S.mg)return botMG();
   if(S.combat)return botCombat();
   if(S.evq.length)return botEvent();
-  if(S.panel==='tuluyen'){const keep=foodCost()*2+10;const cap=cultMaxStones();const n=[cap,Math.ceil(cap/2),0].find(n=>S.stones-n>=keep)||0;if(cultCapped()||(S.ess===0&&n===0)){S.panel=null;advance();return}return cultivate(n)}
+  if(S.panel==='tuluyen'){const keep=foodCost()*2+10;const cap=cultMaxStones();const n=[cap,Math.ceil(cap/2),0].find(n=>S.stones-n>=keep)||0;const cc=cultCapped();if(cc&&cc.type==='break')return beginBreakthrough();if(cc||(S.ess===0&&n===0)){S.panel=null;advance();return}return cultivate(n)}
   if(S.panel){S.panel=null;advance();return}
   // Việc phụ: mua cổ, luyện cổ
   if(S.stones>90){const k=S.shop.find(k=>['attack','guard','heal'].includes(GU[k].t)&&!hasGu(k)&&guPrice(k)<S.stones-40);if(k){buyGu(S.shop.indexOf(k))}}

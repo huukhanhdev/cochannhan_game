@@ -5,7 +5,7 @@
 // Lang triều gộp còn 2 tuần (PR-5): Lang Vương (c_lang3) tới cuối tuần 20, là đại sự chờ sau cảnh Thanh Thư
 // Mốc có cond là mốc nhân quả: thiếu nhân thì tuần đó không có mốc (xem KE_HOACH_PR5.md, phần D).
 // Đại sự bắt buộc (không cond): khai khiếu, khảo hạch, thương đội, Bạch gia tuần tra, gặp Bạch Ngưng Băng, lang triều, lăng mộ lộ ra, Huyết Cương, trận cuối.
-const CANON={1:'c_khaikhieu',3:'c_giasan',4:'c_conghocduong',6:'c_khaohach',7:'c_dothach',8:'c_tramthuy',9:'c_xichluyen',10:'c_thuongdoi',11:'c_kimsinh',
+const CANON={1:'c_khaikhieu',3:'c_giasan',4:'c_conghocduong',6:'c_khaohach',8:'c_tramthuy',9:'c_xichluyen',10:'c_thuongdoi',11:'c_kimsinh',
   13:'c_dieutra',15:'c_thuongdoiroi',16:'c_baigia',17:'c_bai',19:'c_lang1',20:'c_lang2',21:'c_nhanthu',22:'c_luancong',
   23:'c_thiet',24:'c_huyetdong',25:'c_thietvay',26:'c_nhatdai',27:'c_final',28:'c_tienly'};
 const FINAL_TURN=28;
@@ -395,7 +395,8 @@ c_khaohach:{canon:1,title:'Khảo hạch săn lợn rừng',hint:'Khảo hạch 
     }
   }},
 
-c_dothach:{canon:1,title:'Phường đổ thạch',hint:'Hóa thạch cổ trùng',
+c_dothach:{canon:1,title:'Phường đổ thạch',hint:'Hóa thạch cổ trùng',cond:()=>S.f.caravan&&!S.f.dothachDone,
+  post:()=>{S.f.dothachDone=1},
   who:'gialao',
   scene:{
     start:'quay_da',budget:2,
@@ -582,8 +583,8 @@ c_xichluyen:{canon:1,title:'Tống tiền Xích Luyện',hint:'Bí mật Thủy 
 c_thuongdoi:{canon:1,title:'Thương đội Cổ gia',hint:'Thương đội Cổ Phú đến',
   text:()=>'Tiếng chuông lạc đà vang dưới chân núi. Thương đội Cổ gia do Cổ Phú dẫn đầu lên Thanh Mao Sơn, mang theo cổ trùng hiếm từ khắp nơi và mở quầy mổ thạch.'+(mem('doanthach')?' Ký ức kiếp trước giúp ngươi nhìn thấu vân đá.':''),
   choices:[
-    {t:'Đến xem hàng và dạo chợ thương đội',eff:()=>{if(window.SFX)SFX.bell();S.f.caravan=1;meet('giaphu');meet('kimsinh');rollShop();return 'Chợ thương đội mở cửa, có cả Xá Lợi Cổ và quầy mổ thạch.'}},
-    {t:'Tiến thẳng vào quầy mổ thạch',eff:()=>{if(window.SFX)SFX.bell();S.f.caravan=1;meet('giaphu');meet('kimsinh');rollShop();S.panel='gamble';return 'Ngươi rảo bước tới chỗ những khối đá hóa thạch cổ trùng.'}},
+    {t:'Đến xem hàng và dạo chợ thương đội',eff:()=>{if(window.SFX)SFX.bell();S.f.caravan=1;meet('giaphu');meet('kimsinh');rollShop();if(!S.f.dothachDone&&!S.evq.includes('c_dothach'))S.evq.push('c_dothach');return 'Chợ thương đội mở cửa, có cả Xá Lợi Cổ và quầy mổ thạch. Một khối tử thạch ở góc quầy khiến ngươi dừng mắt.'}},
+    {t:'Tiến thẳng vào quầy mổ thạch',eff:()=>{if(window.SFX)SFX.bell();S.f.caravan=1;meet('giaphu');meet('kimsinh');rollShop();if(!S.f.dothachDone&&!S.evq.includes('c_dothach'))S.evq.push('c_dothach');return 'Ngươi rảo bước tới chỗ những khối đá hóa thạch cổ trùng.'}},
   ]},
 
 // Ch 44–47 (đọc toàn văn): Kim Sinh bán sâu béo giả dạng Hắc Thỉ Cổ, Cổ Phú ra bồi thường 500 thạch gấp đôi;
@@ -1028,17 +1029,16 @@ c_nhanthu:{canon:1,title:'Bí phương tàn khốc',hint:'Nhân Thú Táng Sinh 
     },
   ]},
 
-// Chương 100: Hợp luyện Bạch Ngọc Cổ từ Bạch Thỉ + Ngọc Bì, săn Ngọc Nhãn Thạch Hầu
-c_bachngoc:{canon:1,title:'Bạch Ngọc Cổ',hint:'Hợp luyện Bạch Ngọc',cond:()=>!hasGu('bachngoc'),
-  post:()=>{S.f.bachngocDone=1},
-  text:()=>'Sau lang triều, ngươi có Ngọc Bì Cổ và Bạch Thỉ Cổ. Ký ức kiếp trước nhắc nhở: hai con này hợp luyện thành Bạch Ngọc Cổ — giáp hư ảo trắng ngọc, chỉ nhận 30% sát thương, tốn rất ít chân nguyên. Nhưng cần 60 nguyên thạch và nuôi bằng ngọc thạch.',
+// Chương 100: sau khi lên Nhị chuyển, hợp luyện Bạch Ngọc Cổ từ Bạch Thỉ + Ngọc Bì.
+c_bachngoc:{canon:1,title:'Bạch Ngọc Cổ',hint:'Hợp luyện Bạch Ngọc',cond:()=>!S.f.bachngocDone&&!hasGu('bachngoc')&&hasGu('ngocbi')&&hasGu('bachthi'),
+  text:()=>'Sau khi bước vào Nhị chuyển, Ngọc Bì Cổ và Bạch Thỉ Cổ đã không còn đủ sức ứng phó hiểm cảnh phía trước. Ký ức kiếp trước nhắc nhở: hai con này hợp luyện thành Bạch Ngọc Cổ — giáp hư ảo trắng ngọc, chỉ nhận 30% sát thương, tốn rất ít chân nguyên. Nhưng cần 60 nguyên thạch và nuôi bằng ngọc thạch.',
   choices:()=>[
     {t:'Hợp luyện ngay (cần 60 nguyên thạch, mất Bạch Thỉ + Ngọc Bì)',canon:1,req:()=>hasGu('ngocbi')&&hasGu('bachthi')&&S.stones>=60,reqT:'Cần Ngọc Bì, Bạch Thỉ và 60 nguyên thạch',eff:()=>{
-      loseGuQ1('ngocbi');loseGuQ1('bachthi');S.stones-=60;gainGu('bachngoc',true);
+      loseGuQ1('ngocbi');loseGuQ1('bachthi');S.stones-=60;gainGu('bachngoc',true);S.f.bachngocDone=1;
       if(typeof storySetOutcome==='function') storySetOutcome('bachngoc','refined',{choiceText:'Hợp luyện thành công Bạch Ngọc Cổ (Nhị chuyển)',isLech:false,note:'Phòng ngự ngọc sắc toàn diện, tốn cực ít chân nguyên.'});
       return 'Ngươi rót chân nguyên xích thiết vào hai con cổ. Chúng tan thành ánh sáng trắng ngọc, hội tụ thành một con cổ mới: Bạch Ngọc Cổ! Da hóa ngọc trắng, phòng ngự toàn diện. Từ nay nuôi bằng ngọc thạch: 8 lượng / 20 ngày.';}},
     {t:'Chờ tích lũy thêm nguyên thạch',eff:()=>'Ngươi quyết định đợi. Bạch Thỉ và Ngọc Bì vẫn ở trong không khiếu.'},
-    {t:'Bán Bạch Thỉ đổi nguyên thạch',req:()=>hasGu('bachthi'),eff:()=>{loseGuQ1('bachthi');S.stones+=80;return 'Bán Bạch Thỉ: +80 nguyên thạch. Mất cơ hội hợp luyện Bạch Ngọc.'}},
+    {t:'Bán Bạch Thỉ đổi nguyên thạch',req:()=>hasGu('bachthi'),eff:()=>{loseGuQ1('bachthi');S.stones+=80;S.f.bachngocDone=1;return 'Bán Bạch Thỉ: +80 nguyên thạch. Mất cơ hội hợp luyện Bạch Ngọc.'}},
   ]},
 
 // Canon VN 162–189: dưới nguyên tuyền Cổ Nguyệt có một gốc Thiên Nguyên Bảo Liên chưa hiện thực thể. Phương Nguyên lén đổ nguyên thạch nuôi nó, đợi lúc sơn trại sụp đổ thì đoạt.

@@ -35,11 +35,8 @@ function rewindTime(manual){
   // Chỉ ký ức theo được về quá khứ
   S.mem=Object.assign({},S.mem,old.mem);S.combos=Object.assign({},S.combos,old.combos);
   S.cicada={charge:0};S.rewinds=(old.rewinds||0)+1;
-  // Đảm bảo story state được bảo toàn và lọc bỏ pending của tương lai bị hủy
+  // Snapshot đã chứa đúng các lời hẹn tồn tại ở thời điểm quay về; giữ nguyên chúng.
   if(typeof initStoryState==='function') initStoryState(S);
-  if(S.story && Array.isArray(S.story.pending)){
-    S.story.pending = S.story.pending.filter(p => p.minTurn <= S.turn);
-  }
   if(typeof storyAddJournal==='function') storyAddJournal('Xuân Thu Thiền nghịch chuyển quang âm về tuần ' + snap.turn + '. Dòng thời gian thay đổi!', 'warning', 'xuanthu');
   // Quang âm bị khuấy động: thế giới lệch thêm
   if(typeof driftAdd==='function')driftAdd(3,'',1);

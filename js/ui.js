@@ -88,15 +88,17 @@ function renderHungerWarning(){
 /* ---------- Cảnh báo nguy cơ & Dự báo nuôi cổ ---------- */
 function hudForecastHTML(){
   if(typeof S==='undefined'||!S) return '';
+  const chapter=typeof curChap==='function'?curChap():null;
+  const unit=chapter?chapter.unit:'tuần';
   const cost=typeof foodCost==='function'?foodCost():0;
   const hungry=(S.gu||[]).filter(g=>(g.h||0)>0);
   let foodChip='';
   if(hungry.length){
     foodChip=`<span class="fc-chip danger" title="${hungry.map(g=>GU[g.k]?GU[g.k].n:g.k).join(', ')} đang đói!">⚠ <b>${hungry.length} cổ đói</b></span>`;
   }else if(S.stones<cost){
-    foodChip=`<span class="fc-chip danger" title="Nuôi cần ${cost} thạch, hiện có ${S.stones} thạch">⚠ Nuôi tuần tới: <b>thiếu ${cost-S.stones} thạch</b></span>`;
+    foodChip=`<span class="fc-chip danger" title="Nuôi cần ${cost} thạch, hiện có ${S.stones} thạch">⚠ Nuôi ${unit} tới: <b>thiếu ${cost-S.stones} thạch</b></span>`;
   }else{
-    foodChip=`<span class="fc-chip ${cost>15?'warn':'good'}" title="Dự kiến tiêu hao ${cost} nguyên thạch mỗi tuần">Nuôi tuần tới: <b>${cost} thạch</b></span>`;
+    foodChip=`<span class="fc-chip ${cost>15?'warn':'good'}" title="Dự kiến tiêu hao ${cost} nguyên thạch mỗi ${unit}">Nuôi ${unit} tới: <b>${cost} thạch</b></span>`;
   }
 
   let dangerChip='';
@@ -107,16 +109,21 @@ function hudForecastHTML(){
     dangerChip=`<span class="fc-chip warn" title="${INJURY[S.inj.k]?INJURY[S.inj.k].d:injName}">⚠ <b>${injName}</b></span>`;
   }else{
     const cal=S.canon||CANON;
-    const nextTurn=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>t>=S.turn);
+    const nextTurn=Object.keys(cal).map(Number).sort((a,b)=>a-b).find(t=>{
+      const id=cal[t],ev=EV[id];
+      if(!ev||(ev.cond&&!ev.cond()))return false;
+      return t>S.turn||(t===S.turn&&S.pend===id);
+    });
     if(nextTurn){
       const evId=cal[nextTurn];
       const ev=EV[evId];
       const diff=nextTurn-S.turn;
-      const dLabel=diff===0?'tuần này':`còn ${diff} tuần`;
+      const dLabel=diff===0?`${unit} này`:`còn ${diff} ${unit}`;
       dangerChip=`<span class="fc-chip" title="Biến cố: ${ev?.hint||ev?.title||evId} (${dLabel})">Biến cố tới: <b>${ev?.hint||ev?.title||evId}</b> (${dLabel})</span>`;
     }else if(S.story&&S.story.pending&&S.story.pending.length){
       const p=S.story.pending[0];
-      dangerChip=`<span class="fc-chip warn" title="Nhân quả sắp chuyển dời">Sắp tới: <b>${p.evId}</b></span>`;
+      const pe=EV[p.eventId]||{};
+      dangerChip=`<span class="fc-chip warn" title="Nhân quả sắp chuyển dời">Sắp tới: <b>${esc(pe.hint||pe.title||p.eventId||p.id)}</b></span>`;
     }else{
       dangerChip=`<span class="fc-chip good">Thiên cơ: <b>Bình yên</b></span>`;
     }
@@ -138,18 +145,20 @@ function renderJournalModal(){
     content=`<div class="journal-list">
       ${list.map(e=>{
         const ev=EV[e.evId]||{};
-        const title=ev.title||e.title||e.evId;
-        const isCanon=!e.isLech;
-        const timeStr=`Tuần ${e.turn||'?'} · Tháng ${Math.ceil((e.turn||1)/3)}`;
-        return `<div class="journal-card ${isCanon?'canon':'diso'}">
+        const title=ev.title||e.title||e.chainId||e.tag||'Hệ quả';
+        const ch=e.chap&&typeof CHAPTERS!=='undefined'?CHAPTERS[e.chap]:null;
+        const timeStr=e.book===2&&ch?`${ch.unit[0].toUpperCase()+ch.unit.slice(1)} ${e.turn||1} · ${ch.n}`:`Tuần ${e.turn||1} · Tháng ${Math.ceil((e.turn||1)/3)}`;
+        const kind=e.isLech===true?'diso':e.isLech===false?'canon':'effect';
+        const kindText=kind==='diso'?'Dị số':kind==='canon'?'Nguyên tác':'Hệ quả';
+        return `<div class="journal-card ${kind}">
           <div class="journal-top">
             <span class="journal-ev">${esc(title)}</span>
             <div style="display:flex;gap:6px;align-items:center">
               <span class="pill">${timeStr}</span>
-              <span class="pill ${isCanon?'canonp':'danger'}">${isCanon?'Nguyên tác':'Dị số'}</span>
+              <span class="pill ${kind==='canon'?'canonp':kind==='diso'?'danger':''}">${kindText}</span>
             </div>
           </div>
-          <div class="journal-choice">Ngươi đã định: <b>${esc(e.choiceText||e.outcomeId||'Đã định đoạt')}</b></div>
+          <div class="journal-choice">${kind==='effect'?'Ghi nhận':'Ngươi đã định'}: <b>${esc(e.choiceText||e.outcomeId||'Đã định đoạt')}</b></div>
           ${e.note?`<div class="journal-impact">${esc(e.note)}</div>`:''}
         </div>`;
       }).join('')}
@@ -529,6 +538,7 @@ function renderStage(){
     const cc=typeof cultCapped==='function'&&cultCapped();
     st.innerHTML=`<div class="paper">${head('Bế quan tu luyện','Mười ngày trong phòng kín')}
       ${cc?`<div class="banner warning" style="padding:10px 14px;margin-bottom:12px;border-radius:6px;background:rgba(210,140,30,0.18);border:1px solid #d93;color:#ffd866;font-size:13px;line-height:1.5"><b>⚠️ CẢNH BÁO:</b> ${cc.msg}</div>`:''}
+      ${cc&&cc.type==='break'?`<button class="btn big wide" data-a="breakthrough">Xung kích bích khiếu ${CH[S.chuyen+1]} chuyển</button>`:''}
       <p class="dimt">Chân nguyên hiện có ${Math.floor(S.ess)}. Mỗi viên nguyên thạch hồi 5 chân nguyên; một lần bế quan chỉ hấp thu tới khi không khiếu đầy thêm một lần (tối đa ${cap} viên). Hệ số tu luyện ×${cultMult().toFixed(2)}.${S.inj&&S.inj.k==='kinh'?' Kinh mạch tổn hại làm tu luyện chậm đi.':''}</p>
       <div class="act-grid-rich">${opts.map(n=>{
         const g=Math.round((Math.floor(S.ess)+n*5)*cultMult()*(.4+.2*apLeft()));
@@ -587,9 +597,9 @@ function renderStage(){
       ${spots.map(s=>{
         const isTuLuyen = s.id==='tuluyen';
         const cc = isTuLuyen && typeof cultCapped==='function' && cultCapped();
-        const lbl = cc ? `${s.n} (Viên mãn)` : s.n;
+        const lbl = cc ? (cc.type==='break'?'Xung kích bích khiếu':`${s.n} (Viên mãn)`) : s.n;
         const tip = cc ? cc.msg : `${s.d}${s.minor?'':isTuLuyen?' · dùng hết việc còn lại trong tuần':' · 1 việc'}`;
-        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
+        return `<button class="spot ${s.minor?'minor':''} ${s.tag||''} ${!s.minor&&S.ap<=0?'exhausted':''} ${cc&&cc.type==='cap'?'locked':''}" data-a="${s.id}" style="left:${s.x}%;top:${s.y}%"><span class="sseal">${s.g}</span><span class="slbl">${lbl}</span><span class="stip">${tip}</span></button>`;
       }).join('')}
     </div>
     <div class="map-foot">

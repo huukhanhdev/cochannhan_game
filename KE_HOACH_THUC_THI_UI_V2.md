@@ -28,16 +28,11 @@ graph TD
 
 ### 🔹 V2-00: Baseline Audit, Design Tokens & Mock Saves
 * **Mục tiêu:** Rà soát toàn bộ DOM hooks, kiểm kê kho asset thực tế, thiết lập bộ design token CSS và tạo các save profile mẫu để test nhanh các màn.
-- [ ] **DOM Contract Map:** Lập danh sách toàn bộ ID và class mà `js/engine.js`, `js/battle.js`, `js/rt.js`, `js/ui.js`, `js/story.js` đang truy vấn (`hud`, `mainPanel`, `stage`, `sheet`, `log`, `modalContainer`, `titleLayer`...).
-- [ ] **Asset & Font Audit:** Kiểm kê đường dẫn ảnh thực qua hàm `asset()`, kiểm tra tương thích font Google `Ma Shan Zheng`, `Be Vietnam Pro`, `Cormorant Garamond` (kiểm tra hiển thị dấu tiếng Việt đầy đủ).
-- [ ] **Design Tokens (`css/ui-v2/tokens.css`):**
-  - Mực sâu: `#0B1115`
-  - Giấy ngà: `#E8DDC7`
-  - Ngọc trầm: `#75B69A`
-  - Đồng cổ: `#CBA968`
-  - Chu sa: `#C35B50`
-  - Lam lạnh: `#91B9CB`
-- [ ] **Save Mẫu (Mock Saves):** Tạo 3 mock state trong `tools/mock_saves.json` (Q1 đầu game, Q1 Lang triều, Q2 Thương Gia Thành) để nhảy trực tiếp vào bất kỳ màn nào kiểm thử giao diện mà không cần chơi lại từ đầu.
+- [x] **DOM Contract Map:** Lập danh sách toàn bộ ID và class mà `js/engine.js`, `js/battle.js`, `js/rt.js`, `js/ui.js`, `js/story.js` đang truy vấn (`hud`, `mainPanel`, `stage`, `sheet`, `log`, `modalContainer`, `titleLayer`...). *(Hoàn thành 01/10/2026)*
+- [x] **Asset & Font Audit:** Kiểm kê đường dẫn ảnh thực qua hàm `asset()`, kiểm tra tương thích font Google `Ma Shan Zheng`, `Be Vietnam Pro`, `Cormorant Garamond` (kiểm tra hiển thị dấu tiếng Việt đầy đủ). *(Hoàn thành 01/10/2026)*
+- [x] **Design Tokens (`css/ui-v2/tokens.css`):** Đã tạo tệp định nghĩa đầy đủ bảng màu Mực sâu, Giấy ngà, Ngọc trầm, Đồng cổ, Chu sa, Lam lạnh, Aura cảnh giới và Typography. *(Hoàn thành 01/10/2026)*
+- [x] **Save Mẫu (Mock Saves `js/ui-v2/mock_data.js`):** Tạo 3 mock state (`q1_early`, `q1_mid`, `q2_thanh`) phục vụ preview sandbox độc lập. *(Hoàn thành 01/10/2026)*
+- [x] **Sandbox Preview Độc Lập (`ui_v2_preview.html`):** Xây dựng trang preview độc lập tách biệt khỏi main game để User trực tiếp mở trình duyệt kiểm tra và phê duyệt. *(Hoàn thành 01/10/2026)*
 
 ---
 
@@ -149,7 +144,7 @@ graph TD
 
 | Giai đoạn | Mô tả hạng mục | File can thiệp chính | Trạng thái | Ngày hoàn thành |
 | :---: | :--- | :--- | :---: | :---: |
-| **V2-00** | Baseline Audit, Tokens & Mock Saves | `css/ui-v2/tokens.css`, `tools/mock_saves.json` | ⏳ Đang chờ | — |
+| **V2-00** | Baseline Audit, Tokens & Mock Saves | `css/ui-v2/tokens.css`, `js/ui-v2/mock_data.js`, `ui_v2_preview.html` | ✅ Hoàn thành | 01/10/2026 |
 | **V2-01** | Shell & State Adapter | `index.html`, `js/ui_adapter.js`, `css/ui-v2/shell.css` | ⏳ Đang chờ | — |
 | **V2-02** | Màn Hành Trình & Sơn Thủy Map | `js/ui_journey.js`, `css/ui-v2/journey.css` | ⏳ Đang chờ | — |
 | **V2-03** | Hội Thoại Điện Ảnh & Nhân Quả Lục | `js/ui_story.js`, `css/ui-v2/story.css` | ⏳ Đang chờ | — |

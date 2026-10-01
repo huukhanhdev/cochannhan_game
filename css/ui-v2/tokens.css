@@ -1,0 +1,48 @@
+/* UI V2 — Tokens & Design System (Sơn Thủy Xianxia) */
+:root {
+  /* Bảng màu nền tảng theo tài liệu 08_UI_ART_DIRECTION_V2.md */
+  --v2-ink-deep: #070B0E;         /* Mực sâu huyền đẩu: nền sâu nhất */
+  --v2-ink: #0B1115;              /* Mực đậm: nền đọc chữ, card panel */
+  --v2-ink-panel: #111A20;        /* Mực lam mờ: surface, card con */
+  --v2-ink-panel2: #16222B;       /* Mực lam sáng: input, hover */
+  --v2-ink-line: #22323C;         /* Nét cọ biên giới: border mỏng */
+  --v2-ink-line-gold: #4A3C22;    /* Nét mực đồng cổ: viền nhấn */
+
+  --v2-paper: #E8DDC7;            /* Giấy ngà: tiêu đề lớn, ấn chú */
+  --v2-paper-dim: #D1C5AD;        /* Giấy nhạt: chữ nội dung chính */
+  --v2-paper-muted: #8E9E98;      /* Khói sương: nhãn phụ, mô tả */
+
+  --v2-jade: #75B69A;             /* Ngọc trầm: chân nguyên, hồi phục, thanh tịnh */
+  --v2-jade-glow: rgba(117, 182, 154, 0.22);
+
+  --v2-gold: #CBA968;             /* Đồng cổ / Hoàng kim: điểm nhấn, viền chọn, mốc */
+  --v2-gold-bright: #E2C07D;
+  --v2-gold-glow: rgba(203, 169, 104, 0.25);
+
+  --v2-cinnabar: #C35B50;         /* Chu sa / Huyết sắc: sát phạt, nguy cơ, ma đạo */
+  --v2-cinnabar-glow: rgba(195, 91, 80, 0.25);
+
+  --v2-frost: #91B9CB;            /* Lam lạnh / Hàn băng: tuyết lãnh, Bạch Ngưng Băng */
+  --v2-frost-glow: rgba(145, 185, 203, 0.22);
+
+  /* Aura chân nguyên theo cảnh giới */
+  --v2-aura-1: #5FAE8A; /* Thanh đồng */
+  --v2-aura-2: #C8664E; /* Xích thiết */
+  --v2-aura-3: #C9D3D6; /* Bạch ngân */
+  --v2-aura-4: #E0B64A; /* Hoàng kim */
+
+  /* Phông chữ */
+  --v2-font-body: "Be Vietnam Pro", system-ui, -apple-system, sans-serif;
+  --v2-font-display: "Cormorant Garamond", Georgia, serif;
+  --v2-font-brush: "Ma Shan Zheng", "STKaiti", "KaiTi", "Kaiti SC", serif;
+
+  /* Bán kính & Bóng đổ */
+  --v2-radius-sm: 4px;
+  --v2-radius-md: 8px;
+  --v2-radius-lg: 12px;
+  --v2-radius-seal: 2px;
+
+  --v2-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.55);
+  --v2-shadow-seal: 0 0 15px var(--v2-gold-glow);
+  --v2-shadow-blood: 0 0 18px var(--v2-cinnabar-glow);
+}

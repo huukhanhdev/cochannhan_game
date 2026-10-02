@@ -351,3 +351,11 @@ console.log('AI giữ tầm: không nhích/wobble, không tăng nhịp nghĩ khi
   assert.equal(B.events.filter(e=>e.type==='release'&&e.who==='pn'&&e.skill==='atk').length,2);
 }
 console.log('Lệnh chờ giữ tới khi rảnh tay (đánh tay liên tiếp không mất lệnh): đạt.');
+// Đấm tay nhẹ: ra nhanh, gây sát thương nhưng không ngắt chiêu đang lấy đà của đối thủ.
+{
+  const B=battle(),p=B.actors.pn,b=B.actors.bnb;b.x=p.x+70;b.z=p.z;
+  SBSim.issue(B,'bnb',{skill:'atk'});SBSim.issue(B,'pn',{skill:'atk'});
+  advance(B,Math.ceil(p.sk.atk.startup*60)+1);
+  assert.ok(b.hp<b.maxHp);assert.equal(b.state,'act');assert.equal(b.act.s.id,'atk');
+}
+console.log('Đấm tay nhẹ không làm khựng: đạt.');

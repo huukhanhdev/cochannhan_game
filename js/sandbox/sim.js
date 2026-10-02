@@ -254,7 +254,7 @@
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind,hid:A.hid});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
-        hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
+        hurt(B,t,s.dmg,a,A.hid,{skill:s.id,light:!!s.light});
         if(s.slow&&t.state!=='shell'){t.slowUntil=B.t+s.slow.dur;t.slowF=s.slow.f}
         if(s.bleed&&t.state!=='ko'&&t.state!=='shell')t.bleed={dps:s.bleed.dps,until:B.t+s.bleed.dur,acc:0};
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
@@ -337,7 +337,8 @@
     if(o.dot)return;
     // khựng: ngắt chiêu đang ra; sau đó "vững thế" 1,2 giây không bị khựng tiếp (vẫn mất máu).
     // Đang thoát thân (Sương Yêu) hoặc chiêu có armor (chiêu lớn) thì không bị ngắt.
-    if(t.state!=='shell'&&B.t>=t.poiseUntil&&!(t.act&&(t.act.s.kind==='escape'||t.act.s.armor))){
+    // Đòn nhẹ (light: đấm tay không) gây sát thương nhưng không làm khựng, tránh khóa cứng bằng spam đấm nhanh.
+    if(!o.light&&t.state!=='shell'&&B.t>=t.poiseUntil&&!(t.act&&(t.act.s.kind==='escape'||t.act.s.armor))){
       if(t.act)emit(B,{type:'interrupt',who:t.id,skill:t.act.s.id,hid:t.act.hid});
       t.act=null;t.move=null;t.chase=false;setState(t,'hit');t.poiseUntil=B.t+.32+1.2;
     }

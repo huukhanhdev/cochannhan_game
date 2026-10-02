@@ -11,8 +11,8 @@
   const SB_KITS={
     // Chân nguyên (người dùng chốt 02/10): cổ sư thường hồi ≈0 trong trận (ch10: Bính đẳng 4%/giờ); hồi giữa cảnh tính theo giờ truyện.
     pn:{n:'Phương Nguyên',sprite:'phuong_nguyen',hp:220,ess:100,essRegen:0,speed:265,
-      atk:{id:'atk',n:'Đánh tay',icon:'拳',kind:'melee',clip:['atk','attack'],startup:.28,active:.10,recovery:.46,cd:0,cost:0,range:85,depth:44,dmg:13,
-        src:'ch100,131: sức 2 trư chi lực',d:'Chuột phải / trái vào địch: tự tới tầm rồi đấm.'},
+      atk:{id:'atk',n:'Đánh tay',icon:'拳',kind:'melee',clip:['atk','attack'],startup:.12,active:.08,recovery:.25,cd:0,cost:0,range:85,depth:44,dmg:10,light:true,
+        src:'ch100,131: sức 2 trư chi lực · đấm tay không cần vận cổ nên ra nhanh (người dùng 03/10); đòn nhẹ không làm khựng, 10 sát thương để spam đấm không khóa cứng BNB; số liệu là game',d:'Chuột phải / trái vào địch: tự tới tầm rồi đấm.'},
       skills:[
         {key:'q',id:'nguyet',n:'Nguyệt Mang',icon:'月',kind:'proj',clip:['sk_nguyet','cast'],startup:.38,active:.05,recovery:.32,cd:2.8,cost:9,
           speed:430,range:560,dmg:21,pierce:.5,fx:'moon',src:'ch101,131,136',d:'Phóng nguyệt nhận về phía con trỏ. Xuyên một nửa hộ thể.'},

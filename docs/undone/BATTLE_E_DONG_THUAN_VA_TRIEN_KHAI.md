@@ -168,3 +168,11 @@ Kiểm: `sandbox_regression.cjs` (thêm phí huỷ, Sương Yêu, nổ tay/rút 
 **Còn thiếu về hình:** chưa có sprite BNB một tay, nên sau sự kiện vẫn nhìn như đủ hai tay; vỏ băng đang là Graphics đa giác, chưa phải sprite vỏ băng riêng. Không coi cảnh này là asset cuối đã duyệt.
 
 Bằng chứng: [ảnh vỏ băng](../../previews/bnb-detonate-review/shell.png), [ảnh rút lui](../../previews/bnb-detonate-review/retreat.png), [kết quả Chrome](../../previews/bnb-detonate-review/browser_report.json). Hồi quy `sandbox_regression.cjs`, `sandbox_input_regression.cjs`, `fx_import_regression.py` đạt sau sửa.
+
+## 10. Blue-chan — sửa giật tư thế khi BNB giữ tầm (02/10/2026)
+
+Người dùng báo giật liên tục gần thông báo “khớp đông cứng”. Tái hiện bằng simulation production: PN đứng x600/z130, BNB x520/z130, Thường, seed123. BNB tới khoảng đứng rồi đổi `move → idle` mỗi ~0,067s: điểm giữ tầm có `wobble` cập nhật liên tục, mỗi bước chỉ 1–2px; `afterFree()` lúc tới đích kéo nhịp nghĩ AI về 0,06s. Đây là giật state/pose, không phải đo được FPS thấp hay do text hết Sương Yêu.
+
+Đã bỏ wobble ở nhánh giữ tầm, dùng vùng ổn định 12 world px: đủ gần vị trí mong muốn thì dừng; chỉ đi khi mục tiêu ra khỏi vùng. Đến đích move giữ nhịp AI đã chọn theo difficulty, không thúc nghĩ lại sau 0,06s. Hoàn tất chiêu/hit vẫn đánh thức AI như trước, buffer vẫn xử lý. Không đổi HP, damage, phí cổ hoặc tốc độ.
+
+Hồi quy bổ sung: BNB ở khoảng đứng ổn định 3s không tạo arrive hoặc đổi move/idle; tới đích không tăng nhịp nghĩ. Simulation/input đều đạt. Thay đổi có thể ảnh hưởng nhịp chiến đấu, không dùng lại số bench cũ để khẳng định tỷ lệ thắng mới.

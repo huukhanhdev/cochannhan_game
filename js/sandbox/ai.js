@@ -105,10 +105,14 @@
     // PN thả diều xa: cắt đường về khoảng thế đứng, không bám sát
     if(away&&dist>stand+150&&ok('dash')&&B.rng()<L.gap*.5){
       a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:clampX(t.x+vx*.4-side*stand),z:clampZ(t.z+vz*.4)});return}
-    // Thế đứng: giữ khoảng cách, khớp chiều sâu, nhích lệch chút cho khỏi đứng yên
-    const wobble=Math.sin(B.t*1.3+a.x*.01)*25;
+    // Thế đứng ổn định: bỏ wobble và dùng deadband để không lướt/dừng mỗi vài tick.
+    const gx=clampX(t.x-side*stand+(away?vx*.3:0)),gz=clampZ(t.z);
     a.intent='guard';
-    Sim.issue(B,a.id,{skill:'move',x:clampX(t.x-side*stand+(away?vx*.3:0)),z:clampZ(t.z+wobble)});
+    if(Math.hypot(gx-a.x,gz-a.z)<=12){
+      if(a.state==='move')Sim.issue(B,a.id,{skill:'stop'});
+      return;
+    }
+    Sim.issue(B,a.id,{skill:'move',x:gx,z:gz});
   }
   const SBAI={level:'thuong',LEVEL,
     tick(B,dt){

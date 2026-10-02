@@ -213,7 +213,7 @@
     const m=a.move;if(!m){setState(a,'idle');return}
     const dx=m.x-a.x,dz=m.z-a.z,d=Math.hypot(dx,dz),v=speedOf(B,a)*DT;
     if(Math.abs(dx)>2)a.face=Math.sign(dx);
-    if(d<=v){a.x=m.x;a.z=m.z;if(a.chase)return;a.move=null;a.stopAt=B.t;setState(a,'idle');emit(B,{type:'arrive',who:a.id});afterFree(B,a)}
+    if(d<=v){a.x=m.x;a.z=m.z;if(a.chase)return;a.move=null;a.stopAt=B.t;setState(a,'idle');emit(B,{type:'arrive',who:a.id});afterFree(B,a,false)}
     else{a.x+=dx/d*v;a.z+=dz/d*v}
   }
   function stepAct(B,a){
@@ -345,9 +345,9 @@
     a.x=clamp(a.x-dir*push,X0,X1);b.x=clamp(b.x+dir*push,X0,X1);
   }
   // Rảnh tay: người thắng sang tư thế win; lệnh trong bộ đệm được thực hiện
-  function afterFree(B,a){
+  function afterFree(B,a,wakeAI=true){
     if(a.winPending){a.winPending=false;setState(a,'win');a.move=null;return}
-    if(a.ai)a.aiT=Math.min(a.aiT??0,.06);
+    if(a.ai&&wakeAI)a.aiT=Math.min(a.aiT??0,.06);
     if(a.buffer&&B.t<=a.buffer.until){const c=a.buffer.cmd;a.buffer=null;issue(B,a.id,c)}
   }
 

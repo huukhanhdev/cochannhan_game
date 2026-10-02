@@ -320,3 +320,20 @@ console.log('Sương Yêu tăng công/tự hại, nổ tay chuyển pha một l�
   advance(B,20);assert.equal(p.state,'idle');assert.equal(p.act,null);
 }
 console.log('Nổ tay: giữ knockback trước Cường Thủ, ngắt armor không sót act: đạt.');
+
+// Đứng giữ tầm không tạo lệnh nhích/wobble hoặc đổi move-idle liên tục.
+{
+  const B=battle(),p=B.actors.pn,b=B.actors.bnb;
+  p.x=600;b.x=432;p.z=b.z=130;b.ai=true;b.aiT=0;
+  B.rng=()=>.99;b.calmFrom=0;
+  advance(B,180);
+  assert.equal(b.state,'idle');assert.equal(b.x,432);assert.equal(b.z,130);
+  assert.equal(B.events.filter(e=>e.type==='arrive').length,0);
+}
+// Đến đích đi không tăng nhịp AI lên 0,06s; lệnh buffer vẫn được xử lý.
+{
+  const B=battle(),b=B.actors.bnb;b.ai=true;b.aiT=.5;
+  SBSim.issue(B,'bnb',{skill:'move',x:b.x+1,z:b.z});SBSim.step(B);
+  assert.equal(b.state,'idle');assert.ok(b.aiT>.4);
+}
+console.log('AI giữ tầm: không nhích/wobble, không tăng nhịp nghĩ khi tới đích: đạt.');

@@ -36,3 +36,6 @@ assets/openaccess/
 
 # Ảnh nền gốc từ Muse (không deploy)
 incoming_maps/
+
+# Ảnh FX nguồn chưa duyệt (không deploy)
+incoming_fx/

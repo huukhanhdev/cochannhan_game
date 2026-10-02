@@ -34,6 +34,9 @@
   .cell .ic{font-size:21px;color:var(--gold);line-height:1.2}
   .cell .nm{font-weight:600;font-size:12px;text-align:center;line-height:1.15}
   .cell .sub{font-size:10.5px;color:var(--mute)}
+  .controls{display:flex;gap:8px;margin-top:8px}
+  .controls button{min-width:80px;min-height:44px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;font:inherit}
+  .cell.selected{outline:2px solid var(--gold)}
   .cell.busy{border-color:var(--gold)}
   .cell.lack .sub{color:var(--warn)}
   .cell.out{opacity:.4}
@@ -55,13 +58,15 @@
   <h1>Đấu thử: Phương Nguyên đấu Bạch Ngưng Băng</h1>
   <p class="note">Bản thử cơ chế E: trận luôn chạy. <kbd>Chuột phải</kbd> hoặc <kbd>←↑→↓</kbd> đi · <kbd>Chuột</kbd> vào Bạch Ngưng Băng: đuổi và đánh ·
     <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>D</kbd> cổ trùng, nhắm theo con trỏ · <kbd>Space</kbd> lướt · <kbd>1</kbd> Sinh Mệnh Diệp · <kbd>S</kbd> dừng.
-    Điện thoại: chạm đất để đi, chạm Bạch Ngưng Băng để đuổi đánh; chạm ô kỹ năng để dùng.</p>
+    Điện thoại: chạm đất để đi, chạm Bạch Ngưng Băng để đuổi đánh; chạm Nguyệt Mang rồi chạm sân để nhắm; Lướt dùng ngay theo hướng đi, đứng yên thì lướt xa địch; Dừng giống phím S.</p>
   <div id="arena"><div class="result" id="result"><div><h2 id="rtitle"></h2><p id="rsub"></p><button id="again">Đấu lại</button></div></div></div>
   <div id="hud"></div>
   <div class="opts">
     <label>Tốc độ trận <select id="spd"><option value="0.75">0,75×</option><option value="0.85" selected>0,85×</option><option value="1">1×</option></select></label>
-    <label>Độ khó <select id="lvl"><option value="de">Dễ</option><option value="thuong" selected>Thường</option><option value="kho">Khó</option></select></label>
+    <label>Độ khó <select id="lvl"><option value="de">Dễ</option><option value="thuong" selected>Thường</option><option value="kho">Khó</option><option value="cao">Cao thủ</option></select></label>
     <button id="restart">Đấu lại</button>
+    <label>AI <select id="ai-mode"><option value="pressure">Ép nhịp</option><option value="legacy">Đối chứng</option></select></label>
+    <label>Sân <select id="arena-size"><option value="wide">1200×260</option><option value="classic">1000×240 (đối chứng)</option></select></label>
     <button id="sound" type="button">Âm: bật</button>
     <label>Âm lượng <input id="volume" type="range" min="0" max="1" step="0.05" value="0.35" aria-label="Âm lượng chiêu"></label>
   </div>
@@ -71,6 +76,7 @@
 <script src="js/sandbox/kits.js"></script>
 <script src="js/sandbox/sim.js"></script>
 <script src="js/sandbox/ai.js"></script>
+<script src="js/sandbox/fx_assets.js"></script>
 <script src="js/sandbox/view.js"></script>
 <script src="js/sandbox/input.js"></script>
 <script src="js/sandbox/hud.js"></script>
@@ -87,7 +93,9 @@
   // độ khó: nhân sát thương của máy (kit sao chép, không sửa SB_KITS gốc)
   const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[lvl].dmgK;
   [K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
-  const B=SBSim.create(K,{});window.SB=B;
+  const classic=q.get('arena')==='classic';
+  const B=SBSim.create(K,{arena:classic?SBSim.ARENAS.classic:SBSim.ARENAS.wide});window.SB=B;
+  B.aiMode=q.get('ai')==='legacy'?'legacy':'pressure';
   const map=await fetch('assets/battle_maps/q1_bamboo_clearing/map.json').then(r=>r.ok?r.json():null).catch(()=>null);
   await SBView.mount(document.getElementById('arena'),B,map||'assets/art/bg_snow.jpg');
   SBHud.mount(document.getElementById('hud'),B);
@@ -95,6 +103,10 @@
   SBAudio.mount();
   const sel=(id,v)=>{const e=document.getElementById(id);e.value=String(v);e.onchange=()=>{q.set(id==='lvl'?'lvl':'spd',e.value);location.search=q.toString()}};
   sel('lvl',lvl);sel('spd',spd);
+  const arenaSelect=document.getElementById('arena-size');arenaSelect.value=classic?'classic':'wide';
+  arenaSelect.onchange=()=>{q.set('arena',arenaSelect.value);location.search=q.toString()};
+  const aiSelect=document.getElementById('ai-mode');aiSelect.value=B.aiMode;
+  aiSelect.onchange=()=>{q.set('ai',aiSelect.value);location.search=q.toString()};
   const restart=()=>location.reload();
   document.getElementById('restart').onclick=restart;document.getElementById('again').onclick=restart;
   let last=performance.now(),acc=0,shown=false;
@@ -103,9 +115,9 @@
     SBInput.tick();acc+=dt*spd;while(acc>=SBSim.DT){SBSim.step(B);acc-=SBSim.DT}
     const events=B.events.splice(0);
     SBView.render(events);SBAudio.consume(events,B,spd);SBHud.update();
-    if(B.over&&!shown&&B.t-B.over.at>1.2){shown=true;const w=B.over.winner==='pn';
-      document.getElementById('rtitle').textContent=w?'Thắng':'Thua';
-      document.getElementById('rsub').textContent=w?'Bạch Ngưng Băng gục ngã.':'Phương Nguyên gục ngã.';
+    if(B.over&&!shown&&B.t-B.over.at>1.2){shown=true;const w=B.over.winner===B.ids.player;
+      document.getElementById('rtitle').textContent=w?(B.over.retreat?'Thắng: ép lui':'Thắng'):'Thua';
+      document.getElementById('rsub').textContent=w?(B.over.retreat?'Bạch Ngưng Băng trọng thương, bỏ chạy.':'Bạch Ngưng Băng gục ngã.'):'Phương Nguyên gục ngã.';
       document.getElementById('result').classList.add('on')}
     requestAnimationFrame(frame);
   }

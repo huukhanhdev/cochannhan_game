@@ -1,0 +1,1049 @@
+{
+  "note": "trial only; runtime kit unchanged",
+  "jobs": [
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 15,
+        "losses": 285,
+        "timeouts": 0,
+        "seconds": 5674.800000000063,
+        "hp": 228,
+        "moving": 0,
+        "events": {
+          "act": 4818,
+          "release": 4267,
+          "dmg": 3009,
+          "interrupt": 1233,
+          "grab": 433,
+          "heal": 387,
+          "shield": 412,
+          "ko": 285,
+          "miss": 155,
+          "shieldEnd": 352
+        },
+        "pnDamage": 91196,
+        "bnbDamage": 61617,
+        "damageBySkill": {
+          "pn:nguyet": 6363,
+          "bnb:atk": 52364,
+          "pn:cuxi": 17926,
+          "dot:bleed": 5543,
+          "pn:cuongthu": 7731,
+          "pn:atk": 24054,
+          "bnb:locbangnhan": 38832
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 66,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7504.92000000042,
+          "bnb": 21795.200000000463
+        },
+        "winPercent": 5,
+        "meanSeconds": 18.9,
+        "winnerHp": 15.2,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 9,
+        "losses": 291,
+        "timeouts": 0,
+        "seconds": 5957.833333333378,
+        "hp": 144,
+        "moving": 332.4500000000263,
+        "events": {
+          "act": 6332,
+          "release": 5411,
+          "dmg": 3027,
+          "interrupt": 2159,
+          "grab": 322,
+          "heal": 440,
+          "shield": 454,
+          "shieldEnd": 374,
+          "ko": 291,
+          "miss": 328
+        },
+        "pnDamage": 95668,
+        "bnbDamage": 69323,
+        "damageBySkill": {
+          "pn:nguyet": 6317,
+          "pn:atk": 37029,
+          "bnb:atk": 50308,
+          "pn:cuxi": 15878,
+          "dot:bleed": 4303,
+          "pn:cuongthu": 5796,
+          "bnb:locbangnhan": 45360
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 22,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7816.390000000443,
+          "bnb": 21475.64000000081
+        },
+        "winPercent": 3,
+        "meanSeconds": 19.9,
+        "winnerHp": 16,
+        "movePercent": 5.6
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 254,
+        "losses": 46,
+        "timeouts": 0,
+        "seconds": 12577.416666666348,
+        "hp": 22538,
+        "moving": 4037.800000023802,
+        "events": {
+          "act": 8312,
+          "release": 6397,
+          "arrive": 7246,
+          "cancel": 4880,
+          "dmg": 2263,
+          "miss": 198,
+          "shield": 833,
+          "shieldEnd": 753,
+          "heal": 71,
+          "ko": 46,
+          "projEnd": 13,
+          "grab": 11,
+          "fizzle": 1
+        },
+        "pnDamage": 47384,
+        "bnbDamage": 88500,
+        "damageBySkill": {
+          "pn:nguyet": 9767,
+          "pn:cuxi": 25274,
+          "dot:bleed": 7652,
+          "pn:atk": 45623,
+          "bnb:atk": 47384,
+          "pn:cuongthu": 184
+        },
+        "cancelBySkill": {
+          "atk": 2933,
+          "thienbong": 680,
+          "cuxi": 1160,
+          "bachngoc": 75,
+          "nguyet": 6,
+          "leaf": 6,
+          "cuongthu": 20
+        },
+        "cancelByPhase": {
+          "recovery": 2974,
+          "startup": 1906
+        },
+        "lowEss": {
+          "pn": 75,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 10188.687066667311,
+          "bnb": 19719.600000002596
+        },
+        "winPercent": 84.7,
+        "meanSeconds": 41.9,
+        "winnerHp": 88.7,
+        "movePercent": 32.1
+      }
+    ],
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 13,
+        "losses": 287,
+        "timeouts": 0,
+        "seconds": 5698.800000000061,
+        "hp": 196,
+        "moving": 0,
+        "events": {
+          "act": 4810,
+          "release": 4281,
+          "dmg": 3021,
+          "grab": 442,
+          "interrupt": 1227,
+          "heal": 393,
+          "shield": 405,
+          "shieldEnd": 358,
+          "ko": 287,
+          "miss": 153
+        },
+        "pnDamage": 91560,
+        "bnbDamage": 61939,
+        "damageBySkill": {
+          "pn:nguyet": 6342,
+          "bnb:atk": 52776,
+          "pn:cuxi": 18018,
+          "dot:bleed": 5624,
+          "pn:cuongthu": 7907,
+          "pn:atk": 24048,
+          "bnb:locbangnhan": 38784
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 67,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7446.29333333376,
+          "bnb": 21767.000000000473
+        },
+        "winPercent": 4.3,
+        "meanSeconds": 19,
+        "winnerHp": 15.1,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 9,
+        "losses": 291,
+        "timeouts": 0,
+        "seconds": 5992.916666666706,
+        "hp": 108,
+        "moving": 327.1666666666978,
+        "events": {
+          "act": 6391,
+          "release": 5467,
+          "dmg": 3056,
+          "interrupt": 2184,
+          "grab": 329,
+          "heal": 429,
+          "shield": 477,
+          "shieldEnd": 380,
+          "miss": 326,
+          "ko": 291
+        },
+        "pnDamage": 95660,
+        "bnbDamage": 69949,
+        "damageBySkill": {
+          "pn:nguyet": 6300,
+          "pn:atk": 37553,
+          "bnb:atk": 50252,
+          "pn:cuxi": 15888,
+          "dot:bleed": 4293,
+          "pn:cuongthu": 5915,
+          "bnb:locbangnhan": 45408
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 22,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7634.180000000446,
+          "bnb": 21404.60000000081
+        },
+        "winPercent": 3,
+        "meanSeconds": 20,
+        "winnerHp": 12,
+        "movePercent": 5.5
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 261,
+        "losses": 39,
+        "timeouts": 0,
+        "seconds": 12822.93333333299,
+        "hp": 23970,
+        "moving": 4151.333333357071,
+        "events": {
+          "act": 8473,
+          "release": 6534,
+          "arrive": 7388,
+          "cancel": 5004,
+          "dmg": 2196,
+          "miss": 195,
+          "shield": 865,
+          "shieldEnd": 785,
+          "projEnd": 16,
+          "heal": 72,
+          "grab": 17,
+          "ko": 39,
+          "fizzle": 4
+        },
+        "pnDamage": 45980,
+        "bnbDamage": 89497,
+        "damageBySkill": {
+          "pn:nguyet": 10062,
+          "pn:atk": 46858,
+          "bnb:atk": 45980,
+          "pn:cuxi": 24688,
+          "dot:bleed": 7632,
+          "pn:cuongthu": 257
+        },
+        "cancelBySkill": {
+          "atk": 3031,
+          "cuxi": 1265,
+          "thienbong": 622,
+          "cuongthu": 22,
+          "bachngoc": 58,
+          "leaf": 4,
+          "nguyet": 2
+        },
+        "cancelByPhase": {
+          "recovery": 3073,
+          "startup": 1931
+        },
+        "lowEss": {
+          "pn": 93,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 9683.80600000066,
+          "bnb": 19793.24000000259
+        },
+        "winPercent": 87,
+        "meanSeconds": 42.7,
+        "winnerHp": 91.8,
+        "movePercent": 32.4
+      }
+    ],
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 12,
+        "losses": 288,
+        "timeouts": 0,
+        "seconds": 5580.266666666735,
+        "hp": 192,
+        "moving": 0,
+        "events": {
+          "act": 4707,
+          "release": 4134,
+          "dmg": 2984,
+          "interrupt": 1210,
+          "grab": 422,
+          "heal": 375,
+          "shield": 392,
+          "shieldEnd": 344,
+          "miss": 151,
+          "ko": 288
+        },
+        "pnDamage": 89936,
+        "bnbDamage": 60070,
+        "damageBySkill": {
+          "pn:nguyet": 6321,
+          "bnb:atk": 52832,
+          "pn:cuxi": 17510,
+          "dot:bleed": 5543,
+          "pn:cuongthu": 7526,
+          "pn:atk": 23170,
+          "bnb:locbangnhan": 37104
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 56,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7976.556666667079,
+          "bnb": 21871.28000000045
+        },
+        "winPercent": 4,
+        "meanSeconds": 18.6,
+        "winnerHp": 16,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 7,
+        "losses": 293,
+        "timeouts": 0,
+        "seconds": 5948.450000000046,
+        "hp": 208,
+        "moving": 326.48333333336507,
+        "events": {
+          "act": 6347,
+          "release": 5400,
+          "dmg": 3031,
+          "interrupt": 2160,
+          "miss": 327,
+          "heal": 418,
+          "shield": 467,
+          "shieldEnd": 368,
+          "ko": 293,
+          "grab": 325
+        },
+        "pnDamage": 95196,
+        "bnbDamage": 69184,
+        "damageBySkill": {
+          "pn:nguyet": 6342,
+          "pn:atk": 37157,
+          "bnb:atk": 49980,
+          "pn:cuxi": 15588,
+          "dot:bleed": 4268,
+          "bnb:locbangnhan": 45216,
+          "pn:cuongthu": 5829
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 15,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7732.060000000445,
+          "bnb": 21525.120000000767
+        },
+        "winPercent": 2.3,
+        "meanSeconds": 19.8,
+        "winnerHp": 29.7,
+        "movePercent": 5.5
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "current",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 265,
+        "losses": 35,
+        "timeouts": 0,
+        "seconds": 12744.266666666337,
+        "hp": 25882,
+        "moving": 4145.866666690484,
+        "events": {
+          "act": 8340,
+          "release": 6472,
+          "arrive": 7320,
+          "grab": 17,
+          "cancel": 4868,
+          "dmg": 2101,
+          "miss": 223,
+          "shield": 805,
+          "shieldEnd": 730,
+          "ko": 35,
+          "heal": 72,
+          "projEnd": 16,
+          "fizzle": 3
+        },
+        "pnDamage": 43972,
+        "bnbDamage": 89665,
+        "damageBySkill": {
+          "pn:nguyet": 10317,
+          "pn:cuongthu": 292,
+          "pn:atk": 46465,
+          "pn:cuxi": 25208,
+          "dot:bleed": 7383,
+          "bnb:atk": 43972
+        },
+        "cancelBySkill": {
+          "cuongthu": 30,
+          "cuxi": 1220,
+          "atk": 2955,
+          "thienbong": 588,
+          "bachngoc": 68,
+          "leaf": 5,
+          "nguyet": 2
+        },
+        "cancelByPhase": {
+          "recovery": 3013,
+          "startup": 1855
+        },
+        "lowEss": {
+          "pn": 95,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 10281.112933333934,
+          "bnb": 19892.760000002523
+        },
+        "winPercent": 88.3,
+        "meanSeconds": 42.5,
+        "winnerHp": 97.7,
+        "movePercent": 32.5
+      }
+    ],
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 15,
+        "losses": 285,
+        "timeouts": 0,
+        "seconds": 5674.800000000063,
+        "hp": 228,
+        "moving": 0,
+        "events": {
+          "act": 4818,
+          "release": 4267,
+          "dmg": 3009,
+          "interrupt": 1233,
+          "grab": 433,
+          "heal": 387,
+          "shield": 412,
+          "ko": 285,
+          "miss": 155,
+          "shieldEnd": 352
+        },
+        "pnDamage": 91196,
+        "bnbDamage": 61617,
+        "damageBySkill": {
+          "pn:nguyet": 6363,
+          "bnb:atk": 52364,
+          "pn:cuxi": 17926,
+          "dot:bleed": 5543,
+          "pn:cuongthu": 7731,
+          "pn:atk": 24054,
+          "bnb:locbangnhan": 38832
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 66,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7504.92000000042,
+          "bnb": 19059.080000000962
+        },
+        "winPercent": 5,
+        "meanSeconds": 18.9,
+        "winnerHp": 15.2,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 9,
+        "losses": 291,
+        "timeouts": 0,
+        "seconds": 5957.833333333378,
+        "hp": 144,
+        "moving": 332.4500000000263,
+        "events": {
+          "act": 6332,
+          "release": 5411,
+          "dmg": 3027,
+          "interrupt": 2159,
+          "grab": 322,
+          "heal": 440,
+          "shield": 454,
+          "shieldEnd": 374,
+          "ko": 291,
+          "miss": 328
+        },
+        "pnDamage": 95668,
+        "bnbDamage": 69323,
+        "damageBySkill": {
+          "pn:nguyet": 6317,
+          "pn:atk": 37029,
+          "bnb:atk": 50308,
+          "pn:cuxi": 15878,
+          "dot:bleed": 4303,
+          "pn:cuongthu": 5796,
+          "bnb:locbangnhan": 45360
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 22,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7816.390000000443,
+          "bnb": 17710.240000001206
+        },
+        "winPercent": 3,
+        "meanSeconds": 19.9,
+        "winnerHp": 16,
+        "movePercent": 5.6
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 20261002,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 252,
+        "losses": 48,
+        "timeouts": 0,
+        "seconds": 12577.733333333013,
+        "hp": 22346,
+        "moving": 4041.000000023843,
+        "events": {
+          "act": 8313,
+          "release": 6396,
+          "arrive": 7253,
+          "cancel": 4884,
+          "dmg": 2272,
+          "miss": 199,
+          "shield": 832,
+          "shieldEnd": 754,
+          "heal": 71,
+          "ko": 48,
+          "projEnd": 13,
+          "grab": 11,
+          "fizzle": 1
+        },
+        "pnDamage": 47584,
+        "bnbDamage": 88443,
+        "damageBySkill": {
+          "pn:nguyet": 9767,
+          "pn:cuxi": 25158,
+          "dot:bleed": 7649,
+          "pn:atk": 45685,
+          "bnb:atk": 47584,
+          "pn:cuongthu": 184
+        },
+        "cancelBySkill": {
+          "atk": 2936,
+          "thienbong": 681,
+          "cuxi": 1161,
+          "bachngoc": 74,
+          "nguyet": 6,
+          "leaf": 6,
+          "cuongthu": 20
+        },
+        "cancelByPhase": {
+          "recovery": 2976,
+          "startup": 1908
+        },
+        "lowEss": {
+          "pn": 74,
+          "bnb": 40
+        },
+        "minEss": {
+          "pn": 10201.741466667305,
+          "bnb": 7767.800000001234
+        },
+        "winPercent": 84,
+        "meanSeconds": 41.9,
+        "winnerHp": 88.7,
+        "movePercent": 32.1
+      }
+    ],
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 13,
+        "losses": 287,
+        "timeouts": 0,
+        "seconds": 5698.800000000061,
+        "hp": 196,
+        "moving": 0,
+        "events": {
+          "act": 4810,
+          "release": 4281,
+          "dmg": 3021,
+          "grab": 442,
+          "interrupt": 1227,
+          "heal": 393,
+          "shield": 405,
+          "shieldEnd": 358,
+          "ko": 287,
+          "miss": 153
+        },
+        "pnDamage": 91560,
+        "bnbDamage": 61939,
+        "damageBySkill": {
+          "pn:nguyet": 6342,
+          "bnb:atk": 52776,
+          "pn:cuxi": 18018,
+          "dot:bleed": 5624,
+          "pn:cuongthu": 7907,
+          "pn:atk": 24048,
+          "bnb:locbangnhan": 38784
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 67,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7446.29333333376,
+          "bnb": 19087.44000000095
+        },
+        "winPercent": 4.3,
+        "meanSeconds": 19,
+        "winnerHp": 15.1,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 9,
+        "losses": 291,
+        "timeouts": 0,
+        "seconds": 5992.916666666706,
+        "hp": 108,
+        "moving": 327.1666666666978,
+        "events": {
+          "act": 6391,
+          "release": 5467,
+          "dmg": 3056,
+          "interrupt": 2184,
+          "grab": 329,
+          "heal": 429,
+          "shield": 477,
+          "shieldEnd": 380,
+          "miss": 326,
+          "ko": 291
+        },
+        "pnDamage": 95660,
+        "bnbDamage": 69949,
+        "damageBySkill": {
+          "pn:nguyet": 6300,
+          "pn:atk": 37553,
+          "bnb:atk": 50252,
+          "pn:cuxi": 15888,
+          "dot:bleed": 4293,
+          "pn:cuongthu": 5915,
+          "bnb:locbangnhan": 45408
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 22,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7634.180000000446,
+          "bnb": 17506.12000000125
+        },
+        "winPercent": 3,
+        "meanSeconds": 20,
+        "winnerHp": 12,
+        "movePercent": 5.5
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 42,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 260,
+        "losses": 40,
+        "timeouts": 0,
+        "seconds": 12838.683333332985,
+        "hp": 23768,
+        "moving": 4156.116666690335,
+        "events": {
+          "act": 8478,
+          "release": 6535,
+          "arrive": 7406,
+          "cancel": 5017,
+          "dmg": 2209,
+          "miss": 197,
+          "shield": 866,
+          "shieldEnd": 784,
+          "projEnd": 16,
+          "heal": 72,
+          "grab": 17,
+          "ko": 40,
+          "fizzle": 4
+        },
+        "pnDamage": 46192,
+        "bnbDamage": 89539,
+        "damageBySkill": {
+          "pn:nguyet": 10062,
+          "pn:atk": 46888,
+          "bnb:atk": 46192,
+          "pn:cuxi": 24688,
+          "dot:bleed": 7644,
+          "pn:cuongthu": 257
+        },
+        "cancelBySkill": {
+          "atk": 3033,
+          "cuxi": 1263,
+          "thienbong": 632,
+          "cuongthu": 22,
+          "bachngoc": 62,
+          "leaf": 3,
+          "nguyet": 2
+        },
+        "cancelByPhase": {
+          "recovery": 3082,
+          "startup": 1935
+        },
+        "lowEss": {
+          "pn": 95,
+          "bnb": 38
+        },
+        "minEss": {
+          "pn": 9671.361733333986,
+          "bnb": 7778.320000001242
+        },
+        "winPercent": 86.7,
+        "meanSeconds": 42.8,
+        "winnerHp": 91.4,
+        "movePercent": 32.4
+      }
+    ],
+    [
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "stand",
+        "wins": 12,
+        "losses": 288,
+        "timeouts": 0,
+        "seconds": 5580.266666666735,
+        "hp": 192,
+        "moving": 0,
+        "events": {
+          "act": 4707,
+          "release": 4134,
+          "dmg": 2984,
+          "interrupt": 1210,
+          "grab": 422,
+          "heal": 375,
+          "shield": 392,
+          "shieldEnd": 344,
+          "miss": 151,
+          "ko": 288
+        },
+        "pnDamage": 89936,
+        "bnbDamage": 60070,
+        "damageBySkill": {
+          "pn:nguyet": 6321,
+          "bnb:atk": 52832,
+          "pn:cuxi": 17510,
+          "dot:bleed": 5543,
+          "pn:cuongthu": 7526,
+          "pn:atk": 23170,
+          "bnb:locbangnhan": 37104
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 56,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7976.556666667079,
+          "bnb": 19367.760000000893
+        },
+        "winPercent": 4,
+        "meanSeconds": 18.6,
+        "winnerHp": 16,
+        "movePercent": 0
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "spam",
+        "wins": 7,
+        "losses": 293,
+        "timeouts": 0,
+        "seconds": 5948.450000000046,
+        "hp": 208,
+        "moving": 326.48333333336507,
+        "events": {
+          "act": 6347,
+          "release": 5400,
+          "dmg": 3031,
+          "interrupt": 2160,
+          "miss": 327,
+          "heal": 418,
+          "shield": 467,
+          "shieldEnd": 368,
+          "ko": 293,
+          "grab": 325
+        },
+        "pnDamage": 95196,
+        "bnbDamage": 69184,
+        "damageBySkill": {
+          "pn:nguyet": 6342,
+          "pn:atk": 37157,
+          "bnb:atk": 49980,
+          "pn:cuxi": 15588,
+          "dot:bleed": 4268,
+          "bnb:locbangnhan": 45216,
+          "pn:cuongthu": 5829
+        },
+        "cancelBySkill": {},
+        "cancelByPhase": {},
+        "lowEss": {
+          "pn": 15,
+          "bnb": 0
+        },
+        "minEss": {
+          "pn": 7732.060000000445,
+          "bnb": 17684.08000000124
+        },
+        "winPercent": 2.3,
+        "meanSeconds": 19.8,
+        "winnerHp": 29.7,
+        "movePercent": 5.5
+      },
+      {
+        "arena": "wide",
+        "ai": "pressure",
+        "resource": "blade3",
+        "level": "thuong",
+        "seed": 9001,
+        "N": 300,
+        "think": 0.1,
+        "style": "move",
+        "wins": 263,
+        "losses": 37,
+        "timeouts": 0,
+        "seconds": 12743.96666666634,
+        "hp": 25628,
+        "moving": 4147.816666690455,
+        "events": {
+          "act": 8340,
+          "release": 6466,
+          "arrive": 7329,
+          "grab": 17,
+          "cancel": 4880,
+          "dmg": 2113,
+          "miss": 223,
+          "shield": 804,
+          "shieldEnd": 729,
+          "ko": 37,
+          "heal": 72,
+          "projEnd": 16,
+          "fizzle": 3
+        },
+        "pnDamage": 44228,
+        "bnbDamage": 89611,
+        "damageBySkill": {
+          "pn:nguyet": 10296,
+          "pn:cuongthu": 292,
+          "pn:atk": 46474,
+          "pn:cuxi": 25174,
+          "dot:bleed": 7375,
+          "bnb:atk": 44228
+        },
+        "cancelBySkill": {
+          "cuongthu": 30,
+          "cuxi": 1225,
+          "atk": 2954,
+          "thienbong": 593,
+          "bachngoc": 71,
+          "leaf": 5,
+          "nguyet": 2
+        },
+        "cancelByPhase": {
+          "recovery": 3020,
+          "startup": 1860
+        },
+        "lowEss": {
+          "pn": 95,
+          "bnb": 33
+        },
+        "minEss": {
+          "pn": 10298.019333333952,
+          "bnb": 8123.880000001288
+        },
+        "winPercent": 87.7,
+        "meanSeconds": 42.5,
+        "winnerHp": 97.4,
+        "movePercent": 32.5
+      }
+    ]
+  ]
+}

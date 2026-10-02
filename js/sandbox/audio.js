@@ -1,12 +1,12 @@
 // Âm mẫu sandbox, chỉ đọc event; không dùng RNG hoặc clock gameplay.
 // Hai nguồn âm cho cùng một tên cue (kind):
-//   1. File thật nếu có assets/audio/battle/manifest.json ({"punch":"punch_01.ogg", ...}), vd bộ âm CC0
-//      (ghi nguồn + giấy phép từng file trong manifest "sources"). Tải và giải mã một lần lúc unlock.
+//   1. File thật nếu có assets/audio/battle/manifest.json ({"cues":{"punch":"punch_01.ogg", ...},"sources":{...}}),
+//      vd bộ âm CC0 (ghi nguồn + giấy phép từng file trong "sources"). Tải và giải mã một lần lúc unlock.
 //   2. Âm tổng hợp Web Audio (fallback) khi chưa có file hoặc file lỗi.
 // TÍCH HỢP: campaign giữ SFX riêng; E dùng SBAudio. Không tạo AudioContext mới mỗi chiêu.
 const SBAudio=(()=>{
-  let ctx,master,noise,unlocked=false,muted=false,volume=.35,loading=null;
-  const voices=new Set(),buffers={};
+  let ctx,master,compressor,noise,unlocked=false,muted=false,volume=.35,loading=null;
+  const voices=new Set(),buffers={},fileGains={};
   try {muted=localStorage.getItem('sb_audio_muted')==='1';const v=localStorage.getItem('sb_audio_volume');if(v!==null&&Number.isFinite(+v))volume=Math.max(0,Math.min(1,+v))}catch(e){}
   function stop(){for(const v of voices){try{v.stop()}catch(e){}}voices.clear()}
   function gain(){if(master)master.gain.setValueAtTime(muted?0:volume,ctx.currentTime)}
@@ -16,8 +16,11 @@ const SBAudio=(()=>{
     const dir='assets/audio/battle/';
     return loading=fetch(dir+'manifest.json').then(r=>r.ok?r.json():null).then(man=>{
       if(!man)return;
-      return Promise.all(Object.entries(man.cues||{}).map(([kind,file])=>
-        fetch(dir+file).then(r=>r.ok?r.arrayBuffer():null).then(b=>b&&ctx.decodeAudioData(b)).then(buf=>{if(buf)buffers[kind]=buf}).catch(()=>{})));
+      return Promise.all(Object.entries(man.cues||{}).map(([kind,entry])=>{
+        const file=typeof entry==='string'?entry:entry?.file;
+        if(typeof file!=='string'||!file||file.includes('..')||file.startsWith('/')||file.includes(':'))return;
+        fileGains[kind]=Number.isFinite(entry?.gain)?Math.max(0,Math.min(1,entry.gain)):.4;
+        return fetch(dir+file).then(r=>r.ok?r.arrayBuffer():null).then(b=>b&&ctx.decodeAudioData(b)).then(buf=>{if(buf)buffers[kind]=buf}).catch(()=>{});}));
     }).catch(()=>{});
   }
   async function unlock(){
@@ -25,7 +28,9 @@ const SBAudio=(()=>{
     try{
       if(!ctx){
         const C=window.AudioContext||window.webkitAudioContext;if(!C)return;
-        ctx=new C();master=ctx.createGain();master.connect(ctx.destination);gain();
+        ctx=new C();master=ctx.createGain();compressor=ctx.createDynamicsCompressor();
+        compressor.threshold.value=-18;compressor.ratio.value=4;compressor.knee.value=12;
+        master.connect(compressor);compressor.connect(ctx.destination);gain();
         noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);
         const samples=noise.getChannelData(0);for(let i=0;i<samples.length;i++)samples[i]=Math.random()*2-1;
         loadFiles();
@@ -44,7 +49,7 @@ const SBAudio=(()=>{
     if(!unlocked||muted||document.hidden||ctx.state!=='running'||voices.size>=8)return;
     const t=ctx.currentTime,g=ctx.createGain();let source,stopAt=null;
     if(buffers[kind]){
-      source=ctx.createBufferSource();source.buffer=buffers[kind];g.gain.value=.9;source.connect(g);
+      source=ctx.createBufferSource();source.buffer=buffers[kind];g.gain.value=fileGains[kind]??.4;source.connect(g);
     }else{
       const [isNoise,f0,f1,dur,amp,wave]=SYNTH[kind]||SYNTH.wind;
       source=isNoise?ctx.createBufferSource():ctx.createOscillator();
@@ -58,23 +63,24 @@ const SBAudio=(()=>{
     source.start(t);if(stopAt)source.stop(stopAt);
   }
   // Hộ thể → chất liệu âm: ba hộ thể phải nghe khác nhau (người chơi nghe để biết đòn bị đỡ)
-  const SHIELD={bachngoc:'jade',thienbong:'gold',thuytrao:'water'};
-  const RELEASE={nguyet:'moon',cuxi:'saw',cuongthu:'heavy',dash:'wind'};
+  const SHIELD={bachngoc:'jade',thienbong:'gold',thuytrao:'water',vobang:'ice'};
+  const RELEASE={nguyet:'moon',cuxi:'saw',cuongthu:'heavy',dash:'wind',lamdieu:'ice'};
   function consume(events,B,speed){
     if(!unlocked||muted||document.hidden)return;
     for(const e of events){
       if((B.t-e.t)/(speed||1)>.15)continue;                       // bỏ cue quá hạn (catch-up), không phát dồn
       if(e.type==='release'){
-        if(e.kind==='buff'||e.kind==='heal'||e.kind==='escape'||e.kind==='aoe'||e.kind==='grab')continue;
-        play(e.skill==='atk'?(e.who==='bnb'?'ice':'wind'):RELEASE[e.skill]||'wind');
+        if(e.kind==='buff'||e.kind==='heal'||e.kind==='escape'||e.kind==='empower'||e.kind==='aoe'||e.kind==='grab')continue;
+        play(e.skill==='atk'?(B.actors[e.who]?.sk[e.skill]?.fx==='ice'?'ice':'wind'):RELEASE[e.skill]||'wind');
       }else if(e.type==='dmg'&&!e.dot){
         if(e.blocked&&SHIELD[e.shield])play(SHIELD[e.shield]);    // lớp chất liệu hộ thể, impact chính đã giảm
-        else play(e.source==='bnb'?'ice':e.skill==='nguyet'?'cut':e.skill==='cuxi'?'saw':'punch');
+        else play(B.actors[e.source]?.sk[e.skill]?.fx==='ice'?'ice':e.skill==='nguyet'?'cut':e.skill==='cuxi'?'saw':'punch');
       }else if(e.type==='grab')play('grab');
       else if(e.type==='shield')play(SHIELD[e.skill]||'jade');
       else if(e.type==='heal')play('heal');
       else if(e.type==='zoneFire')play('storm');
-      else if(e.type==='escape')play('ice');
+      else if(e.type==='escape'||e.type==='empower')play('ice');
+      else if(e.type==='detonate')play('storm');
     }
   }
   function mount(){

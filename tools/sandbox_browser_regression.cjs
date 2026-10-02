@@ -1,0 +1,22 @@
+const assert=require('node:assert/strict'),puppeteer=require('puppeteer');
+(async()=>{const browser=await puppeteer.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--no-sandbox']});try{
+ const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.setViewport({width:1280,height:900});
+ await page.goto('http://127.0.0.1:8765/battle_sandbox.html',{waitUntil:'networkidle2'});await page.waitForFunction(()=>window.SB&&document.querySelectorAll('.cell').length===8);
+ console.log(await page.evaluate(()=>{SB.actors.bnb.ai=false;SBInput.stop();const r=SBView.app.view.getBoundingClientRect();const point=(x,y)=>SBView.toWorld(r.left+x/960*r.width,r.top+y/430*r.height);return {arena:SB.arena,left:point(127,250),right:point(833,400),errors:[]}}));
+ await page.screenshot({path:'previews/arena-ai-v01/desktop.png',fullPage:true});
+ await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true});await page.reload({waitUntil:'networkidle2'});await page.waitForFunction(()=>window.SB&&document.querySelectorAll('.cell').length===8);
+ await page.evaluate(()=>{SB.actors.bnb.ai=false;SBInput.stop();});
+ await page.tap('.cell[data-id="nguyet"]');assert.equal(await page.evaluate(()=>SBInput.selected?.id),'nguyet');
+ const r=await page.$eval('canvas',e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}});
+ await page.touchscreen.tap(r.x+r.w*.6,r.y+r.h*.75);assert.equal(await page.evaluate(()=>SBInput.selected),null);
+ await page.waitForFunction(()=>SBAudio.files.length===4,{timeout:10000});
+ assert.deepEqual(await page.evaluate(()=>SBAudio.files.slice().sort()),['gold','ice','jade','punch']);
+ await page.tap('.stop');await page.screenshot({path:'previews/arena-ai-v01/mobile.png',fullPage:true});
+ assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+ await page.setViewport({width:1280,height:900,isMobile:false,hasTouch:false});
+ await page.reload({waitUntil:'networkidle2'});await page.waitForFunction(()=>window.SB&&document.querySelectorAll('.cell').length===8);
+ await page.evaluate(()=>{window.requestAnimationFrame=()=>0});await new Promise(r=>setTimeout(r,100));
+ await page.evaluate(()=>{SB.actors.bnb.ai=false;const p=SB.actors.pn;p.act=null;p.state='idle';p.ess=100;p.cd={};SBInput.stop();SBSim.issue(SB,SB.ids.player,{skill:'nguyet',x:SB.actors.bnb.x,z:SB.actors.bnb.z});SBView.render([]);SBView.app.renderer.render(SBView.app.stage)});
+ await page.screenshot({path:'previews/arena-ai-v01/telegraph.png',fullPage:true});
+ assert.deepEqual(errors,[]);console.log('Chrome desktop/mobile: không lỗi, tọa độ biên, tap nhắm/commit/Dừng, không tràn ngang, giải mã 4 cue âm MP3: đạt.');
+}finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});

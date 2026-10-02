@@ -1,0 +1,162 @@
+{
+  "au_duong_cong": [
+    "Giữ thử",
+    "Mặt/râu/búi tóc/áo tối nhất quán; họa tiết đơn giản hơn ref, chưa thấy lỗi cần gen."
+  ],
+  "ba_quy_spirit": [
+    "Gen lại bộ nếu giữ ref",
+    "Rùa nâu mai trơn khác ref rùa xanh có cây/đất trên mai; idle/warn đều đổi thiết kế. Không phải importer làm mất cây: source đã không có."
+  ],
+  "bach_chien_liep": [
+    "Gen lại bộ nếu giữ ref",
+    "Tóc dài và bộ áo/giáp của ref đổi thành tóc ngắn, đồ xanh nhạt đơn giản; body/head cũng đổi. Chốt base trước rồi gen lại, không sửa một clip riêng."
+  ],
+  "bach_chien_on": [
+    "Giữ thử, rà tóc",
+    "Áo đỏ/râu trắng nhất quán; tóc ref búi dài đã đổi thành trán hói/tóc xõa. Nếu ref là design khóa thì sửa tóc, không cần bỏ mọi pose."
+  ],
+  "bach_lien": [
+    "Giữ thử, rà chiêu",
+    "Áo trắng/hair accessories nhất quán; sk_anxiety gần idle, cần cử chỉ đọc được nếu là chiêu gameplay chủ động."
+  ],
+  "bach_ngung_bang_nam": [
+    "Giữ bộ cũ",
+    "11 clip mẫu đã có, chưa có atk và 3 clip signature mới trong prompt; dùng fallback công khai. Registry approved chưa khóa BNB. Dodge đang bị căn đáy như pose đứng."
+  ],
+  "bach_ngung_bang_nu": [
+    "Giữ thử",
+    "7 clip, tạo hình ổn giữa clip. Không dùng cho Q1; nếu thành actor người chơi cần xác định thêm heal/dodge và signature theo kit. Hit F02 gần pose thủ hơn đau."
+  ],
+  "ca_sau_dung_nham": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref cá sấu tối, vảy núi lửa; bộ mới đỏ rực, đầu tròn cực lớn/thân ngắn, thiếu cảm giác vảy/đốm than. Palette và tỷ lệ khác cả bộ."
+  ],
+  "ca_sau_sau_chan": [
+    "Giữ thử, rà anatomy",
+    "Thiết kế bám ref khá tốt; chân chồng trong side view nên chưa chứng nhận đủ sáu chân mọi pose. Idle F02 hạ thân rõ (99→80px cao), xem loop ở battle; hand đang là đầu mõm."
+  ],
+  "co_kim_sinh": [
+    "Sửa/gen riêng atk",
+    "Atk tự thêm dao cong, có cả lưỡi phía sau trong source; ref/prompt tay không. Giữ idle/hit/ko/move/sk_drain/win, sửa atk bằng stiff-finger low strike."
+  ],
+  "cu_khai_bi": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref đầu trọc lộ mặt, lực sĩ giáp ngà; bộ mới có mũ trùm/helmet lớn, thân bé. Cần khóa đầu trọc, không thêm mũ, giữ khối cơ bắp."
+  ],
+  "cuong_thi": [
+    "Giữ thử, tách FX",
+    "Da xám/tóc trắng nhất quán; sk_poison đã vẽ đám hạt xanh trước mặt, tách FX khỏi actor. Không tự báo thiếu win là lỗi: xác định gói clip thực tế."
+  ],
+  "dian_lang_boss": [
+    "Giữ thử",
+    "Bám ref sói xanh/gai/sừng vàng, silhouette rõ; phải map rõ ID Lôi Quan/alias. Điểm phát thunder nên sừng/body, không dùng hand ngoài cùng. Win cần rà cụm gai lưng thêm."
+  ],
+  "dien_lang": [
+    "Giữ thử, bổ sung ref",
+    "Bộ sói xám nhất quán, khác sói boss hợp lý; chưa có assets/chibi_ref/dien_lang.png. Roar dùng mouth, không hand ngoài cùng. Chưa xác nhận identity bằng ref riêng."
+  ],
+  "hac_hung": [
+    "Giữ thử",
+    "Bám ref gấu đen, đấm/vồ/rage phân biệt được. Win đứng hai chân cao hơn idle là hợp lý, không tự scale nó xuống bằng chiều cao bbox."
+  ],
+  "han_bat_luu": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref tóc đen dài, áo xanh, da sẫm; bộ mới tóc nâu ngắn, áo nâu, da sáng. Command huýt sáo/chỉ tay hợp vai trò nhưng identity đã đổi."
+  ],
+  "heo_rung": [
+    "Giữ làm pilot",
+    "Bám ref lông/nanh, attack/charge/move đọc được. Atk F02 ngửa mõm là hất nanh; contact/charge cần gắn riêng theo cơ chế. Không dùng hand làm điểm tay."
+  ],
+  "hien_vien_than_ke": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref gà trưởng thành cổ xanh, lông nhiều màu; mới thành gà vàng nhỏ kiểu mascot. Warn thay mào đỏ bằng chùm nhiều màu, chưa nhất quán với idle."
+  ],
+  "hoanh_mi": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref tóc đen/lực sĩ to, bộ mới tóc nâu xù, thân nhỏ và mặt hoạt hình khác. Không chữa tỷ lệ đầu/thân bằng scale toàn sprite."
+  ],
+  "hoc_duong_gia_lao": [
+    "Giữ thử, làm sạch viền",
+    "Bám ref gia lão áo xám xanh; còn nhiều viền xanh tươi ở tóc/giày/vạt. Không xóa mọi pixel xanh: áo là màu thật. Reimport sửa mask/de-spill chọn lọc trước gen."
+  ],
+  "huyet_thu_ma_tu": [
+    "Giữ thử, chốt design",
+    "Áo rách đỏ nhất quán nhưng mặt thành trắng xám và vẻ xác sống so với ref da thường. Chốt có chủ ý không; nếu không thì sửa palette/mặt theo ref."
+  ],
+  "mac_bac": [
+    "Giữ thử, chỉnh scale win",
+    "Bám ref tóc nhọn/áo nâu. Win bbox cao168 so idle148; pose win đứng thẳng còn idle hơi chùng gối, cần so head/body trước chỉnh scale, không auto kết luận phóng to14%."
+  ],
+  "nhat_dai_boss": [
+    "Giữ thử, sửa registration",
+    "Bám ref tóc/râu đen, viền đỏ. Idle/atk đều bị đặt đáy197 như actor chạm đất dù prompt lơ lửng; cần hoverOffset/anchor riêng, không gen lại chỉ vì pivot."
+  ],
+  "phi_hau": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref vượn to, cánh tay nặng; bộ mới đầu rất lớn, tay nhỏ, vàng chói kiểu thú bông. Chưa thể hiện upper arms twice as thick as thighs như prompt."
+  ],
+  "phi_tuong": [
+    "Gen lại base rồi cả bộ",
+    "Ref cũ đã cần thay theo prompt; bộ mới voi trắng tối giản, không thấy feather layers/ngà rất dài, thiếu hit. Cần base có lông chim đúng brief trước; hover registration riêng."
+  ],
+  "phuong_chinh": [
+    "Sửa palette/nguồn trước duyệt",
+    "Source idle/atk/hit/win tím; move/ko xanh; sk_nguyet/sk_nguyetnghe pha xanh/tím. Không phải importer đổi áo xanh thành tím. Khóa áo xanh ref; có thể edit palette từng source giữ pose, không bắt buộc gen mới cả8."
+  ],
+  "phuong_nguyen": [
+    "Giữ bộ đã khóa",
+    "11 clip và approved registry đầy đủ cho bộ cũ. Atk/sk_* mới chưa có; cast/attack/heavy là fallback, không gọi mỗi cổ đã có animation riêng."
+  ],
+  "thach_hau": [
+    "Giữ thử",
+    "Bám ref khỉ đá xám/đuôi, atk/ambush đọc được. Rà bàn tay trắng có chủ ý và jump anchor, không coi pose bay đặt đáy sàn là đúng registration."
+  ],
+  "thanh_thu": [
+    "Giữ thử, tách roi/viền",
+    "Bám ref tóc xanh/áo xanh hiện có (màu là design, không xác minh canon lượt này). Atk vẽ sẵn roi xanh; tách sinh vật/roi FX hoặc chốt đòn vũ khí baked-in. Nhiều viền xanh quanh tóc cần phân biệt màu thật và spill."
+  ],
+  "thiet_ba_tu": [
+    "Giữ thử, sửa riêng atk/move",
+    "Tạo hình giáp/body bám ref tốt. Atk release F02 là bàn tay/chém thấp thay quyền nặng của prompt; sửa thành nắm đấm nếu kit là đấm. Move có bụi vẽ sẵn dưới chân, tách FX."
+  ],
+  "thiet_dao_kho": [
+    "Giữ thử, chốt ref vũ khí",
+    "Bộ giáp/tóc bám ref, pose cạnh bàn tay rõ; ref hiện cầm lưỡi dao nhưng prompt yêu cầu tay như lưỡi. Sửa reference/ghi ngoại lệ, không thêm dao vào sprite chỉ để khớp ref lỗi."
+  ],
+  "thiet_huyet_lanh": [
+    "Giữ thử, sửa anchor xích",
+    "Giáp/tóc/xích bám ref và clip riêng. Không có ko trong manifest dù nhóm boss người yêu cầu: bổ sung ko. Điểm hand hiện tính ở đầu xích, cần bàn tay thật; FX nếu kéo xích tránh vẽ trùng."
+  ],
+  "thiet_mo_bach": [
+    "Giữ thử, rà tóc/palette",
+    "Áo vàng/râu trắng nhất quán; tóc dài xõa ref đổi thành búi/trán hói. Chốt design đầu trước duyệt, có thể sửa đầu riêng, không bỏ hết pose."
+  ],
+  "thiet_nhuoc_nam": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref tóc đen dài buộc cao/giáp đen đỏ chi tiết; mới tóc nâu ngắn đuôi nhỏ, giáp đơn giản, tỷ lệ đầu khác. Chưa tự gán id Q1/Q2 để hợp thức hóa redesign."
+  ],
+  "tiet_tam_tu": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref tóc đen cao/da sẫm/áo cam họa tiết; mới tóc nâu/da sáng/áo xanh, mặt thành mascot. Khóa bản base đã chọn trước làm lại."
+  ],
+  "tran_thuy_hoa": [
+    "Giữ thử, rà màu tóc",
+    "Cast_ground cúi đặt bẫy tốt, đúng kiểu động tác riêng. Ref tóc đen còn mới nâu; chốt palette/hair. Không cần dùng sk_poison phóng bằng tay nếu kỹ năng thực đặt bẫy."
+  ],
+  "tuu_khoi_huyet_khoi": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref khôi đất nâu thân dày, đầu chum; mới cam phẳng đầu hộp to/thân tí hon. Cần chọn Tửu Khôi hay Huyết Khôi và ID riêng trước gen, không trộn variant."
+  ],
+  "viem_dot": [
+    "Giữ thử",
+    "Lão gầy hói/áo rách/móng dài đọc được, nhất quán khá tốt. Không thấy lỗi bắt buộc gen; rà origin firehand dùng bàn tay thật."
+  ],
+  "vu_quy": [
+    "Gen lại bộ nếu giữ ref",
+    "Ref tóc đen búi/áo rách nâu; mới lão tóc xám hói/áo xanh sạch, nét mặt khác. Rà lại base được dùng trước gen."
+  ],
+  "xich_thanh": [
+    "Giữ thử",
+    "Bám ref tóc dài/áo vàng cam nhất quán. Sk_nguyet là dữ liệu game chưa xác minh trong prompt, không coi asset là chứng cứ sở hữu cổ."
+  ]
+}

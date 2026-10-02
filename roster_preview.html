@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roster key-pose</title>
+<style>
+  :root{--bg:#1d1f27;--panel:#2a2d38;--ink:#e8e4d8;--mute:#9a97a8;--acc:#7fd4ff}
+  :root[data-theme="light"]{--bg:#1d1f27}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,sans-serif}
+  main{max-width:1100px;margin:0 auto;padding:16px}
+  h1{font-size:18px;margin:0 0 4px} p{color:var(--mute);margin:0 0 10px}
+  canvas{display:block;width:100%;background:linear-gradient(#2b3346,#3b3a3a 70%,#2b2621);border-radius:8px;image-rendering:pixelated}
+  .bar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  button,select{background:var(--panel);color:var(--ink);border:1px solid #444a5c;border-radius:6px;padding:6px 10px;cursor:pointer;font:inherit}
+  button.on{border-color:var(--acc);color:var(--acc)}
+  #info{color:var(--mute);font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Roster key-pose</h1>
+  <p>Sheet trong <code>assets/chibi_kp/</code>. Hàng trên: nhân vật đang chọn diễn từng clip và toàn bộ frame tĩnh. Hàng dưới: roster idle cùng tỷ lệ để so cỡ với PN. Vạch đỏ là sàn (pivot). Được tải không có nghĩa đã duyệt.</p>
+  <div class="bar"><select id="pick"></select><label><input type="checkbox" id="flip"> lật trái</label><span id="info"></span></div>
+  <canvas id="stage" width="960" height="250"></canvas>
+  <div class="bar" id="acts"></div>
+  <canvas id="line" width="960" height="1080"></canvas>
+</main>
+<script>
+const R='assets/chibi_kp/',cache={};
+const load=id=>cache[id]||(cache[id]=fetch(R+id+'/manifest.json').then(r=>r.json()).then(m=>Promise.all(Object.entries(m.actions).map(([a,c])=>new Promise(ok=>{const i=new Image();i.onload=()=>ok([a,i]);i.onerror=()=>ok([a,null]);i.src=R+id+'/'+c.sheet}))).then(L=>({m,img:Object.fromEntries(L)}))));
+function frameAt(c,ms){const d=c.durations_ms,tot=d.reduce((s,v)=>s+v,0);let t=ms%(tot+(c.loop?0:500)),i=0;if(t>=tot)return d.length-1;while(i<d.length-1&&t>=d[i]){t-=d[i];i++}return i}
+function blit(g,K,a,i,x,y,s,dir){const [fw,fh]=K.m.frame_size,[px,py]=K.m.pivot_px,im=K.img[a];if(!im)return;
+  g.save();g.translate(Math.round(x),y);g.scale(dir*s,s);g.drawImage(im,i*fw,0,fw,fh,-px,-py,fw,fh);g.restore()}
+const st=document.getElementById('stage'),sg=st.getContext('2d'),ln=document.getElementById('line'),lg=ln.getContext('2d');
+sg.imageSmoothingEnabled=lg.imageSmoothingEnabled=false;
+let ids=[],cur=null,act='idle',t0=performance.now(),all=[],choice=0;
+fetch(R+'index.json').then(r=>r.json()).then(L=>{ids=L;const p=document.getElementById('pick');
+  for(const id of L){const o=document.createElement('option');o.value=o.textContent=id;p.append(o)}
+  const q=new URLSearchParams(location.search).get('id');p.value=L.includes(q)?q:L[0];p.onchange=()=>choose(p.value);choose(p.value);
+  Promise.all(L.map(load)).then(K=>{all=K.map((k,i)=>[L[i],k])});requestAnimationFrame(loop)});
+function choose(id){const token=++choice;load(id).then(K=>{if(token!==choice)return;cur=K;t0=performance.now();st.height=Math.max(250,K.m.frame_size[1]+32);sg.imageSmoothingEnabled=false;const b=document.getElementById('acts');b.innerHTML='';act='idle';
+  for(const a of Object.keys(K.m.actions)){const e=document.createElement('button');e.textContent=a+' ('+K.m.actions[a].frames+')';e.onclick=()=>{act=a;t0=performance.now();[...b.children].forEach(x=>x.classList.toggle('on',x===e))};b.append(e)}
+  document.getElementById('info').textContent=`khung ${K.m.frame_size.join('×')} · pivot ${K.m.pivot_px.join(',')} · ${Object.keys(K.m.actions).length} clip`})}
+function loop(ts){
+  sg.clearRect(0,0,st.width,st.height);const G=st.height-20;sg.strokeStyle='#c44';sg.beginPath();sg.moveTo(0,G);sg.lineTo(960,G);sg.stroke();
+  if(cur){const dir=document.getElementById('flip').checked?-1:1,c=cur.m.actions[act];
+    blit(sg,cur,act,frameAt(c,ts-t0),300,G,1,dir);
+    // dải frame tĩnh của clip đang chọn
+    const fw=cur.m.frame_size[0],px=cur.m.pivot_px[0],gap=8,s=Math.min(.6,(st.width-536-gap*(c.frames-1))/(fw*c.frames));
+    for(let i=0;i<c.frames;i++){const left=520+i*(fw*s+gap),pivot=left+(dir>0?px:fw-px)*s;blit(sg,cur,act,i,pivot,G,s,dir)}}
+  lg.clearRect(0,0,ln.width,ln.height);const cols=5,s=.55;
+  all.forEach(([id,K],n)=>{const x=96+(n%cols)*192,y=120+Math.floor(n/cols)*135;
+    const c=K.m.actions.idle;if(c)blit(lg,K,'idle',frameAt(c,ts),x,y,s,1);
+    lg.fillStyle='#9a97a8';lg.font='10px system-ui';lg.textAlign='center';lg.fillText(id,x,y+12)});
+  requestAnimationFrame(loop)}
+</script>
+</body>
+</html>

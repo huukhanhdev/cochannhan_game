@@ -45,6 +45,16 @@ EXPECT = {}
 # Khung riêng cho nhân vật to/dài: id -> ((w, h), (pivot_x, pivot_y))
 FRAME_BY_ID = {'bach_ngung_bang_nam': ((352, 208), (176, 198))}
 FACE = 18.5                 # cạnh khuôn mặt chuẩn (căn bậc hai diện tích da mặt, px gốc)
+# Đo cỡ bằng mặt chỉ đáng tin với PN/BNB (da sáng, mặt rõ). Nhân vật khác: chuẩn hóa theo DIỆN TÍCH thân
+# (trung vị các pose) so với pose idle của PN × SIZE[id]². Thú/da ngăm/râu không làm hỏng tỷ lệ.
+FACE_IDS = {'phuong_nguyen', 'bach_ngung_bang_nam'}
+# Cỡ hiển thị tương đối so với PN (chiều dài cạnh). Thiết kế mỹ thuật, không phải số liệu nguyên tác.
+SIZE = {'heo_rung': 1.3, 'hac_hung': 1.6, 'phi_hau': 1.45, 'thach_hau': 1.45, 'ca_sau_dung_nham': 1.45,
+        'ca_sau_sau_chan': 1.45, 'phi_tuong': 1.6, 'dien_lang': 1.2, 'dian_lang_boss': 1.55, 'nhat_dai_boss': 1.15,
+        'thiet_ba_tu': 1.1, 'tuu_khoi_huyet_khoi': 1.3, 'hien_vien_than_ke': .85, 'ba_quy_spirit': 1.1}
+# Clip có diện tích khác hẳn idle (vd chiêu kèm hiệu ứng lớn): hệ số diện tích kỳ vọng
+CLIP_AREA = {'win': 1.0}
+BIG = ((640, 400), (320, 390))  # khung tạm khi nhập; cuối lượt cắt về khung chung vừa đủ cho từng id
 SCALE_FIX = {'pn_cast_v1.png': .93, 'pn_hit_v1.png': .8, 'pn_move_v1.png': 1.1, 'pn_guard_v1.png': .68, 'pn_ko_v1.png': .8,
              'pn_win_v1.png': .82, 'pn_attack_v1.png': .93, 'pn_heavy_v1.png': .93,
              'bnb_attack_v1.png': .93, 'bnb_ko_v1.png': .87, 'bnb_win_v1.png': .89, 'bnb_cast_v1.png': 1.05,
@@ -173,10 +183,16 @@ def process(path):
     spec = load_spec().get(cid, {})
     if action not in TIMING and action not in spec:
         print(f'✗ {path.name}: clip riêng "{action}" chưa có trong bảng {cid} của PROMPT_MUSE_ROSTER.md'); return None
-    FRAME, PIVOT = FRAME_BY_ID.get(cid, (globals()['FRAME'], globals()['PIVOT']))
+    FRAME, PIVOT = FRAME_BY_ID.get(cid, (globals()['FRAME'], globals()['PIVOT']) if cid in FACE_IDS else BIG)
     a = clean(Image.open(path), despill=cid not in NO_DESPILL); p = pixel_size(a)
-    fs = face_size(a, split(a, 20))
-    k = (FACE / fs if fs else 1 / p) * SCALE_FIX.get(path.name, 1)
+    if cid in FACE_IDS:
+        fs = face_size(a, split(a, 20))
+        k = (FACE / fs if fs else 1 / p) * SCALE_FIX.get(path.name, 1)
+    else:
+        fs = None; raw = pieces(a)
+        if not raw: print(f'✗ {path.name}: ảnh trống'); return None
+        area = float(np.median([(r[..., 3] > 0).sum() for r in raw]))
+        k = np.sqrt(ref_area() * SIZE.get(cid, 1) ** 2 * CLIP_AREA.get(action, 1) / area) * SCALE_FIX.get(path.name, 1)
     nat = Image.fromarray(a).resize((round(a.shape[1] * k), round(a.shape[0] * k)), Image.NEAREST)
     na = np.asarray(nat).copy(); na[..., 3] = np.where(na[..., 3] > 0, 255, 0)
     found = pieces(na)
@@ -185,6 +201,9 @@ def process(path):
         print(f'✗ {path.name}: không biết số pose kỳ vọng của "{action}". Thêm vào bảng nhân vật hoặc EXPECT.'); return None
     if not 1 <= len(found) <= 4:
         print(f'✗ {path.name}: tách được {len(found)} pose (clip riêng cần 1–4). KHÔNG ghi đè.'); return None
+    if action == 'idle' and expect == 2 and len(found) == 1:
+        found = found * 2                 # Muse hay vẽ idle 1 pose: dùng 2 frame giống nhau, nhịp thở do code
+        print(f'  {path.name}: idle chỉ 1 pose → nhân đôi frame')
     if len(found) != expect:
         print(f'✗ {path.name}: tách được {len(found)} pose, cần {expect}. KHÔNG ghi đè sheet cũ. '
               f'(Pose dính nhau / thừa người → gen lại; cố ý khác số pose → thêm vào EXPECT)'); return None
@@ -205,6 +224,49 @@ def process(path):
     print(f'{path.name}: điểm ảnh {p:.2f}px, mặt {fs or 0:.0f}px, tỷ lệ {k:.3f} → {len(frames)} pose, gốc {nat.size[0]}x{nat.size[1]}')
     return cid, action, {'sheet': f'{action}.png', 'frames': len(frames), 'durations_ms': dur,
                          'loop': loop, 'release': rel, 'source': path.name, 'scale': round(k, 4), **({'hand': meta_hand} if meta_hand else {})}
+
+
+_REF_AREA = None
+def ref_area():
+    """Diện tích trung bình (px gốc) một frame idle của PN đã duyệt: thước chung cho mọi nhân vật."""
+    global _REF_AREA
+    if _REF_AREA is None:
+        m = json.loads((OUT / 'phuong_nguyen' / 'manifest.json').read_text()); W = m['frame_size'][0]
+        al = np.asarray(Image.open(OUT / 'phuong_nguyen' / 'idle.png'))[..., 3] > 0
+        _REF_AREA = float(np.mean([al[:, i * W:(i + 1) * W].sum() for i in range(m['actions']['idle']['frames'])]))
+    return _REF_AREA
+
+
+def fit_frames(cid, pad=8):
+    """Cắt mọi sheet của id về một khung chung vừa đủ, đối xứng quanh pivot (lật trái/phải không lệch)."""
+    d = OUT / cid; mf = d / 'manifest.json'; man = json.loads(mf.read_text())
+    (W, H), (px, py) = man['frame_size'], man['pivot_px']; reach, top, bot = 0, 0, 0
+    for c in man['actions'].values():
+        al = np.asarray(Image.open(d / c['sheet']))[..., 3] > 0
+        for i in range(c['frames']):
+            ys, xs = np.nonzero(al[:, i * W:(i + 1) * W])
+            if len(xs): reach = max(reach, px - xs.min(), xs.max() + 1 - px); top = max(top, py - ys.min()); bot = max(bot, ys.max() + 1 - py)
+    reach, top, bot = int(reach), int(top), int(bot)
+    nw = max(288, 2 * (reach + pad)); nh = max(208, top + pad + max(10, bot + 2)); npx, npy = nw // 2, nh - max(10, bot + 2)
+    for c in man['actions'].values():
+        sh = Image.open(d / c['sheet']); out = Image.new('RGBA', (nw * c['frames'], nh), (0, 0, 0, 0))
+        for i in range(c['frames']):
+            out.alpha_composite(sh.crop((i * W + px - npx, py - npy, i * W + px - npx + nw, py - npy + nh)), (i * nw, 0))
+        out.save(d / c['sheet'], optimize=True)
+        if c.get('hand'): c['hand'] = [c['hand'][0] - px + npx, c['hand'][1] - py + npy]
+    man.update(frame_size=[nw, nh], pivot_px=[npx, npy], reach_px=reach); mf.write_text(json.dumps(man, ensure_ascii=False, indent=1))
+    print(f'  {cid}: khung chung {nw}x{nh}, pivot {npx},{npy}')
+
+
+def pad_to(cid, man, fr, pv):
+    """Đưa các sheet đã cắt gọn của id về khung tạm (fr, pv) để ghép thêm clip mới cùng khung."""
+    d = OUT / cid; (W, H), (px, py) = man['frame_size'], man['pivot_px']
+    for a, c in man['actions'].items():
+        sh = Image.open(d / c['sheet']); out = Image.new('RGBA', (fr[0] * c['frames'], fr[1]), (0, 0, 0, 0))
+        for i in range(c['frames']):
+            out.alpha_composite(sh.crop((i * W, 0, (i + 1) * W, H)), (i * fr[0] + pv[0] - px, pv[1] - py))
+        out.save(d / c['sheet'], optimize=True)
+        if c.get('hand'): c['hand'] = [c['hand'][0] - px + pv[0], c['hand'][1] - py + pv[1]]
 
 
 def save_base(path, cid):
@@ -300,7 +362,7 @@ def main():
         return approve(args[1], args[2:])
     force = '--force' in args; names = [a for a in args if not a.startswith('--')]
     files = [SRC / n for n in names] or sorted(SRC.glob('*.png'))
-    approved = load_approved()
+    approved = load_approved(); touched = set()
     best = {}
     for f in files:                       # giữ bản vN lớn nhất mỗi action
         m = re.search(r'_v(\d+)\.png$', f.name); k = re.sub(r'_v\d+\.png$', '', f.name)
@@ -315,9 +377,12 @@ def main():
         if not r: continue
         cid, action, meta = r; mf = OUT / cid / 'manifest.json'
         man = json.loads(mf.read_text()) if mf.exists() else {'id': cid, 'frame_size': list(FRAME), 'pivot_px': list(PIVOT), 'facing': 'right', 'actions': {}}
-        fr, pv = FRAME_BY_ID.get(cid, (FRAME, PIVOT))
+        fr, pv = FRAME_BY_ID.get(cid, (FRAME, PIVOT) if cid in FACE_IDS else BIG)
+        if man['frame_size'] != list(fr):     # sheet cũ đã cắt gọn: đưa về khung tạm trước khi thêm clip mới
+            pad_to(cid, man, fr, pv)
         man.update(frame_size=list(fr), pivot_px=list(pv)); man['actions'][action] = meta
-        mf.write_text(json.dumps(man, ensure_ascii=False, indent=1))
+        mf.write_text(json.dumps(man, ensure_ascii=False, indent=1)); touched.add(cid)
+    for cid in sorted(touched - FACE_IDS - set(FRAME_BY_ID)): fit_frames(cid)
 
 
 if __name__ == '__main__':

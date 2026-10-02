@@ -1,14 +1,15 @@
-# Bản đồ di chuyển và gộp tài liệu
+# Bản đồ tài liệu
 
-Kế hoạch mới chờ Orange-kun review: [Cân bằng cổ trùng và BNB theo mốc truyện — Blue-chan](undone/KE_HOACH_CAN_BANG_CO_TRUNG_VA_BNB_THEO_MOC_TRUYEN.md). Đối chiếu ch.129–190, tách bộ cổ từng lần gặp, vận chiêu/hộ thể và cách đo cân bằng; chưa đổi code.
+## Battle E hiện hành — cập nhật 02/10/2026
 
-Kế hoạch chờ Orange-kun review: [Chốt sandbox PN–BNB: KO và điều khiển mobile](undone/KE_HOACH_CHOT_SANDBOX_PN_BNB.md).
+- [Phần hai AI đã thống nhất và hiện trạng triển khai](undone/BATTLE_E_DONG_THUAN_VA_TRIEN_KHAI.md).
+- [Một danh sách các điểm còn cần chốt và phụ thuộc](undone/BATTLE_E_CAC_DIEM_CAN_CHOT.md).
+- [Lịch sử 13 kế hoạch/ghi chú và phản hồi Orange-kun](reference/LICH_SU_REVIEW_BATTLE_E_2026_10_02.md); các file riêng đã được gộp.
+- [Hướng dẫn nhập FX riêng](../assets/battle_fx/README.md) và [âm pilot/nguồn giấy phép](../assets/audio/battle/README.md).
 
-02/10/2026. Dùng để tìm file từ tab IDE hoặc tên cũ.
+- [Review roster 40 ID: lỗi nguồn, tạo hình, anchor và danh sách cần sửa/gen lại](../previews/roster-validation-v01/README.md).
 
-Kế hoạch mới: [Map battle pixel — Blue-chan](undone/KE_HOACH_MAP_BATTLE_PIXEL.md), nền mẫu và quy trình tích hợp sandbox E.
-
-Kế hoạch bổ sung: [Hiệu ứng và âm thanh chiêu battle E — Blue-chan](undone/KE_HOACH_VFX_AM_THANH_BATTLE_E.md), bộ PN/BNB, event/anchor, ngân sách mobile và lộ trình Orange-kun.
+## Tra tên tài liệu cũ
 
 | Đường dẫn cũ | Tài liệu mới | Xử lý |
 |---|---|---|

@@ -1,0 +1,27 @@
+{
+  "shell": {
+    "state": "shell",
+    "oneArm": true,
+    "shield": "vobang",
+    "suongyeu": false,
+    "gap": 230,
+    "over": null
+  },
+  "end": {
+    "after": {
+      "state": "idle",
+      "hp": 46.3199999999997,
+      "oneArm": true,
+      "shield": null
+    },
+    "over": {
+      "winner": "pn",
+      "loser": "bnb",
+      "at": 3.9666666666666575,
+      "retreat": true
+    },
+    "projs": 0,
+    "zones": 0
+  },
+  "errors": []
+}

@@ -1,0 +1,59 @@
+{
+  "status": "pilot",
+  "cues": {
+    "punch": {
+      "file": "punch_kenney.mp3",
+      "gain": 0.4
+    },
+    "jade": {
+      "file": "jade_kenney.mp3",
+      "gain": 0.4
+    },
+    "ice": {
+      "file": "ice_kenney.mp3",
+      "gain": 0.4
+    },
+    "gold": {
+      "file": "gold_kenney.mp3",
+      "gain": 0.4
+    }
+  },
+  "sources": {
+    "punch_kenney.mp3": {
+      "author": "Kenney",
+      "pack": "Impact Sounds (1.0)",
+      "original": "Audio/impactPunch_medium_000.ogg",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Trim leading silence, -3dB, peak limiter 0.8, 0.45s cap/fade, mono MP3; pilot chưa nghe duyệt"
+    },
+    "jade_kenney.mp3": {
+      "author": "Kenney",
+      "pack": "Impact Sounds (1.0)",
+      "original": "Audio/impactGlass_light_000.ogg",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Trim leading silence, -3dB, peak limiter 0.8, 0.45s cap/fade, mono MP3; pilot chưa nghe duyệt"
+    },
+    "ice_kenney.mp3": {
+      "author": "Kenney",
+      "pack": "Impact Sounds (1.0)",
+      "original": "Audio/impactGlass_medium_000.ogg",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Trim leading silence, -3dB, peak limiter 0.8, 0.45s cap/fade, mono MP3; pilot chưa nghe duyệt"
+    },
+    "gold_kenney.mp3": {
+      "author": "Kenney",
+      "pack": "Impact Sounds (1.0)",
+      "original": "Audio/impactMetal_light_000.ogg",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0-1.0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "processing": "Trim leading silence, -3dB, peak limiter 0.8, 0.45s cap/fade, mono MP3; pilot chưa nghe duyệt"
+    }
+  }
+}

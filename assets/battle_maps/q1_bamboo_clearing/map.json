@@ -29,6 +29,6 @@
     250,
     400
   ],
-  "notes": "User-supplied image copied unchanged. Cover at scale 0.46875, viewport offset y=-55 (crop source y≈117.33..1034.67). Metadata bounds document existing projection; they do not create collision or campaign mapping. ground_screen_y drives the view projection; haze lightens the backdrop above the floor.",
+  "notes": "User-supplied image copied unchanged. Cover at scale 0.46875, viewport offset y=-55 (crop source y≈117.33..1034.67). Metadata bounds document existing projection; they do not create collision or campaign mapping. ground_screen_y drives the view projection; haze lightens the backdrop above the floor. Sandbox now selects SBSim.ARENAS classic (1000x240) or wide (1200x260) at creation; world_bounds above records classic, not a runtime override. View maps playable bounds to screen x=127..833; background is reused unchanged as a pilot.",
   "haze": 0.14
 }

@@ -1,0 +1,16 @@
+{
+  "note": "Sau khi chốt TR-1 (Sương Yêu tăng công + nổ tay chuyển pha), CN-1/CN-4 (PN hồi 0; BNB bể 130, hồi 0,8/s, tốc độ 275), CN-5 (phí huỷ 25% sau 0,15s), TR-3 (thua = BNB rút lui). Sân wide 1200x260, AI pressure, kit hiện tại. 300 trận mỗi seed, style move. lowEssPN = số trận PN xuống dưới 10% chân nguyên.",
+  "command": "node tools/sandbox_bench.cjs 300 <level> move <seed> wide pressure current <expert|human>",
+  "seeds": [20261002, 42, 9001],
+  "human_react_0.3s": {
+    "de":     {"win": [83.3, 86.3, 88.7], "meanSeconds": [38.9, 37.9, 38.8], "lowEssPN": [189, 149, 167]},
+    "thuong": {"win": [47.3, 50.7, 50.7], "meanSeconds": [36.9, 37.0, 37.7], "lowEssPN": [226, 223, 230]},
+    "kho":    {"win": [30.3, 27.0, 33.0], "meanSeconds": [34.4, 34.8, 34.7], "lowEssPN": [201, 204, 196]},
+    "spam_thuong_seed20261002": 0, "spam_de_seed20261002": 3.3
+  },
+  "expert_react_0.15s": {
+    "de":     {"win": [96.3, 94.0, 98.0]},
+    "thuong": {"win": [88.7, 87.0, 87.0]},
+    "kho":    {"win": [79.3, 73.7, 79.3]}
+  }
+}

@@ -261,7 +261,8 @@ Bộ chung và `win` đã duyệt, đã khóa. Ảnh tham chiếu: `assets/chibi
 
 - **Era: Q1 sau khi hợp luyện Nguyệt Nghê Thường (ch 104 trở đi).** Bản học đường trước ch 104 không có `sk_nguyetnghe`; nếu cần thì làm id riêng `phuong_chinh_hoc`.
 - Ảnh tham chiếu: `assets/chibi_ref/phuong_chinh_full.jpg` hoặc `chibi_ref/phuong_chinh.png`.
-- `Character: young teenage boy, long black hair tied back with a green ribbon, earnest honest face, green robe, bare hands.`
+- `Character: young teenage boy, long black hair tied low with a green ribbon, earnest honest face, long jade-green robe with silver-white embroidery, green sash, dark green boots, bare hands. Robe color is jade green exactly like the reference image.`
+- Bộ v1 (02/10): `idle`, `hit`, `atk`, `sk_nguyetnghe`, `win` ra áo trắng/tím, sai ảnh gốc. `ko`, `move`, `sk_nguyet` đúng màu xanh, giữ lại.
 - Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
@@ -491,8 +492,10 @@ Không gen `atk`, `ko` hay `win`. Đây là cuộc chạm trán để tránh, kh
 #### 4.18. `phi_tuong`: Bạch Vũ Phi Tượng
 
 - Lơ lửng.
-- `Animal: white flying elephant covered in white fur, four legs, one trunk, two long tusks, hovering in the air, side view facing right.`
-- Negative: `wings, feathers`
+- **Canon ch 277:** toàn thân phủ **lông chim màu trắng** (không phải lông thú), hai ngà cong dài một trượng, bay được, bổ nhào từ trên không. Truyện không nhắc cánh, nên mặc định không vẽ cánh; muốn thêm cánh thì ghi là thiết kế mỹ thuật.
+- `Animal: white flying elephant, whole body covered in layered soft white bird feathers, four legs, one trunk, two very long curved ivory tusks, hovering in the air without wings, side view facing right.`
+- Negative: `wings, fur`
+- Bộ v1 (02/10) vẽ lông thú và thiếu `hit`: làm lại ảnh gốc bằng Cách 1 rồi gen lại cả bộ.
 - Khung: `((416, 256), (208, 200))`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
@@ -723,6 +726,14 @@ Bưu / Xung Thiên Hổ (hư ảnh hổ có cánh) là hiệu ứng hoặc biế
 
 - `Animal: ancient weary giant turtle, rigid shell, four limbs, short neck, intelligent gaze, side view facing right.`
 - Gen `idle` và `warn` theo mục 2. Không gen `atk`, `ko`, `win`.
+
+#### 4.37. `bach_ngung_bang_nu`: Bạch Ngưng Băng thân nữ (người dùng gen thêm 02/10/2026)
+
+Hình dạng sau khi đổi thân, **không dùng cho các trận Q1** (Q1 dùng `bach_ngung_bang_nam`). Mốc truyện cụ thể chưa đối chiếu. Trang phục và màu là thiết kế mỹ thuật.
+
+| clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
+|---|---|---|---|---|
+| atk | Đánh tay phóng hàn khí | art | 3 | (bộ người dùng gửi, không có prompt riêng) |
 
 ---
 

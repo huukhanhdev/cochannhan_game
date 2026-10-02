@@ -1,5 +1,7 @@
 # Bản đồ di chuyển và gộp tài liệu
 
+Kế hoạch chờ Orange-kun review: [Chốt sandbox PN–BNB: KO và điều khiển mobile](undone/KE_HOACH_CHOT_SANDBOX_PN_BNB.md).
+
 02/10/2026. Dùng để tìm file từ tab IDE hoặc tên cũ.
 
 Kế hoạch mới: [Map battle pixel — Blue-chan](undone/KE_HOACH_MAP_BATTLE_PIXEL.md), nền mẫu và quy trình tích hợp sandbox E.

@@ -1,46 +1,73 @@
-// Đo cân bằng sandbox E: PN do script giả lập người chơi đấu BNB do AI.
-// node tools/sandbox_bench.cjs [số trận] [mức: de|thuong|kho] [kiểu: move|spam]
-//   spam : đứng ra chiêu liên tục, không né (cách chơi cũ)
-//   move : phản xạ trễ 0,2s: bước ra khỏi ô đòn đỏ / vòng Lốc, giữ khoảng cách rồi phóng Nguyệt Mang (thả diều)
-// So hai kiểu để biết di chuyển có quyết định trận hay không.
+// So sánh cùng nhịp quyết định, cùng seed và cùng chính sách hồi máu/hộ thể; move giữ khoảng cách và né, spam áp sát.
+// node tools/sandbox_bench.cjs [N=300] [de|thuong|kho] [move|spam|stand|compare] [seed=20261002]
+// spam có tự đuổi khi đánh thường; stand tuyệt đối không ra lệnh đi/lướt/đuổi.
 const {SBSim,SBAI,SB_KITS}=require('./sandbox_sim.cjs');
-const N=+process.argv[2]||300;SBAI.level=process.argv[3]||'thuong';const style=process.argv[4]||'move';
-const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[SBAI.level].dmgK;[K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
-const REACT=.2;
-let w={pn:0,bnb:0},T=0,hpLeft=0;const ev={};
-function spamBot(B){
-  const p=B.actors.pn,b=B.actors.bnb,d=Math.abs(b.x-p.x);
-  const tryS=id=>SBSim.check(B,p,{skill:id}).ok&&SBSim.issue(B,'pn',{skill:id,x:b.x,z:b.z}).ok;
-  if(p.hp<p.maxHp*.45&&tryS('leaf'))return;
-  if(p.hp<p.maxHp*.6&&!p.shield&&(tryS('thienbong')||tryS('bachngoc')))return;
-  if(d<120&&tryS('cuxi'))return;if(d<190&&tryS('cuongthu'))return;if(d>150&&tryS('nguyet'))return;
-  SBSim.issue(B,'pn',{skill:'atk'});
-}
-function moveBot(B){
-  const p=B.actors.pn,b=B.actors.bnb,dx=b.x-p.x,d=Math.abs(dx),dir=Math.sign(dx)||1,A=b.act;
+const N=Number(process.argv[2]||300),level=process.argv[3]||'thuong',style=process.argv[4]||'compare',seed=Number(process.argv[5]||20261002);
+if(!Number.isInteger(N)||N<1||!SBAI.LEVEL[level]||!['move','spam','stand','compare'].includes(style)||!Number.isFinite(seed))throw Error('Tham số benchmark không hợp lệ');
+SBAI.level=level;
+const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[level].dmgK;
+[K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
+function rng(seed){let s=seed>>>0;return()=>{s=(s+0x6D2B79F5)|0;let t=Math.imul(s^(s>>>15),1|s);t^=t+Math.imul(t^(t>>>7),61|t);return((t^(t>>>14))>>>0)/4294967296}}
+const THINK=.1,REACT=.15;
+function bot(B,style){
+  const p=B.actors.pn,b=B.actors.bnb,dir=Math.sign(b.x-p.x)||1,d=Math.abs(b.x-p.x);
   const tryS=(id,x=b.x,z=b.z)=>SBSim.check(B,p,{skill:id}).ok&&SBSim.issue(B,'pn',{skill:id,x,z}).ok;
-  const away=(dist,dz=0)=>SBSim.issue(B,'pn',{skill:'move',x:p.x-dir*dist,z:Math.max(0,Math.min(SBSim.Z1,p.z+dz)),cancel:true});
-  // 1. né: vòng Lốc đang chờ và mình ở trong → lướt ra (hoặc chạy)
-  for(const z of B.zones)if(B.t-z.from>=REACT&&Math.hypot(p.x-z.x,(p.z-z.z)*1.6)<z.r+20){
-    if(!tryS('dash',p.x-dir*200,p.z))away(160,p.z>120?-60:60);return}
-  // 2. né: đòn cận chiến địch đang lấy đà, mình trong ô → lùi ra khỏi tầm
-  if(A&&A.phase==='startup'&&A.t>=REACT&&A.s.kind==='melee'&&d<=A.s.range+15&&Math.abs(b.z-p.z)<=A.s.depth+10){away(90);return}
-  // 3. phản đòn: địch đang thu chiêu sau đòn trượt, mình trong tầm → đánh
-  if(A&&A.phase==='recovery'&&d<=110){if(tryS('cuxi'))return;SBSim.issue(B,'pn',{skill:'atk'});return}
-  if(p.state==='act')return;
-  if(p.hp<p.maxHp*.45&&d>200&&tryS('leaf'))return;
-  if(p.hp<p.maxHp*.55&&!p.shield&&d<220&&(tryS('thienbong')||tryS('bachngoc')))return;
-  // 4. thả diều: quá gần mà địch rảnh → lùi giữ khoảng 200–300; xa thì phóng Nguyệt Mang
-  if(d<150&&!A){away(120,(Math.random()-.5)*80);return}
-  if(d>=180&&tryS('nguyet'))return;
-  if(d<190&&d>120&&tryS('cuongthu'))return;
-  if(d>320)SBSim.issue(B,'pn',{skill:'move',x:b.x-dir*240,z:b.z});
+  const go=(x,z)=>{B.evadeUntil=B.t+.65;return SBSim.issue(B,'pn',{skill:'move',x,z,cancel:true})};
+  if(style==='move'&&B.t<(B.evadeUntil||0)&&p.state==='move')return;
+  // Không tự huỷ lần né vừa bắt đầu; không xếp đòn đánh thay lệnh thoát vùng nguy hiểm.
+  if(style==='move'&&!(p.act&&['dash','escape'].includes(p.act.s.kind))){
+    const side=p.z>SBSim.Z1/2?-1:1;
+    for(const zone of B.zones)if(B.t-zone.from>=REACT&&Math.hypot(p.x-zone.x,(p.z-zone.z)*1.6)<zone.r+12){
+      // Ưu tiên chiều sâu: vòng Lốc có bán kính theo z nhỏ hơn theo x.
+      const z=Math.max(0,Math.min(SBSim.Z1,zone.z+side*(zone.r/1.6+35)));
+      if(Math.abs(z-p.z)>20){if(!tryS('dash',p.x,z))go(p.x,z)}
+      else go(p.x-dir*(zone.r+45),p.z);
+      return;
+    }
+    const A=b.act;
+    if(A&&A.phase==='startup'&&A.t>=REACT&&A.s.kind==='melee'&&SBSim.inMelee(b,p,A.s,false)){
+      go(p.x,p.z+side*(A.s.depth+35));return;
+    }
+  }
+  // Các bot không liên tục đè bộ đệm và không liên tục đè bộ đệm lúc đang bận.
+  if(p.state!=='idle'&&p.state!=='move')return;
+  if(p.hp<p.maxHp*.45&&(style!=='move'||d>200)&&tryS('leaf'))return;
+  if(p.hp<p.maxHp*.6&&!p.shield&&(tryS('thienbong')||tryS('bachngoc')))return;
+  if(style==='move'){
+    if(d<170&&!b.act){
+      const cornered=dir>0?p.x<SBSim.X0+100:p.x>SBSim.X1-100;
+      go(cornered?p.x+dir*160:p.x-dir*130,p.z+(p.z>SBSim.Z1/2?-90:90));return;
+    }
+    if(d>=170&&tryS('nguyet'))return;
+    if(b.act?.phase==='recovery'){if(tryS('cuxi'))return;if(tryS('atk'))return;}
+    if(d>120&&d<190&&tryS('cuongthu'))return;
+    if(d>320)SBSim.issue(B,'pn',{skill:'move',x:b.x-dir*240,z:b.z});
+    return;
+  }
+  if(tryS('cuxi'))return;
+  if(tryS('cuongthu'))return;
+  if(d>150&&tryS('nguyet'))return;
+  if(style==='stand'){
+    if(SBSim.inMelee(p,b,p.sk.atk,true))tryS('atk');
+  }else tryS('atk');
 }
-for(let n=0;n<N;n++){const B=SBSim.create(K,{});let i=0,th=0;
-  while(!B.over&&i<60*240){SBSim.step(B);i++;th-=1/60;
-    if(th<=0){th=style==='spam'?.45+Math.random()*.2:.12;(style==='spam'?spamBot:moveBot)(B)}
-    B.events.splice(0).forEach(e=>ev[e.type]=(ev[e.type]||0)+1)}
-  if(B.over){w[B.over.winner]++;if(B.over.winner==='pn')hpLeft+=B.actors.pn.hp}T+=B.t}
-const hits=ev.dmg||0,miss=ev.miss||0;
-console.log(`mức ${SBAI.level} · kiểu ${style} · PN thắng ${(w.pn/N*100).toFixed(1)}% · TB ${(T/N).toFixed(1)}s · máu PN còn TB khi thắng ${(hpLeft/Math.max(1,w.pn)).toFixed(0)}`);
-console.log(`  đòn trúng ${hits} · trượt ${miss} · huỷ chiêu ${ev.cancel||0} · lốc nổ ${ev.zoneFire||0} · thoát thân ${ev.escape||0}`);
+function run(style){
+  const stats={style,wins:0,losses:0,timeouts:0,seconds:0,hp:0,moving:0,events:{},pnDamage:0,bnbDamage:0,damageBySkill:{},cancelBySkill:{},cancelByPhase:{}};
+  for(let n=0;n<N;n++){
+    const B=SBSim.create(K,{rng:rng(seed+n)});let think=0;
+    for(let i=0;!B.over&&i<60*120;i++){
+      SBSim.step(B);think-=SBSim.DT;
+      if(think<=0){think=THINK;bot(B,style)}
+      if(B.actors.pn.state==='move')stats.moving+=SBSim.DT;
+      for(const e of B.events.splice(0)){
+        if(e.who==='pn')stats.events[e.type]=(stats.events[e.type]||0)+1;
+        if(e.type==='dmg'){if(e.who==='pn')stats.pnDamage+=e.amount;else stats.bnbDamage+=e.amount;const key=(e.source||'dot')+':'+(e.skill||'bleed');stats.damageBySkill[key]=(stats.damageBySkill[key]||0)+e.amount}
+        if(e.type==='cancel'&&e.who==='pn'){stats.cancelBySkill[e.skill]=(stats.cancelBySkill[e.skill]||0)+1;stats.cancelByPhase[e.phase]=(stats.cancelByPhase[e.phase]||0)+1;}
+      }
+    }
+    if(!B.over)stats.timeouts++;else if(B.over.winner==='pn'){stats.wins++;stats.hp+=B.actors.pn.hp}else stats.losses++;
+    stats.seconds+=B.t;
+  }
+  console.log(JSON.stringify({level,seed,N,think:THINK,...stats,winPercent:+(stats.wins/N*100).toFixed(1),meanSeconds:+(stats.seconds/N).toFixed(1),winnerHp:+(stats.hp/Math.max(1,stats.wins)).toFixed(1),movePercent:+(100*stats.moving/stats.seconds).toFixed(1)},null,2));
+}
+(style==='compare'?['stand','spam','move']:[style]).forEach(run);

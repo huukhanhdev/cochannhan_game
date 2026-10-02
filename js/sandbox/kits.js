@@ -1,6 +1,6 @@
 // Bộ chiêu sandbox E (chỉ dữ liệu). Số liệu là giả thuyết, chỉnh sau khi chơi thử / chạy máy đấu máy.
 // Thời gian: giây của trận. Khoảng cách: px thế giới (sân 1000 × 240).
-// Nhịp (02/10): đòn lấy đà đủ lâu để né bằng di chuyển (≥0,28s, đòn địch ≥0,45s có ô báo trên đất),
+// Nhịp (02/10): đòn lấy đà đủ lâu để né bằng di chuyển (≥0,28s, đòn địch ≥0,65s có ô báo trên đất),
 // đạn đủ chậm để bước ngang tránh, đánh trượt thì thu chiêu lâu → di chuyển/spacing quyết định trận.
 // clip: danh sách ưu tiên; view lấy clip đầu tiên có trong sheet (sk_* riêng → clip dự phòng → idle).
 // kind: melee (cung trước mặt) · proj (đạn bay thẳng) · aoe (vùng tại điểm, báo trước) · grab (chộp kéo)
@@ -10,7 +10,7 @@
 (function(root){
   const SB_KITS={
     pn:{n:'Phương Nguyên',sprite:'phuong_nguyen',hp:220,ess:100,essRegen:1.8,speed:265,
-      atk:{id:'atk',n:'Đánh tay',icon:'拳',kind:'melee',clip:['atk','attack'],startup:.28,active:.10,recovery:.32,cd:0,cost:0,range:85,depth:44,dmg:13,
+      atk:{id:'atk',n:'Đánh tay',icon:'拳',kind:'melee',clip:['atk','attack'],startup:.28,active:.10,recovery:.46,cd:0,cost:0,range:85,depth:44,dmg:13,
         src:'ch100,131: sức 2 trư chi lực',d:'Chuột phải / trái vào địch: tự tới tầm rồi đấm.'},
       skills:[
         {key:'q',id:'nguyet',n:'Nguyệt Mang',icon:'月',kind:'proj',clip:['sk_nguyet','cast'],startup:.38,active:.05,recovery:.32,cd:2.8,cost:9,
@@ -30,11 +30,11 @@
       ]},
     bnb:{n:'Bạch Ngưng Băng',sprite:'bach_ngung_bang_nam',hp:300,ess:100,essRegen:2.4,speed:235,
       // Bạch Ngọc / Băng Trùy tạm bỏ khỏi kit sandbox, chờ xác minh nguồn Q1 (vẫn còn trong js/data.js)
-      atk:{id:'atk',n:'Băng nhận',icon:'冰',kind:'melee',clip:['atk','attack'],startup:.45,active:.10,recovery:.42,cd:0,cost:0,range:118,depth:46,dmg:17,
+      atk:{id:'atk',n:'Băng nhận',icon:'冰',kind:'melee',clip:['atk','attack'],startup:.65,active:.10,recovery:.42,cd:0,cost:0,range:118,depth:46,dmg:24,
         slow:{f:.7,dur:1.2},fx:'ice',src:'ch135,172: dải hàn băng phóng từ tay',d:'Một tay hất dải hàn băng chém ra, làm chậm.'},
       skills:[
         {key:'q',id:'locbangnhan',n:'Lốc băng nhận',icon:'旋',kind:'aoe',clip:['sk_locbangnhan','heavy'],startup:1.15,active:.15,recovery:.60,cd:10,cost:22,
-          radius:125,castRange:340,dmg:48,armor:true,fx:'blizzard',src:'ch140',d:'Báo trước bằng vòng trên đất rồi cuốn lốc băng nhận. Không bị ngắt khi lấy đà.'},
+          radius:125,castRange:340,dmg:96,armor:true,fx:'blizzard',src:'ch140',d:'Khóa vùng lúc lấy đà, nổ sau 1,15 giây: 96 sát thương trước hộ thể. Bước khỏi vòng đỏ hoặc lướt để né. Không bị ngắt khi lấy đà.'},
         {key:'w',id:'thuytrao',n:'Thủy Tráo',icon:'水',kind:'buff',clip:['sk_thuytrao','guard'],startup:.30,active:.05,recovery:.25,cd:10,cost:12,
           group:'shield',red:.4,dur:3,tint:0x8fd0ff,src:'ch143: cổ trên người BNB',d:'Cầu nước bao thân: giảm 40% sát thương 3 giây.'},
         {key:'e',id:'suongyeu',n:'Sương Yêu',icon:'霜',kind:'escape',clip:['sk_suongyeu','dodge'],startup:.25,active:.35,recovery:.25,cd:0,cost:0,uses:1,dist:380,

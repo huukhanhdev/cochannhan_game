@@ -32,6 +32,9 @@
   function setState(a,s){a.state=s;a.since=0}
   function emit(B,e){e.t=B.t;B.events.push(e)}
   const totalT=s=>s.startup+s.active+s.recovery;
+  const GU_LOCK=2;
+  // Đánh thường và lướt giữ nhịp riêng; lá hồi máu nằm trong nhóm action dùng cổ/vật phẩm.
+  const guAction=s=>s.id!=='atk'&&s.kind!=='dash';
 
   // Tầm cận chiến: phía trước theo x, lệch chiều sâu nhỏ. loose: cho phép quay mặt lúc nhận lệnh.
   function inMelee(a,t,s,loose){
@@ -60,7 +63,7 @@
     return A.phase==='recovery'&&A.t>=s.startup+s.active+s.recovery*.5;
   }
   function cancelAct(B,a){
-    const A=a.act;if(A.zone)B.zones.splice(B.zones.indexOf(A.zone),1);
+    const A=a.act;if(A.zone){const i=B.zones.indexOf(A.zone);if(i>=0)B.zones.splice(i,1);}
     emit(B,{type:'cancel',who:a.id,skill:A.s.id,hid:A.hid,phase:A.phase});
     a.act=null;setState(a,'idle');
   }
@@ -167,6 +170,11 @@
   function fire(B,a){
     const A=a.act,s=A.s,t=other(B,a);if(B.over||A.fired)return;A.fired=true;
     a.ess=Math.max(0,a.ess-(s.cost||0));if(s.cd)a.cd[s.id]=s.cd;     // trả giá lúc phát đòn
+    if(guAction(s))for(const next of Object.values(a.sk)){
+      if(next.id===s.id||!guAction(next)||(next.uses&&!(a.uses[next.id]>0)))continue;
+      // Chỉ cổ đang sẵn sàng nhận khóa; không kéo dài/rút ngắn cooldown đang chạy.
+      if(!(a.cd[next.id]>0))a.cd[next.id]=GU_LOCK;
+    }
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
@@ -232,11 +240,11 @@
       emit(B,{type:'ko',who:t.id});return;
     }
     if(o.dot)return;
-    // khựng: ngắt chiêu đang ra; sau đó "vững thế" 0,6 giây không bị khựng tiếp (vẫn mất máu).
+    // khựng: ngắt chiêu đang ra; sau đó "vững thế" 1,2 giây không bị khựng tiếp (vẫn mất máu).
     // Đang thoát thân (Sương Yêu) hoặc chiêu có armor (chiêu lớn) thì không bị ngắt.
     if(B.t>=t.poiseUntil&&!(t.act&&(t.act.s.kind==='escape'||t.act.s.armor))){
       if(t.act)emit(B,{type:'interrupt',who:t.id,skill:t.act.s.id});
-      t.act=null;t.move=null;t.chase=false;setState(t,'hit');t.poiseUntil=B.t+.32+.6;
+      t.act=null;t.move=null;t.chase=false;setState(t,'hit');t.poiseUntil=B.t+.32+1.2;
     }
   }
   // Va chạm thân: hai người không đứng chồng lên nhau (đẩy ra theo trục x)
@@ -253,6 +261,6 @@
     if(a.buffer&&B.t<=a.buffer.until){const c=a.buffer.cmd;a.buffer=null;issue(B,a.id,c)}
   }
 
-  const SBSim={DT,X0,X1,Z1,BODY,create,issue,check,step,inMelee};
+  const SBSim={DT,X0,X1,Z1,BODY,GU_LOCK,create,issue,check,step,inMelee};
   if(typeof module!=='undefined')module.exports=SBSim;else root.SBSim=SBSim;
 })(this);

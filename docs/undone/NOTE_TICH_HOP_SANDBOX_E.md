@@ -143,3 +143,76 @@ Blue-chan đã sửa trực tiếp các file dưới đây, chưa commit/push. C
 - Khi nối vào Arena chính, mang theo `touch-action:none` cho canvas và bộ Pointer Events. E chưa được nối vào `index.html`; không coi cảm ứng sandbox là đã hỗ trợ mọi chế độ battle.
 - Kiểm tra thực tế trên Safari iPhone / Chrome Android. Blue-chan kiểm tra bằng Chrome headless giả lập cảm ứng; chưa kiểm tra thiết bị thật.
 - Muốn mobile đầy đủ hơn, làm tiếp nút Dừng và chọn điểm/hướng dùng chiêu; tách thao tác đó khỏi chạm đi để tránh vô tình di chuyển khi nhắm.
+
+## Bàn giao Orange-kun — Blue-chan tiếp tục cân bằng di chuyển (02/10/2026)
+
+Đã sửa trực tiếp sandbox E theo yêu cầu người dùng, chưa commit/push. Bản trước dùng làm đối chứng là `cf2c8c5`. Phần này cập nhật kết quả cân bằng; các tỷ lệ đo ngẫu nhiên ở phần trước không còn đại diện cho bộ thông số hiện tại.
+
+### Vấn đề xác nhận được
+
+- Simulation chỉ có **một chiêu đang chạy và một lệnh chờ cuối** mỗi actor. Bấm Q/W/E/R cùng lúc không phát bốn chiêu; lệnh hợp lệ khi bận thay nhau trong bộ đệm 0,25 giây. Vấn đề thật là áp sát và ra đòn liên tục quá hiệu quả.
+- Benchmark dở dang cho bot `move` quyết định mỗi 0,12 giây, còn `spam` mỗi 0,45–0,65 giây; dùng ngẫu nhiên không seed. Không thể kết luận lợi ích di chuyển từ hai con số này.
+- Bot né có thể tự hủy lướt vừa bắt đầu, hoặc quay lại ra đòn trước khi đi hết đoạn né. Đòn Băng Nhận 0,45 giây cũng quá khó bước tránh sau khi bot đã nhận diện cảnh báo, nhất là đang bị làm chậm.
+- Bảo vệ khỏi khựng quá ngắn tạo lợi thế lớn cho chuỗi đấm nhanh. Đánh trúng liên tiếp dễ ngắt chiêu trả đòn, khiến né ít có giá trị hơn tiếp tục đấm.
+
+### Thông số đã đổi
+
+| Cơ chế | Trước | Hiện tại | Mục đích |
+|---|---|---|---|
+| PN đánh tay: thu chiêu | 0,32s | 0,46s | Giảm hiệu quả đứng sát đánh liên tục; vẫn giữ lấy đà 0,28s và sát thương 13 |
+| BNB Băng Nhận: lấy đà | 0,45s | 0,65s | Có thời gian đọc ô đỏ và bước ngang khỏi tầm |
+| BNB Băng Nhận: sát thương | 17 | 24 | Đòn chậm, rõ cảnh báo phải có giá nếu cố ăn đòn |
+| BNB Lốc Băng Nhận: sát thương | 48 | 96 | Không bỏ qua vòng đỏ chỉ để tiếp tục combo; giữ báo trước 1,15s, vùng khóa tại vị trí ban đầu, bán kính/cooldown/chi phí cũ |
+| Vững thế sau khựng, cả hai actor | 0,6s | 1,2s | Có cơ hội trả đòn sau khi hết khựng 0,32s; vẫn nhận đủ sát thương, không phải bất tử |
+
+Lốc 96 tương đương khoảng 44% HP tối đa của PN trước hộ thể. Đây là thay đổi lớn nhất cần chơi thử: Bạch Ngọc còn 48 sát thương, Thiên Bồng khoảng 34 ở mức Thường. Chưa thêm phạt đứng yên, chưa cho né bất tử; bước ra ngoài tầm/vùng mới tránh được sát thương.
+
+Sửa thêm `cancelAct`: chỉ xóa zone khi thực sự tìm thấy trong danh sách. Trước đây hủy recovery của Lốc đã nổ có thể gọi `splice(-1,1)` và xóa nhầm zone khác.
+
+### Benchmark mới và kết quả
+
+`tools/sandbox_bench.cjs` dùng seed, cùng nhịp kiểm tra khoảng 0,1s cho tất cả bot, nhận diện cảnh báo sau ít nhất 0,15s. Có ba chính sách rõ ràng:
+
+- `stand`: dùng chiêu/hộ thể/lá và đánh trong tầm; không đi, không lướt, không tự đuổi.
+- `spam`: chọn chiêu phù hợp tầm, tự đuổi đánh; không chủ động né. Đây là bot biết ưu tiên chiêu, **không phải** mô phỏng bấm bừa bốn nút.
+- `move`: né ô đỏ/vòng Lốc, giữ khoảng cách, phóng Nguyệt và phản công lúc địch thu chiêu. Không tự hủy dash/escape, giữ thời gian đi né và không đè đòn đánh vào bộ đệm khi đang bận. Chính sách tấn công khác `spam`, vì vậy đây là so sánh hai cách chơi, không phải thí nghiệm chỉ thay một biến di chuyển.
+
+Đối chứng bằng cùng benchmark mới, 300 trận mỗi cách chơi, mức Thường, seed `20261002`:
+
+| Cách chơi | Trước sửa runtime | Sau sửa runtime | Thời gian sau sửa | HP PN trung bình khi thắng |
+|---|---:|---:|---:|---:|
+| Đứng yên | 71,7% | 12,7% | 21,2s | 18,4 |
+| Áp sát spam | 100% | 67,7% | 20,6s | 49,5 |
+| Né + giữ khoảng cách + phản công | 55,3% | 94,3% | 39,7s | 84,4 |
+
+Đo lại seed 42 và 9001, mỗi seed 300 trận/cách chơi ở mức Thường: đứng yên 13,3% / 15,7%; spam 69,3% / 70,0%; di chuyển 96,7% / 96,3%. Không có trận hết thời gian 120s trong các lượt đo cuối.
+
+Seed `20261002`, 300 trận/cách chơi ở các mức khác:
+
+| Mức | Đứng yên | Áp sát spam | Né + phản công |
+|---|---:|---:|---:|
+| Dễ | 80,0% | 99,3% | 100% |
+| Khó | 1,3% | 19,3% | 90,3% |
+
+Bot di chuyển mức Thường có khoảng 7,7 lần hủy startup và 8,2 lần hủy recovery mỗi trận; báo cáo tách hai loại để không nhầm hủy nửa cuối thu chiêu với chiêu chưa phát. Không còn chuyện tự hủy hàng nghìn lần trong một trận. Bot vẫn hủy một số Cự Xỉ/hộ thể để né nguy hiểm, đây chưa phải chính sách bot tối ưu.
+
+Số liệu gốc: [`tools/reports/sandbox_balance_2026_10_02.json`](../../tools/reports/sandbox_balance_2026_10_02.json). Lệnh đo lại:
+
+```bash
+node tools/sandbox_bench.cjs 300 thuong compare 20261002
+node tools/sandbox_bench.cjs 300 thuong compare 42
+node tools/sandbox_bench.cjs 300 thuong compare 9001
+node tools/sandbox_bench.cjs 300 de compare 20261002
+node tools/sandbox_bench.cjs 300 kho compare 20261002
+node tools/sandbox_regression.cjs
+```
+
+### Đã kiểm tra và phần Orange cần review
+
+- Hồi quy đạt: chốt kết trận, chi phí/lá khi bị ngắt, hủy startup; bổ sung bấm dồn bốn chiêu chỉ phát một, đứng yên ăn Băng Nhận nhưng bước ngang sau 0,2s né được, ra khỏi vòng Lốc không mất máu, hủy Lốc đã nổ không xóa zone khác.
+- Kiểm tra dữ liệu và hồi quy engine đạt. Chrome giả lập mobile/desktop vẫn nhận tap đi/đánh, chuột trái/phải và Q đúng, mỗi tap chỉ ra một lệnh. Chưa thử điện thoại thật.
+- Runtime đổi ở `js/sandbox/kits.js` và `sim.js`; không đổi AI BNB, map, input hay thông số campaign.
+- **Cần chơi thử trước khi chốt:** di chuyển hiện an toàn hơn nhưng trận kéo dài gần gấp đôi kiểu áp sát. Mức Khó vẫn bị bot biết hình học né thắng khoảng 90%; đó là giới hạn của AI hiện tại, không phải tỷ lệ thắng người thật. Đừng cân bằng tiếp chỉ bằng cách ép tỷ lệ bot về 50%.
+- Ưu tiên review cảm giác ô cảnh báo Băng Nhận 0,65s, mức phạt Lốc 96, và liệu nút/cách nhắm lướt trên điện thoại đã đủ dễ dùng. Kế hoạch KO ở biên và nhắm chiêu/nút Dừng vẫn nằm riêng trong `KE_HOACH_CHOT_SANDBOX_PN_BNB.md`, chưa triển khai trong lượt cân bằng này.
+
+**Cập nhật sau lượt cân bằng trên:** đã thêm khóa chung 2s và AI BNB mức Khó; danh sách action PN/BNB, nguồn đối chiếu thời kỳ và kết quả benchmark mới ở [NOTE_COOLDOWN_CHUNG_VA_BOSS_BNB.md](NOTE_COOLDOWN_CHUNG_VA_BOSS_BNB.md). Tỷ lệ thắng trước khóa 2s không còn đại diện cho runtime hiện tại.

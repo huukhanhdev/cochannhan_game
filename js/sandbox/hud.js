@@ -35,11 +35,11 @@ const SBHud=(function(){
       c.classList.toggle('busy',p.act&&p.act.s.id===s.id);
       c.querySelector('.sub').textContent=out?'hết':lack?'thiếu c.nguyên':s.uses?'còn '+p.uses[s.id]:s.cost?s.cost+' c.n':'';
       c.querySelector('.cdv').textContent=cd>0?cd.toFixed(1):'';
-      c.style.setProperty('--cd',s.cd?(cd/s.cd):0);
+      c.style.setProperty('--cd',Math.min(1,cd/Math.max(s.cd||0,SBSim.GU_LOCK)));
     });
     const h=SBInput.hover,m=SBInput.msg;
     el.desc.innerHTML=m?`<span class="warn">${m}</span>`:h?`<b>${h.n}</b> — ${h.d||''}${h.startup!=null?` · lấy đà ${h.startup}s`:''}${h.cd?` · hồi ${h.cd}s`:''}${h.cost?` · ${h.cost} chân nguyên`:''}<span class="src"> · ${h.src||''}</span>`:
-      '<span class="hint">Chuột phải hoặc phím mũi tên: đi · chuột vào Bạch Ngưng Băng: đánh · Q W E R D: cổ (nhắm theo con trỏ) · Space: lướt · 1: Sinh Mệnh Diệp · S: dừng</span>';
+      '<span class="hint">Chuột phải hoặc phím mũi tên: đi · chuột vào Bạch Ngưng Băng: đánh · Q W E R D: cổ (nhắm theo con trỏ) · Phát cổ: các cổ sẵn sàng khác hồi 2s · Space: lướt · 1: Sinh Mệnh Diệp · S: dừng</span>';
   }
   return {mount,update};
 })();

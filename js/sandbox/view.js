@@ -16,10 +16,23 @@ const SBView=(function(){
     el.appendChild(app.view);app.view.style.width='100%';app.view.style.height='auto';
     for(const k of ['bg','ground','ghost','fig','fx'])L[k]=new PIXI.Container();
     L.fig.sortableChildren=true;app.stage.addChild(L.bg,L.ground,L.ghost,L.fig,L.fx);
-    if(bg){const t=await PIXI.Assets.load(bg).catch(()=>null);if(t){const s=new PIXI.Sprite(t);const k=Math.max(W/t.width,H/t.height);s.scale.set(k);s.x=(W-t.width*k)/2;s.y=(H-t.height*k)*.35;s.alpha=.85;L.bg.addChild(s)}}
-    const dim=new PIXI.Graphics();dim.beginFill(0x000000,.35);dim.drawRect(0,0,W,H);dim.endFill();
-    dim.beginFill(0x0c0f12,.55);dim.drawRect(0,GY0-20,W,H-GY0+20);dim.endFill();L.bg.addChild(dim);
+    const map=bg&&typeof bg==='object'?bg:null;
+    let pixel=false;
+    if(bg){
+      let t=await PIXI.Assets.load(map?map.image:bg).catch(()=>null);
+      pixel=!!(t&&map?.pixel);
+      if(!t&&map?.fallback)t=await PIXI.Assets.load(map.fallback).catch(()=>null);
+      if(t){
+        if(pixel)t.baseTexture.scaleMode=PIXI.SCALE_MODES.NEAREST;
+        const s=new PIXI.Sprite(t),k=Math.max(W/t.width,H/t.height);
+        s.scale.set(k);s.x=(W-t.width*k)/2;s.y=(H-t.height*k)*(pixel?(map.cropY??.5):.35);
+        s.alpha=pixel?1:.85;L.bg.addChild(s);
+      }
+    }
+    const dim=new PIXI.Graphics();dim.beginFill(0x000000,pixel?(map.dim??0):.35);dim.drawRect(0,0,W,H);dim.endFill();
+    if(!pixel){dim.beginFill(0x0c0f12,.55);dim.drawRect(0,GY0-20,W,H-GY0+20);dim.endFill()}L.bg.addChild(dim);
     L.guide=new PIXI.Graphics();L.ground.addChild(L.guide);L.proj=new PIXI.Graphics();L.fx.addChild(L.proj);
+    L.windup=new PIXI.Graphics();L.fx.addChild(L.windup);
     for(const a of Object.values(B.actors)){
       kp[a.id]=await KPSprite.load(a.kit.sprite);
       const c=new PIXI.Container(),sh=new PIXI.Graphics(),aura=new PIXI.Graphics(),s=new PIXI.Sprite(kp[a.id].clips.idle.tex[0]);
@@ -75,10 +88,13 @@ const SBView=(function(){
       if((a.state==='move'||fast)&&B.t-S.ghostAt>(fast?.025:.05)){S.ghostAt=B.t;const g=new PIXI.Sprite(S.s.texture);g.anchor.copyFrom(S.s.anchor);g.scale.copyFrom(S.s.scale);g.position.copyFrom(S.c.position);g.alpha=g.startAlpha=fast?.45:.3;g.born=B.t;if(a.act&&a.act.s.kind==='escape')g.tint=0xbfe8ff;L.ghost.addChild(g)}
     }
     for(const g of [...L.ghost.children]){const age=B.t-g.born;g.alpha=g.startAlpha*Math.max(0,1-age/.3);if(age>.3)g.destroy()}
-    drawProj();
+    drawProj();drawWindup();
     for(const e of evs||[]){
       const a=B.actors[e.who];
-      if(e.type==='dmg')floatText(a,(e.dot?'':'−')+e.amount+(e.blocked?` (đỡ ${e.blocked})`:''),e.dot?0xff9a9a:a.id==='pn'?0xff7a6a:0xffe3a0,e.dot?.65:1);
+      if(e.type==='dmg'){
+        floatText(a,(e.dot?'':'−')+e.amount+(e.blocked?` (đỡ ${e.blocked})`:''),e.dot?0xff9a9a:a.id==='pn'?0xff7a6a:0xffe3a0,e.dot?.65:1);
+        if(!e.dot)impact(e.contact||a,e.blocked?'jade':e.source==='bnb'?'ice':e.skill==='nguyet'?'moon':'punch');
+      }
       else if(e.type==='miss')floatText(a,'trượt',0xb8c0cc,.7);
       else if(e.type==='interrupt')floatText(a,'bị ngắt',0xffb070,.7);
       else if(e.type==='heal')floatText(a,'+'+e.amount,0x8fe0b0,1);
@@ -86,11 +102,46 @@ const SBView=(function(){
       else if(e.type==='zoneFire')burst(e.x,e.z,0xbfe8ff,30,e.r);
       else if(e.type==='grab')line(B.actors[e.who],B.actors[e.target],0xc9c2b0);
       else if(e.type==='release'&&e.skill==='cuxi')saw(a);
-      else if(e.type==='release'&&e.skill==='atk'&&a.id==='bnb')slash(a,0xcfefff);
+      else if(e.type==='release'&&e.skill==='atk')strike(a,a.id==='bnb');
       else if(e.type==='shield')burst(a.x,a.z,a.shield?a.shield.tint:0xffffff,12,50);
     }
     for(const f of [...fx]){const age=B.t-f.born;if(f.upd(age)){f.o.destroy();fx.splice(fx.indexOf(f),1)}}
     drawGuide();
+  }
+  // Điểm phát: dùng hand của clip nếu đã có; fallback thủ công, không đo alpha bbox.
+  function hand(a){
+    const k=depthK(a.z)*SCALE,clip=a.act?clipOf(a,a.act.s):null,h=clip&&clip.hand;
+    const [px,py]=kp[a.id].man.pivot_px;
+    return {x:sx(a.x)+(h?h[0]-px:38)*k*a.face,y:sy(a.z)+(h?h[1]-py:-78)*k};
+  }
+  function drawWindup(){
+    const g=L.windup;g.clear();
+    for(const a of Object.values(B.actors))if(!B.over&&a.act?.s.id==='nguyet'&&a.act.phase==='startup'){
+      const h=hand(a),p=a.act.t/a.act.s.startup,n=2+Math.floor(p*4);
+      g.beginFill(0x8acbdf,.5);g.drawRect(Math.round(h.x)-n,Math.round(h.y)-n,n*2,n*2);g.endFill();
+      g.beginFill(0xf0fcff,.85);g.drawRect(Math.round(h.x)-2,Math.round(h.y)-2,4,4);g.endFill();
+    }
+  }
+  function strike(a,ice){
+    const g=new PIXI.Graphics();L.fx.addChild(g);const h=hand(a),f=a.face,k=depthK(a.z)*SCALE;
+    fx.push({o:g,born:B.t,upd:age=>{
+      const p=age/.16;g.clear();if(p>=1)return true;
+      const len=(ice?68:30)*k;
+      g.beginFill(ice?0x71abc9:0xc5bba3,(1-p)*.7);
+      g.drawPolygon([h.x-f*8,h.y-10,h.x+f*len,h.y-3,h.x+f*(len+6),h.y+3,h.x,h.y+10]);g.endFill();
+      g.beginFill(ice?0xf1fbff:0xfff1cb,1-p);
+      g.drawPolygon([h.x,h.y-3,h.x+f*len,h.y,h.x+f*10,h.y+4]);g.endFill();return false;
+    }});
+  }
+  function impact(at,material){
+    const g=new PIXI.Graphics();L.fx.addChild(g);
+    const x=sx(at.x),y=sy(at.z)-78,colors={ice:[0x80bddd,0xf4fcff],moon:[0x8bcbe0,0xffffff],jade:[0xacc7ca,0xfff7dc],punch:[0xbba07e,0xffecd0]}[material];
+    const parts=Array.from({length:material==='ice'?8:6},(_,i)=>({a:i*6.28/8,v:20+Math.random()*18}));
+    fx.push({o:g,born:B.t,upd:age=>{
+      const p=age/.22;g.clear();if(p>=1)return true;
+      if(p<.35){g.beginFill(colors[1],1-p);g.drawPolygon([x-12,y,x-3,y-3,x,y-12,x+3,y-3,x+12,y,x+3,y+3,x,y+12,x-3,y+3]);g.endFill()}
+      for(const q of parts){const xx=Math.round(x+Math.cos(q.a)*q.v*p),yy=Math.round(y+Math.sin(q.a)*q.v*p);g.beginFill(colors[0],1-p);g.drawRect(xx,yy,material==='ice'?4:3,3);g.endFill()}return false;
+    }});
   }
   function floatText(a,txt,col,sc){
     const k=depthK(a.z)*SCALE,t=new PIXI.Text(txt,{fontFamily:'system-ui,sans-serif',fontWeight:'800',fontSize:24*(sc||1),fill:col,stroke:0x000000,strokeThickness:4});
@@ -100,10 +151,6 @@ const SBView=(function(){
   function burst(x,z,col,n,r){
     const g=new PIXI.Graphics();L.fx.addChild(g);const parts=Array.from({length:n},()=>({a:Math.random()*6.28,v:.4+Math.random()*.6}));
     fx.push({o:g,born:B.t,upd:age=>{g.clear();const p=age/.45;for(const q of parts){g.beginFill(col,1-p);g.drawCircle(sx(x)+Math.cos(q.a)*r*q.v*p,sy(z)-40+Math.sin(q.a)*r*q.v*p*.5,3);g.endFill()}return p>=1}});
-  }
-  function slash(a,col){
-    const g=new PIXI.Graphics();L.fx.addChild(g);const k=depthK(a.z)*SCALE,cx=sx(a.x)+a.face*55*k,cy=sy(a.z)-70*k;
-    fx.push({o:g,born:B.t,upd:age=>{g.clear();const p=age/.22;g.lineStyle(6*(1-p),col,1-p);g.arc(cx,cy,55*k,a.face>0?-1.2:Math.PI-.6,a.face>0?.6:Math.PI+1.2);return p>=1}});
   }
   function saw(a){
     const g=new PIXI.Graphics();L.fx.addChild(g);const k=depthK(a.z)*SCALE;
@@ -119,8 +166,10 @@ const SBView=(function(){
   function drawProj(){
     const g=L.proj;g.clear();
     for(const p of B.projs){const x=sx(p.x),y=sy(p.z)-78,f=p.face;
-      g.beginFill(0x9fe8ff,.25);g.drawEllipse(x-f*22,y,30,10);g.endFill();
-      g.beginFill(0xe8fbff,1);g.arc(x,y,20,-1.3*f+(f<0?Math.PI:0),1.3*f+(f<0?Math.PI:0),f<0);g.arc(x-f*9,y,17,1.15*f+(f<0?Math.PI:0),-1.15*f+(f<0?Math.PI:0),f>0);g.endFill()}
+      for(let i=3;i>0;i--){g.beginFill(0x71adc9,.32/i);g.drawRect(Math.round(x-f*i*12)-4,Math.round(y)-3,8,6);g.endFill()}
+      const poly=[-10,-18,0,-16,8,-10,12,-4,12,4,8,10,0,16,-10,18,-2,8,2,2,2,-2,-2,-8];
+      g.beginFill(0x639fbe,1);g.drawPolygon(poly.map((v,i)=>i%2?Math.round(y+v):Math.round(x+v*f)));g.endFill();
+      g.beginFill(0xeffcff,1);g.drawPolygon(poly.map((v,i)=>i%2?Math.round(y+v*.8):Math.round(x+v*f*.8)));g.endFill()}
   }
   // Đường dẫn: điểm đến, vòng báo trước của địch, tầm chiêu khi rê chuột lên ô kỹ năng
   function drawGuide(){
@@ -138,7 +187,8 @@ const SBView=(function(){
     }
   }
   function toWorld(cx,cy){const r=app.view.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H;
-    return {x:x*1000/W,z:(y-GY0)/syk,inGround:y>=GY0-30}}
+    const wx=x*1000/W,z=(y-GY0)/syk;
+    return {x:wx,z,inGround:wx>=SBSim.X0&&wx<=SBSim.X1&&y>=GY0&&y<=GY1}}
   function hitActor(cx,cy){
     const r=app.view.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H;
     for(const a of Object.values(B.actors)){const k=depthK(a.z)*SCALE;if(Math.abs(x-sx(a.x))<40*k&&y<sy(a.z)+12&&y>sy(a.z)-spr[a.id].hy*k)return a.id}

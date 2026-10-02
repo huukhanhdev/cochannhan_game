@@ -59,13 +59,13 @@ blurry, 3d render, realistic, painterly, extra limbs, extra fingers, duplicate c
 **Phương Nguyên** (`{CHARACTER}`):
 
 ```text
-Character: Fang Yuan, 15-year-old young man, long straight black hair falling to the waist, pale skin, narrow cold calm eyes, expressionless face, plain charcoal-black cultivator robe with a dark belt, black trousers, black boots, slim build, bare hands, no weapon.
+Character: Fang Yuan, 15-year-old young man, long straight black hair falling to the waist, pale skin, narrow cold calm eyes, expressionless face, plain charcoal-black cultivator robe with a dark belt, black trousers, black boots, slim build, bare hands, both hands empty.
 ```
 
 **Bạch Ngưng Băng, Q1, nam** (`{CHARACTER}`):
 
 ```text
-Character: Bai Ning Bing, a 15-year-old young MAN (male, flat chest, masculine jaw), very long silver-white hair with a silver hair ornament, ice-blue eyes, arrogant playful smile, white cultivator robe with blue snowflake patterns, white boots, slim build, bare hands, no weapon, faint frosty pale skin.
+Character: Bai Ning Bing, a 15-year-old young MAN (male, flat chest, masculine jaw), very long silver-white hair with a silver hair ornament, ice-blue eyes, arrogant playful smile, white cultivator robe with blue snowflake patterns, white boots, slim build, bare hands, both hands empty, faint frosty pale skin.
 ```
 
 Nếu Muse cứ ra nữ, thêm vào đầu prompt `male, boy, young man` và đưa `female, girl, breasts, makeup` vào negative.
@@ -154,7 +154,7 @@ Pose 3: arm low at the end of the swing pointing down-forward, crouched, looking
 BNB (Băng Đao):
 
 ```text
-Poses: 3 poses of a horizontal sword-like slash using the edge of the right hand.
+Poses: 3 poses of a wide horizontal chop using the edge of the right hand.
 Pose 1: right arm cocked across the chest to the left shoulder, body coiled.
 Pose 2: arm swept fully outward to the right in a wide horizontal slash, stepping forward.
 Pose 3: arm extended out to the side after the slash, confident smile.
@@ -203,7 +203,7 @@ BNB: `Pose: standing with one hand on the hip, chin raised, wide arrogant grin.`
 
 ```text
 Pixel art game sprite sheet, chibi side-view character, 2D fighting game style, crisp pixel art, clean dark outlines, flat shading, no anti-aliasing blur.
-Character: Fang Yuan, 15-year-old young man, long straight black hair falling to the waist, pale skin, narrow cold calm eyes, expressionless face, plain charcoal-black cultivator robe with a dark belt, black trousers, black boots, slim build, bare hands, no weapon.
+Character: Fang Yuan, 15-year-old young man, long straight black hair falling to the waist, pale skin, narrow cold calm eyes, expressionless face, plain charcoal-black cultivator robe with a dark belt, black trousers, black boots, slim build, bare hands, both hands empty.
 Exactly the same character as the reference image: same face, same hair, same outfit, same colors, same body proportions, same pixel art style. Do not redesign.
 Layout: one single horizontal row, poses ordered left to right, every pose the same size and standing on the same invisible ground line, full body visible head to feet, wide empty gap between poses, poses never overlap or touch.
 Facing right in every pose. Camera fixed, orthographic side view.

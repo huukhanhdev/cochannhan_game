@@ -62,6 +62,8 @@
     <label>Tốc độ trận <select id="spd"><option value="0.75">0,75×</option><option value="0.85" selected>0,85×</option><option value="1">1×</option></select></label>
     <label>Độ khó <select id="lvl"><option value="de">Dễ</option><option value="thuong" selected>Thường</option><option value="kho">Khó</option></select></label>
     <button id="restart">Đấu lại</button>
+    <button id="sound" type="button">Âm: bật</button>
+    <label>Âm lượng <input id="volume" type="range" min="0" max="1" step="0.05" value="0.35" aria-label="Âm lượng chiêu"></label>
   </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
@@ -72,6 +74,7 @@
 <script src="js/sandbox/view.js"></script>
 <script src="js/sandbox/input.js"></script>
 <script src="js/sandbox/hud.js"></script>
+<script src="js/sandbox/audio.js"></script>
 <script>
 // Vòng chính: simulation luôn bước (nhân tốc độ trận); hình vẽ mỗi khung hình.
 // TÍCH HỢP: khối này tương ứng phần engine gọi Arena.mount + vòng FX; khi B.over gọi win()/die().
@@ -85,9 +88,11 @@
   const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[lvl].dmgK;
   [K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
   const B=SBSim.create(K,{});window.SB=B;
-  await SBView.mount(document.getElementById('arena'),B,'assets/art/bg_snow.jpg');
+  const map=await fetch('assets/battle_maps/q1_bamboo_clearing/map.json').then(r=>r.ok?r.json():null).catch(()=>null);
+  await SBView.mount(document.getElementById('arena'),B,map||'assets/art/bg_snow.jpg');
   SBHud.mount(document.getElementById('hud'),B);
   SBInput.init(B,()=>{});
+  SBAudio.mount();
   const sel=(id,v)=>{const e=document.getElementById(id);e.value=String(v);e.onchange=()=>{q.set(id==='lvl'?'lvl':'spd',e.value);location.search=q.toString()}};
   sel('lvl',lvl);sel('spd',spd);
   const restart=()=>location.reload();
@@ -96,7 +101,8 @@
   function frame(now){
     const dt=Math.min(.1,(now-last)/1000);last=now;
     acc+=dt*spd;while(acc>=SBSim.DT){SBSim.step(B);acc-=SBSim.DT}
-    SBView.render(B.events.splice(0));SBHud.update();
+    const events=B.events.splice(0);
+    SBView.render(events);SBAudio.consume(events,B,spd);SBHud.update();
     if(B.over&&!shown&&B.t-B.over.at>1.2){shown=true;const w=B.over.winner==='pn';
       document.getElementById('rtitle').textContent=w?'Thắng':'Thua';
       document.getElementById('rsub').textContent=w?'Bạch Ngưng Băng gục ngã.':'Phương Nguyên gục ngã.';

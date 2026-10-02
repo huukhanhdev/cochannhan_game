@@ -4,6 +4,8 @@
 
 Kế hoạch mới: [Map battle pixel — Blue-chan](undone/KE_HOACH_MAP_BATTLE_PIXEL.md), nền mẫu và quy trình tích hợp sandbox E.
 
+Kế hoạch bổ sung: [Hiệu ứng và âm thanh chiêu battle E — Blue-chan](undone/KE_HOACH_VFX_AM_THANH_BATTLE_E.md), bộ PN/BNB, event/anchor, ngân sách mobile và lộ trình Orange-kun.
+
 | Đường dẫn cũ | Tài liệu mới | Xử lý |
 |---|---|---|
 | `BAN_GIAO.md` | [docs/undone/BACKLOG_VA_BAN_GIAO_CU.md](undone/BACKLOG_VA_BAN_GIAO_CU.md#source-ban-giao-md) | Gộp |

@@ -155,7 +155,7 @@
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
-        hurt(B,t,s.dmg,a,A.hid,{});
+        hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
         if(s.slow){t.slowUntil=B.t+s.slow.dur;t.slowF=s.slow.f}
         if(s.bleed&&t.state!=='ko')t.bleed={dps:s.bleed.dps,until:B.t+s.bleed.dur,acc:0};
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
@@ -164,7 +164,7 @@
       B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:dx/d*s.speed,vz:dz/d*s.speed,left:s.range,s,hid:A.hid,face:Math.sign(dx)||a.face});
     }else if(s.kind==='grab'){
       if(t.state!=='ko'&&Math.abs(t.x-a.x)<=s.range&&Math.abs(t.z-a.z)<=s.depth&&Math.sign(t.x-a.x)===a.face){
-        hurt(B,t,s.dmg,a,A.hid,{});
+        hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
         if(t.state!=='ko'){t.x=clamp(a.x+a.face*Math.max(BODY+6,Math.abs(t.x-a.x)-s.pull),X0,X1);t.z=a.z}
         emit(B,{type:'grab',who:a.id,target:t.id});
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
@@ -182,7 +182,7 @@
       const st=Math.hypot(p.vx,p.vz)*DT;p.x+=p.vx*DT;p.z+=p.vz*DT;p.left-=st;
       const t=p.owner==='pn'?B.actors.bnb:B.actors.pn;
       if(t.state!=='ko'&&Math.abs(t.x-p.x)<28&&Math.abs(t.z-p.z)<36){
-        hurt(B,t,p.s.dmg,B.actors[p.owner],p.hid,{pierce:p.s.pierce});
+        hurt(B,t,p.s.dmg,B.actors[p.owner],p.hid,{pierce:p.s.pierce,skill:p.s.id,contact:{x:p.x,z:p.z}});
         if(B.over)return;
         B.projs.splice(B.projs.indexOf(p),1);continue}
       if(p.left<=0||p.x<X0-40||p.x>X1+40){B.projs.splice(B.projs.indexOf(p),1);emit(B,{type:'projEnd',who:p.owner,x:p.x,z:p.z})}
@@ -194,7 +194,7 @@
       if(!own.act||own.act.zone!==z){B.zones.splice(B.zones.indexOf(z),1);emit(B,{type:'zoneCancel',who:z.owner});continue}   // chủ bị ngắt
       if(B.t>=z.fireAt){
         const t=other(B,own);
-        if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r)hurt(B,t,z.s.dmg,own,z.hid,{});
+        if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r)hurt(B,t,z.s.dmg,own,z.hid,{skill:z.s.id});
         emit(B,{type:'zoneFire',who:z.owner,x:z.x,z:z.z,r:z.r});
         if(B.over)return;
         B.zones.splice(B.zones.indexOf(z),1);
@@ -206,7 +206,7 @@
     if(hid)t.lastHid=hid;
     let d=dmg;if(t.shield&&!o.dot)d=Math.round(d*(1-t.shield.red*(1-(o.pierce||0))));
     t.hp=Math.max(0,t.hp-d);t.flashAt=B.t;
-    emit(B,{type:'dmg',who:t.id,amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0});
+    emit(B,{type:'dmg',who:t.id,source:src?.id,skill:o.skill,hid,contact:o.contact||{x:t.x,z:t.z},amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0});
     if(t.hp<=0){
       t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;setState(t,'ko');
       const w=other(B,t);B.over={winner:w.id,loser:t.id,at:B.t};

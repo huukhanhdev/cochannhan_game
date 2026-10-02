@@ -98,7 +98,7 @@ Thêm `tools/sandbox_regression.cjs`: kiểm tra hai DOT cùng tới hạn, đ�
 ### Review hình ảnh và việc còn lại
 
 1. **Đủ dùng để thử cơ chế:** nhân vật rõ, thanh kỹ năng có phím và chi phí, vòng báo trước giúp nhận diện chiêu lớn. Key-pose vẫn là chuyển pose rời; chưa giải quyết yêu cầu chạy liên tục bằng frame trung gian.
-2. **Nền chưa hợp sprite:** nền tranh núi tuyết có góc nhìn cao và không có mặt sàn rõ. Mảng tối ngang chỉ đánh dấu vùng điều khiển, nên chân nhân vật có cảm giác đứng trên cảnh. Nên làm map đầu tiên theo `KE_HOACH_MAP_BATTLE_PIXEL.md` trước khi chấm chất lượng tổng thể.
+2. **Nền:** review ban đầu ghi nền núi tuyết thiếu mặt sàn; đã thay bằng nền rừng trúc người dùng cung cấp trong lượt sau. Xem bàn giao nền mẫu bên dưới và `KE_HOACH_MAP_BATTLE_PIXEL.md`; còn duyệt các biên/KO/thú lớn trước khi chốt toàn bộ.
 3. **Thiếu clip riêng:** nhiều chiêu dùng `guard` / `heavy` / `cast` dự phòng, vì vậy chiêu khác nhau vẫn có thể dùng cùng dáng. Chỉ gen các clip đặc trưng đã đối chiếu kit; không nhân rộng dáng chưởng chung.
 4. **Mobile:** đã thêm chạm đất để đi / chạm địch để đánh (xem bàn giao dưới). Canvas vẫn thu nhỏ cả nhân vật và vùng né; chưa có thao tác nhắm chiêu tự do hoặc nút dừng riêng cho cảm ứng.
 5. **Cân bằng cần người chơi thật:** giữ nguyên thông số trong lượt sửa này. Đo lại nhiều seed và chơi thử trước khi chốt độ khó; sandbox chưa nối tài nguyên, phần thưởng và vòng đời save campaign.
@@ -106,6 +106,10 @@ Thêm `tools/sandbox_regression.cjs`: kiểm tra hai DOT cùng tới hạn, đ�
 ## Bàn giao Orange-kun: sửa battle và bổ sung cảm ứng
 
 Blue-chan đã sửa trực tiếp các file dưới đây, chưa commit/push. Các thay đổi áp dụng cho **sandbox E**, không tự nối E vào campaign và không đổi bộ chiêu / thông số cân bằng.
+
+**Bổ sung preview VFX/audio:** theo yêu cầu dùng ngay kế hoạch hiệu ứng, Blue-chan đã thay mẫu Đánh tay / Nguyệt Mang / Băng nhận trong `view.js`, bổ sung damage source/contact trong `sim.js`, thêm `js/sandbox/audio.js` và điều khiển âm trong trang sandbox. Chi tiết phạm vi và test ở [kế hoạch VFX, mục “Mẫu đang chạy để duyệt”](KE_HOACH_VFX_AM_THANH_BATTLE_E.md#mẫu-đang-chạy-để-duyệt). Các chiêu còn lại giữ hiệu ứng cũ và âm fallback; đây chưa phải bộ VFX/audio cuối cùng.
+
+**Bổ sung nền rừng trúc:** sandbox đã dùng ảnh người dùng gửi (2048×1152), tải metadata ở `assets/battle_maps/q1_bamboo_clearing/map.json`, cover/crop giữa vào 960×430, không phủ tối mạnh. Input nay nhận đi chỉ trong đủ bốn biên sàn, bỏ mép đệm 30 px cũ. Xem [bàn giao nền mẫu cho Orange-kun](KE_HOACH_MAP_BATTLE_PIXEL.md#bàn-giao-orange-kun--nền-mẫu-đã-áp-vào-sandbox) để review crop, fallback và phạm vi còn mở. Campaign vẫn chưa đổi nền.
 
 | File | Thay đổi cần giữ khi tích hợp |
 |---|---|

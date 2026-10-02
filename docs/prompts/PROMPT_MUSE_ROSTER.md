@@ -45,7 +45,7 @@ Background: transparent, or solid flat pure green #00FF00.
 blurry, 3d render, realistic, painterly, extra limbs, extra fingers, extra heads, overlapping characters, different face, different hairstyle, text, letters, watermark, border, grid lines, gradient background, scenery, cropped feet, cropped head, glow, magic effect, particles, motion lines
 ```
 
-Cộng thêm negative riêng ở từng nhân vật. `weapon` **không** nằm trong negative chung. Ai không có vũ khí thì negative riêng sẽ ghi.
+Cộng thêm negative riêng ở từng nhân vật. Ai không cầm vũ khí thì ghi **trong dòng Character** (`bare hands`, `both hands empty`), không đưa từ vũ khí vào negative (xem mục 1b).
 
 **Ảnh tham chiếu:**
 
@@ -68,6 +68,16 @@ Cộng thêm negative riêng ở từng nhân vật. `weapon` **không** nằm t
 3. Thú to hoặc dài: thêm khung riêng vào `FRAME_BY_ID` trong script trước khi nhập.
 
 ---
+
+## 1b. Khi Muse chặn prompt (dao, răng rết, máu...)
+
+Bộ lọc của Muse thường quét **cả ô negative**. Viết "không vẽ dao" vẫn có chữ "dao", nên ảnh vẫn bị chặn. Cách làm đúng, không lách bộ lọc:
+
+1. **Không đưa từ vũ khí hay máu vào negative.** Muốn tay không thì ghi tích cực trong dòng Character: `bare hands`, `both hands empty and open`.
+2. **Sprite không cần máu hay vết thương.** Máu, vết chém, đạn, hào quang do code vẽ (quy tắc từ đầu). Màu áo thì tả bằng màu: `crimson`, `deep red`, không dùng `blood`, `stained`.
+3. **Sinh vật cổ trùng** (rết vàng Cự Xỉ Kim Ngô, dơi Đao Sí) là **asset riêng**, tả như sinh vật: `giant golden armored centipede creature with jagged mandibles, side view`. Không ghép vào câu tấn công người.
+4. **Nhân vật có vũ khí thật trong nguyên tác** (ví dụ xích của Thiết Huyết Lãnh) tả đúng đồ vật: `a short iron chain`. Không thêm từ bạo lực.
+5. Làm đủ 4 điều trên mà Muse vẫn chặn thì gen clip đó bằng **Gemini hoặc Leonardo** với cùng prompt và cùng ảnh tham chiếu. Không viết sai chính tả hay dùng mẹo để đánh lừa bộ lọc.
 
 ## 2. Clip chung: dùng nguyên văn cho mọi nhân vật
 
@@ -125,37 +135,63 @@ Mỗi nhân vật gen `idle` + `atk` trước, xem bằng mắt rồi mới làm
 
 Ảnh gốc là **ảnh tham chiếu** upload lên Muse cho mọi clip của nhân vật đó. Ảnh sai thì mọi clip sẽ sai theo, nên duyệt ảnh gốc trước khi gen động tác.
 
-### Prompt ảnh gốc (người)
+### Cách 1 (nên thử trước): sửa từ ảnh gốc cũ
+
+Ảnh gốc cũ trong `assets/chibi_ref/` đã đúng phong cách chibi của bộ. Khi chỉ cần sửa một chi tiết (bỏ dao, thêm chân), sửa ảnh cũ thay vì vẽ mới. Lần gen thử ngày 02/10 cho thấy vẽ mới dễ lệch tỷ lệ và góc nhìn.
+
+- Dùng chế độ sửa ảnh / image-to-image của Muse với độ bám ảnh **cao**. Nếu Muse sửa kém, dùng Gemini: upload ảnh và gõ câu sửa.
+- Câu sửa ngắn, chỉ nói điều cần đổi và yêu cầu giữ nguyên phần còn lại:
+
+| id | Ảnh để sửa | Câu sửa |
+|---|---|---|
+| `thiet_dao_kho` | `assets/chibi_ref/thiet_dao_kho.png` | `Edit this sprite: remove the blade from his hand. Both hands empty, right hand held flat and straight with fingers together. Keep everything else exactly the same: same chibi proportions, face, armor, colors, pose angle and pixel style. Transparent background.` |
+| `ca_sau_sau_chan` | `assets/chibi_ref/ca_sau_sau_chan.png` | `Edit this sprite: give the crocodile exactly three legs on the visible near side, evenly spaced under the long body (front, middle, back), with the far-side legs barely peeking out behind them. Keep the same head, tail, colors, cute compact proportions and pixel style. Transparent background.` |
+| `dien_lang` | `assets/chibi_ref/dian_lang_boss.png` (mượn dáng sói vương) | `Edit this sprite into a plain young grey wolf: remove the horns and crown, make it smaller and leaner with grey-blue fur, keep the same strict side view facing right, same cute compact proportions and pixel style. Transparent background.` |
+
+### Cách 2: vẽ mới (khi không có ảnh cũ phù hợp)
+
+Câu về **góc nhìn và tỷ lệ đặt lên đầu**, mô tả nhân vật để sau.
+
+**Bắt buộc đính kèm ảnh tham chiếu phong cách:** `assets/chibi_ref/phuong_nguyen_full.png` cho người; `assets/chibi_ref/heo_rung.png` hoặc `hac_hung.png` cho thú.
+
+**Người:**
 
 ```text
-Pixel art game character sprite, chibi proportions about 2.5 heads tall, side-view character, 2D fighting game style, crisp pixel art, clean dark outlines, flat shading.
+Strict side view, character facing right, full body. Cute chibi pixel art sprite: very large head about one third of total height, small short body, short limbs, about 2.5 heads tall, exactly like the style reference image.
+Simple clean shapes, few details, flat colors with one shadow tone, clean dark outline, crisp pixels.
+Standing still in a neutral pose: arms relaxed down at the sides, both hands visible, feet slightly apart.
 {CHARACTER}
-Single character only, full body from head to feet, standing in a neutral relaxed stance, arms slightly away from the body so both hands are visible, feet slightly apart.
-Exact side profile facing right, fixed orthographic side view, nose pointing to the right.
-Background: transparent, or solid flat pure green #00FF00.
-Same pixel density, outline thickness and shading style as the style reference image.
+Single character only, transparent background.
 ```
 
-### Prompt ảnh gốc (thú)
+**Thú:**
 
 ```text
-Pixel art game creature sprite, side-view animal sprite, 2D fighting game style, crisp pixel art, clean dark outlines, flat shading.
+Strict side view profile facing right, body horizontal, every leg visible in a row from the side, head in profile with the snout pointing right. Cute compact chibi pixel art creature: oversized head, short sturdy legs, rounded simple body, exactly like the style reference image.
+Simple clean shapes, few details, flat colors with one shadow tone, clean dark outline, crisp pixels.
+Standing still in a neutral stance.
 {ANIMAL}
-Single creature only, whole body visible including tail and every leg, standing in a neutral alert stance.
-Exact side profile facing right, fixed orthographic side view.
-Background: transparent, or solid flat pure green #00FF00.
-Same pixel density, outline thickness and shading style as the style reference image.
+Single creature only, transparent background.
 ```
 
-**Negative** (cộng negative riêng của nhân vật): `multiple characters, multiple poses, front view, three-quarter view, back view, cropped, text, watermark, scenery, floor, shadow, glow, magic effect`
+**Negative:**
 
-**Ảnh tham chiếu khi gen ảnh gốc:**
-- **Phong cách:** `assets/chibi_ref/phuong_nguyen_full.png`, để mọi nhân vật cùng một kiểu pixel art.
-- **Nhận diện:** ảnh gốc cũ của nhân vật, nếu còn dùng được (ví dụ chỉ sửa vũ khí). Muse chỉ cho một ảnh thì ưu tiên ảnh nhận diện, và để câu "same pixel style" trong prompt lo phần phong cách.
+```text
+three-quarter view, front view, facing the viewer, turned body, realistic proportions, tall adult proportions, detailed rendering, painterly, texture noise, glowing veins, multiple characters, multiple poses, cropped, text, watermark, scenery, floor, shadow
+```
+
+Riêng thú, thêm vào negative: `chest facing viewer, head turned toward viewer`.
+
+**Kiểm tra trước khi lưu:**
+- Đầu to khoảng 1/3 chiều cao (người) hoặc đầu to, chân ngắn (thú).
+- Mũi hoặc mõm chỉ thẳng sang phải, không thấy ngực từ phía trước.
+- Chi tiết ít ngang bộ Phương Nguyên.
+- Đủ chân, tay không cầm gì nếu nhân vật tay không.
+- Đặt cạnh `phuong_nguyen_full.png` nhìn cùng một bộ.
 
 **Tên file và nhập:**
-- Lưu `incoming_sprites/<id>_base_v1.png`, rồi chạy `python3 tools/keypose_import.py`.
-- Script tách nền và lưu thành `assets/chibi_ref/<id>.png`. Bản cũ được giữ lần đầu ở `assets/chibi_ref/_cu/`.
+- Lưu `incoming_sprites/<id>_base_vN.png`, rồi chạy `python3 tools/keypose_import.py`.
+- Script tách nền, xóa viền xanh và lưu thành `assets/chibi_ref/<id>.png`. Bản cũ được giữ lần đầu ở `assets/chibi_ref/_cu/`.
 - Ảnh có nhiều hơn 1 nhân vật bị từ chối.
 
 ### Danh sách ảnh gốc cần làm
@@ -164,17 +200,17 @@ Same pixel density, outline thickness and shading style as the style reference i
 
 | Ưu tiên | id | Lý do | Dòng `{CHARACTER}` / `{ANIMAL}` | Negative riêng |
 |---|---|---|---|---|
-| **Gen lại** | `thiet_dao_kho` | Ảnh cũ **cầm dao**. Canon ch 443–445: lưỡi dao là cạnh bàn tay (Thủ Nhận) | `Character: resolute adult man, short black hair, stern face, practical dark armor, both hands empty, right hand held flat and straight like a blade.` | `sword, saber, knife, dagger, weapon` |
-| **Gen lại** | `ca_sau_sau_chan` | Ảnh cũ chỉ thấy 4 chân; hồ sơ yêu cầu đủ 3 cặp chân | `Animal: long armored crocodile king with exactly six legs in three pairs along its long body, all six legs visible from the side, long toothy muzzle, heavy tail, dark green scales.` | `four legs, wings` |
-| **Tạo mới** | `dien_lang` | Sói Điện Lang thường, chưa có ảnh (mục 4.9b) | `Animal: lean four-legged grey wolf, crackling grey-blue fur, sharp ears, long muzzle, glowing pale eyes.` | `horn, crown, standing on two legs, lightning` |
-| Biến thể, làm khi cần | `thanh_thu_mocmi` | Mộc Mị biến thân cây (ch 141–142) | `Character: young man transformed into a tree spirit, body of twisted bark and wood, long blue-green hair turned into leafy vines, roots growing from the feet.` | `human skin, weapon` |
-| Biến thể | `bach_chien_on_hoanhan` | Hỏa Nhân, thân hóa lửa (ch 228–250) | `Character: elderly man whose whole body has become living flame, red robe burning, white beard made of fire.` | `weapon` |
-| Biến thể | `hoanh_mi_baoluc` | Bạo Lực cổ phồng người | `Character: brutish man swollen to giant muscular size, broad brow, torn sleeveless clothes, veins bulging.` | `weapon` |
-| Biến thể | `cuong_thi_hac` | Hắc Mao cương thi, nhanh, hút máu | `Character: lean corpse-like zombie humanoid covered in long black hair, grey skin, torn dark clothes, crouched ready to pounce.` | `white hair, weapon` |
-| Biến thể | `huyet_khoi` | Huyết Khôi | `Character: hulking dark-red puppet humanoid of dense clotted blood, no face.` | `clay, wine jar, weapon` |
-| Biến thể | `thiet_nhuoc_nam_q2b` | Nhược Nam sau ch 453–455: cắt tóc, ánh mắt lạnh | `Character: young woman with short-cut dark hair, cold iron gaze, practical dark-red armor, bare hands.` | `long hair, male, sword` |
-| Biến thể | `thiet_nhuoc_nam_q1` | Nhược Nam Q1, thời điều tra | `Character: resolute young woman investigator, long dark hair tied in a ponytail, practical dark clothes, bare hands.` | `male, sword` |
-| Biến thể | `phuong_chinh_hoc` | Phương Chính học đường, trước khi có Nguyệt Nghê Thường | Dòng `Character` của Phương Chính, thay `green robe` bằng `plain academy robe`. | `sword` |
+| **Gen lại** | `thiet_dao_kho` | Ảnh cũ **cầm dao**. Canon ch 443–445: lưỡi dao là cạnh bàn tay (Thủ Nhận) | `Character: resolute adult man, short black hair, stern face, practical dark armor, both hands empty, right hand held flat and straight like a blade.` | `—` |
+| **Gen lại** | `ca_sau_sau_chan` | Ảnh cũ chỉ thấy 4 chân; hồ sơ yêu cầu đủ 3 cặp chân. Ưu tiên cách 1 | `Animal: long low crocodile king, three short legs on the near side evenly spaced under the body (front, middle, back), far-side legs barely visible behind them, long snout, long tail, dark green scales.` | `four legs, wings` |
+| **Tạo mới** | `dien_lang` | Sói Điện Lang thường, chưa có ảnh (mục 4.9b). Ưu tiên cách 1 | `Animal: young grey wolf, lean body, smooth grey-blue fur, pointed ears, long snout, pale blue eyes.` | `horn, crown, standing on two legs, lightning` |
+| Biến thể, làm khi cần | `thanh_thu_mocmi` | Mộc Mị biến thân cây (ch 141–142) | `Character: young man transformed into a tree spirit, body of twisted bark and wood, long blue-green hair turned into leafy vines, roots growing from the feet.` | `human skin` |
+| Biến thể | `bach_chien_on_hoanhan` | Hỏa Nhân, thân hóa lửa (ch 228–250) | `Character: elderly man whose whole body has become living flame, red robe burning, white beard made of fire.` | `—` |
+| Biến thể | `hoanh_mi_baoluc` | Bạo Lực cổ phồng người | `Character: brutish man swollen to giant muscular size, broad brow, torn sleeveless clothes, veins bulging.` | `—` |
+| Biến thể | `cuong_thi_hac` | Hắc Mao cương thi, nhanh, hút máu | `Character: lean pale jiangshi-like undead figure covered in long black hair, grey skin, torn dark clothes, crouched ready to pounce.` | `white hair` |
+| Biến thể | `huyet_khoi` | Huyết Khôi | `Character: hulking dark-red puppet humanoid of dense dark crimson material, no face.` | `clay, wine jar` |
+| Biến thể | `thiet_nhuoc_nam_q2b` | Nhược Nam sau ch 453–455: cắt tóc, ánh mắt lạnh | `Character: young woman with short-cut dark hair, cold iron gaze, practical dark-red armor, bare hands.` | `long hair, male` |
+| Biến thể | `thiet_nhuoc_nam_q1` | Nhược Nam Q1, thời điều tra | `Character: resolute young woman investigator, long dark hair tied in a ponytail, practical dark clothes, bare hands.` | `male` |
+| Biến thể | `phuong_chinh_hoc` | Phương Chính học đường, trước khi có Nguyệt Nghê Thường | Dòng `Character` của Phương Chính, thay `green robe` bằng `plain academy robe`. | `—` |
 
 Không cần gen lại ảnh gốc của các nhân vật còn lại. Chỉ gen lại nếu muốn đồng bộ phong cách với Phương Nguyên; khi đó dùng dòng `Character` / `Animal` trong mục 4 của nhân vật.
 
@@ -197,7 +233,7 @@ Ví dụ: Hàn Bất Lưu chỉ huy chó là cơ chế có trong truyện, nhưn
 
 #### 4.0a. `phuong_nguyen`: Phương Nguyên (Q1, ch 100–188)
 
-Bộ chung và `win` đã duyệt, đã khóa. Ảnh tham chiếu: `assets/chibi_ref/phuong_nguyen_full.png`. Dòng `Character` lấy ở [PROMPT_MUSE_KEYPOSE_PN_BNB.md](PROMPT_MUSE_KEYPOSE_PN_BNB.md). Negative: `sword, weapon`.
+Bộ chung và `win` đã duyệt, đã khóa. Ảnh tham chiếu: `assets/chibi_ref/phuong_nguyen_full.png`. Dòng `Character` lấy ở [PROMPT_MUSE_KEYPOSE_PN_BNB.md](PROMPT_MUSE_KEYPOSE_PN_BNB.md). Negative: `—`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -210,7 +246,7 @@ Bộ chung và `win` đã duyệt, đã khóa. Ảnh tham chiếu: `assets/chibi
 
 #### 4.0b. `bach_ngung_bang_nam`: Bạch Ngưng Băng nam (Q1, trước khi mất tay phải, ch 133–138)
 
-Ảnh tham chiếu: `assets/chibi_ref/bach_ngung_bang_nam_full.png`. Dòng `Character` lấy ở [PROMPT_MUSE_KEYPOSE_PN_BNB.md](PROMPT_MUSE_KEYPOSE_PN_BNB.md). Negative: `female, girl, breasts, sword`. Bộ chung chưa khóa: người dùng duyệt xong thì chạy `--approve bnb`.
+Ảnh tham chiếu: `assets/chibi_ref/bach_ngung_bang_nam_full.png`. Dòng `Character` lấy ở [PROMPT_MUSE_KEYPOSE_PN_BNB.md](PROMPT_MUSE_KEYPOSE_PN_BNB.md). Negative: `female, girl, breasts`. Bộ chung chưa khóa: người dùng duyệt xong thì chạy `--approve bnb`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -226,7 +262,7 @@ Bộ chung và `win` đã duyệt, đã khóa. Ảnh tham chiếu: `assets/chibi
 - **Era: Q1 sau khi hợp luyện Nguyệt Nghê Thường (ch 104 trở đi).** Bản học đường trước ch 104 không có `sk_nguyetnghe`; nếu cần thì làm id riêng `phuong_chinh_hoc`.
 - Ảnh tham chiếu: `assets/chibi_ref/phuong_chinh_full.jpg` hoặc `chibi_ref/phuong_chinh.png`.
 - `Character: young teenage boy, long black hair tied back with a green ribbon, earnest honest face, green robe, bare hands.`
-- Negative: `sword, weapon`
+- Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -242,7 +278,7 @@ Chưa làm: Phong Nhận cổ (canon ch 171, dùng liên hoàn với Nguyệt Qu
 - Era: Q1 trước ch 141.
 - **Ngoại hình theo canon ch 104: tóc dài màu xanh** ("xanh" trong bản dịch có thể là lam hoặc lục). Ảnh gốc hiện có `chibi_ref/thanh_thu.png` là **tóc dài xanh lam, áo xanh lục**: khớp, không cần gen lại.
 - `Character: calm young man, long flowing blue-green hair, gentle composed face, dark green robe.`
-- Negative: `black hair, tree body, roots, wood armor, sword`
+- Negative: `black hair, tree body, roots, wood armor`
 - Không khử ám xanh khi nhập (`NO_DESPILL` trong script đã có `thanh_thu`).
 
 **Không** vẽ Mộc Mị biến thân cây trong các clip này. Đó là biến thân hy sinh (ch 141–142); nếu cần thì làm id riêng `thanh_thu_mocmi`. Cành Thanh Đằng là **cổ mọc ra từ lòng bàn tay**, khác với biến thân Mộc Mị.
@@ -260,7 +296,7 @@ Chưa làm: Phong Nhận cổ (canon ch 171, dùng liên hoàn với Nguyệt Qu
 
 - Era: Q1 học đường.
 - `Character: proud teenage boy, short dark hair, arrogant sneer, warm brown training clothes, bare hands.`
-- Negative: `weapon, ox horns, rock armor`
+- Negative: `ox horns, rock armor`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -271,7 +307,7 @@ Chưa làm: Phong Nhận cổ (canon ch 171, dùng liên hoàn với Nguyệt Qu
 #### 4.4. `xich_thanh`: Cổ Nguyệt Xích Thành
 
 - `Character: small wary teenage boy, long black hair, ochre robe, bare hands.`
-- Negative: `water, water shield, weapon`
+- Negative: `water, water shield`
 
 Thủy Khiếu là cổ lừa tu vi, **không** phải phép nước.
 
@@ -284,7 +320,7 @@ Thủy Khiếu là cổ lừa tu vi, **không** phải phép nước.
 #### 4.5. `hoc_duong_gia_lao`: Học đường gia lão
 
 - `Character: stern elder teacher, grey hair in a topknot, grey formal robe, hands behind the back.`
-- Negative: `weapon, staff`
+- Negative: `staff`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -296,7 +332,7 @@ Thủy Khiếu là cổ lừa tu vi, **không** phải phép nước.
 
 - Era: Q1 sau lang triều.
 - `Character: stern mature man, short black hair, upright posture, dark armor with a dark cloak, a short iron chain wrapped around the right forearm.`
-- Negative: `sword, needles, lightning`
+- Negative: `needles, lightning`
 
 Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích là `art`.
 
@@ -310,7 +346,7 @@ Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích
 
 - Alias: bộ cũ gọi là Giả Kim Sinh. Game dùng Cổ Kim Sinh.
 - `Character: scheming young merchant man, dark hair, sly smile, ochre traveling robe, bare hands.`
-- Negative: `sword, weapon`
+- Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -321,15 +357,15 @@ Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích
 #### 4.8. `nhat_dai_boss`: Cổ Nguyệt Nhất Đại (Huyết Cương)
 
 - Era: Q1 ch 180–200. Đứng lơ lửng.
-- `Character: ancient corpse-like elder, gaunt pale skin, long tangled black hair and beard, ragged dark robes with blood-red trim, hovering slightly above the ground.`
-- Negative: `wings, fangs, bats, weapon`
+- `Character: ancient withered elder, gaunt grey-pale skin, long tangled black hair and beard, ragged dark robes with crimson trim, hovering slightly above the ground.`
+- Negative: `wings, bats`
 
 Đàn dơi máu là hiệu ứng riêng, không vẽ trong ảnh.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
 | atk | Vuốt máu | art | 3 | `Poses: 3 poses of a slow heavy claw swipe. Pose 1: clawed hand raised high, head tilted. Pose 2: hand slashing down diagonally. Pose 3: hand hanging low, empty stare.` |
-| sk_blood | Gọi máu / huyết đạo | canon ch 180–200 (Huyết Hải truyền thừa); cách ra chiêu là `art` | 3 | `Poses: 3 poses of summoning blood power. Pose 1: both arms hanging, head bowed. Pose 2: both arms raised wide, head thrown back, mouth open. Pose 3: arms thrust forward, palms open.` |
+| sk_blood | Gọi máu / huyết đạo | canon ch 180–200 (Huyết Hải truyền thừa); cách ra chiêu là `art` | 3 | `Poses: 3 poses of summoning dark crimson power. Pose 1: both arms hanging, head bowed. Pose 2: both arms raised wide, head thrown back, mouth open. Pose 3: arms thrust forward, palms open.` |
 | win | — | art | 1 | `Pose: floating upright, arms hanging, head tilted, eerie stillness.` |
 
 #### 4.9. `dian_lang_boss`: Lôi Quan Lang / Lôi Quan Lang Vương
@@ -337,12 +373,12 @@ Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích
 - Khóa game: `langvuong` (boss) và `loiquan` (thu nhỏ hoặc phủ màu khác). Cả hai trong data dùng **`sk:'thunder'`** (Lôi bạo, xuyên hộ thể), **không** dùng tru gọi bầy.
 - Tru gọi bầy (`howl`) thuộc sói thường `dienlang` / `dlbay` / `cuongdienlang`, làm sprite riêng ở mục 4.9b.
 - `Animal: huge four-legged wolf king, blue-grey fur, jagged spiky mane along the back, a short crown-like horn on the head, long muzzle, glowing blue eyes, side view facing right.`
-- Negative: `standing on two legs, human hands, lightning, weapon`
+- Negative: `standing on two legs, human hands, lightning`
 - Khung: thêm `'dian_lang_boss': ((416, 240), (208, 228))` vào `FRAME_BY_ID`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
-| atk | Vồ cắn | art | 3 | `Poses: 3 poses of a pouncing bite. Pose 1: crouched low, hind legs coiled, fangs bared. Pose 2: leaping forward, jaws wide open, front claws extended. Pose 3: landing, head twisting, biting down.` |
+| atk | Vồ cắn | art | 3 | `Poses: 3 poses of a pouncing bite. Pose 1: crouched low, hind legs coiled, teeth bared. Pose 2: leaping forward, jaws wide open, front claws extended. Pose 3: landing, head twisting, biting down.` |
 | sk_thunder | Lôi bạo (sét trên sừng, xuyên hộ thể) | game (`EAI.langvuong/loiquan.sk='thunder'`); động tác dàn dựng | 3 | `Poses: 3 poses of charging lightning into the horn. Pose 1: head lowered, horn pointed forward, legs braced, fur bristling. Pose 2: head raised slightly, body tense, mane standing up. Pose 3: lunging head-first, horn thrust forward.` |
 | win | — | art | 1 | `Pose: standing tall, chest out, head raised proudly.` |
 
@@ -373,7 +409,7 @@ Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích
 #### 4.11. `hac_hung`: Hắc Hùng
 
 - `Animal: heavy black bear on four legs, thick black fur, rounded ears, broad muzzle, large forepaws, side view facing right.`
-- Negative: `human clothes, weapon`
+- Negative: `human clothes`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -384,7 +420,7 @@ Xích sắt có trong hồ sơ cũ (dùng với huyết tổ). Hình dáng xích
 #### 4.12. `thach_hau`: Thạch Hầu Vương
 
 - `Animal: agile monkey with stone-grey fur, two arms, two legs, one tail, side view facing right.`
-- Negative: `rock golem, extra tail, weapon`
+- Negative: `rock golem, extra tail`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -431,7 +467,7 @@ Không gen `atk`, `ko` hay `win`. Đây là cuộc chạm trán để tránh, kh
 
 - Era: Q2 hành trình sông Hoàng Long (ch 222–224).
 - `Character: middle-aged peasant woman, patched brown clothes, pale greenish sickly face, bare hands.`
-- Negative: `fireball, weapon, male`
+- Negative: `fireball, male`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -443,7 +479,7 @@ Không gen `atk`, `ko` hay `win`. Đây là cuộc chạm trán để tránh, kh
 #### 4.17. `phi_hau`: Phỉ Hầu
 
 - `Animal: giant striped ape, yellow fur with black stripes, upper arms twice as thick as the thighs, two legs, side view facing right.`
-- Negative: `small monkey, weapon`
+- Negative: `small monkey`
 - Khung: `((352, 240), (176, 228))`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
@@ -469,8 +505,8 @@ Không gen `atk`, `ko` hay `win`. Đây là cuộc chạm trán để tránh, kh
 
 Bản Hắc Mao làm id riêng `cuong_thi_hac`: lông đen, `sk:'drain'`, nhanh.
 
-- `Character: stiff corpse-like zombie humanoid covered in long white hair, grey skin, torn dark clothes, arms stretched forward.`
-- Negative: `black hair, weapon`
+- `Character: stiff pale jiangshi-like undead figure covered in long white hair, grey skin, torn dark clothes, arms stretched forward.`
+- Negative: `black hair`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -483,7 +519,7 @@ Bản Hắc Mao làm id riêng `cuong_thi_hac`: lông đen, `sk:'drain'`, nhanh.
 Biến thể Tửu Khôi. Huyết Khôi làm id riêng `huyet_khoi`. Tạo hình là chuyển thể game, chưa xác minh trong truyện.
 
 - `Character: squat clay humanoid puppet made of cracked wine jars, heavy round body.`
-- Negative: `blood, human face, weapon`
+- Negative: `human face`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -494,8 +530,8 @@ Biến thể Tửu Khôi. Huyết Khôi làm id riêng `huyet_khoi`. Tạo hình
 
 Archetype game, danh tính trong truyện chưa xác minh.
 
-- `Character: hostile demonic cultivator, ragged dark-red robe, forearms stained red, fierce face, bare hands.`
-- Negative: `weapon`
+- `Character: hostile demonic cultivator, ragged dark-red robe, forearms dyed deep crimson, fierce face, bare hands.`
+- Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -507,7 +543,7 @@ Archetype game, danh tính trong truyện chưa xác minh.
 
 - Era: Q2 thương đội (ch 258–294).
 - `Character: authoritative middle-aged merchant cultivator, black hair in a topknot, dark beard, dark navy robe with broad sleeves, bare hands.`
-- Negative: `insects, weapon`
+- Negative: `insects`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -518,7 +554,7 @@ Archetype game, danh tính trong truyện chưa xác minh.
 #### 4.23. `bach_chien_liep`: Bách Chiến Liệp
 
 - `Character: lean young man, dark hair, vengeful eyes, practical pale-blue clothes, bare hands.`
-- Negative: `bow, crossbow, weapon`
+- Negative: `bow, crossbow`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -542,7 +578,7 @@ Hỏa Nhân (thân hóa lửa, đồng quy vu tận, ch 228–250) là **biến 
 #### 4.25. `bach_lien`: Bách Liên
 
 - `Character: composed young woman, long black hair with small white flower hair ornaments, modest white robe, calm face, bare hands.`
-- Negative: `lotus magic, glowing flowers, fan, male, weapon`
+- Negative: `lotus magic, glowing flowers, fan, male`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -554,7 +590,7 @@ Hỏa Nhân (thân hóa lửa, đồng quy vu tận, ch 228–250) là **biến 
 
 - **Era: Q2 trận Thiết gia ch 442–447**, còn tóc dài buộc. Sau ch 453–455 cô cắt tóc, lạnh lùng hơn: nếu cần thì làm id riêng `thiet_nhuoc_nam_q2b`. Bản Q1 (điều tra) cũng cần id riêng `thiet_nhuoc_nam_q1`.
 - `Character: determined young woman, long dark hair tied back, practical dark armor, bare hands.`
-- Negative: `needles, sword, male, soldiers`
+- Negative: `needles, male, soldiers`
 - Thảo binh là **unit riêng**, không vẽ vào sheet.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
@@ -567,7 +603,7 @@ Hỏa Nhân (thân hóa lửa, đồng quy vu tận, ch 228–250) là **biến 
 
 - Era: Q2 diễn võ trường. Tứ chuyển lực tu, cao tám thước, nghiêm cẩn (canon ch 295–390).
 - `Character: very tall muscular fighter, heavy pale ivory armor, disciplined stern face, bare hands.`
-- Negative: `rock shield, giant, weapon`
+- Negative: `rock shield, giant`
 - Khung: `((320, 240), (160, 228))`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
@@ -580,7 +616,7 @@ Hỏa Nhân (thân hóa lửa, đồng quy vu tận, ch 228–250) là **biến 
 
 - Era: Q2 diễn võ trường. Tứ chuyển hỏa đạo (canon ch 295–390).
 - `Character: thin wizened old man like a beggar, sparse hair, long fingernails, ragged clothes.`
-- Negative: `muscular, red hair, tattoos, weapon`
+- Negative: `muscular, red hair, tattoos`
 
 Hỏa Thủ ba móng là hiệu ứng. **Không** sửa tay thật thành ba ngón.
 
@@ -596,7 +632,7 @@ Chiêu theo canon ch 443–445: Tấn Ảnh, **Thủ Nhận**, Thiết Thủ, **
 
 - **Ảnh gốc cũ cầm dao: gen lại trước** (mục 3b).
 - `Character: resolute adult man, short black hair, stern face, practical dark armor, both hands empty, right hand held flat and straight like a blade.`
-- Negative: `sword, saber, knife, dagger, weapon`
+- Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -609,7 +645,7 @@ Chiêu theo canon ch 443–445: Tấn Ảnh, **Thủ Nhận**, Thiết Thủ, **
 
 - Q2 Tam Xoa, Tứ trung lực tu (canon ch 407–438).
 - `Character: bulky brutish man with a broad brow, rough sleeveless clothes, swaggering.`
-- Negative: `weapon`
+- Negative: `—`
 
 Bạo Lực cổ phồng người là **biến thể riêng** `hoanh_mi_baoluc`, không phóng to sprite.
 
@@ -648,7 +684,7 @@ Bưu / Xung Thiên Hổ (hư ảnh hổ có cánh) là hiệu ứng hoặc biế
 
 - Q2 Ngũ chuyển đỉnh phong Hồn đạo / Nô đạo (canon ch 460–461). Chiếm Khuyển Vương truyền thừa, điều khiển bầy chó (ch 462–485).
 - `Character: gaunt sinister old man, thin face, dark loose robe.`
-- Negative: `staff, skull, skeleton, weapon`
+- Negative: `staff, skull, skeleton`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -660,7 +696,7 @@ Bưu / Xung Thiên Hổ (hư ảnh hổ có cánh) là hiệu ứng hoặc biế
 
 - Q2 Ngũ chuyển đỉnh phong Kim đạo. Giáng lâm Tam Xoa ch 456–457 (khí tức kim quang áp đảo núi), đấu Ô Cật ch 460–461 ("hóa kim quang xé rách mây đen"), bị Phương Nguyên ám sát trong phúc địa ch 477.
 - `Character: venerable old master, long white beard, formal muted-gold robe.`
-- Negative: `sword, weapon`
+- Negative: `—`
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |
 |---|---|---|---|---|
@@ -674,7 +710,7 @@ Bưu / Xung Thiên Hổ (hư ảnh hổ có cánh) là hiệu ứng hoặc biế
 
 - Q2, "Bá Vương Đương Thời" (canon ch 443–449). Thổ Bá Vương: phải đứng trên đất.
 - `Character: massive muscular mature man, short hair, stern face, practical dark armor, bare hands.`
-- Negative: `boulder, weapon`
+- Negative: `boulder`
 - Khung: `((320, 240), (160, 228))`.
 
 | clip | Dùng cho | Căn cứ | Pose | Dòng POSES |

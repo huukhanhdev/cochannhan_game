@@ -1,6 +1,28 @@
 # Kế hoạch map battle pixel — Blue-chan
 
-02/10/2026. Kế hoạch cho nền đấu trường phù hợp sprite key-pose PN/BNB và roster sau này. Chưa generate ảnh, chưa sửa renderer/simulation. Orange-kun có thể dùng tài liệu này để review và tích hợp.
+02/10/2026. Kế hoạch cho nền đấu trường phù hợp sprite key-pose PN/BNB và roster sau này. **Đã áp ảnh người dùng cung cấp vào sandbox để duyệt**, xem bàn giao bên dưới. Chưa nối map vào campaign. Orange-kun có thể dùng tài liệu này để review và tích hợp.
+
+## Bàn giao Orange-kun — nền mẫu đã áp vào sandbox
+
+Theo yêu cầu người dùng, Blue-chan đã dùng đúng `Downloads/q1_bamboo_clearing.png` (2048×1152), không generate lại hoặc sửa nội dung ảnh. Bản raw được sao chép vào `incoming_maps/q1_bamboo_clearing_v01/source.png` (đã được ignore); bản phục vụ sandbox ở `assets/battle_maps/q1_bamboo_clearing/background.png`.
+
+**Cách tích hợp:**
+
+- `map.json` cùng thư mục ghi kích thước source, viewport, phiên bản, crop, pixel sampling và bounds hiện có; trạng thái `sandbox_review`, chưa coi là bản đã nghiệm thu toàn roster.
+- `battle_sandbox.html` tải metadata một lần lúc khởi tạo và đưa cho `SBView.mount`. JSON lỗi thì dùng nền tuyết cũ; ảnh mới lỗi thì renderer cũng thử ảnh fallback.
+- `view.js` vẫn nhận được đường dẫn string cũ, thêm nhận object cấu hình nền. Không đổi canvas, vị trí spawn, scale actor hay luật simulation.
+- Source 16:9 được **cover đồng tỷ lệ**, scale 0,46875: ảnh hiển thị 960×540, offset y=-55 trên viewport 960×430. Crop 55 px hiển thị mỗi phía (source y≈117,33…1034,67), giữ nguyên chiều ngang; không kéo giãn thành 2,23:1. Bản runtime vẫn là PNG gốc, chưa xuất file resize/crop riêng.
+- Nền pixel dùng nearest, alpha=1, dim=0; bỏ dải tối phủ sàn cũ. Fallback tuyết vẫn giữ dim cũ. Ảnh pixel không tự tạo vật cản, parallax hoặc hiệu ứng thời tiết.
+- `toWorld()` đã kiểm đủ bốn biên: world x=60…940, screen y=250…400 tương ứng z=0…240. Chạm trời, mép bên ngoài sân hoặc phần đất trang trí dưới y=400 không phát lệnh đi. **Thay quy tắc cũ có đệm 30 px phía trên đất**; chạm vào địch vẫn ưu tiên hitActor trước kiểm mặt đất.
+- Metadata bounds/projection hiện ghi để đối chiếu, chưa là cấu hình động của view/sim. Không đổi riêng các giá trị trong JSON rồi coi là đã đổi hitbox/phép chiếu.
+
+**Review của Blue-chan:** mặt sàn đọc rõ hơn nền tuyết; PN áo đen và BNB áo trắng đều thấy rõ, đạn nguyệt hiện rõ ở giữa. Hậu cảnh trúc vẫn khá nhiều texture; phần thân/tóc actor ở z thấp có thể hòa vào trúc, nên Orange-kun xem thêm trận ở hàng sau và các pose rộng. Đá lớn tập trung ở ven rừng; chưa thêm collision cho đá, cần xem thêm mép sau/hai bên để không có cảm giác đi xuyên đá. Chưa chứng minh mọi KO/thú lớn đều đủ margin; giữ cổng duyệt đó mở.
+
+**Kiểm thử đã chạy:** hồi quy simulation đạt; Chrome desktop/mobile nhận chuột/chạm như cũ; VFX/audio và mute/volume chạy trên nền mới. Người dùng và Orange-kun cần duyệt trực tiếp `battle_sandbox.html`, đặc biệt chân ở z=0/240, các biên x, telegraph Lốc và pose KO. Chưa thử điện thoại thật.
+
+Đã kiểm thêm scale/crop đúng 0,46875 và y=-55, tâm sàn quy đổi đúng world (500,120), bốn điểm ngoài sàn đều bị bỏ qua. Cố tình chặn tải ảnh rừng trúc: sandbox vẫn nạp texture tuyết fallback và tám ô chiêu, không lỗi JavaScript. Ba bản ảnh Download/raw/runtime có cùng SHA-256, xác nhận không sửa nội dung source.
+
+Các mục kế hoạch dưới đây giữ để tiếp tục sản xuất; mô tả “hiện trạng” trong bảng mục 2 là baseline trước lần tích hợp này.
 
 ## 1. Mục tiêu và phạm vi bản đầu
 
@@ -112,3 +134,35 @@ Nếu không có negative riêng, chỉ thêm một câu ngắn trong prompt ch�
 - Có nguồn raw, prompt/reference, phiên bản và trạng thái duyệt. Bản chưa duyệt không thay bản runtime đã duyệt.
 
 **Bước tiếp theo:** làm MAP-01 → MAP-03 với một nền rừng trúc, gửi preview để người dùng duyệt; chưa gen cả danh sách map.
+
+## 9. Cách tạo nền mẫu trên Muse (Orange-kun bổ sung, 02/10/2026)
+
+Thay đổi so với mục 7:
+- **Không** bắt AI vẽ sàn đúng 58–93% chiều cao. Sau khi gen, đo mép trên và mép dưới của sàn rồi ghi vào `map.json`; code tính phép chiếu theo số đo đó.
+- Tỷ lệ khung dùng tỷ lệ Muse có sẵn, rồi cắt bằng script.
+
+**Thiết lập:**
+- Tỷ lệ **21:9**. Không có thì chọn 2:1, cuối cùng mới tới 16:9.
+- Mỗi lượt tạo 4 ảnh.
+- **Lần 1 không đính kèm ảnh nào.** Lần 2, nếu phong cách lệch sprite, đính kèm `assets/chibi_ref/phuong_nguyen_full.png` làm tham chiếu phong cách với độ bám **thấp đến vừa**, rồi kiểm tra ảnh không có người.
+
+**Prompt:**
+
+```text
+Pixel art battle background for a 2D side-view martial arts game. An open flat earthen clearing in a mountain bamboo forest, ancient China. Side-on camera at low height looking slightly down at the ground: a flat dirt floor fills the lower half of the image and stretches across the full width, empty and unobstructed. Behind the floor: dense grey-green bamboo grove, a few mossy rocks along the back edge of the clearing, pale blue distant mountains, soft daylight sky at the top. Muted earthy palette, brown-grey soil with sparse small fallen leaves, low contrast on the floor so dark-robed and white-robed characters stand out clearly. Crisp chunky pixel clusters, limited palette, clean 16-bit style pixel art. Empty scene with no characters.
+```
+
+**Negative:**
+
+```text
+characters, people, animals, UI, text, watermark, grid, shadows of characters, projectiles, spell effects, large rocks on the floor, trees on the floor, water, cliffs, holes, top-down view, isometric view, photorealistic, blurry painting, dense pixel noise, fog covering the floor
+```
+
+**Chọn ảnh:**
+- Sàn phẳng, trống, trải hết chiều ngang.
+- Mép sau của sàn nằm khoảng giữa ảnh.
+- Không có đá hay thân cây chắn giữa sàn.
+- Pixel không mịn hơn sprite.
+- Nhân vật áo đen và áo trắng đặt lên đều nổi.
+
+**Lưu:** `incoming_maps/q1_bamboo_clearing_v1.png`, ảnh gốc nguyên, không cắt hay sửa. Ghi prompt và thiết lập đã dùng vào `incoming_maps/NOTE.txt`. Việc cắt, thu nhỏ, đo sàn và đặt nhân vật lên để duyệt do script và trang xem trước làm (bước MAP-01 → MAP-03).

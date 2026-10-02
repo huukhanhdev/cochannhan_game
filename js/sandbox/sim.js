@@ -90,6 +90,18 @@
 
   function step(B){
     B.t+=DT;
+    // Kết quả đã chốt: chỉ diễn hết clip ra chiêu / gục, không xử lý thêm đòn đánh.
+    if(B.over){
+      for(const a of Object.values(B.actors)){
+        a.since+=DT;
+        if(a.state==='act'&&a.act){
+          const A=a.act,s=A.s;A.t+=DT;
+          A.phase=A.t<s.startup?'startup':A.t<s.startup+s.active?'active':'recovery';
+          if(A.t>=totalT(s)){a.act=null;afterFree(B,a)}
+        }
+      }
+      return;
+    }
     for(const a of Object.values(B.actors)){
       a.since+=DT;
       for(const k in a.cd)if(a.cd[k]>0)a.cd[k]=Math.max(0,a.cd[k]-DT);
@@ -100,13 +112,18 @@
         if(a.bleed.acc>=1){const n=Math.floor(a.bleed.acc);a.bleed.acc-=n;hurt(B,a,n,null,0,{dot:true})}
         if(a.bleed&&B.t>=a.bleed.until)a.bleed=null;
       }
+      if(B.over)break;
       if(a.state==='move')stepMove(B,a);
       else if(a.state==='act')stepAct(B,a);
       else if(a.state==='hit'&&a.since>=.32){setState(a,'idle');afterFree(B,a)}
       if(a.state==='idle'&&!B.over&&a.since>.05){const t=other(B,a);if(Math.abs(t.x-a.x)>4)a.face=Math.sign(t.x-a.x)}
       if(a.buffer&&B.t>a.buffer.until)a.buffer=null;
+      if(B.over)break;
     }
-    stepProjs(B);stepZones(B);separate(B);
+    if(B.over)return;
+    stepProjs(B);if(B.over)return;
+    stepZones(B);if(B.over)return;
+    separate(B);
     if(typeof SBAI!=='undefined')SBAI.tick(B,DT);
   }
   function speedOf(B,a){return a.kit.speed*(a.slowUntil>B.t?a.slowF||.7:1)}
@@ -134,7 +151,7 @@
   }
   // Phát đòn: đúng một lần mỗi act, mỗi đòn có id riêng (A.hid)
   function fire(B,a){
-    const A=a.act,s=A.s,t=other(B,a);if(A.fired)return;A.fired=true;
+    const A=a.act,s=A.s,t=other(B,a);if(B.over||A.fired)return;A.fired=true;
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
@@ -165,7 +182,9 @@
       const st=Math.hypot(p.vx,p.vz)*DT;p.x+=p.vx*DT;p.z+=p.vz*DT;p.left-=st;
       const t=p.owner==='pn'?B.actors.bnb:B.actors.pn;
       if(t.state!=='ko'&&Math.abs(t.x-p.x)<28&&Math.abs(t.z-p.z)<36){
-        hurt(B,t,p.s.dmg,B.actors[p.owner],p.hid,{pierce:p.s.pierce});B.projs.splice(B.projs.indexOf(p),1);continue}
+        hurt(B,t,p.s.dmg,B.actors[p.owner],p.hid,{pierce:p.s.pierce});
+        if(B.over)return;
+        B.projs.splice(B.projs.indexOf(p),1);continue}
       if(p.left<=0||p.x<X0-40||p.x>X1+40){B.projs.splice(B.projs.indexOf(p),1);emit(B,{type:'projEnd',who:p.owner,x:p.x,z:p.z})}
     }
   }
@@ -176,12 +195,14 @@
       if(B.t>=z.fireAt){
         const t=other(B,own);
         if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r)hurt(B,t,z.s.dmg,own,z.hid,{});
-        emit(B,{type:'zoneFire',who:z.owner,x:z.x,z:z.z,r:z.r});B.zones.splice(B.zones.indexOf(z),1);
+        emit(B,{type:'zoneFire',who:z.owner,x:z.x,z:z.z,r:z.r});
+        if(B.over)return;
+        B.zones.splice(B.zones.indexOf(z),1);
       }
     }
   }
   function hurt(B,t,dmg,src,hid,o){
-    if(t.state==='ko'||(hid&&t.lastHid===hid))return;
+    if(B.over||t.state==='ko'||(hid&&t.lastHid===hid))return;
     if(hid)t.lastHid=hid;
     let d=dmg;if(t.shield&&!o.dot)d=Math.round(d*(1-t.shield.red*(1-(o.pierce||0))));
     t.hp=Math.max(0,t.hp-d);t.flashAt=B.t;
@@ -189,6 +210,8 @@
     if(t.hp<=0){
       t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;setState(t,'ko');
       const w=other(B,t);B.over={winner:w.id,loser:t.id,at:B.t};
+      B.projs.length=0;B.zones.length=0;
+      w.bleed=null;w.buffer=null;
       if(w.state==='act')w.winPending=true;else{w.move=null;w.chase=false;setState(w,'win')}
       emit(B,{type:'ko',who:t.id});return;
     }

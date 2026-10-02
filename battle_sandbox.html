@@ -12,7 +12,7 @@
   h1{font-size:17px;margin:0 0 2px}
   .note{color:var(--mute);margin:0 0 10px;font-size:13px}
   #arena{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);user-select:none}
-  #arena canvas{display:block}
+  #arena canvas{display:block;touch-action:none}
   .result{position:absolute;inset:0;display:none;place-items:start center;padding-top:18px;background:rgba(0,0,0,.18);pointer-events:none}
   .result div{pointer-events:auto}
   .result.on{display:grid}
@@ -54,7 +54,8 @@
 <main>
   <h1>Đấu thử: Phương Nguyên đấu Bạch Ngưng Băng</h1>
   <p class="note">Bản thử cơ chế E: trận luôn chạy. <kbd>Chuột phải</kbd> đi · <kbd>Chuột</kbd> vào Bạch Ngưng Băng: đuổi và đánh ·
-    <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>D</kbd> cổ trùng, nhắm theo con trỏ · <kbd>Space</kbd> lướt · <kbd>1</kbd> Sinh Mệnh Diệp · <kbd>S</kbd> dừng</p>
+    <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>D</kbd> cổ trùng, nhắm theo con trỏ · <kbd>Space</kbd> lướt · <kbd>1</kbd> Sinh Mệnh Diệp · <kbd>S</kbd> dừng.
+    Điện thoại: chạm đất để đi, chạm Bạch Ngưng Băng để đuổi đánh; chạm ô kỹ năng để dùng.</p>
   <div id="arena"><div class="result" id="result"><div><h2 id="rtitle"></h2><p id="rsub"></p><button id="again">Đấu lại</button></div></div></div>
   <div id="hud"></div>
   <div class="opts">
@@ -75,7 +76,10 @@
 // Vòng chính: simulation luôn bước (nhân tốc độ trận); hình vẽ mỗi khung hình.
 // TÍCH HỢP: khối này tương ứng phần engine gọi Arena.mount + vòng FX; khi B.over gọi win()/die().
 (async function(){
-  const q=new URLSearchParams(location.search),lvl=q.get('lvl')||'thuong',spd=+(q.get('spd')||.85);
+  const q=new URLSearchParams(location.search);
+  const requestedLevel=q.get('lvl'),requestedSpeed=Number(q.get('spd'));
+  const lvl=Object.hasOwn(SBAI.LEVEL,requestedLevel)?requestedLevel:'thuong';
+  const spd=[.75,.85,1].includes(requestedSpeed)?requestedSpeed:.85;
   SBAI.level=lvl;
   // độ khó: nhân sát thương của máy (kit sao chép, không sửa SB_KITS gốc)
   const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[lvl].dmgK;

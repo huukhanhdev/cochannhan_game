@@ -53,7 +53,7 @@ const SBView=(function(){
       case 'win':return [c('win'),0];
       default:
         if(B.t-a.stopAt<.22&&K.move)return [K.move,Math.min(1,K.move.tex.length-1)];
-        return [K.idle,Math.floor(B.t/.75)%K.idle.tex.length];
+        return [K.idle,KPSprite.frameAt(K.idle,B.t)];
     }
   }
 
@@ -72,9 +72,9 @@ const SBView=(function(){
       if(a.act&&a.act.phase==='startup'&&a.act.s.startup>=.35){const p=a.act.t/a.act.s.startup;S.bar.beginFill(0x000000,.6);S.bar.drawRect(-32,12,64,6);S.bar.endFill();S.bar.beginFill(a.act.s.kind==='aoe'?0xff5a44:0xf0c46a);S.bar.drawRect(-32,12,64*p,6);S.bar.endFill()}
       // bóng mờ khi lướt / thoát thân / di chuyển
       const fast=a.act&&(a.act.s.kind==='dash'||a.act.s.kind==='escape')&&a.act.phase==='active';
-      if((a.state==='move'||fast)&&B.t-S.ghostAt>(fast?.025:.05)){S.ghostAt=B.t;const g=new PIXI.Sprite(S.s.texture);g.anchor.copyFrom(S.s.anchor);g.scale.copyFrom(S.s.scale);g.position.copyFrom(S.c.position);g.alpha=fast?.45:.3;g.born=B.t;if(a.act&&a.act.s.kind==='escape')g.tint=0xbfe8ff;L.ghost.addChild(g)}
+      if((a.state==='move'||fast)&&B.t-S.ghostAt>(fast?.025:.05)){S.ghostAt=B.t;const g=new PIXI.Sprite(S.s.texture);g.anchor.copyFrom(S.s.anchor);g.scale.copyFrom(S.s.scale);g.position.copyFrom(S.c.position);g.alpha=g.startAlpha=fast?.45:.3;g.born=B.t;if(a.act&&a.act.s.kind==='escape')g.tint=0xbfe8ff;L.ghost.addChild(g)}
     }
-    for(const g of [...L.ghost.children]){const age=B.t-g.born;g.alpha=Math.max(0,g.alpha-.03);if(age>.3)g.destroy()}
+    for(const g of [...L.ghost.children]){const age=B.t-g.born;g.alpha=g.startAlpha*Math.max(0,1-age/.3);if(age>.3)g.destroy()}
     drawProj();
     for(const e of evs||[]){
       const a=B.actors[e.who];

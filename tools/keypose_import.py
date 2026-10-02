@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 """Nhập dải key-pose do AI (Muse...) tạo ra thành sheet sprite cho battle.
 
-Dùng:  python3 tools/keypose_import.py            (xử lý mọi file trong incoming_sprites/)
-       python3 tools/keypose_import.py pn_cast_v1.png
+Dùng:  python3 tools/keypose_import.py                 xử lý mọi file trong incoming_sprites/
+       python3 tools/keypose_import.py pn_cast_v1.png  chỉ file này
+       python3 tools/keypose_import.py --report        in cao x rộng từng pose
+       python3 tools/keypose_import.py --approve <id> [clip ...]   khóa bản đang dùng (sau khi người dùng duyệt)
+       python3 tools/keypose_import.py --force ...     ghi đè cả clip đã khóa
 
-Tên file: <id>_<action>_v<N>.png, id là tên ảnh trong assets/chibi_ref (vd heo_rung_attack_v1.png).
+Tên file: <id>_<clip>_v<N>.png (vd heo_rung_atk_v1.png, dian_lang_boss_sk_thunder_v1.png,
+tran_thuy_hoa_cast_ground_v1.png). id lấy theo ảnh trong assets/chibi_ref; tên được tách bằng cách thử
+mọi chỗ cắt và ưu tiên id đã biết, nên id và clip đều có thể chứa dấu gạch dưới.
+Số pose kỳ vọng: clip chung theo TIMING; clip riêng (atk, sk_*, roar, cast_ground, win) theo bảng của
+nhân vật trong docs/prompts/PROMPT_MUSE_ROSTER.md. Clip riêng chưa có trong bảng thì bị từ chối.
+Clip đã khóa trong tools/keypose_approved.json không bị ghi đè (trừ --force).
 Viết tắt pn / bnb ánh xạ qua PREFIX. --report: in chiều cao/rộng từng pose để chỉnh SCALE_FIX.
 Bước: bỏ viền xanh nền → tách pose theo khoảng trống cột → đo cỡ "điểm ảnh" của
 pixel art → thu về độ phân giải gốc (nearest) → đặt chân lên cùng vạch sàn → ghép sheet.
@@ -17,6 +25,11 @@ from PIL import Image
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parent.parent
+SPEC_DOC = ROOT / 'docs' / 'prompts' / 'PROMPT_MUSE_ROSTER.md'
+APPROVED = ROOT / 'tools' / 'keypose_approved.json'
+REF = ROOT / 'assets' / 'chibi_ref'
+# Nhân vật có màu xanh lá trong thiết kế (áo, tóc): không khử ám xanh ở viền
+NO_DESPILL = {'phuong_chinh', 'thanh_thu', 'hoc_duong_gia_lao'}
 SRC = ROOT / 'incoming_sprites'
 OUT = ROOT / 'assets' / 'chibi_kp'
 PREFIX = {'pn': 'phuong_nguyen', 'bnb': 'bach_ngung_bang_nam'}
@@ -53,7 +66,7 @@ TIMING = {
 }
 
 
-def clean(img):
+def clean(img, despill=True):
     """Tách nền. Ảnh đã có alpha thật (Muse xuất nền trong suốt) thì CHỈ dùng alpha, không lọc màu,
     để áo xanh lá / xanh rêu của nhân vật không bị xóa. Ảnh nền đặc thì chỉ xóa vùng màu nền
     nối liền với mép ảnh (flood fill), không xóa pixel cùng màu nằm trong nhân vật.
@@ -70,11 +83,14 @@ def clean(img):
         bgmask = np.isin(L, np.unique(L[seed & near]))
         keep = ~bgmask
     a[..., 3] = np.where(keep, 255, 0)
+    if not despill:
+        return a.astype(np.uint8)
     edge = keep & ndimage.binary_dilation(~keep, iterations=EDGE_PX)   # dải sát mép (ảnh gốc), không đụng phần trong
     r, g, b = a[..., 0], a[..., 1], a[..., 2]
-    spill = edge & (g > r + 25) & (g > b + 25)
-    a[..., 3] = np.where(spill & (g > 150) & (r < 90) & (b < 90), 0, a[..., 3])   # viền nền xanh thuần: bỏ
-    a[..., 1] = np.where(spill, np.maximum(r, b), g)
+    chroma = edge & (g > 150) & (g > r + 60) & (g > b + 60)            # chỉ xanh lá tươi kiểu nền #00FF00
+    a[..., 3] = np.where(chroma & (r < 90) & (b < 90), 0, a[..., 3])
+    dark = edge & (g > r + 30) & (g > b + 30) & ((r + b) < 240)         # viền ám xanh (lẫn nền + nét tối)
+    a[..., 1] = np.where(chroma | dark, np.maximum(r, b), g)
     return a.astype(np.uint8)
 
 def pixel_size(a):
@@ -148,20 +164,25 @@ def to_frame(piece, FRAME=FRAME, PIVOT=PIVOT):
 
 
 def process(path):
-    m = re.match(r'([a-z0-9_]+?)_([a-z]+)_v(\d+)\.png$', path.name)
-    if not m:
-        print('bỏ qua (sai tên)', path.name); return None
-    cid, action = PREFIX.get(m.group(1), m.group(1)), m.group(2)
-    if action not in TIMING and not SIGNATURE.match(action):
-        print('bỏ qua (action lạ)', path.name); return None
+    pr = parse_name(path.name)
+    if not pr:
+        print('✗ bỏ qua (tên không đúng <id>_<clip>_vN.png hoặc clip lạ):', path.name); return None
+    cid, action, _ = pr
+    if action == 'base':
+        return save_base(path, cid)
+    spec = load_spec().get(cid, {})
+    if action not in TIMING and action not in spec:
+        print(f'✗ {path.name}: clip riêng "{action}" chưa có trong bảng {cid} của PROMPT_MUSE_ROSTER.md'); return None
     FRAME, PIVOT = FRAME_BY_ID.get(cid, (globals()['FRAME'], globals()['PIVOT']))
-    a = clean(Image.open(path)); p = pixel_size(a)
+    a = clean(Image.open(path), despill=cid not in NO_DESPILL); p = pixel_size(a)
     fs = face_size(a, split(a, 20))
     k = (FACE / fs if fs else 1 / p) * SCALE_FIX.get(path.name, 1)
     nat = Image.fromarray(a).resize((round(a.shape[1] * k), round(a.shape[0] * k)), Image.NEAREST)
     na = np.asarray(nat).copy(); na[..., 3] = np.where(na[..., 3] > 0, 255, 0)
     found = pieces(na)
-    expect = EXPECT.get(path.name) or EXPECT.get(action) or (len(TIMING[action][0]) if action in TIMING else len(found))
+    expect = EXPECT.get(path.name) or spec.get(action) or (len(TIMING[action][0]) if action in TIMING else None)
+    if expect is None:
+        print(f'✗ {path.name}: không biết số pose kỳ vọng của "{action}". Thêm vào bảng nhân vật hoặc EXPECT.'); return None
     if not 1 <= len(found) <= 4:
         print(f'✗ {path.name}: tách được {len(found)} pose (clip riêng cần 1–4). KHÔNG ghi đè.'); return None
     if len(found) != expect:
@@ -186,6 +207,81 @@ def process(path):
                          'loop': loop, 'release': rel, 'source': path.name, 'scale': round(k, 4), **({'hand': meta_hand} if meta_hand else {})}
 
 
+def save_base(path, cid):
+    """Ảnh gốc side view mới (<id>_base_vN.png): tách nền, cắt sát, lưu thành assets/chibi_ref/<id>.png.
+    Bản cũ được giữ ở assets/chibi_ref/_cu/<id>.png (lần đầu). Không tạo sheet hay manifest."""
+    a = clean(Image.open(path), despill=cid not in NO_DESPILL)
+    found = pieces(a)
+    if len(found) != 1:
+        print(f'✗ {path.name}: ảnh gốc phải có đúng 1 nhân vật, tách được {len(found)}. KHÔNG ghi đè.'); return None
+    al = found[0][..., 3] > 0; ys, xs = np.nonzero(al)
+    img = Image.fromarray(found[0][max(0, ys.min() - 8):ys.max() + 9, max(0, xs.min() - 8):xs.max() + 9])
+    dst = REF / f'{cid}.png'
+    if dst.exists():
+        old = REF / '_cu' / f'{cid}.png'; old.parent.mkdir(exist_ok=True)
+        if not old.exists(): dst.replace(old)
+    img.save(dst, optimize=True)
+    print(f'{path.name}: ảnh gốc mới → assets/chibi_ref/{cid}.png ({img.width}x{img.height})')
+    return None
+
+
+def known_ids():
+    ids = set(PREFIX) | {p.stem for p in REF.glob('*.png') if not p.stem.endswith('_full')}
+    ids |= {p.name for p in OUT.glob('*') if p.is_dir()} | set(load_spec())
+    return ids
+
+
+def is_clip(c):
+    return c in TIMING or c == 'base' or bool(SIGNATURE.match(c))
+
+
+def parse_name(name):
+    """<id>_<clip>_v<N>.png → (id, clip, N). Thử mọi chỗ cắt; ưu tiên id đã biết, rồi id ngắn nhất."""
+    m = re.match(r'^([a-z0-9_]+)_v(\d+)\.png$', name)
+    if not m: return None
+    stem, ver = m.group(1), int(m.group(2)); known = known_ids()
+    cands = [(stem[:i], stem[i + 1:]) for i, ch in enumerate(stem) if ch == '_' and is_clip(stem[i + 1:])]
+    if not cands: return None
+    good = [c for c in cands if c[0] in known]
+    cid, clip = (good or cands)[0]
+    return PREFIX.get(cid, cid), clip, ver
+
+
+_SPEC = None
+def load_spec():
+    """Đọc số pose của clip riêng từ bảng từng nhân vật trong PROMPT_MUSE_ROSTER.md.
+    Mục bắt đầu bằng dòng '#### ... `id`'; bảng có cột 'Pose'. Nhân vật dòng 'Animal:' dùng ko 2 pose."""
+    global _SPEC
+    if _SPEC is not None: return _SPEC
+    _SPEC = {}
+    if not SPEC_DOC.exists(): return _SPEC
+    cid, col = None, None
+    for line in SPEC_DOC.read_text().splitlines():
+        h = re.match(r'^####\s.*?`([a-z0-9_]+)`', line)
+        if h: cid, col = h.group(1), None; _SPEC.setdefault(cid, {}); continue
+        if not cid: continue
+        if '`Animal:' in line: _SPEC[cid].setdefault('ko', 2)
+        if line.startswith('|'):
+            cells = [c.strip().strip('`') for c in line.strip().strip('|').split('|')]
+            if 'Pose' in cells: col = cells.index('Pose'); continue
+            if col is not None and len(cells) > col and re.fullmatch(r'\d', cells[col]) and is_clip(cells[0]):
+                _SPEC[cid][cells[0]] = int(cells[col])
+    return _SPEC
+
+
+def load_approved():
+    return json.loads(APPROVED.read_text()) if APPROVED.exists() else {}
+
+
+def approve(cid, clips):
+    cid = PREFIX.get(cid, cid); mf = OUT / cid / 'manifest.json'
+    if not mf.exists(): print('chưa có sheet cho', cid); return
+    man = json.loads(mf.read_text()); ap = load_approved(); ap.setdefault(cid, {})
+    for a, c in man['actions'].items():
+        if not clips or a in clips: ap[cid][a] = c['source']; print(f'khóa {cid}/{a} = {c["source"]}')
+    APPROVED.write_text(json.dumps(ap, ensure_ascii=False, indent=1))
+
+
 def report():
     for mf in sorted(OUT.glob('*/manifest.json')):
         man = json.loads(mf.read_text()); W = man['frame_size'][0]; print(man['id'])
@@ -197,13 +293,24 @@ def report():
 
 
 def main():
-    if '--report' in sys.argv: return report()
-    files = [SRC / n for n in sys.argv[1:]] or sorted(SRC.glob('*.png'))
+    args = sys.argv[1:]
+    if '--report' in args: return report()
+    if args[:1] == ['--approve']:
+        if len(args) < 2: print('dùng: --approve <id> [clip ...]'); return
+        return approve(args[1], args[2:])
+    force = '--force' in args; names = [a for a in args if not a.startswith('--')]
+    files = [SRC / n for n in names] or sorted(SRC.glob('*.png'))
+    approved = load_approved()
     best = {}
     for f in files:                       # giữ bản vN lớn nhất mỗi action
         m = re.search(r'_v(\d+)\.png$', f.name); k = re.sub(r'_v\d+\.png$', '', f.name)
         if m and (k not in best or int(m.group(1)) > best[k][0]): best[k] = (int(m.group(1)), f)
     for _, f in sorted(best.values(), key=lambda x: x[1].name):
+        pr = parse_name(f.name)
+        if pr and not force and pr[1] in approved.get(pr[0], {}):
+            src = approved[pr[0]][pr[1]]
+            if src != f.name: print(f'⏸ {f.name}: {pr[0]}/{pr[1]} đã khóa bản duyệt {src}; xem rồi chạy với --force hoặc --approve')
+            continue
         r = process(f)
         if not r: continue
         cid, action, meta = r; mf = OUT / cid / 'manifest.json'

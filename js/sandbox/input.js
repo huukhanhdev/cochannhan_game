@@ -1,5 +1,6 @@
 // Điều khiển sandbox E: trận luôn chạy, không có bảng chọn hay bước xác nhận.
 //   Chuột phải mặt đất: đi · chuột phải / trái vào địch: đuổi tới tầm rồi đánh thường
+//   Cảm ứng: chạm mặt đất để đi, chạm địch để đuổi đánh; chỉ nhận ngón chính.
 //   Q W E R D: cổ trùng theo ô, phóng ngay về phía con trỏ · Space: lướt về phía con trỏ
 //   1: vật phẩm · S: dừng · click nút trên thanh kỹ năng: như bấm phím (nhắm về phía địch)
 // Phím gắn với ô (key trong kit), không gắn với tên cổ.
@@ -30,13 +31,15 @@ const SBInput=(function(){
     addEventListener('keydown',key);
     const cv=SBView.app.view;
     cv.addEventListener('contextmenu',ev=>ev.preventDefault());
-    cv.addEventListener('mousemove',ev=>{const w=SBView.toWorld(ev.clientX,ev.clientY);aim=w.inGround?{x:w.x,z:Math.max(0,Math.min(SBSim.Z1,w.z))}:aim});
-    cv.addEventListener('mouseleave',()=>{aim=null});
-    cv.addEventListener('mousedown',ev=>{
-      if(B.over)return;
+    cv.addEventListener('pointermove',ev=>{if(ev.pointerType!=='mouse')return;const w=SBView.toWorld(ev.clientX,ev.clientY);aim=w.inGround?{x:w.x,z:Math.max(0,Math.min(SBSim.Z1,w.z))}:aim});
+    cv.addEventListener('pointerleave',()=>{aim=null});
+    cv.addEventListener('pointerdown',ev=>{
+      if(B.over||ev.isPrimary===false)return;
+      const touch=ev.pointerType==='touch'||ev.pointerType==='pen';
+      if(touch)ev.preventDefault();
       const onFoe=SBView.hitActor(ev.clientX,ev.clientY)==='bnb';
-      if(onFoe&&(ev.button===0||ev.button===2)){say(SBSim.issue(B,'pn',{skill:'atk'}));return}
-      if(ev.button===2){
+      if(onFoe&&(touch||ev.button===0||ev.button===2)){say(SBSim.issue(B,'pn',{skill:'atk'}));return}
+      if(touch||ev.button===2){
         const w=SBView.toWorld(ev.clientX,ev.clientY);if(!w.inGround)return;
         say(SBSim.issue(B,'pn',{skill:'move',x:w.x,z:w.z}));SBView.pingGround(w);
       }

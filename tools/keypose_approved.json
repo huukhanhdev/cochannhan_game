@@ -1,0 +1,15 @@
+{
+ "phuong_nguyen": {
+  "cast": "pn_cast_v1.png",
+  "hit": "pn_hit_v1.png",
+  "idle": "pn_idle_v1.png",
+  "move": "pn_move_v1.png",
+  "attack": "pn_attack_v1.png",
+  "dodge": "pn_dodge_v1.png",
+  "guard": "pn_guard_v1.png",
+  "heal": "pn_heal_v1.png",
+  "heavy": "pn_heavy_v1.png",
+  "ko": "pn_ko_v1.png",
+  "win": "pn_win_v1.png"
+ }
+}

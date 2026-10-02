@@ -4,8 +4,11 @@
 // giữ nền/thời tiết của Arena, dùng pick() + các lớp guide/fx ở đây.
 const SBView=(function(){
   let app,B,L={},spr={},kp={},W=960,H=430,fx=[],hover=null,pings=[];
-  const GY0=250,GY1=400;                     // dải mặt đất trên màn hình
-  const sx=x=>x*(W/1000),sy=z=>GY0+(z/SBSim.Z1)*(GY1-GY0),syk=(GY1-GY0)/SBSim.Z1;
+  // Dải mặt đất trên màn hình (z=0 → GY0, z=Z1 → GY1). Map pixel ghi ground_screen_y trong map.json
+  // để mỗi ảnh nền khớp sàn của nó; view, input, bóng và telegraph cùng dùng phép chiếu này.
+  let GY0=250,GY1=400,syk=(GY1-GY0)/SBSim.Z1;
+  const sx=x=>x*(W/1000),sy=z=>GY0+(z/SBSim.Z1)*(GY1-GY0);
+  const PICK_TOL=12;                          // click lệch khỏi mép sàn tối đa 12px vẫn nhận (kéo về mép)
   const depthK=z=>.9+.16*(z/SBSim.Z1);
   const SCALE=1.12;                            // px màn hình / px sprite gốc
   const INTENT={melee:'⚔',near:'»',big:'⚠',guard:'🛡',dodge:'↯',escape:'❄'};
@@ -17,6 +20,7 @@ const SBView=(function(){
     for(const k of ['bg','ground','ghost','fig','fx'])L[k]=new PIXI.Container();
     L.fig.sortableChildren=true;app.stage.addChild(L.bg,L.ground,L.ghost,L.fig,L.fx);
     const map=bg&&typeof bg==='object'?bg:null;
+    if(map&&Array.isArray(map.ground_screen_y)){[GY0,GY1]=map.ground_screen_y;syk=(GY1-GY0)/SBSim.Z1}
     let pixel=false;
     if(bg){
       let t=await PIXI.Assets.load(map?map.image:bg).catch(()=>null);
@@ -31,6 +35,9 @@ const SBView=(function(){
     }
     const dim=new PIXI.Graphics();dim.beginFill(0x000000,pixel?(map.dim??0):.35);dim.drawRect(0,0,W,H);dim.endFill();
     if(!pixel){dim.beginFill(0x0c0f12,.55);dim.drawRect(0,GY0-20,W,H-GY0+20);dim.endFill()}L.bg.addChild(dim);
+    // Sương nhẹ phủ hậu cảnh phía trên sàn để nhân vật hàng sau tách khỏi rừng tối (map.haze, 0 = tắt)
+    if(pixel&&map.haze>0){const h=new PIXI.Graphics(),n=8;for(let i=0;i<n;i++){h.beginFill(map.hazeColor??0xdfe8ec,map.haze*(i+1)/n);h.drawRect(0,(GY0-24)*i/n,W,(GY0-24)/n+1);h.endFill()}
+      h.beginFill(map.hazeColor??0xdfe8ec,map.haze);h.drawRect(0,GY0-24,W,24);h.endFill();L.bg.addChild(h)}
     L.guide=new PIXI.Graphics();L.ground.addChild(L.guide);L.proj=new PIXI.Graphics();L.fx.addChild(L.proj);
     L.windup=new PIXI.Graphics();L.fx.addChild(L.windup);
     for(const a of Object.values(B.actors)){
@@ -135,7 +142,7 @@ const SBView=(function(){
   }
   function impact(at,material){
     const g=new PIXI.Graphics();L.fx.addChild(g);
-    const x=sx(at.x),y=sy(at.z)-78,colors={ice:[0x80bddd,0xf4fcff],moon:[0x8bcbe0,0xffffff],jade:[0xacc7ca,0xfff7dc],punch:[0xbba07e,0xffecd0]}[material];
+    const x=sx(at.x),y=sy(at.z)-78*depthK(at.z)*SCALE,colors={ice:[0x80bddd,0xf4fcff],moon:[0x8bcbe0,0xffffff],jade:[0xacc7ca,0xfff7dc],punch:[0xbba07e,0xffecd0]}[material];
     const parts=Array.from({length:material==='ice'?8:6},(_,i)=>({a:i*6.28/8,v:20+Math.random()*18}));
     fx.push({o:g,born:B.t,upd:age=>{
       const p=age/.22;g.clear();if(p>=1)return true;
@@ -165,7 +172,7 @@ const SBView=(function(){
   // Đạn nguyệt nhận: hình trăng khuyết sáng + vệt
   function drawProj(){
     const g=L.proj;g.clear();
-    for(const p of B.projs){const x=sx(p.x),y=sy(p.z)-78,f=p.face;
+    for(const p of B.projs){const x=sx(p.x),y=sy(p.z)-78*depthK(p.z)*SCALE,f=p.face;
       for(let i=3;i>0;i--){g.beginFill(0x71adc9,.32/i);g.drawRect(Math.round(x-f*i*12)-4,Math.round(y)-3,8,6);g.endFill()}
       const poly=[-10,-18,0,-16,8,-10,12,-4,12,4,8,10,0,16,-10,18,-2,8,2,2,2,-2,-2,-8];
       g.beginFill(0x639fbe,1);g.drawPolygon(poly.map((v,i)=>i%2?Math.round(y+v):Math.round(x+v*f)));g.endFill();
@@ -176,6 +183,15 @@ const SBView=(function(){
     const g=L.guide;g.clear();const p=B.actors.pn;
     if(p.move&&!p.chase){g.lineStyle(2,0x8fd0ff,.8);g.drawEllipse(sx(p.move.x),sy(p.move.z),16,5)}
     for(const q of [...pings]){const age=B.t-q.t;if(age>.35){pings.splice(pings.indexOf(q),1);continue}g.lineStyle(2,0x8fd0ff,1-age/.35);g.drawEllipse(sx(q.x),sy(q.z),10+age*40,3+age*12)}
+    // Ô báo đòn cận chiến / chộp đang lấy đà: vùng đánh khóa theo hướng lúc ra đòn → bước ra khỏi ô là né được
+    for(const a of Object.values(B.actors)){
+      const A=a.act;if(B.over||!A||A.phase!=='startup'||(A.s.kind!=='melee'&&A.s.kind!=='grab'))continue;
+      const s=A.s,foe=a.ai,col=foe?0xff5a44:0xf0c46a,pr=Math.min(1,A.t/s.startup);
+      const x0=sx(a.x),x1=sx(a.x+a.face*s.range),y0=sy(Math.max(0,a.z-s.depth)),y1=sy(Math.min(SBSim.Z1,a.z+s.depth));
+      const l=Math.min(x0,x1),w=Math.abs(x1-x0);
+      g.lineStyle(2,col,foe?.85:.45);g.beginFill(col,foe?.10:.05);g.drawRect(l,y0,w,y1-y0);g.endFill();
+      g.lineStyle(0);g.beginFill(col,foe?.25:.12);g.drawRect(a.face>0?l:l+w*(1-pr),y0,w*pr,y1-y0);g.endFill();
+    }
     for(const z of B.zones){
       const pr=Math.min(1,(B.t-z.from)/(z.fireAt-z.from)),rx=z.r*(W/1000),ry=z.r*syk/1.6;
       g.lineStyle(3,0xff5a44,.9);g.beginFill(0xff5a44,.10);g.drawEllipse(sx(z.x),sy(z.z),rx,ry);g.endFill();
@@ -188,7 +204,8 @@ const SBView=(function(){
   }
   function toWorld(cx,cy){const r=app.view.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H;
     const wx=x*1000/W,z=(y-GY0)/syk;
-    return {x:wx,z,inGround:wx>=SBSim.X0&&wx<=SBSim.X1&&y>=GY0&&y<=GY1}}
+    const ok=wx>=SBSim.X0-PICK_TOL&&wx<=SBSim.X1+PICK_TOL&&y>=GY0-PICK_TOL&&y<=GY1+PICK_TOL;
+    return {x:Math.max(SBSim.X0,Math.min(SBSim.X1,wx)),z:Math.max(0,Math.min(SBSim.Z1,z)),inGround:ok}}
   function hitActor(cx,cy){
     const r=app.view.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H;
     for(const a of Object.values(B.actors)){const k=depthK(a.z)*SCALE;if(Math.abs(x-sx(a.x))<40*k&&y<sy(a.z)+12&&y>sy(a.z)-spr[a.id].hy*k)return a.id}

@@ -726,6 +726,27 @@ Bưu / Xung Thiên Hổ (hư ảnh hổ có cánh) là hiệu ứng hoặc biế
 
 ---
 
+## 4b. Asset hiệu ứng là sinh vật / vật thể cổ trùng (không phải nhân vật)
+
+Những cổ có hình dạng riêng: gen thành sprite rời, code cho chạy theo đường chiêu. Không ghép vào clip nhân vật, không có nhân vật trong ảnh. Lưu vào `incoming_sprites/fx_<id>_<clip>_v1.png`. Bộ nhập asset hiệu ứng **chưa viết**; tạm lưu để duyệt hình.
+
+**Khối chung:**
+
+```text
+Pixel art game effect sprite sheet, side view facing right, crisp pixel art, clean dark outlines, flat shading, same pixel density as the style reference image.
+{OBJECT}
+One single horizontal row of poses ordered left to right, all the same size, wide empty gap between poses.
+Background: transparent, or solid flat pure green #00FF00. No people, no hands, no text.
+{POSES}
+```
+
+| id | Dùng cho | Căn cứ | `{OBJECT}` | Pose | `{POSES}` |
+|---|---|---|---|---|---|
+| `fx_cuxi` | Cự Xỉ Kim Ngô của Phương Nguyên | canon ch 186–188 (rết vàng răng cưa, Tam chuyển) | `Object: a long golden armored centipede creature, segmented gold body plates, many short legs, large jagged saw-like mandibles, glowing amber eyes.` | 3 | `Poses: 3 poses of the centipede. Pose 1: coiled in a tight spiral. Pose 2: body stretched straight forward in a lunge, mandibles open wide. Pose 3: body curving back, mandibles snapping shut.` |
+| `fx_cuongthu` | Cường Thủ (bàn tay chộp) | canon ch 138, 143; hình dạng là mỹ thuật | `Object: a large disembodied grey iron hand made of steel plates, thick fingers, no arm, no person.` | 3 | `Poses: 3 poses of the iron hand. Pose 1: hand open with fingers spread, palm facing right. Pose 2: fingers half closed, curling. Pose 3: fist clenched tight.` |
+
+Ảnh tham chiếu phong cách: `assets/chibi_ref/phuong_nguyen_full.png`. Nếu Muse chặn chữ `mandibles` thì dùng `big curved jaws`.
+
 ## 5. Tổng hợp số ảnh cần gen
 
 Không tính PN và BNB đã xong. Đếm theo bảng trên:

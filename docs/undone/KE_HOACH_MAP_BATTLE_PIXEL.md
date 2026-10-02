@@ -166,3 +166,45 @@ characters, people, animals, UI, text, watermark, grid, shadows of characters, p
 - Nhân vật áo đen và áo trắng đặt lên đều nổi.
 
 **Lưu:** `incoming_maps/q1_bamboo_clearing_v1.png`, ảnh gốc nguyên, không cắt hay sửa. Ghi prompt và thiết lập đã dùng vào `incoming_maps/NOTE.txt`. Việc cắt, thu nhỏ, đo sàn và đặt nhân vật lên để duyệt do script và trang xem trước làm (bước MAP-01 → MAP-03).
+
+## 10. Review của Orange-kun cho nền mẫu đã áp (02/10/2026)
+
+Đã chụp sandbox bằng Chrome headless, đặt PN và BNB ở bốn góc sân (z = 0 / 240, x = 70 / 930) và giữa trận.
+
+**Đạt:**
+- Mép sau bãi đất của ảnh nằm khoảng y = 250, trùng phép chiếu hiện có, nên chân hàng sau đứng sát ven rừng và hàng trước đứng trên đất.
+- Nhân vật áo đen và áo trắng đều nổi; đạn nguyệt rõ.
+- Mật độ pixel của nền thô hơn sprite một chút, đúng hướng.
+
+**Đã sửa (chỉ phần hình, không đổi luật trận):**
+- `ground_screen_y` trong `map.json` giờ **điều khiển phép chiếu của view**. Lúc trước chỉ là ghi chú. View, chuyển click sang tọa độ, bóng và telegraph cùng dùng. Map sau chỉ cần đo mép sàn của ảnh và ghi vào đây, không phải bắt AI vẽ sàn đúng 58–93%.
+- Click lệch khỏi mép sàn tối đa 12px vẫn nhận và kéo về mép. Không còn tình huống click hụt vì lệch 1–2px ngay chân hàng sau.
+- Thêm `haze` (map này đặt 0,14): một lớp sương sáng dần lên phía trên mép sàn, chỉ phủ hậu cảnh. Đã kiểm: PN tóc đen ở hàng sau tách rõ khỏi rừng trúc. Tắt bằng `haze: 0`.
+
+**Đề xuất, chưa làm vì đụng luật simulation:**
+- **Nhân vật bị cắt ở mép sân.** Pose rộng nhất (KO nằm) vươn khoảng 120px màn hình mỗi bên, trong khi biên sân `X0 = 60` chỉ cách mép khung 57px. Đề xuất đổi `X0 / X1` thành 110 / 890, hoặc giữ nguyên biên và chỉ chặn spawn, đẩy lùi gần mép. Sân hẹp đi khoảng 11%, cần đo lại cân bằng.
+- Mép sau (z = 0) đang trùng hàng đá rêu ven rừng. Nếu thấy chân như đứng trên đá, tăng `ground_screen_y[0]` lên khoảng 256 cho map này.
+
+**Cho map tiếp theo:** quy trình chỉ còn **gen → đo mép trên / dưới của sàn → ghi `ground_screen_y` và `haze`** → xem preview. Nên viết `tools/map_import.py` để tự cắt theo tỷ lệ 960:430 và gợi ý mép sàn khi bắt đầu nhân rộng.
+
+**Cập nhật Orange-kun (cùng ngày, theo người dùng duyệt):**
+- Đã đổi biên sân `X0 / X1` từ 60 / 940 thành **110 / 890** (`js/sandbox/sim.js`; `map.json` cập nhật `world_bounds`).
+- Đã chụp kiểm tra: KO nằm ở hai mép nằm gọn trong khung.
+- Hồi quy đạt. Bot PN thắng (300 trận): Dễ 86,3% / Thường 65,7% / Khó 30,0%, gần như cũ.
+
+## 11. Blue-chan đối chiếu lại cập nhật Orange-kun (02/10/2026)
+
+**Giữ được:** `ground_screen_y` đã điều khiển view/input/bóng/telegraph; haze chỉ trên hậu cảnh; tolerance rồi clamp điểm đi là hợp lý cho cảm ứng. Kiểm thử Chrome chuột/cảm ứng qua; hồi quy simulation và dữ liệu qua. Thay biên 110/890 là thay đổi gameplay có chủ đích, không nên gộp vào mô tả “chỉ phần hình”. Không đổi thêm biên trong lượt review này.
+
+**Còn một lỗi hình đã đo được: KO ở hàng trước vẫn bị cắt.** Dùng alpha >=100 của frame KO cuối, pivot thật trong manifest, `SCALE=1,12`, `depthK(240)=1,06`:
+
+| Actor | Bề vươn lớn nhất từ pivot sau scale | Khoảng trống mép ở x=110/890 | Phần tràn mỗi mép |
+|---|---|---|---|
+| PN | 122,28 px màn hình | 105,60 px | 16,68 px |
+| BNB | 124,66 px màn hình | 105,60 px | 19,06 px |
+
+Ở z=0 scale nhỏ hơn nên có thể vừa khung; cần thử cả z=240, hai hướng mặt và frame KO cuối, không chỉ frame đầu hoặc hàng sau. Vì vậy chưa chốt tiêu chí “KO mọi góc nằm gọn”.
+
+Đề xuất Orange-kun chọn tiếp: nếu tiếp tục thu biên toàn sân thì cặp **132/868** cho hai asset hiện tại có khoảng đệm hơn 2 px ở scale lớn nhất (ngưỡng vừa đủ là 130/870). Phải đo lại cân bằng và xét thêm pose khác. Nếu giữ 110/890, giải pháp renderer/camera riêng cho KO cần giữ chân/pivot/contact nhất quán; không tự clamp riêng hình actor mà để hitbox ở chỗ khác. Không coi một cặp biên cố định là bảo đảm cho thú lớn của roster.
+
+**Việc nhỏ trước khi mở map khác:** validate `ground_screen_y` gồm hai số hữu hạn với 0 <= đầu < cuối <= 430; cấu hình lỗi cần về [250,400], tránh chia cho 0 trong `toWorld`. `world_bounds` vẫn là ghi chú khớp sim, chưa tự đổi sim theo từng map. Tolerance ngang hiện là 12 đơn vị world (11,52 px sân), tolerance dọc 12 px sân; chênh nhỏ này không làm hỏng bản mẫu.

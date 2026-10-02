@@ -53,7 +53,7 @@
 <body>
 <main>
   <h1>Đấu thử: Phương Nguyên đấu Bạch Ngưng Băng</h1>
-  <p class="note">Bản thử cơ chế E: trận luôn chạy. <kbd>Chuột phải</kbd> đi · <kbd>Chuột</kbd> vào Bạch Ngưng Băng: đuổi và đánh ·
+  <p class="note">Bản thử cơ chế E: trận luôn chạy. <kbd>Chuột phải</kbd> hoặc <kbd>←↑→↓</kbd> đi · <kbd>Chuột</kbd> vào Bạch Ngưng Băng: đuổi và đánh ·
     <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>D</kbd> cổ trùng, nhắm theo con trỏ · <kbd>Space</kbd> lướt · <kbd>1</kbd> Sinh Mệnh Diệp · <kbd>S</kbd> dừng.
     Điện thoại: chạm đất để đi, chạm Bạch Ngưng Băng để đuổi đánh; chạm ô kỹ năng để dùng.</p>
   <div id="arena"><div class="result" id="result"><div><h2 id="rtitle"></h2><p id="rsub"></p><button id="again">Đấu lại</button></div></div></div>
@@ -100,7 +100,7 @@
   let last=performance.now(),acc=0,shown=false;
   function frame(now){
     const dt=Math.min(.1,(now-last)/1000);last=now;
-    acc+=dt*spd;while(acc>=SBSim.DT){SBSim.step(B);acc-=SBSim.DT}
+    SBInput.tick();acc+=dt*spd;while(acc>=SBSim.DT){SBSim.step(B);acc-=SBSim.DT}
     const events=B.events.splice(0);
     SBView.render(events);SBAudio.consume(events,B,spd);SBHud.update();
     if(B.over&&!shown&&B.t-B.over.at>1.2){shown=true;const w=B.over.winner==='pn';

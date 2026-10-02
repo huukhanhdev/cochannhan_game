@@ -20,7 +20,7 @@ function advance(B,n){for(let i=0;i<n;i++)SBSim.step(B)}
   const B=battle(),p=B.actors.pn,b=B.actors.bnb;
   p.hp=b.hp=1;p.z=b.z=120;p.x=300;b.x=360;
   assert.equal(SBSim.issue(B,'pn',{skill:'atk'}).ok,true);
-  advance(B,10);
+  advance(B,Math.ceil(p.sk.atk.startup*60)-1);       // ngay trước khi đòn tay phát (theo kit hiện tại)
   B.projs.push({owner:'bnb',x:p.x-620/60,z:p.z,vx:620,vz:0,left:100,
     s:{dmg:10},hid:999});
   advance(B,2);assert.equal(B.over.winner,'pn');assert.equal(p.hp,1);
@@ -37,7 +37,19 @@ function advance(B,n){for(let i=0;i<n;i++)SBSim.step(B)}
   p.hp=100;p.z=b.z=120;b.x=p.x+80;
   assert.equal(SBSim.issue(B,'pn',{skill:'leaf'}).ok,true);
   assert.equal(SBSim.issue(B,'bnb',{skill:'atk'}).ok,true);
-  advance(B,15);assert.equal(p.state,'hit');assert.equal(p.uses.leaf,1);
+  advance(B,Math.ceil(b.sk.atk.startup*60)+2);assert.equal(p.state,'hit');assert.equal(p.uses.leaf,1);   // sau khi băng nhận phát
   assert.equal(B.events.filter(e=>e.type==='heal').length,0);
 }
 console.log('Sandbox regression: 3 nhóm kiểm thử đạt.');
+// Di chuyển có cancel huỷ pha lấy đà: không mất chân nguyên, không vào hồi chiêu; lệnh không cancel chỉ xếp hàng.
+{
+  const B=battle(),p=B.actors.pn,b=B.actors.bnb;b.ai=false;b.x=800;
+  const ess=p.ess;
+  assert.equal(SBSim.issue(B,'pn',{skill:'nguyet',x:800,z:p.z}).ok,true);advance(B,5);
+  assert.equal(SBSim.issue(B,'pn',{skill:'move',x:200,z:p.z}).queued,true);assert.equal(p.state,'act');
+  SBSim.issue(B,'pn',{skill:'move',x:200,z:p.z,cancel:true});
+  assert.equal(p.state,'move');assert.equal(p.ess>=ess-0.5,true);assert.equal(p.cd.nguyet||0,0);
+  assert.equal(B.events.filter(e=>e.type==='cancel').length,1);assert.equal(B.projs.length,0);
+}
+console.log('Huỷ chiêu bằng di chuyển: đạt.');
+

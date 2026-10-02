@@ -4,12 +4,31 @@
   "status": "sandbox_review",
   "image": "assets/battle_maps/q1_bamboo_clearing/background.png",
   "fallback": "assets/art/bg_snow.jpg",
-  "source_size": [2048, 1152],
-  "viewport_size": [960, 430],
+  "source_size": [
+    2048,
+    1152
+  ],
+  "viewport_size": [
+    960,
+    430
+  ],
   "pixel": true,
   "cropY": 0.5,
   "dim": 0,
-  "world_bounds": {"x": [60, 940], "z": [0, 240]},
-  "ground_screen_y": [250, 400],
-  "notes": "User-supplied image copied unchanged. Cover at scale 0.46875, viewport offset y=-55 (crop source y≈117.33..1034.67). Metadata bounds document existing projection; they do not create collision or campaign mapping."
+  "world_bounds": {
+    "x": [
+      110,
+      890
+    ],
+    "z": [
+      0,
+      240
+    ]
+  },
+  "ground_screen_y": [
+    250,
+    400
+  ],
+  "notes": "User-supplied image copied unchanged. Cover at scale 0.46875, viewport offset y=-55 (crop source y≈117.33..1034.67). Metadata bounds document existing projection; they do not create collision or campaign mapping. ground_screen_y drives the view projection; haze lightens the backdrop above the floor.",
+  "haze": 0.14
 }

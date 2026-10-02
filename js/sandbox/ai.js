@@ -5,9 +5,9 @@
 // TÍCH HỢP: giữ nguyên file; campaign chọn mức khó qua SBAI.level.
 (function(root){
   const LEVEL={
-    de:{think:.6,jitter:.25,dodge:.15,dmgK:.85},
-    thuong:{think:.4,jitter:.15,dodge:.4,dmgK:1},
-    kho:{think:.28,jitter:.08,dodge:.7,dmgK:1.2}};
+    de:{think:.6,jitter:.25,dodge:.15,dmgK:.85,gap:.15},
+    thuong:{think:.4,jitter:.15,dodge:.4,dmgK:1,gap:.35},
+    kho:{think:.28,jitter:.08,dodge:.7,dmgK:1.2,gap:.55}};
   const SBAI={level:'thuong',LEVEL,
     tick(B,dt){
       const Sim=root.SBSim;
@@ -27,6 +27,8 @@
         if(ok('locbangnhan')&&dist<a.sk.locbangnhan.castRange&&B.t-(a.lastBig??-2)>8){
           a.lastBig=B.t;a.intent='big';Sim.issue(B,a.id,{skill:'locbangnhan'});continue}
         if(ok('thuytrao')&&!a.shield&&dist<180&&a.hp<a.maxHp*.65&&B.rng()<.6){a.intent='guard';Sim.issue(B,a.id,{skill:'thuytrao'});continue}
+        // áp sát bằng lướt khi đối thủ giữ khoảng cách (thả diều): buộc người chơi canh vị trí
+        if(dist>170&&dist<330&&ok('dash')&&B.rng()<L.gap){a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:t.x-Math.sign(t.x-a.x)*80,z:t.z});continue}
         a.intent=Sim.inMelee(a,t,a.sk.atk,true)?'melee':'near';
         Sim.issue(B,a.id,{skill:'atk'});
       }

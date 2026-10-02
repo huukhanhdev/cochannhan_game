@@ -39,7 +39,7 @@ const SBHud=(function(){
     });
     const h=SBInput.hover,m=SBInput.msg;
     el.desc.innerHTML=m?`<span class="warn">${m}</span>`:h?`<b>${h.n}</b> — ${h.d||''}${h.startup!=null?` · lấy đà ${h.startup}s`:''}${h.cd?` · hồi ${h.cd}s`:''}${h.cost?` · ${h.cost} chân nguyên`:''}<span class="src"> · ${h.src||''}</span>`:
-      '<span class="hint">Chuột phải: đi · chuột vào Bạch Ngưng Băng: đánh · Q W E R D: cổ (nhắm theo con trỏ) · Space: lướt · 1: Sinh Mệnh Diệp · S: dừng</span>';
+      '<span class="hint">Chuột phải hoặc phím mũi tên: đi · chuột vào Bạch Ngưng Băng: đánh · Q W E R D: cổ (nhắm theo con trỏ) · Space: lướt · 1: Sinh Mệnh Diệp · S: dừng</span>';
   }
   return {mount,update};
 })();

@@ -1,13 +1,15 @@
 // Mô phỏng trận sandbox E: bước cố định 1/60 giây, không phụ thuộc hình ảnh (chạy được trong node).
 // Thế giới: x ∈ [X0, X1] ngang, z ∈ [0, Z1] chiều sâu (0 = xa, Z1 = gần màn hình).
 // Trận LUÔN chạy (không dừng khi chọn chiêu). Mỗi chiêu: startup → active (phát đúng một lần) → recovery.
-// Chi phí, hồi chiêu, lượt dùng trừ lúc nhận lệnh; bị ngắt sau đó vẫn mất.
+// Chân nguyên và hồi chiêu trừ lúc PHÁT ĐÒN (release): huỷ khi đang lấy đà thì không mất gì (giả động tác).
+// Lượt vật phẩm (uses) trừ lúc nhận lệnh: bị ngắt / tự huỷ vẫn mất. Di chuyển với cmd.cancel huỷ được
+// pha lấy đà (trừ chiêu armor) và nửa sau pha thu chiêu.
 // Lệnh đến khi đang bận được giữ trong bộ đệm 0,25 giây (BUFFER) rồi tự ra khi rảnh tay.
 // Hình ảnh chỉ đọc state + B.events (vòng chính rút ra mỗi khung hình), gọi vào đây qua issue().
 // TÍCH HỢP: campaign gọi SBSim.create() với kit sinh từ S.gu / EN; khi B.over gọi win() hoặc die(c.n)
 // của engine.js và đồng bộ S.hp ← actor.hp.
 (function(root){
-  const DT=1/60,X0=60,X1=940,Z1=240,BUFFER=.25,BODY=60,BODYZ=34;
+  const DT=1/60,X0=110,X1=890,Z1=240,BUFFER=.25,BODY=60,BODYZ=34;
 
   function create(kits,opt){
     opt=opt||{};
@@ -51,9 +53,21 @@
     return {ok:true};
   }
 
-  // Lệnh: {skill:'move',x,z} · {skill:'stop'} · {skill:'atk'} (đuổi tới tầm rồi đánh) · {skill:id,x,z} (điểm nhắm)
+  // Huỷ chiêu đang ra bằng lệnh di chuyển: được khi đang lấy đà (chiêu không armor) hoặc đã qua nửa thu chiêu
+  function cancelable(a){
+    const A=a.act;if(!A)return false;const s=A.s;
+    if(A.phase==='startup')return !s.armor;
+    return A.phase==='recovery'&&A.t>=s.startup+s.active+s.recovery*.5;
+  }
+  function cancelAct(B,a){
+    const A=a.act;if(A.zone)B.zones.splice(B.zones.indexOf(A.zone),1);
+    emit(B,{type:'cancel',who:a.id,skill:A.s.id,hid:A.hid,phase:A.phase});
+    a.act=null;setState(a,'idle');
+  }
+  // Lệnh: {skill:'move',x,z,cancel?} · {skill:'stop',cancel?} · {skill:'atk'} (đuổi tới tầm rồi đánh) · {skill:id,x,z} (điểm nhắm)
   function issue(B,id,cmd){
     const a=B.actors[id];if(!a||a.state==='ko'||B.over)return {ok:false,reason:'Không ra lệnh được'};
+    if((cmd.skill==='move'||cmd.skill==='stop')&&cmd.cancel&&a.state==='act'&&cancelable(a))cancelAct(B,a);
     if(cmd.skill==='move'){
       if(!free(a)){a.buffer={cmd,until:B.t+BUFFER};return {ok:true,queued:true}}
       a.chase=false;a.move={x:clamp(cmd.x,X0,X1),z:clamp(cmd.z,0,Z1)};if(a.state!=='move')setState(a,'move');
@@ -74,7 +88,7 @@
   function start(B,a,s,cmd){
     const t=other(B,a),ax=cmd.x??t.x,az=cmd.z??t.z;
     a.chase=false;a.move=null;a.buffer=null;
-    a.ess-=s.cost||0;if(s.cd)a.cd[s.id]=s.cd;if(s.uses)a.uses[s.id]--;
+    if(s.uses)a.uses[s.id]--;                        // vật phẩm: mất ngay khi bắt đầu dùng
     if(s.kind!=='dash'&&s.kind!=='escape')a.face=Math.sign((s.kind==='proj'?ax:t.x)-a.x)||a.face;
     const A={s,t:0,phase:'startup',fired:false,hid:++B.seq,aim:{x:ax,z:az}};
     if(s.kind==='aoe'){                                     // vùng đặt tại vị trí mục tiêu lúc nhận lệnh
@@ -152,6 +166,7 @@
   // Phát đòn: đúng một lần mỗi act, mỗi đòn có id riêng (A.hid)
   function fire(B,a){
     const A=a.act,s=A.s,t=other(B,a);if(B.over||A.fired)return;A.fired=true;
+    a.ess=Math.max(0,a.ess-(s.cost||0));if(s.cd)a.cd[s.id]=s.cd;     // trả giá lúc phát đòn
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
@@ -161,6 +176,7 @@
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
     }else if(s.kind==='proj'){
       const dx=A.aim.x-a.x,dz=A.aim.z-a.z,d=Math.hypot(dx,dz)||1;
+      B.events[B.events.length-1].origin={x:a.x+a.face*30,z:a.z};   // điểm phát của đạn cho FX/âm
       B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:dx/d*s.speed,vz:dz/d*s.speed,left:s.range,s,hid:A.hid,face:Math.sign(dx)||a.face});
     }else if(s.kind==='grab'){
       if(t.state!=='ko'&&Math.abs(t.x-a.x)<=s.range&&Math.abs(t.z-a.z)<=s.depth&&Math.sign(t.x-a.x)===a.face){
@@ -206,7 +222,7 @@
     if(hid)t.lastHid=hid;
     let d=dmg;if(t.shield&&!o.dot)d=Math.round(d*(1-t.shield.red*(1-(o.pierce||0))));
     t.hp=Math.max(0,t.hp-d);t.flashAt=B.t;
-    emit(B,{type:'dmg',who:t.id,source:src?.id,skill:o.skill,hid,contact:o.contact||{x:t.x,z:t.z},amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0});
+    emit(B,{type:'dmg',who:t.id,source:src?.id,skill:o.skill,hid,contact:o.contact||{x:t.x,z:t.z},amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0,shield:t.shield&&!o.dot?t.shield.id:null});
     if(t.hp<=0){
       t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;setState(t,'ko');
       const w=other(B,t);B.over={winner:w.id,loser:t.id,at:B.t};

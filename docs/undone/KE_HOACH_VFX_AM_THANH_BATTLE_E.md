@@ -130,3 +130,50 @@ Viewer cần nút thử từng chiêu, chọn “trúng / trượt / bị ngắt
 - Người dùng duyệt mẫu FX-02 trước khi làm toàn bộ kit; roster chỉ đi tiếp sau FX-05. Không gọi bản tổng hợp âm “đạt” nếu chưa nghe thực tế.
 
 **Bước đầu đề xuất:** Orange-kun hoàn tất review map song song với chốt event/anchor; sau đó dựng ba mẫu FX-02, gửi preview có âm. Chưa cần gen thêm pose hoặc tải model AI nặng để làm bước này.
+
+## 11. Review của Orange-kun (02/10/2026)
+
+Đã đọc kế hoạch và code mẫu FX-02 (`view.js`, `audio.js`, event `dmg` trong `sim.js`); chạy hồi quy và chụp trận trên nền mới.
+
+**Đồng ý:**
+- Nhịp lấy đà → phát → trúng / trượt → tan.
+- Không rung camera, không hit-stop đợt này.
+- DOT không phát tiếng mỗi tick.
+- Vòng chính rút event một lần rồi chia cho view và audio.
+- Giới hạn 8 voice; unlock âm bằng thao tác người dùng.
+- Mẫu FX-02 chạy đúng: tụ sáng Nguyệt Mang, lưỡi trăng pixel sắc hơn, impact theo chất liệu; event `dmg` có `source`, `skill`, `hid`, `contact`. Đã kiểm hồi quy: luật trận không đổi.
+
+**Đã sửa nhỏ:**
+- Impact giờ tính độ cao theo độ sâu, trước đây cố định 78px ở mọi z.
+- Quay lại tab thì âm tự resume (đã unlock trước đó). Không phát bù cue cũ, vì `consume` bỏ event quá hạn.
+
+**Đề xuất chỉnh kế hoạch:**
+1. **Thu nhỏ FX-01 cho sandbox.** Schema đầy đủ (`eid`, snapshot origin cho mọi event, anchor mọi frame, registry) là cho roster. Với PN / BNB hiện đủ dùng: `hid` + `skill` + `source` + `contact`, và anchor ở frame phát đòn (manifest đã có `hand` cho clip phát đòn). Thêm `origin` cho `release` của đạn là đủ. Registry để đến FX-06.
+2. **Âm thanh: đổi thứ tự ưu tiên.** Âm tổng hợp bằng Web Audio thường nghe "điện tử", khó đạt nước / băng / răng cưa. Đề xuất thử ngay **bộ âm CC0** (ví dụ các gói impact / RPG sound của Kenney, hoặc file CC0 trên Freesound; **kiểm giấy phép từng file**), cắt ngắn, đặt vào `assets/audio/battle/` có ghi nguồn. Web Audio giữ làm fallback. Cùng API `play(kind)`, chỉ thay nguồn phát.
+3. **Hộ thể đang chung một tiếng `jade`** cho Bạch Ngọc, Thiên Bồng và Thủy Tráo; impact khi được đỡ cũng là `jade`. Kế hoạch đã nêu cần phân biệt; khi làm FX-03 nên ưu tiên âm, vì người chơi dựa vào tai để biết đòn bị đỡ.
+4. **FX rết và Cường Thủ (FX-04) nên dùng sprite**, không vẽ bằng Graphics. Con rết vàng là asset riêng trong `PROMPT_MUSE_ROSTER.md`. Gen 2–3 khung (cuộn, phóng, cắn) rồi cho chạy theo cung chém; dễ đọc ra "đốt / răng" hơn vẽ tay bằng đa giác.
+5. **Pool và ngân sách FX:** hiện mỗi FX tạo một `PIXI.Graphics` mới. Ổn với 2 actor; khi lên roster hoặc lang triều (nhiều địch) mới cần pool. Ghi thành điều kiện chuyển sang pool, không làm ngay.
+
+**Thứ tự đề xuất:** người dùng nghe / xem FX-02 hiện tại → thử 3–4 file CC0 cho đấm, gió, băng, nước → FX-03 (ba hộ thể phân biệt bằng âm và viền) → gen sprite rết → FX-04.
+
+**Cập nhật Orange-kun (cùng ngày, theo người dùng duyệt):**
+- `audio.js`:
+  - Ba hộ thể có âm riêng: Bạch Ngọc `jade`, Thiên Bồng `gold`, Thủy Tráo `water`. Áp cho cả lúc bật hộ thể lẫn lúc đỡ đòn.
+  - Thêm cue `saw` (Cự Xỉ), `grab` (Cường Thủ chộp trúng, phát theo event `grab`; release của grab không kêu), `heavy`, `storm` (Lốc khi `zoneFire`).
+  - **Nạp file âm tùy chọn** theo `assets/audio/battle/manifest.json` (xem README cùng thư mục: tên cue cố định, ghi nguồn và giấy phép từng file). Thiếu file thì dùng âm tổng hợp.
+  - Sửa thứ tự `start` / `stop` của âm tổng hợp.
+- `sim.js`, chỉ thêm dữ liệu event, không đổi luật: `dmg.shield` (id hộ thể đỡ đòn) và `release.origin` cho đạn.
+- Prompt sprite `fx_cuxi` (rết vàng) và `fx_cuongthu` (bàn tay sắt) ở mục 4b của `PROMPT_MUSE_ROSTER.md`. Bộ nhập asset hiệu ứng và FX-04 chưa làm.
+- Đã kiểm: Chrome bật âm sau thao tác, tối đa 2 voice trong lượt thử, không lỗi; hồi quy đạt. **Chưa nghe duyệt bằng tai.**
+
+## 12. Blue-chan đối chiếu lại cập nhật Orange-kun (02/10/2026)
+
+**Đồng ý giữ:** âm ba hộ thể đã phân biệt cả lúc bật và đỡ, cue rết/chộp/lốc riêng; nguồn file tùy chọn có fallback tổng hợp; `start` trước `stop`; quay lại tab đã unlock có thể resume. Thu nhỏ FX-01 cho sandbox hai actor là hợp lý, registry/schema toàn roster để FX-06. Vẫn cần hid trên các event act/release/interrupt nếu triển khai hủy FX/âm lấy đà theo act; hiện chưa đủ để gọi schema vòng đời hoàn chỉnh.
+
+**Đã sửa một chỗ lệch hình trong lượt review:** Orange-kun đổi impact thành `sy(z)-78*depthK(z)*SCALE`, nhưng đạn nguyệt vẫn vẽ ở `sy(z)-78`. Ở z=240 lệch 14,61 px, ở z=0 lệch 0,62 px. Blue-chan sửa `drawProj()` dùng cùng công thức chiều cao theo độ sâu để đạn và điểm impact không nhảy lúc trúng. Không đổi tọa độ world, vận tốc hoặc kiểm tra va chạm.
+
+**Kiểm thử:** Chrome unlock audio sau thao tác, mute, trần tám voice, voice kết thúc được dọn; chuột/cảm ứng vẫn qua; hồi quy simulation và kiểm tra dữ liệu qua. Chưa nghe duyệt âm trên thiết bị thật; kiểm voice không chứng minh chất lượng chất liệu.
+
+**Phần file âm hiện còn là khả năng nạp, chưa phải bộ âm mới:** thư mục có README nhưng chưa có manifest/file cue, nên runtime đang dùng tổng hợp. Comment đầu `audio.js` minh họa object phẳng chưa khớp loader (`man.cues`); README có schema đúng `{cues, sources}`. Khi đưa file thật vào, normalize âm lượng/cắt khoảng lặng: file hiện dùng gain 0,9, lớn hơn biên độ tổng hợp 0,12–0,35, và chưa có limiter chung. Chưa nên nghiệm thu âm lượng khi tám file phát đồng thời.
+
+Đề xuất bước tiếp giữ như Orange-kun: nghe duyệt mẫu → thử vài file có nguồn/giấy phép rõ → hoàn thiện FX-03 → asset rết/tay và FX-04. Chưa tải bộ CC0 trong lượt review này; đề xuất nguồn của Orange-kun chưa được Blue-chan kiểm chứng từng file.

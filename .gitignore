@@ -22,3 +22,14 @@ Icon
 
 # Test outputs
 tools/*.png
+
+# Ảnh gốc từ Muse (nguồn để nhập, không deploy)
+incoming_sprites/
+# Asset animation cũ đã chuyển ra /Users/huukhanh/cochannhan_archive_assets (không track lại)
+assets/chibi_anim/
+assets/chibi_pack/
+assets/chibi/
+assets/chibi_side/
+assets/pinterest/
+assets/chinese_sources/
+assets/openaccess/

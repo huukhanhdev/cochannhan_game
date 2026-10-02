@@ -378,7 +378,7 @@ function scChoices(ev){
   // _i: vị trí gốc trong nút, để đánh dấu lựa chọn dò xét đã dùng không bị lệch khi danh sách co lại
   return withNeed(list).map((c,i)=>Object.assign({},c,{_i:i})).filter(c=>{
     if(c.hidden&&(!S.sc.flags||!S.sc.flags[c.hidden]))return false;
-    if(c.stay&&((S.sc.budget||0)<=0||(S.sc.picked&&S.sc.picked[S.sc.node+':'+c._i])))return false;
+    if(c.stay&&((!c.freeTalk&&(S.sc.budget||0)<=0)||(S.sc.picked&&S.sc.picked[S.sc.node+':'+c._i])))return false;
     if(c.mem&&!mem(c.mem))return false;
     return true;
   });
@@ -419,8 +419,8 @@ function scChoose(i){
   if(!c||(c.req&&!c.req()))return;
 
   if(c.stay){
-    if(S.sc.budget<=0)return;
-    S.sc.budget--;
+    if(!c.freeTalk&&S.sc.budget<=0)return;
+    if(!c.freeTalk)S.sc.budget--;
     (S.sc.picked=S.sc.picked||{})[S.sc.node+':'+c._i]=1;
     if(c.flag&&!c.check)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
     if(c.tense)S.sc.tense=Math.min(3,(S.sc.tense||0)+c.tense);
@@ -433,10 +433,12 @@ function scChoose(i){
       const txt=r.ok?(c.ok?c.ok():(typeof c.say==='function'?c.say():c.say)||''):(c.fail?c.fail():'Ngươi không nhận ra điều gì.');
       if(txt){log(txt);said.push(txt)}
       if(r.ok&&c.flag)(S.sc.flags=S.sc.flags||{})[c.flag]=1;
+      if(r.ok&&c.result){log(c.result,'good');said.push(c.result)}
     }else{
       if(c.say){const t=typeof c.say==='function'?c.say():c.say;log(t);said.push(t)}
       if(c.eff){const txt=c.eff();if(txt){log(txt);said.push(txt)}}
     }
+    if(!c.check&&c.result){log(c.result,'good');said.push(c.result)}
     if(c.talk){
       S.sc.subTalk=c.talk;
       S.sc.subIdx=0;
@@ -1303,19 +1305,15 @@ document.addEventListener('click',ev=>{
         if(S.combat)return;
         META.opt = META.opt || {};
         const cur = META.opt.fightMode || (META.opt.turn ? 'turn' : 'rt');
-        if (cur === 'rt') {
-          META.opt.fightMode = 'tactical';
-          META.opt.turn = true;
-          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Đấu trí】 — theo lượt, có ý đồ và chân nguyên tuần hoàn.', 'good');
-        } else if (cur === 'tactical') {
-          META.opt.fightMode = 'turn';
-          META.opt.turn = true;
-          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Theo Lượt Cổ Điển】.', 'sys');
-        } else {
-          META.opt.fightMode = 'rt';
-          META.opt.turn = false;
-          if (typeof log === 'function') log('Đã chuyển sang chế độ: 【Thời Gian Thực (RT)】.', 'sys');
-        }
+        const mode=['tactical','turn','rt'].includes(d.mode)?d.mode:(cur==='rt'?'tactical':cur==='tactical'?'turn':'rt');
+        META.opt.fightMode=mode;
+        META.opt.turn=mode!=='rt';
+        const message={
+          tactical:['Đã chuyển sang chế độ: 【Đấu trí】 — theo lượt, có ý đồ và chân nguyên tuần hoàn.','good'],
+          turn:['Đã chuyển sang chế độ: 【Theo Lượt Cổ Điển】.','sys'],
+          rt:['Đã chuyển sang chế độ: 【Thời Gian Thực (RT)】.','sys']
+        }[mode];
+        if(typeof log==='function')log(message[0],message[1]);
         saveAll();render();return;
       }
       // === [BATTLE-01/02: TACTICAL TURN-BASED] END ===

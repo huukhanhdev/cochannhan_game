@@ -287,6 +287,45 @@ const Arena=(function(){
       im.src=asset('art/'+name+'.jpg');
     });
   }
+  // Sprite key-pose (assets/chibi_kp/<id>/): sheet ngang + manifest, do tools/keypose_import.py tạo
+  const KP={};
+  function loadKP(id){
+    if(KP[id])return KP[id];
+    const dir='assets/chibi_kp/'+id+'/';
+    return KP[id]=fetch(dir+'manifest.json').then(r=>r.ok?r.json():null).then(man=>{
+      if(!man)return null;
+      const [fw,fh]=man.frame_size;
+      return Promise.all(Object.entries(man.actions).map(([act,c])=>new Promise(res=>{
+        const im=new Image();
+        im.onload=()=>{const base=PIXI.BaseTexture.from(im,{scaleMode:PIXI.SCALE_MODES.NEAREST});
+          res([act,Object.assign({},c,{tex:Array.from({length:c.frames},(_,i)=>new PIXI.Texture(base,new PIXI.Rectangle(i*fw,0,fw,fh)))})])};
+        im.onerror=()=>res(null);im.src=dir+c.sheet;
+      }))).then(list=>{const clips={};list.forEach(x=>{if(x)clips[x[0]]=x[1]});return clips.idle?{man,clips}:null});
+    }).catch(()=>null);
+  }
+  const kpOn=()=>!(typeof META!=='undefined'&&META&&META.opt&&META.opt.kpSprite===false);
+  // Nháy màu cho sprite key-pose: cùng giao diện alpha/tint như lớp "add" của tranh sống
+  function kpFlash(s){
+    const f=new (PIXI.ColorMatrixFilter||PIXI.filters.ColorMatrixFilter)();let A=0,tint=0xffffff;
+    const set=()=>{const r=(tint>>16&255)/255,g=(tint>>8&255)/255,b=(tint&255)/255,a=A*.55;
+      f.matrix=[1-a,0,0,0,r*a, 0,1-a,0,0,g*a, 0,0,1-a,0,b*a, 0,0,0,1,0];s.filters=a>0.01?[f]:null};
+    return {get alpha(){return A},set alpha(v){A=Math.max(0,Math.min(1,v));set()},get tint(){return tint},set tint(v){tint=v;set()}};
+  }
+  // Phát một động tác; onRel chạy ở frame phát đòn (hoặc cuối clip), xong thì về idle trừ khi hold
+  function kpPlay(F,act,onRel,o){
+    const c=F&&F.kp&&TX.kp.clips[act];
+    if(!c){onRel&&onRel();return false}
+    const s=F.kp;let rel=onRel;const fire=()=>{if(rel){const r=rel;rel=null;r()}};
+    s.textures=c.tex.map((t,i)=>({texture:t,time:c.durations_ms[i]}));
+    s.loop=!!c.loop;
+    s.onFrameChange=i=>{if(c.release!=null&&i>=c.release)fire()};
+    s.onComplete=()=>{fire();if(!(o&&o.hold))kpPlay(F,'idle')};
+    s.gotoAndPlay(0);if(c.release===0)fire();
+    return true;
+  }
+  // Tọa độ cảnh của bàn tay ở frame phát đòn
+  function kpHand(F,act){const c=TX.kp.clips[act],[px,py]=TX.kp.man.pivot_px,k=F.kp.scale.y,h=c&&c.hand;
+    return h?{x:F.c.x+(h[0]-px)*k*F.kp.scale.x/Math.abs(F.kp.scale.x),y:F.c.y+(h[1]-py)*k}:{x:F.c.x+30*k,y:F.c.y-80*k}}
   function gradSprite(c0,c1){return new PIXI.Sprite(canvasTex(4,256,(x)=>{const g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,c0);g.addColorStop(1,c1);x.fillStyle=g;x.fillRect(0,0,4,256)}))}
 
   function fontsReady(){
@@ -309,7 +348,8 @@ const Arena=(function(){
     const foeName = typeof PORTRAIT[art.k] === 'function' ? PORTRAIT[art.k]() : (PORTRAIT[art.k] || 'p_cultivator');
     const want=[loadTex('p_hero',true),loadTex(foeName,true),loadTex(BGIMG[art.sc]||'bg_forest',false)];
     const [hero,foe,bg]=await Promise.race([Promise.all([fontsReady().then(()=>0),...want]).then(r=>r.slice(1)),new Promise(r=>setTimeout(()=>r([null,null,null]),5000))]);
-    TX={hero,foe,bg};
+    const kp=kpOn()?await Promise.race([loadKP('phuong_nguyen'),new Promise(r=>setTimeout(()=>r(null),3000))]):null;
+    TX={hero,foe,bg,kp};
     if(host!==el||!el.isConnected)return;
     build();ready=true;
     pend.splice(0).forEach(play);
@@ -375,7 +415,12 @@ const Arena=(function(){
     P.c.position.set(P.bx,P.by);
     P.as=pr*.04;P.aura=sprite('soft',col(state.ess||'#5fae8a'),true,.55,P.as);
     P.ring=new PIXI.Graphics();P.ring.lineStyle(3,0x7fd1a8,.85);P.ring.drawCircle(0,0,pr*.95);P.ring.lineStyle(10,0x7fd1a8,.18);P.ring.drawCircle(0,0,pr*.95);P.ring.visible=false;
-    if(TX.hero){
+    if(TX.kp){
+      const [fw,fh]=TX.kp.man.frame_size,[px,py]=TX.kp.man.pivot_px,k=(H*.55)/140;
+      P.kp=new PIXI.AnimatedSprite(TX.kp.clips.idle.tex);P.kp.anchor.set(px/fw,py/fh);P.kp.scale.set(k);
+      P.t=P.kp;P.flash=kpFlash(P.kp);P.flash.tint=0xff3a20;P.by=H*.67;P.c.y=P.by;P.aura.y=-70*k;P.ring.y=-70*k;P.as*=1.5;P.aura.scale.set(P.as);
+      kpPlay(P,'idle');
+    }else if(TX.hero){
       const k=(H*.9)/TX.hero.height;
       P.lv=makeLiving(TX.hero,'p_hero',k);P.t=P.lv.c;
       P.flash=P.lv.add;P.flash.tint=0xff3a20;P.flash.alpha=0;
@@ -384,7 +429,7 @@ const Arena=(function(){
       P.t=brushText('方\n源',pr*.62,0xece8cf);P.t.anchor.set(.5);
       P.flash=brushText('方\n源',pr*.62,0xff5040,{dropShadow:false});P.flash.anchor.set(.5);P.flash.alpha=0;
     }
-    P.c.addChild(P.aura,P.ring,P.t);if(!P.lv)P.c.addChild(P.flash);L.fig.addChild(P.c);
+    P.c.addChild(P.aura,P.ring,P.t);if(!P.lv&&!P.kp)P.c.addChild(P.flash);L.fig.addChild(P.c);
 
     // Kẻ địch
     const er=Math.min(H*.27,100),fc=col(art.c);
@@ -531,7 +576,7 @@ const Arena=(function(){
 
   /* ---------- đòn đánh ---------- */
   function projectile(kind,land){
-    const h=P.lv&&P.lv.def.hand?spot(P,P.lv.def.hand[0],P.lv.def.hand[1]):{x:P.c.x+30,y:P.c.y};
+    const h=P.kp?kpHand(P,'cast'):P.lv&&P.lv.def.hand?spot(P,P.lv.def.hand[0],P.lv.def.hand[1]):{x:P.c.x+30,y:P.c.y};
     const a={x:h.x,y:h.y},b=E.lv&&E.lv.def.mouth?spot(E,.25,.45):{x:E.c.x,y:E.c.y},ang=Math.atan2(b.y-a.y,b.x-a.x),dist=Math.hypot(b.x-a.x,b.y-a.y);
     if(RM){land();return}
     if(kind==='nguyetmang'){
@@ -598,7 +643,11 @@ const Arena=(function(){
     patk(e){
       const color=e.kind==='fist'?EL_TINT.fist:EL_TINT[GU_EL[e.kind]]||0x9fd8ff;
       const land=()=>{if(e.miss)return dodge();impact(color,e.kind==='fist'?1:1.3);num('e','−'+e.dmg,e.kind==='fist'?'':'gu')};
-      if(e.kind==='fist'){tween(220,p=>{P.c.x=P.bx+50*Math.sin(p*Math.PI)});leanPulse(P,.35,300);pose(P,{arm:-.3,fore:-.2},120);rest(P,400,200);setTimeout(land,RM?0:110)}
+      if(P.kp){
+        if(e.kind==='fist'){tween(260,p=>{P.c.x=P.bx+60*Math.sin(p*Math.PI)});kpPlay(P,TX.kp.clips.attack?'attack':'cast',()=>live()&&land())}
+        else kpPlay(P,'cast',()=>live()&&projectile(e.kind,land));
+      }
+      else if(e.kind==='fist'){tween(220,p=>{P.c.x=P.bx+50*Math.sin(p*Math.PI)});leanPulse(P,.35,300);pose(P,{arm:-.3,fore:-.2},120);rest(P,400,200);setTimeout(land,RM?0:110)}
       else{
         tween(160,p=>{P.aura.scale.set(P.as*(1+.5*Math.sin(p*Math.PI)))});
         pose(P,{arm:.25,fore:.3,head:-.04,eyeGlow:.6},110,null,()=>pose(P,{arm:-.5,fore:-.42,head:.07,eyeGlow:1},150));
@@ -628,7 +677,8 @@ const Arena=(function(){
   }
   function comboHit(e){
       const onFoe=!!e.dmg||!!e.miss,F=onFoe?E:P;
-      pose(P,onFoe?{arm:-.8,fore:-.5,head:.1,hair:-.3,eyeGlow:1}:{arm:-.3,fore:-.6,head:.04,eyeGlow:.7},200);leanPulse(P,onFoe?.45:.15,500);rest(P,650,450);
+      pose(P,onFoe?{arm:-.8,fore:-.5,head:.1,hair:-.3,eyeGlow:1}:{arm:-.3,fore:-.6,head:.04,eyeGlow:.7},200);
+      if(P.kp)kpPlay(P,onFoe?(TX.kp.clips.heavy?'heavy':'cast'):(TX.kp.clips.guard?'guard':'idle'));leanPulse(P,onFoe?.45:.15,500);rest(P,650,450);
       const g=brushText(SKILL_GLYPH[e.id]||'招',Math.min(H*.5,170),0xf0c46a,{dropShadowColor:'#8a5a10',dropShadowBlur:30,dropShadowAlpha:1});
       g.anchor.set(.5);g.position.set(F.c.x,F.c.y);g.alpha=0;L.ui.addChild(g);
       tween(200,p=>{g.scale.set(2.6-1.6*p);g.alpha=p},()=>{
@@ -651,7 +701,7 @@ const Arena=(function(){
           tween(360,p=>{s.scale.set(w*Math.min(1,p*3),heavy?1.6:1.1);s.alpha=p<.4?1:1-(p-.4)/.6},()=>s.destroy());
         }
         P.flash.alpha=.9;tween(300,p=>{P.flash.alpha=.9*(1-p)});
-        pose(P,{head:-.16,squint:1,arm:.22,fore:.3,hair:.25},110);leanPulse(P,-.28,380);rest(P,520,260);
+        pose(P,{head:-.16,squint:1,arm:.22,fore:.3,hair:.25},110);leanPulse(P,-.28,380);rest(P,520,260);kpPlay(P,'hit');
         tween(260,p=>{P.c.x=P.bx-16*(heavy?2:1)*Math.sin(p*Math.PI)});
         if(!RM){shake=Math.max(shake,heavy?16:8);stop_=Math.max(stop_,heavy?90:40)}
         ink(P.c.x,P.c.y,0x4a0a06,heavy?14:7,heavy?7:4);
@@ -660,12 +710,12 @@ const Arena=(function(){
       },RM?0:140);
     },
     heal(e){
-      num('p','+'+e.amt,'heal');pose(P,{eyeGlow:.5,squint:.4},200);rest(P,500,300);
+      num('p','+'+e.amt,'heal');pose(P,{eyeGlow:.5,squint:.4},200);rest(P,500,300);kpPlay(P,'heal');
       for(let i=0;i<16;i++)particle({x:P.c.x+rnd(-40,40),y:P.c.y+rnd(0,50),vy:-rnd(.8,2),vx:rnd(-.2,.2),tint:0x8fe0b0,sc:rnd(.1,.22),life:rnd(600,1000),drag:1});
     },
     shield(e){
       const t=SHIELD_TINT[e.k]||0x7fd1a8,R=Math.min(H*.22,86)*1.2;
-      pose(P,{arm:-.3,fore:-.6,head:.04,eyeGlow:.5},260);rest(P,480,420);ring(P.c.x,P.c.y,t,20,R,10,500);sparks(P.c.x,P.c.y,t,10,4);P.ring.visible=true;
+      pose(P,{arm:-.3,fore:-.6,head:.04,eyeGlow:.5},260);rest(P,480,420);kpPlay(P,'guard');ring(P.c.x,P.c.y,t,20,R,10,500);sparks(P.c.x,P.c.y,t,10,4);P.ring.visible=true;
       // Hình dạng riêng: nước rơi, tơ quấn, lửa bốc, lá bay
       for(let i=0;i<18;i++){const an=rnd(0,Math.PI*2),x=P.c.x+Math.cos(an)*R*.8,y=P.c.y+Math.sin(an)*R*.8;
         if(e.k==='thuytrao')particle({tex:'dot',x,y:P.c.y-R*.9+rnd(0,20),vy:rnd(2,4),tint:t,sc:rnd(.2,.35),life:rnd(400,700),drag:1});
@@ -687,7 +737,7 @@ const Arena=(function(){
     },
     pdie(){
       if(!RM){stop_=160;shake=14}
-      flashScreen(0xa01008,.5,900);ink(P.c.x,P.c.y,0x4a0a06,30,7);
+      flashScreen(0xa01008,.5,900);ink(P.c.x,P.c.y,0x4a0a06,30,7);kpPlay(P,'ko',null,{hold:true});
       pose(P,{head:.35,squint:1,arm:.35,fore:.3,hair:.4},900,ease.in);if(P.lv)tween(900,p=>{P.lv.lean=-.4*p;P.lv.sq=-.2*p;P.lv.breath=1-p},null,ease.in);
       tween(1000,p=>{P.t.alpha=1-p;P.aura.alpha=.55*(1-p);P.c.y=P.by+p*18},null,ease.in);
     },
@@ -730,7 +780,7 @@ const Arena=(function(){
     if(P&&E){
       P.aura.alpha=.45+.15*Math.sin(T/700);
       if(E.lv){const heavy=state.intent==='heavy'&&!E.lv.act.squint;E.lv.crouch+=((heavy?.7:0)-E.lv.crouch)*.06*k;if(heavy)E.lv.act.eyeGlow=Math.max(E.lv.act.eyeGlow||0,.5)}
-      if(P.lv)P.lv.update(T,ms);else P.t.y=Math.sin(T/900)*3;
+      if(P.lv)P.lv.update(T,ms);else if(!P.kp)P.t.y=Math.sin(T/900)*3;
       if(E.lv)E.lv.update(T,ms);else E.t.y=Math.sin(T/750+1)*4;E.ring.rotation+=(state.intent==='heavy'?.05:.004)*k;
       E.glow.alpha=(state.intent==='heavy'?.4:.22)+.06*Math.sin(T/500);
       if(P.ring.visible)P.ring.alpha=.7+.3*Math.sin(T/260);

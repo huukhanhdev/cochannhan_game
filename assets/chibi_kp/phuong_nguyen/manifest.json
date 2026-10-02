@@ -1,0 +1,161 @@
+{
+ "id": "phuong_nguyen",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "cast": {
+   "sheet": "cast.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "pn_cast_v1.png",
+   "scale": 0.2385,
+   "hand": [
+    228,
+    128
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_hit_v1.png",
+   "scale": 0.1824
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "pn_idle_v1.png",
+   "scale": 0.1809
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_move_v1.png",
+   "scale": 0.1764
+  },
+  "attack": {
+   "sheet": "attack.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    110,
+    280
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "pn_attack_v1.png",
+   "scale": 0.1818,
+   "hand": [
+    241,
+    105
+   ]
+  },
+  "dodge": {
+   "sheet": "dodge.png",
+   "frames": 2,
+   "durations_ms": [
+    180,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_dodge_v1.png",
+   "scale": 0.173
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_guard_v1.png",
+   "scale": 0.14
+  },
+  "heal": {
+   "sheet": "heal.png",
+   "frames": 2,
+   "durations_ms": [
+    300,
+    500
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_heal_v1.png",
+   "scale": 0.1529
+  },
+  "heavy": {
+   "sheet": "heavy.png",
+   "frames": 3,
+   "durations_ms": [
+    280,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "pn_heavy_v1.png",
+   "scale": 0.1864,
+   "hand": [
+    222,
+    149
+   ]
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_ko_v1.png",
+   "scale": 0.1874
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "pn_win_v1.png",
+   "scale": 0.1029
+  }
+ }
+}

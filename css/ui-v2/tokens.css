@@ -45,4 +45,20 @@
   --v2-shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.55);
   --v2-shadow-seal: 0 0 15px var(--v2-gold-glow);
   --v2-shadow-blood: 0 0 18px var(--v2-cinnabar-glow);
+
+  --v2-hud-h: 64px;
+  --v2-dock-h: 72px;
+  --v2-touch: 44px;
+  --v2-touch-lg: 48px;
+
+  --v2-motion-tap: 140ms;
+  --v2-motion-view: 240ms;
+  --v2-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --v2-z-stage: 1;
+  --v2-z-hud: 20;
+  --v2-z-dock: 20;
+  --v2-z-sheet: 40;
+  --v2-z-overlay: 50;
+  --v2-z-review: 80;
 }

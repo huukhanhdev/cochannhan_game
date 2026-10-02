@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Đấu thử E</title>
+<style>
+  :root{--bg:#14171d;--panel:#1f242d;--line:#343b48;--ink:#ece6d6;--mute:#98a0ad;--gold:#f0c46a;--hp:#d4553f;--ess:#5fae8a;--warn:#ffb070}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,"Be Vietnam Pro",sans-serif}
+  main{max-width:980px;margin:0 auto;padding:12px 16px 24px}
+  h1{font-size:17px;margin:0 0 2px}
+  .note{color:var(--mute);margin:0 0 10px;font-size:13px}
+  #arena{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);user-select:none}
+  #arena canvas{display:block}
+  .result{position:absolute;inset:0;display:none;place-items:start center;padding-top:18px;background:rgba(0,0,0,.18);pointer-events:none}
+  .result div{pointer-events:auto}
+  .result.on{display:grid}
+  .result div{background:var(--panel);border:1px solid var(--gold);border-radius:10px;padding:18px 26px;text-align:center}
+  .result h2{margin:0 0 10px;color:var(--gold)}
+  #hud{margin-top:10px}
+  .bars{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .bar-box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+  .bar-box.bnb{text-align:right}
+  .bar{position:relative;height:14px;background:#0d1014;border-radius:4px;margin-top:4px;overflow:hidden}
+  .bar i{position:absolute;inset:0 auto 0 0;background:var(--hp);transition:width .12s}
+  .bar.ess i{background:var(--ess)}
+  .bar-box.bnb .bar i{inset:0 0 0 auto}
+  .bar span{position:relative;font-size:11px;padding:0 6px;line-height:14px}
+  .sbar{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:10px}
+  .cell{position:relative;display:grid;grid-template-rows:auto auto auto;justify-items:center;gap:1px;min-height:74px;padding:6px 4px;
+    background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;font:inherit;cursor:pointer;overflow:hidden}
+  .cell .k{position:absolute;top:3px;left:5px;font-size:10px;color:var(--gold);font-weight:700}
+  .cell .ic{font-size:21px;color:var(--gold);line-height:1.2}
+  .cell .nm{font-weight:600;font-size:12px;text-align:center;line-height:1.15}
+  .cell .sub{font-size:10.5px;color:var(--mute)}
+  .cell.busy{border-color:var(--gold)}
+  .cell.lack .sub{color:var(--warn)}
+  .cell.out{opacity:.4}
+  .cell.cd::before{content:"";position:absolute;inset:0;background:conic-gradient(rgba(0,0,0,.62) calc(var(--cd)*360deg),transparent 0)}
+  .cell .cdv{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:17px;text-shadow:0 1px 3px #000}
+  .bar-box small.buff{color:var(--gold);font-size:11px}
+  .desc{margin-top:8px;min-height:22px;color:var(--mute);font-size:13px}
+  .desc b{color:var(--ink)}
+  .desc .warn{color:var(--warn)}
+  .desc .src{opacity:.7}
+  .opts{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;color:var(--mute);font-size:13px;align-items:center}
+  .opts button,.opts select{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font:inherit;cursor:pointer}
+  kbd{background:#0d1014;border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+  @media (max-width:640px){.sbar{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Đấu thử: Phương Nguyên đấu Bạch Ngưng Băng</h1>
+  <p class="note">Bản thử cơ chế E: trận luôn chạy. <kbd>Chuột phải</kbd> đi · <kbd>Chuột</kbd> vào Bạch Ngưng Băng: đuổi và đánh ·
+    <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd><kbd>D</kbd> cổ trùng, nhắm theo con trỏ · <kbd>Space</kbd> lướt · <kbd>1</kbd> Sinh Mệnh Diệp · <kbd>S</kbd> dừng</p>
+  <div id="arena"><div class="result" id="result"><div><h2 id="rtitle"></h2><p id="rsub"></p><button id="again">Đấu lại</button></div></div></div>
+  <div id="hud"></div>
+  <div class="opts">
+    <label>Tốc độ trận <select id="spd"><option value="0.75">0,75×</option><option value="0.85" selected>0,85×</option><option value="1">1×</option></select></label>
+    <label>Độ khó <select id="lvl"><option value="de">Dễ</option><option value="thuong" selected>Thường</option><option value="kho">Khó</option></select></label>
+    <button id="restart">Đấu lại</button>
+  </div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+<script src="js/kp_sprite.js"></script>
+<script src="js/sandbox/kits.js"></script>
+<script src="js/sandbox/sim.js"></script>
+<script src="js/sandbox/ai.js"></script>
+<script src="js/sandbox/view.js"></script>
+<script src="js/sandbox/input.js"></script>
+<script src="js/sandbox/hud.js"></script>
+<script>
+// Vòng chính: simulation luôn bước (nhân tốc độ trận); hình vẽ mỗi khung hình.
+// TÍCH HỢP: khối này tương ứng phần engine gọi Arena.mount + vòng FX; khi B.over gọi win()/die().
+(async function(){
+  const q=new URLSearchParams(location.search),lvl=q.get('lvl')||'thuong',spd=+(q.get('spd')||.85);
+  SBAI.level=lvl;
+  // độ khó: nhân sát thương của máy (kit sao chép, không sửa SB_KITS gốc)
+  const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[lvl].dmgK;
+  [K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
+  const B=SBSim.create(K,{});window.SB=B;
+  await SBView.mount(document.getElementById('arena'),B,'assets/art/bg_snow.jpg');
+  SBHud.mount(document.getElementById('hud'),B);
+  SBInput.init(B,()=>{});
+  const sel=(id,v)=>{const e=document.getElementById(id);e.value=String(v);e.onchange=()=>{q.set(id==='lvl'?'lvl':'spd',e.value);location.search=q.toString()}};
+  sel('lvl',lvl);sel('spd',spd);
+  const restart=()=>location.reload();
+  document.getElementById('restart').onclick=restart;document.getElementById('again').onclick=restart;
+  let last=performance.now(),acc=0,shown=false;
+  function frame(now){
+    const dt=Math.min(.1,(now-last)/1000);last=now;
+    acc+=dt*spd;while(acc>=SBSim.DT){SBSim.step(B);acc-=SBSim.DT}
+    SBView.render(B.events.splice(0));SBHud.update();
+    if(B.over&&!shown&&B.t-B.over.at>1.2){shown=true;const w=B.over.winner==='pn';
+      document.getElementById('rtitle').textContent=w?'Thắng':'Thua';
+      document.getElementById('rsub').textContent=w?'Bạch Ngưng Băng gục ngã.':'Phương Nguyên gục ngã.';
+      document.getElementById('result').classList.add('on')}
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

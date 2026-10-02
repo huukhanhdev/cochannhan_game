@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thử Nghiệm Cơ Chế 3: Đấu Trí Theo Lượt Visual Arena (BATTLE-01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap&text=书事人仇令伤修光冰利功劫卫压反启味商嗅城婢学守家寒寨射尸山岩市幽弱徒怒息悟愈战技护招拳捕撞攻敌斩方族旱晕月木查正毒洞源炉烟煞熊狂狼猛猪玉王疫白真石竹终群翠老考耳脉舅舍芒若荒药莫蓬蛊蝉血袭规警贫贼贾赤走酒醉金铁长雨雷魔黑风铜丝旋银裳刀水鳞草蜈魅蝠盾齿吸甲枪锥刺灰清跳气苏刚冲爆蝎焰炎魂翼">
+  <link rel="stylesheet" href="css/tactical_battle.css">
+  <script>
+    window.__FORCE_TACTICAL_MODE__ = true;
+    window.hudTimeHTML = () => '';
+    window.hudForecastHTML = () => '';
+    window.curFinal = () => null;
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #0b1013;
+      --panel: #131a1f;
+      --panel2: #182329;
+      --line: #26363d;
+      --deep: #080c0e;
+      --text: #e2e8f0;
+      --dim: #8b9a95;
+      --moon: #ece8cf;
+      --jade: #80b99b;
+      --blood: #ef4444;
+      --gold: #f59e0b;
+      --display: "Cormorant Garamond", Georgia, serif;
+      --brush: "Ma Shan Zheng", serif;
+      --body: "Be Vietnam Pro", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 50% 10%, #152229 0%, #0a0e11 80%);
+      color: var(--text);
+      font: 14px/1.5 var(--body);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .sandbox-top {
+      max-width: 920px;
+      width: 100%;
+      background: rgba(19, 26, 31, 0.95);
+      border: 1px solid rgba(121, 212, 176, 0.3);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), inset 0 0 15px rgba(121,212,176,0.05);
+      backdrop-filter: blur(8px);
+    }
+    .sandbox-top h1 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-family: var(--display);
+      color: #79d4b0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+    .sandbox-top p {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .sb-btn {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #475569;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sb-btn:hover {
+      background: #334155;
+      border-color: #94a3b8;
+      transform: translateY(-2px);
+    }
+    .sb-btn.primary {
+      background: linear-gradient(180deg, #065f46, #044e39);
+      border-color: #10b981;
+      color: #a7f3d0;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+    .sb-btn.primary:hover {
+      background: #047857;
+      color: #fff;
+    }
+    .sb-btn.accent {
+      background: linear-gradient(180deg, #831843, #701a39);
+      border-color: #f43f5e;
+      color: #ffe4e6;
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.25);
+    }
+    .sb-btn.accent:hover {
+      background: #9f1239;
+    }
+    .sb-btn.gold {
+      background: linear-gradient(180deg, #78350f, #632d0c);
+      border-color: #f59e0b;
+      color: #fde68a;
+    }
+    .sb-btn.ice {
+      background: linear-gradient(180deg, #0369a1, #075985);
+      border-color: #38bdf8;
+      color: #e0f2fe;
+    }
+
+    .game-container {
+      max-width: 920px;
+      width: 100%;
+      background: rgba(19, 26, 31, 0.85);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px;
+      min-height: 480px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+    }
+    #stage { width: 100%; }
+
+    .test-log-panel {
+      max-width: 920px;
+      width: 100%;
+      margin-top: 14px;
+      background: #0d1316;
+      border: 1px solid #1e2c33;
+      border-radius: 8px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .test-log-panel h3 {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .test-log-box {
+      height: 110px;
+      overflow-y: auto;
+      font-size: 12px;
+      font-family: monospace;
+      color: #cbd5e1;
+      padding: 6px;
+      background: #080c0e;
+      border-radius: 4px;
+      border: 1px solid #162227;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sandbox-top">
+    <h1>⚔️ ĐẤU TRÍ THEO LƯỢT V3 · VISUAL ARENA XIANXIA</h1>
+    <p>
+      Cơ chế chiến đấu thứ 3 độc lập (BATTLE-01). Được trang bị Đấu Trường Thủy Mặc, chân dung Phương Nguyên, quái thú đối kháng, thanh soi trước tác động khi hover và các thẻ bài Cổ trùng nguyên tác.
+    </p>
+    <div class="btn-row">
+      <span style="font-size:12px; color:#94a3b8; font-weight:600;">Chọn Đối Thủ Thử Nghiệm:</span>
+      <button class="sb-btn primary" onclick="startEncounter('dienlang')">⚡ Điện Lang Hoang Dã</button>
+      <button class="sb-btn accent" onclick="startEncounter('langvuong')">🐺 Cuồng Lang Vương (Tinh Anh)</button>
+      <button class="sb-btn gold" onclick="startEncounter('hachung')">🐻 Bách Trọng Hùng (Gấu Khổng Lồ)</button>
+      <button class="sb-btn ice" onclick="startEncounter('bai')">❄️ Bạch Ngưng Băng (Bắc Minh)</button>
+    </div>
+  </div>
+
+  <div class="game-container" id="mainPanel">
+    <div id="stage"></div>
+  </div>
+
+  <div class="test-log-panel">
+    <h3>Nhật Ký Giao Chiến (Combat Log)</h3>
+    <div class="test-log-box" id="logBox"></div>
+  </div>
+
+  <!-- Dummy DOM cho engine game -->
+  <div style="display:none">
+    <header id="hud"></header>
+    <nav id="timeline"></nav>
+    <aside id="sheet"></aside>
+    <div id="log"></div>
+    <span id="pName"></span>
+    <span id="pChuyen"></span>
+    <span id="pStones"></span>
+    <span id="pHerbs"></span>
+    <span id="pDao"></span>
+    <span id="pDanh"></span>
+    <span id="pSusp"></span>
+    <span id="pSatphat"></span>
+    <span id="hpTxt"></span>
+    <span id="hpBar"></span>
+    <span id="essTxt"></span>
+    <span id="essBar"></span>
+    <div id="guList"></div>
+    <div id="autoBanner"></div>
+  </div>
+
+  <!-- Nạp script chuẩn của game -->
+  <script src="js/data.js"></script>
+  <script src="js/story.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/living.js"></script>
+  <script src="js/battle.js"></script>
+  <script src="js/minigame.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/present.js"></script>
+  <script src="js/aperture.js"></script>
+  <script src="js/auto.js"></script>
+  <script src="js/rt.js"></script>
+  <script src="js/ff.js"></script>
+  <script src="js/cicada.js"></script>
+  <script src="js/butterfly.js"></script>
+  <script src="js/tactical_battle.js"></script>
+  <script src="js/engine.js"></script>
+
+  <script>
+    window.__FORCE_TACTICAL_MODE__ = true;
+    window.hudTimeHTML = window.hudTimeHTML || (() => '');
+    window.hudForecastHTML = window.hudForecastHTML || (() => '');
+    window.renderHUD = window.renderHUD || (() => {});
+    window.renderTimeline = window.renderTimeline || (() => {});
+    window.renderSheet = window.renderSheet || (() => {});
+
+    function setupGuDeck() {
+      // Đảm bảo Phương Nguyên luôn có dàn Cổ Trùng chiến đấu tiêu biểu
+      S.gu = [
+        { k: 'nguyetquang', h: 0 },
+        { k: 'bachngoc', h: 0 },
+        { k: 'tuutrung', h: 0 },
+        { k: 'huyetnguyet', h: 0 }
+      ];
+      S.hp = 100;
+      S.maxHp = 100;
+      S.ess = 30;
+      S.maxEss = 50;
+      S.stones = 45;
+      S.herbs = 4;
+      S.satphat = 6;
+      S.chuyen = 1;
+      S.giai = 2;
+      S.tacticalMode = true;
+    }
+
+    function initSandboxState() {
+      setupGuDeck();
+
+      const origLog = window.log;
+      window.log = function(msg, cls) {
+        if (origLog) origLog(msg, cls);
+        const box = document.getElementById('logBox');
+        if (box) {
+          const div = document.createElement('div');
+          div.style.color = cls === 'danger' ? '#f87171' : cls === 'good' ? '#4ade80' : '#e2e8f0';
+          div.style.marginBottom = '3px';
+          div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+          box.appendChild(div);
+          box.scrollTop = box.scrollHeight;
+        }
+      };
+    }
+
+    function startEncounter(type) {
+      initSandboxState();
+      const stage = document.getElementById('stage');
+      stage.innerHTML = '';
+
+      if (type === 'dienlang') {
+        fight('dienlang', {
+          after: () => { log('🎉 Hoàn tất trận đấu Điện Lang Hoang Dã!', 'good'); }
+        });
+      } else if (type === 'langvuong') {
+        fight('dienlang', {
+          elite: true,
+          after: () => { log('🎉 Đã hạ gục Cuồng Lang Vương Tinh Anh!', 'good'); }
+        });
+      } else if (type === 'hachung') {
+        fight('hachung', {
+          after: () => { log('🎉 Đã thuần phục Bách Trọng Hùng!', 'good'); }
+        });
+      } else if (type === 'bai') {
+        fight('bai', {
+          after: () => { log('🎉 Đã kích lui Bắc Minh Băng Phách Bạch Ngưng Băng!', 'good'); }
+        });
+      }
+
+      // Đảm bảo S.gu không bị engine reset
+      setupGuDeck();
+      renderCombat(stage);
+      log(`Bắt đầu thử nghiệm trận đấu: 【${S.combat.n}】 với Đấu Trí Theo Lượt V3!`, 'good');
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        startEncounter('dienlang');
+      }, 50);
+    });
+  </script>
+</body>
+</html>

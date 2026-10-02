@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xem thử key-pose</title>
+<style>
+  :root{--bg:#1d1f27;--panel:#2a2d38;--ink:#e8e4d8;--mute:#9a97a8;--acc:#7fd4ff}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,sans-serif}
+  main{max-width:980px;margin:0 auto;padding:16px}
+  h1{font-size:18px;margin:0 0 4px}
+  p.note{color:var(--mute);margin:0 0 12px}
+  canvas{display:block;width:100%;background:linear-gradient(#2b3346,#3b3a3a 70%,#2b2621);border-radius:8px;image-rendering:pixelated}
+  .bar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  button{background:var(--panel);color:var(--ink);border:1px solid #444a5c;border-radius:6px;padding:6px 10px;cursor:pointer;font:inherit}
+  button.on{border-color:var(--acc);color:var(--acc)}
+  .strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .strip figure{margin:0;background:var(--panel);border-radius:6px;padding:4px;text-align:center;color:var(--mute);font-size:12px}
+  .strip canvas{width:128px;background:none}
+  label{color:var(--mute)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Xem thử key-pose Phương Nguyên · 11 động tác</h1>
+  <p class="note">Sheet từ <code>assets/chibi_kp/</code>, do <code>tools/keypose_import.py</code> tạo từ ảnh Muse. Đối thủ là bản lật ngược để thử va chạm. Hiệu ứng chiêu (trăng lưỡi liềm, bóng mờ, bụi, nháy trắng) do code vẽ.</p>
+  <canvas id="stage" width="480" height="240"></canvas>
+  <div class="bar" id="acts"></div>
+  <div class="bar">
+    <button id="demo">▶ Chuỗi ngắn</button>
+    <button id="full">▶ Diễn đủ bộ</button>
+    <button id="pause">⏸ Dừng</button>
+    <label><input type="range" id="speed" min="0.25" max="2" step="0.25" value="1"> tốc độ <span id="sv">1×</span></label>
+  </div>
+  <div class="strip" id="strip"></div>
+</main>
+<script>
+const BASE='assets/chibi_kp/phuong_nguyen/';
+const cv=document.getElementById('stage'),cx=cv.getContext('2d');cx.imageSmoothingEnabled=false;
+const GROUND=212,SCALE=1;let man,img={},speed=1,paused=false,t0=performance.now(),now=0;
+const pn={x:130,dir:1,act:'idle',start:0,ghosts:[]},foe={x:360,dir:-1,act:'idle',start:0,ghosts:[]};
+let fx=[],queue=[],shake=0;
+
+fetch(BASE+'manifest.json').then(r=>r.json()).then(m=>{man=m;
+  return Promise.all(Object.entries(m.actions).map(([a,c])=>new Promise(ok=>{const i=new Image();i.onload=()=>{img[a]=i;ok()};i.src=BASE+c.sheet})));
+}).then(()=>{buildUI();requestAnimationFrame(loop)});
+
+function clip(a){return man.actions[a]}
+function frameAt(act,el){const c=clip(act),d=c.durations_ms,tot=d.reduce((s,v)=>s+v,0);
+  let t=c.loop?el%tot:Math.min(el,tot-1),i=0;while(i<d.length-1&&t>=d[i]){t-=d[i];i++}return{i,done:!c.loop&&el>=tot}}
+function play(who,act,then){who.act=act;who.start=now;who.then=then||null;who.fired=false}
+function draw(who,flash){const c=clip(who.act);if(!c)return;const i=who.glide?0:frameAt(who.act,now-who.start).i;
+  const [fw,fh]=man.frame_size,[px,py]=man.pivot_px,im=img[who.act];
+  for(const g of who.ghosts){cx.save();cx.globalAlpha=g.a;sprite(im,g.i,g.x,who.dir,fw,fh,px,py);cx.restore()}
+  cx.save();if(flash){cx.filter='brightness(3)'}sprite(im,i,who.x,who.dir,fw,fh,px,py);cx.restore();return i}
+function sprite(im,i,x,dir,fw,fh,px,py){cx.save();cx.translate(Math.round(x),GROUND);cx.scale(dir*SCALE,SCALE);
+  cx.drawImage(im,i*fw,0,fw,fh,-px,-py,fw,fh);cx.restore()}
+
+function step(who){if(who.glide)return;const c=clip(who.act),f=frameAt(who.act,now-who.start);
+  if(who.onFrame&&!who.fired&&c.release!=null&&f.i>=c.release){who.fired=true;who.onFrame()}
+  if(f.done&&!who.hold){const t=who.then;play(who,'idle');if(t)t()}}
+
+function loop(ts){const dt=paused?0:(ts-t0)*speed;t0=ts;now+=dt;
+  cx.clearRect(0,0,cv.width,cv.height);
+  cx.save();if(shake>0){cx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake=Math.max(0,shake-dt*.02)}
+  cx.fillStyle='rgba(0,0,0,.25)';for(const w of [pn,foe]){cx.beginPath();cx.ellipse(w.x,GROUND+2,34,6,0,0,7);cx.fill()}
+  for(const w of [pn,foe]){step(w);
+    if(w.glide){const g=w.glide,k=Math.min(1,(now-g.t)/g.dur);w.x=g.from+(g.to-g.from)*(1-(1-k)*(1-k));
+      if(Math.random()<.5)w.ghosts.push({x:w.x,i:0,a:.35});if(Math.random()<.4)fx.push({k:'dust',x:w.x-20*w.dir,y:GROUND,t:now});
+      if(k>=1){w.glide=null;play(w,'move',null);w.start=now-clip('move').durations_ms[0]}}
+    w.ghosts.forEach(g=>g.a-=dt*.0015);w.ghosts=w.ghosts.filter(g=>g.a>0)}
+  draw(foe,foe.flash>now);draw(pn,pn.flash>now);
+  fx=fx.filter(f=>drawFx(f,dt));cx.restore();requestAnimationFrame(loop)}
+
+function drawFx(f,dt){const age=now-f.t;
+  if(f.k==='dust'){if(age>400)return false;cx.fillStyle=`rgba(180,170,150,${.5-age/800})`;cx.beginPath();cx.arc(f.x,f.y-age*.02,3+age*.02,0,7);cx.fill();return true}
+  if(f.k==='moon'){f.x+=f.v*dt;cx.save();cx.translate(f.x,f.y);cx.scale(f.v>0?1:-1,1);
+    cx.shadowColor='#9fe8ff';cx.shadowBlur=14;cx.fillStyle='#d8f6ff';cx.beginPath();cx.arc(0,0,18,-1.3,1.3);cx.arc(-8,0,16,1.2,-1.2,true);cx.fill();cx.restore();
+    if((f.v>0&&f.x>=f.target.x-20)||(f.v<0&&f.x<=f.target.x+20)){f.hit();return false}return true}
+  if(f.k==='spark'){if(age>250)return false;cx.strokeStyle=`rgba(220,250,255,${1-age/250})`;cx.lineWidth=2;
+    for(let a=0;a<6;a++){const r=8+age*.12;cx.beginPath();cx.moveTo(f.x+Math.cos(a)*r*.4,f.y+Math.sin(a)*r*.4);cx.lineTo(f.x+Math.cos(a)*r,f.y+Math.sin(a)*r);cx.stroke()}return true}
+  return false}
+
+// Kịch bản: lướt tới → phóng Nguyệt Quang → địch trúng đòn → địch phản đòn → PN trúng đòn
+function castAt(src,dst,done){src.onFrame=()=>{fx.push({k:'moon',x:src.x+48*src.dir,y:GROUND-104,v:.42*src.dir,t:now,target:dst,
+    hit:()=>{fx.push({k:'spark',x:dst.x,y:GROUND-100,t:now});dst.flash=now+90;shake=6;play(dst,'hit',done)}})};play(src,'cast')}
+function glide(w,to,then){play(w,'move');w.start=now;w.act='move';w.then=null;w.glide={from:w.x,to,t:now,dur:420};
+  const chk=setInterval(()=>{if(!w.glide){clearInterval(chk);setTimeout(()=>{play(w,'idle');then&&then()},300/speed)}},30)}
+function demo(){pn.x=70;foe.x=380;play(pn,'idle');play(foe,'idle');
+  setTimeout(()=>glide(pn,180,()=>castAt(pn,foe,()=>setTimeout(()=>castAt(foe,pn,()=>{}),400/speed))),600/speed)}
+
+// Diễn đủ 11 động tác: mỗi bước chờ clip xong; đòn trúng ở frame phát đòn
+const wait=ms=>new Promise(r=>setTimeout(r,ms/speed));
+const run=(w,a,o={})=>new Promise(r=>{if(!clip(a))return r();w.hold=!!o.hold;w.onFrame=o.rel||null;w.fired=false;play(w,a,o.hold?null:r);if(o.hold)setTimeout(r,clip(a).durations_ms.reduce((x,y)=>x+y,0)/speed)});
+const strike=(dst,big)=>()=>{fx.push({k:'spark',x:dst.x,y:GROUND-100,t:now});dst.flash=now+90;shake=big?10:5;play(dst,'hit')};
+let busy=false;
+async function full(){if(busy)return;busy=true;const L=m=>console.log('[kp] '+m);L('start');pn.x=70;foe.x=380;foe.hold=false;play(pn,'idle');play(foe,'idle');await wait(500);
+  await new Promise(r=>glide(pn,250,r));
+  L('attack');await run(pn,'attack',{rel:strike(foe)});await wait(250);
+  L('heavy');await run(pn,'heavy',{rel:strike(foe,1)});await wait(300);
+  await new Promise(r=>{foe.onFrame=()=>fx.push({k:'moon',x:foe.x-48,y:GROUND-104,v:-.42,t:now,target:pn,hit:()=>{ring(pn);r()}});play(foe,'cast')});
+  async function ring(w){w.flash=now+60;play(w,'guard')}
+  await wait(700);
+  await new Promise(r=>castAt(foe,pn,r));await wait(200);
+  L('heal');await run(pn,'heal');await wait(200);
+  L('dodge');await run(pn,'dodge');pn.x-=30;await wait(200);
+  await new Promise(r=>castAt(pn,foe,r));
+  L('ko');await run(foe,'ko',{hold:true});
+  await wait(300);L('win');await run(pn,'win',{hold:true});await wait(1600);pn.hold=foe.hold=false;play(pn,'idle');play(foe,'idle');busy=false;L('end')}
+
+function buildUI(){const bar=document.getElementById('acts');
+  for(const a of Object.keys(man.actions)){const b=document.createElement('button');b.textContent=a;
+    b.onclick=()=>{pn.onFrame=null;pn.glide=null;pn.x=180;if(a==='move')glide(pn,300,()=>{pn.x=180});else play(pn,a)};bar.append(b)}
+  document.getElementById('demo').onclick=demo;document.getElementById('full').onclick=full;
+  const pz=document.getElementById('pause');pz.onclick=()=>{paused=!paused;pz.textContent=paused?'▶ Tiếp':'⏸ Dừng'};
+  const sp=document.getElementById('speed');sp.oninput=()=>{speed=+sp.value;document.getElementById('sv').textContent=speed+'×'};
+  const st=document.getElementById('strip'),[fw,fh]=man.frame_size;
+  for(const [a,c] of Object.entries(man.actions))for(let i=0;i<c.frames;i++){const f=document.createElement('figure'),k=document.createElement('canvas');
+    k.width=fw;k.height=fh;const g=k.getContext('2d');g.drawImage(img[a],i*fw,0,fw,fh,0,0,fw,fh);g.strokeStyle='#e66';g.beginPath();g.moveTo(0,man.pivot_px[1]);g.lineTo(fw,man.pivot_px[1]);g.stroke();
+    f.append(k,`${a} ${i+1}/${c.frames} · ${c.durations_ms[i]}ms${c.release===i?' · phát đòn':''}`);st.append(f)}
+  play(pn,'idle');play(foe,'idle')}
+</script>
+</body>
+</html>

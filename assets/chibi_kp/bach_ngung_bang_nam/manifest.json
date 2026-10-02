@@ -1,0 +1,161 @@
+{
+ "id": "bach_ngung_bang_nam",
+ "frame_size": [
+  352,
+  208
+ ],
+ "pivot_px": [
+  176,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "attack": {
+   "sheet": "attack.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    110,
+    280
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bnb_attack_v1.png",
+   "scale": 0.173,
+   "hand": [
+    261,
+    119
+   ]
+  },
+  "cast": {
+   "sheet": "cast.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bnb_cast_v1.png",
+   "scale": 0.1724,
+   "hand": [
+    262,
+    126
+   ]
+  },
+  "dodge": {
+   "sheet": "dodge.png",
+   "frames": 2,
+   "durations_ms": [
+    180,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_dodge_v1.png",
+   "scale": 0.1707
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_guard_v1.png",
+   "scale": 0.1446
+  },
+  "heal": {
+   "sheet": "heal.png",
+   "frames": 2,
+   "durations_ms": [
+    300,
+    500
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_heal_v1.png",
+   "scale": 0.1392
+  },
+  "heavy": {
+   "sheet": "heavy.png",
+   "frames": 3,
+   "durations_ms": [
+    280,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bnb_heavy_v1.png",
+   "scale": 0.1706,
+   "hand": [
+    262,
+    114
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_hit_v1.png",
+   "scale": 0.1503
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "bnb_idle_v1.png",
+   "scale": 0.1423
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_ko_v1.png",
+   "scale": 0.1788
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_move_v1.png",
+   "scale": 0.1458
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bnb_win_v1.png",
+   "scale": 0.097
+  }
+ }
+}

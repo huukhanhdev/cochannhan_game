@@ -1,0 +1,35 @@
+// Máy điều khiển Bạch Ngưng Băng: kiêu ngạo, thích áp sát (ch 133–135). Nghĩ mỗi ~0,4 giây, không
+// phản xạ từng khung hình. a.intent dùng để hiện biểu tượng ý đồ trên đầu.
+// Thứ tự: thoát thân khi nguy (Sương Yêu, 1 lần) → né Nguyệt Mang đang lấy đà → Lốc băng nhận →
+// Thủy Tráo khi bị dồn → băng nhận khi trong tầm → áp sát.
+// TÍCH HỢP: giữ nguyên file; campaign chọn mức khó qua SBAI.level.
+(function(root){
+  const LEVEL={
+    de:{think:.6,jitter:.25,dodge:.15,dmgK:.85},
+    thuong:{think:.4,jitter:.15,dodge:.4,dmgK:1},
+    kho:{think:.28,jitter:.08,dodge:.7,dmgK:1.2}};
+  const SBAI={level:'thuong',LEVEL,
+    tick(B,dt){
+      const Sim=root.SBSim;
+      for(const a of Object.values(B.actors)){
+        if(!a.ai||a.state==='ko'||B.over)continue;
+        a.aiT=(a.aiT??.6)-dt;if(a.aiT>0)continue;
+        const L=LEVEL[SBAI.level]||LEVEL.thuong;a.aiT=L.think+B.rng()*L.jitter;
+        const t=a.id==='pn'?B.actors.bnb:B.actors.pn;
+        if(t.state==='ko')continue;
+        const dist=Math.hypot(t.x-a.x,t.z-a.z),ok=id=>a.sk[id]&&Sim.check(B,a,{skill:id}).ok;
+        // né: đối thủ đang lấy đà đạn nhắm về phía mình
+        const ta=t.act;
+        if(ta&&ta.phase==='startup'&&ta.s.kind==='proj'&&Math.abs(ta.aim.z-a.z)<50&&ok('dash')&&B.rng()<L.dodge){
+          const dz=a.z>Sim.Z1/2?-1:1;a.intent='dodge';Sim.issue(B,a.id,{skill:'dash',x:a.x-Math.sign(t.x-a.x)*30,z:a.z+dz*160});continue}
+        if(a.state!=='idle'&&a.state!=='move')continue;
+        if(a.hp<a.maxHp*.3&&ok('suongyeu')&&dist<220){a.intent='escape';Sim.issue(B,a.id,{skill:'suongyeu'});continue}
+        if(ok('locbangnhan')&&dist<a.sk.locbangnhan.castRange&&B.t-(a.lastBig??-2)>8){
+          a.lastBig=B.t;a.intent='big';Sim.issue(B,a.id,{skill:'locbangnhan'});continue}
+        if(ok('thuytrao')&&!a.shield&&dist<180&&a.hp<a.maxHp*.65&&B.rng()<.6){a.intent='guard';Sim.issue(B,a.id,{skill:'thuytrao'});continue}
+        a.intent=Sim.inMelee(a,t,a.sk.atk,true)?'melee':'near';
+        Sim.issue(B,a.id,{skill:'atk'});
+      }
+    }};
+  if(typeof module!=='undefined')module.exports=SBAI;else root.SBAI=SBAI;
+})(this);

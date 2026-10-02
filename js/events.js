@@ -87,8 +87,8 @@ c_khaikhieu:{canon:1,title:'Lễ khai khiếu',hint:'Lễ khai khiếu',
           ['gialao','Phương Chính... Chân nguyên hải chín phần tám! Giáp đẳng! Giáp đẳng tuyệt đỉnh!']
         ],
         choices:[
-          {t:'Dò xét phản ứng của gia lão và tộc trưởng',stay:1,flag:'soi_toctruong',say:'Tộc trưởng Cổ Nguyệt Bác kích động đứng bật dậy, ánh mắt sáng rực. Đã bao năm sơn trại mới lại xuất hiện Giáp đẳng!'},
-          {t:'Quan sát biểu cảm ngơ ngác của Phương Chính',stay:1,flag:'soi_emtrai',talk:[['phuongchinh','Đệ... đệ là Giáp đẳng thật sao ca ca? Đệ không còn là cái bóng của huynh nữa rồi...']]},
+          {t:'Quan sát phản ứng của gia lão và tộc trưởng',stay:1,freeTalk:true,flag:'soi_toctruong',say:'Tộc trưởng Cổ Nguyệt Bác kích động đứng bật dậy, ánh mắt sáng rực. Đã bao năm sơn trại mới lại xuất hiện Giáp đẳng!'},
+          {t:'Quan sát biểu cảm ngơ ngác của Phương Chính',stay:1,freeTalk:true,flag:'soi_emtrai',talk:[['phuongchinh','Đệ... đệ là Giáp đẳng thật sao ca ca? Đệ không còn là cái bóng của huynh nữa rồi...']]},
           {t:'Bước vào biển hoa, tới lượt bản thân',go:'den_luot'}
         ]
       },
@@ -148,8 +148,8 @@ c_giasan:{canon:1,title:'Di sản cha mẹ',hint:'Đòi lại di sản',
           ['','Cậu Đống Thổ mặt mày giả nhân giả nghĩa, mợ ngồi bên cạnh quạt phành phạch. Tỳ nữ Trầm Thúy đứng sau bưng trà, mắt lúng liếng dò xét.']
         ],
         choices:[
-          {t:'Uống chén trà, quan sát thái độ Trầm Thúy',stay:1,flag:'soi_tramthuy',talk:[['tramthuy','...Khế ước mợ cất kỹ lắm, thiếu gia chớ dại làm căng...']]},
-          {t:'Gặng hỏi về sổ sách thu chi tửu lâu năm qua',stay:1,flag:'soi_sosach',say:'Cậu ấp úng lảng sang chuyện khác. Rõ ràng tửu lâu sinh lời cả trăm thạch mỗi tháng nhưng lão chưa từng chia một cắc.'},
+          {t:'Uống chén trà, quan sát thái độ Trầm Thúy',stay:1,result:'Đã mở lựa chọn mua chuộc Trầm Thúy lấy khế ước.',flag:'soi_tramthuy',talk:[['tramthuy','...Khế ước mợ cất kỹ lắm, thiếu gia chớ dại làm căng...']]},
+          {t:'Gặng hỏi về sổ sách thu chi tửu lâu năm qua',stay:1,freeTalk:true,flag:'soi_sosach',say:'Cậu ấp úng lảng sang chuyện khác. Rõ ràng tửu lâu sinh lời cả trăm thạch mỗi tháng nhưng lão chưa từng chia một cắc.'},
           {t:'Đem gia quy tộc luật ra đe dọa, đòi lại tửu lâu',tag:'ma',canon:1,go:'doi_manh'},
           {t:'Mua chuộc Trầm Thúy lấy khế ước giấu trong buồng',hidden:'soi_tramthuy',req:()=>S.stones>=10,reqT:'Cần 10 nguyên thạch mua chuộc',go:'mua_chuoc'},
           {t:'Đề nghị phân chia hòa hoãn: nhận tửu lâu, để lại ruộng trà',tag:'chinh',go:'hoa_hoan'},
@@ -234,7 +234,7 @@ c_conghocduong:{canon:1,title:'Cổng học đường',hint:'Chặn cổng học
           ['','Học đường gia lão đứng trên bao lơn lầu hai, ung dung vuốt râu ngắm cảnh như thể mù điếc trước mọi chuyện xảy ra dưới cổng.']
         ],
         choices:[
-          {t:'Quan sát kẻ nào nhát gan và nhiều tiền nhất',stay:1,flag:'soi_moc',say:'Đám công tử Mạc gia rủng rỉnh tiền túi, còn đám con nhà nghèo thì run rẩy ôm khư khư từng viên thạch.'},
+          {t:'Quan sát kẻ nào nhát gan và nhiều tiền nhất',stay:1,freeTalk:true,flag:'soi_moc',say:'Đám công tử Mạc gia rủng rỉnh tiền túi, còn đám con nhà nghèo thì run rẩy ôm khư khư từng viên thạch.'},
           {t:'Bước ra giữa cổng, chặn đường cướp nguyên thạch',tag:'ma',canon:1,go:'cuop_cong'},
           {t:'Mở dịch vụ "bảo kê": thu phí che chở đám học trò nghèo khỏi Mạc gia',go:'bao_ke'},
           {t:'Theo ký ức: chặn đúng ba kẻ nhát gan bỏ chạy',mem:'gate',go:'nho_cong'},
@@ -456,7 +456,7 @@ c_tramthuy:{canon:1,title:'Tỳ nữ Trầm Thúy',hint:'Trầm Thúy trở mặ
           ['tramthuy','Phương Nguyên thiếu gia... đây là trà hoa cúc của ngài. Nước sôi vừa cạn, thiếu gia uống tạm. Ta còn phải sang phòng nhị thiếu gia ủi y phục...']
         ],
         choices:[
-          {t:'Cầm chén trà lên nếm thử',stay:1,flag:'tra_nguoi',say:'Chén trà nguội ngắt, bã trà nổi lềnh bềnh. Trầm Thúy đứng nép bên cửa, mắt cứ lén nhìn về phía sương phòng của Phương Chính.'},
+          {t:'Cầm chén trà lên nếm thử',stay:1,result:'Đã mở lựa chọn dụ dỗ bằng tiền và lời hứa.',flag:'tra_nguoi',say:'Chén trà nguội ngắt, bã trà nổi lềnh bềnh. Trầm Thúy đứng nép bên cửa, mắt cứ lén nhìn về phía sương phòng của Phương Chính.'},
           {t:'Mặc kệ, kẻ thiển cận lòng dạ hẹp hòi không đáng bận tâm',tag:'chinh',canon:1,go:'mac_ke'},
           {t:'Lợi dụng nàng làm tai mắt bên cạnh Phương Chính',go:'cai_cam'},
           {t:'Quát tháo dằn mặt nàng trước mặt cả phủ',tag:'ma',go:'dan_mat'},
@@ -605,7 +605,7 @@ c_kimsinh:{canon:1,title:'Cổ Kim Sinh',hint:'Cổ Kim Sinh ở tửu quán',co
           ['','Kim Sinh uất ức bỏ vào tửu quán, vừa uống vừa khóc thầm. Thân là con út được phụ thân cưng chiều nhưng chỉ mang tư chất Đinh đẳng, bao năm chịu ca ca đè nén, phân chia gia sản lại bị biến thành đá lót đường.']
         ],
         choices:()=>[
-          {t:'Quan sát Kim Sinh',stay:1,check:['tamco',10],flag:'say',ok:()=>'Tư chất Đinh đẳng, hám lợi và khao khát thể hiện bản thân. Rất dễ trở thành quân cờ để thao túng.',fail:()=>'Hắn chỉ là một thiếu gia say rượu đang khóc.'},
+          {t:'Quan sát Kim Sinh',stay:1,freeTalk:true,check:['tamco',10],flag:'say',ok:()=>'Tư chất Đinh đẳng, hám lợi và khao khát thể hiện bản thân. Rất dễ trở thành quân cờ để thao túng.',fail:()=>'Hắn chỉ là một thiếu gia say rượu đang khóc.'},
           {t:'Vạch trần trò lừa Hắc Thỉ Cổ giả trước mặt Cổ Phú ở chợ',tag:'chinh',go:'vach_tran'},
           {t:'Tiến tới ngồi cạnh, đề nghị vụ làm ăn 2000 thạch bán vách đá Lưu Ảnh Tồn Thanh',canon:1,go:'du'},
           {t:'Uống hết chén trà rồi về (Rút lui)',eff:()=>{
@@ -817,7 +817,7 @@ c_bai:{canon:1,title:'Bạch Ngưng Băng',hint:'Gặp Bạch Ngưng Băng',
           ['bai','Ngươi là Cổ Nguyệt Phương Nguyên? Nghe nói trại Cổ Nguyệt có một kẻ thú vị, không màng danh lợi cũng chẳng sợ hãi ai.']
         ],
         choices:[
-          {t:'Lặng lẽ quan sát khí tức quanh người hắn',stay:1,flag:'soi_bai',say:()=>((S.var||{}).bai==='satý'?'Hàn khí quanh người hắn cô đặc lại thành từng lưỡi băng nhọn hoắt. Không phải tò mò, mà là sát ý lạnh lẽo!':(mem('bai')?'Biển chân nguyên trong không khiếu hắn tràn trề đến mức nứt toác kinh mạch. Hắn biết rõ thể chất này sẽ giết chết hắn trước tuổi hai mươi!':'Hàn khí Tam chuyển đỉnh phong tỏa ra bức người, nhưng trong đáy mắt hắn chỉ toàn là sự chán chường vô tận.'))},
+          {t:'Lặng lẽ quan sát khí tức quanh người hắn',stay:1,freeTalk:true,flag:'soi_bai',say:()=>((S.var||{}).bai==='satý'?'Hàn khí quanh người hắn cô đặc lại thành từng lưỡi băng nhọn hoắt. Không phải tò mò, mà là sát ý lạnh lẽo!':(mem('bai')?'Biển chân nguyên trong không khiếu hắn tràn trề đến mức nứt toác kinh mạch. Hắn biết rõ thể chất này sẽ giết chết hắn trước tuổi hai mươi!':'Hàn khí Tam chuyển đỉnh phong tỏa ra bức người, nhưng trong đáy mắt hắn chỉ toàn là sự chán chường vô tận.'))},
           {t:'Nói với hắn về sự hư vô của sinh tử và tự do đích thực',tag:'chinh',canon:1,go:'luan_dao'},
           {t:'Theo ký ức: nói thẳng về thể chất Bắc Minh Băng Phách đang giết hắn',mem:'bai',go:'nho_thechat'},
           {t:'Rút Nguyệt Quang Cổ, sẵn sàng liều mình một trận sinh tử',tag:'ma',go:'quyet_chien'},
@@ -930,8 +930,8 @@ c_lang2:{canon:1,title:'Hàn khí giữa lang triều',hint:'Thanh Thư và Bạ
           ['bai','Ha ha ha! Lạnh quá... lạnh quá! Ai cũng được, đánh với ta!']
         ],
         choices:()=>[
-          {t:'Nhìn kỹ cách Bạch Ngưng Băng ra đòn',stay:1,flag:'soi_bai',say:'Mỗi lần băng tiễn rời tay, hắn khựng lại nửa nhịp, ngón tay tím tái. Hàn khí đang giết chính hắn: sau mỗi đòn là một khe hở.'},
-          {t:'Nhìn Thanh Thư',stay:1,flag:'soi_tt',say:()=>(S.rel.thanhthu||0)>=30?'Thanh Thư nắm Mộc Mị Cổ đến trắng bệch cả đốt tay. Hắn chưa muốn dùng. Hắn đang chờ một lý do để không phải dùng.':'Thanh Thư đã quyết. Ánh mắt ấy ngươi từng thấy ở năm trăm năm trước, trên mặt những kẻ biết mình sắp chết.'},
+          {t:'Nhìn kỹ cách Bạch Ngưng Băng ra đòn',stay:1,result:'Đã mở lựa chọn đánh vào nửa nhịp hàn khí khựng lại.',flag:'soi_bai',say:'Mỗi lần băng tiễn rời tay, hắn khựng lại nửa nhịp, ngón tay tím tái. Hàn khí đang giết chính hắn: sau mỗi đòn là một khe hở.'},
+          {t:'Nhìn Thanh Thư',stay:1,result:'Đã mở cách can ngăn Thanh Thư; cần quan hệ 30.',flag:'soi_tt',say:()=>(S.rel.thanhthu||0)>=30?'Thanh Thư nắm Mộc Mị Cổ đến trắng bệch cả đốt tay. Hắn chưa muốn dùng. Hắn đang chờ một lý do để không phải dùng.':'Thanh Thư đã quyết. Ánh mắt ấy ngươi từng thấy ở năm trăm năm trước, trên mặt những kẻ biết mình sắp chết.'},
           {t:'Đứng sau quan sát, chờ thời',tag:'ma',canon:1,dao:10,go:'cho_thoi'},
           {t:'Xông lên cùng Thanh Thư, không để hắn phải dùng cấm cổ',tag:'chinh',drift:12,go:'xong_len'},
           {t:'Đánh vào nửa nhịp hàn khí khựng lại',hidden:'soi_bai',tag:'chinh',drift:12,go:'danh_han'},
@@ -1115,7 +1115,7 @@ c_thiet:{canon:1,title:'Thần bổ nhập cuộc',hint:'Thiết Huyết Lãnh',
           ...(mem('tiexue')?[['','Ký ức kiếp trước: hắn truy án bằng dấu vết máu và lời khai mâu thuẫn.']]:[])
         ],
         choices:()=>[
-          {t:'Quan sát cách thần bổ tra án',stay:1,flag:'soi_thiet',say:'Hắn không hỏi ai. Hắn nhìn giày, nhìn móng tay, nhìn ai tránh ánh mắt hắn. Nhược Nam đi sau, ghi chép tất cả. Muốn qua mặt hắn thì phải qua mặt cô gái kia trước.'},
+          {t:'Quan sát cách thần bổ tra án',stay:1,result:'Đã hiểu cách tra án: thêm lợi thế khi xóa dấu vết hoặc đối đáp.',flag:'soi_thiet',say:'Hắn không hỏi ai. Hắn nhìn giày, nhìn móng tay, nhìn ai tránh ánh mắt hắn. Nhược Nam đi sau, ghi chép tất cả. Muốn qua mặt hắn thì phải qua mặt cô gái kia trước.'},
           {t:'Giữ bình tĩnh, sống như thường',canon:1,go:'binh_than'},
           {t:'Xin tộc trưởng bảo lãnh: chính ngươi đã vạch trần Kim Sinh lừa tộc nhân',
             req:()=>jksIs('reported')||(typeof storyHasOutcome==='function'&&storyHasOutcome('kimsinh','vach_tran')),
@@ -1175,7 +1175,7 @@ c_thietvay:{canon:1,title:'Vòng vây siết chặt',hint:'Thiết Huyết Lãnh
           ['tiexueleng','Ta hỏi một lần. Đêm Cổ Kim Sinh mất tích, ngươi ở đâu?']
         ],
         choices:()=>[
-          {t:'Nhìn tay hắn',stay:1,flag:'soi_dao',say:'Tay hắn không đặt trên chuôi đao. Hắn đang hỏi, chưa phải đang bắt. Chối khéo thì còn đường.'},
+          {t:'Nhìn tay hắn',stay:1,result:'Chối bỏ đến cùng: điểm kiểm tra Tâm cơ +3.',flag:'soi_dao',say:'Tay hắn không đặt trên chuôi đao. Hắn đang hỏi, chưa phải đang bắt. Chối khéo thì còn đường.'},
           {t:'Để lộ lối vào lăng mộ Nhất Đại cho hắn',canon:1,req:()=>S.f.huyethai,reqT:'Cần đã vào lăng mộ',eff:()=>{S.f.tieToTomb=1;S.susp=Math.max(0,S.susp-30);learn('tiexue');return 'Thần bổ ngửi thấy mùi huyết đạo nồng nặc hơn cả một vụ án mạng. Hắn bỏ ngươi lại, đi thẳng xuống lăng mộ.'}},
           {t:'Chối bỏ đến cùng',check:['tamco',17],bonus:()=>(S.f.tieIntel?5:0)+(mem('tiexue')?6:0)+(S.sc&&S.sc.flags.soi_dao?3:0),
             ok:()=>{S.susp+=5;learn('tiexue');return 'Hắn nhìn ngươi rất lâu, rồi quay đi. Chưa phải lúc.'},
@@ -1214,7 +1214,7 @@ c_nhatdai:{canon:1,title:'Huyết Cương thức tỉnh',hint:'Cổ Nguyệt Nh�
           const tie=(S.f.tieHunt||S.f.tieToTomb)&&!S.f.tieGone;
           const al=[S.f.pcAlly&&'Phương Chính',S.f.qingshuAlive&&'Thanh Thư'].filter(Boolean);
           return [
-            {t:'Nhìn kỹ ngực Huyết Cương',stay:1,flag:'soi_nd',eff:()=>{S.f.soiNd=1},say:'Huyết Cương mạnh, nhưng mỗi lần gào lên là một dòng máu trào ra từ vết nứt giữa ngực, chỗ quan tài vỡ đã đâm vào. Đánh vào đó.'},
+            {t:'Nhìn kỹ ngực Huyết Cương',stay:1,result:'Đã phát hiện điểm yếu: một số đường đối đầu Huyết Cương có hệ số độ khó ×0,85.',flag:'soi_nd',eff:()=>{S.f.soiNd=1},say:'Huyết Cương mạnh, nhưng mỗi lần gào lên là một dòng máu trào ra từ vết nứt giữa ngực, chỗ quan tài vỡ đã đâm vào. Đánh vào đó.'},
             ...(tie?[
               {t:'Để thần bổ và Huyết Cương đồng quy vu tận',tag:'ma',canon:1,eff:()=>{
                 S.f.tieGone=1;S.f.tieFate='dead_nd';S.f.tieHunt=0;S.susp=Math.max(0,S.susp-40);S.stones+=50;
@@ -1268,7 +1268,7 @@ c_final:{canon:1,title:'Thanh Mao Sơn diệt vong',hint:'Kết cục quyển m�
         choices:()=>{
           const eMod=S.sc&&S.sc.flags.soi_bang?.9:1;
           return [
-            {t:'Tìm chỗ băng mỏng nhất',stay:1,flag:'soi_bang',say:'Phía nam, nơi nguyên tuyền cạn, băng đóng chậm hơn. Có một khe nứt đủ cho một người đi qua. Đường chạy nào cũng dễ hơn nếu đi lối đó.'},
+            {t:'Tìm chỗ băng mỏng nhất',stay:1,result:'Đã tìm thấy đường băng mỏng: một số đường phá vây dễ hơn; kiểm tra lẻn qua thông đạo được +2.',flag:'soi_bang',say:'Phía nam, nơi nguyên tuyền cạn, băng đóng chậm hơn. Có một khe nứt đủ cho một người đi qua. Đường chạy nào cũng dễ hơn nếu đi lối đó.'},
             ...(S.f.pcAlly?[{t:'Cùng Phương Chính phá vây, bảo vệ nhau rời núi',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_songhung',flee:false,mod:finalMod()*.98*eMod,allies:['phuongchinh']});return 'Hai huynh đệ Phương Nguyên - Phương Chính lưng tựa lưng, nguyệt nhận lam xích hòa quyện chém tan vòng vây!'}}]:[]),
             ...(S.f.qingshuAlive?[{t:'Cùng Thanh Thư bảo vệ tộc nhân thoát khỏi biển lửa và băng giá',tag:'chinh',eff:()=>{fight('baitruonglao',{after:'end_thanhthu',flee:false,mod:finalMod()*.94*eMod,allies:['thanhthu']});return 'Thanh Thư tung dây leo mở đường, ngươi bọc hậu. Tộc nhân hướng về hai người như hai vầng thái dương mới của bộ tộc!'}}]:[]),
             {t:'Nhảy xuống vực, cược Xuân Thu Thiền lần hai dù nó chưa hồi phục',tag:'ma',canon:1,dao:40,need:{gu:'xuanthu'},go:'thien_a'},
@@ -1483,7 +1483,7 @@ r_tuulau:{loc:'trai',w:2,cond:()=>S.f.tuulau,title:'Tửu lâu gia sản',
           ['','Chưởng quầy cúi chào khi thấy ngươi bước vào: "Đại thiếu gia đến chơi! Hôm nay buôn bán rất khá, nhưng đằng kia có gã Cổ sư say mèm đập bàn quát tháo."']
         ],
         choices:[
-          {t:'Kiểm tra sổ sách và thu tiền lời hôm nay',stay:1,flag:'soi_so',say:'Sổ sách ghi chép cẩn thận: trừ chi phí mua rượu ủ và gạo, hôm nay tửu lâu thặng dư được 8 nguyên thạch.'},
+          {t:'Kiểm tra sổ sách và thu tiền lời hôm nay',stay:1,result:'Đã mở lựa chọn thu 8 nguyên thạch lợi nhuận.',flag:'soi_so',say:'Sổ sách ghi chép cẩn thận: trừ chi phí mua rượu ủ và gạo, hôm nay tửu lâu thặng dư được 8 nguyên thạch.'},
           {t:'Thu lấy 8 nguyên thạch lợi nhuận hôm nay',hidden:'soi_so',eff:()=>{S.stones+=8;return 'Bỏ túi 8 nguyên thạch lợi nhuận ròng!';}},
           {t:'Xông tới dạy cho gã Cổ sư say rượu một bài học',tag:'ma',go:'danh_say'},
           {t:'Mời gã say một vò rượu ngon, khéo léo dò hỏi tin tức',tag:'chinh',req:()=>S.stones>=3,reqT:'Cần 3 nguyên thạch',go:'moi_ruou'},
@@ -1640,7 +1640,7 @@ k_hd_gialaosay:{loc:'hocduong',w:1,once:1,cond:()=>S.turn>=3,title:'Gia lão say
           ['','Lão lắc đầu quầy quậy, vò rượu đã cạn quá nửa, tỏa ra mùi men nồng nặc dưới bóng hiên giảng đường.']
         ],
         choices:[
-          {t:'Lắng nghe lão lẩm bẩm',stay:1,flag:'nghe_say',say:'Lão lè nhè về thời kỳ lang triều mấy chục năm trước, bàn tay đầy vết sẹo rung lên bần bật.'},
+          {t:'Lắng nghe lão lẩm bẩm',stay:1,freeTalk:true,flag:'nghe_say',say:'Lão lè nhè về thời kỳ lang triều mấy chục năm trước, bàn tay đầy vết sẹo rung lên bần bật.'},
           {t:'Rót thêm rượu, ngồi nghe lão kể',req:()=>S.stones>=5,reqT:'Cần 5 nguyên thạch mua rượu',eff:()=>{S.stones-=5;return 'Ngươi mang tới một vò rượu gạo. Mắt lão sáng rực lên.';},go:'uong_ruou'},
           {t:'Cúi chào rồi đi',go:'ve'}
         ]
@@ -1705,7 +1705,7 @@ k_hd_hocngheo:{loc:'hocduong',w:1,once:1,title:'Học trò nghèo',
           ['hoctro','Phương Nguyên ca ca... xin huynh thương tình cho đệ mượn mười khối nguyên thạch! Cổ trùng bản mệnh của đệ đã nhịn đói ba hôm, sắp chết héo rồi... Sang tháng đệ trả gấp đôi!']
         ],
         choices:[
-          {t:'Gặng hỏi xem hắn nuôi cổ gì mà tốn kém thế',stay:1,flag:'hoi_co',say:'Hắn ngập ngừng xòe tay: là một con Thạch Bì Cổ hạ phẩm ăn bùn khoáng, nhưng do chân nguyên cặn bã của Đinh đẳng nên cổ hấp thụ rất kém.'},
+          {t:'Gặng hỏi xem hắn nuôi cổ gì mà tốn kém thế',stay:1,result:'Đã mở lựa chọn chỉ điểm bí quyết nuôi cổ.',flag:'hoi_co',say:'Hắn ngập ngừng xòe tay: là một con Thạch Bì Cổ hạ phẩm ăn bùn khoáng, nhưng do chân nguyên cặn bã của Đinh đẳng nên cổ hấp thụ rất kém.'},
           {t:'Cho mượn mười khối nguyên thạch cứu ngặt',tag:'chinh',req:()=>S.stones>=10,reqT:'Cần 10 nguyên thạch',go:'cho_muon'},
           {t:'Bắt nộp 4 thạch trợ cấp trước, thu làm chân chạy canh chừng học đường',tag:'ma',go:'chan_chay'},
           {t:'Chỉ điểm bí quyết nuôi cổ Đinh đẳng không tốn kém',hidden:'hoi_co',check:['ngo',10],go:'chi_diem'},
@@ -1883,7 +1883,7 @@ k_nui_ansi:{loc:'nui',w:1,once:1,cond:()=>S.turn>=6,title:'Nhà tranh trong mây
           ['','Một ông lão tóc bạc ngồi đánh cờ một mình. Quanh lều yên tĩnh đến lạ, cổ trùng trong không khiếu của ngươi cũng ngoan ngoãn nằm im.']
         ],
         choices:[
-          {t:'Đứng xa quan sát bàn cờ đá',stay:1,flag:'soi_co',say:'Thế cờ tàn khốc liệt, quân đen như rồng bị vây tứ phía, sát khí ẩn giấu tầng tầng.'},
+          {t:'Đứng xa quan sát bàn cờ đá',stay:1,freeTalk:true,flag:'soi_co',say:'Thế cờ tàn khốc liệt, quân đen như rồng bị vây tứ phía, sát khí ẩn giấu tầng tầng.'},
           {t:'Bước tới ngồi xuống xem cờ',go:'xem_co'},
           {t:'Lặng lẽ quay lưng rời đi',go:'ve'}
         ]
@@ -1995,8 +1995,8 @@ k_tr_banlai:{loc:'trai',w:4,once:1,cond:()=>S.f.tuulau&&S.turn>=9&&!S.f.tlBan,ti
           ...(S.f.tramthuySpy&&!S.f.tramthuyGone?[['','Trầm Thúy đứng pha trà sau quầy, khẽ lắc đầu với ngươi.']]:[])
         ],
         choices:()=>[
-          {t:'Hỏi cậu lấy tiền ở đâu ra',stay:1,check:['tamco',11],flag:'no_mac',ok:()=>'Cậu ấp úng. Mợ lỡ miệng: tiền vay của Mạc gia, giấy nợ còn nằm trong rương nhà cậu.',fail:()=>'Cậu cười xòa: "Tiền dành dụm cả đời."'},
-          {t:'Hỏi cậu còn cất giữ gì của cha mẹ',stay:1,flag:'ngocbi',say:'Mợ buột miệng: trong rương có con Ngọc Bì Cổ, của cha ngươi để lại. Cậu trừng mắt với bà.'},
+          {t:'Hỏi cậu lấy tiền ở đâu ra',stay:1,result:'Đã mở cách thương lượng lấy giấy nợ Mạc gia.',check:['tamco',11],flag:'no_mac',ok:()=>'Cậu ấp úng. Mợ lỡ miệng: tiền vay của Mạc gia, giấy nợ còn nằm trong rương nhà cậu.',fail:()=>'Cậu cười xòa: "Tiền dành dụm cả đời."'},
+          {t:'Hỏi cậu còn cất giữ gì của cha mẹ',stay:1,result:'Đã mở cách thương lượng lấy Ngọc Bì Cổ.',flag:'ngocbi',say:'Mợ buột miệng: trong rương có con Ngọc Bì Cổ, của cha ngươi để lại. Cậu trừng mắt với bà.'},
           ...(S.f.caravan&&!hasGu('xaloi2')?[{t:'Bán cả tửu lâu lẫn trúc lâu, cầm tiền tới thương đội mua Xích Thiết Xá Lợi Cổ',canon:1,go:'xaloi'}]:[]),
           ...(S.f.caravan&&hasGu('bachthi')&&!hasGu('hacthi')?[{t:'Bán tửu lâu lấy tiền tới thương đội mua Hắc Thỉ Cổ (đạt Song Trư chi lực)',canon:1,go:'hacthi'}]:[]),
           {t:'Mặc cả: một trăm hai mươi khối, không bớt',check:['tamco',13],okGo:'giacao',failGo:'giathap'},
@@ -2059,7 +2059,7 @@ k_nui_dusoi:{loc:'nui',w:4,once:1,cond:()=>S.turn>=(S.tideT||19)-4&&S.turn<(S.ti
           ...(hasGu('diathinh')?[['','Địa Thính Nhục Nhĩ Thảo trên tai ngươi khẽ rung. Ngươi nghe rõ Man Thạch đang bàn chuyện gì.']]:[])
         ],
         choices:()=>[
-          {t:hasGu('diathinh')?'Lắng nghe bằng Địa Thính Nhục Nhĩ Thảo':'Bò lại gần nghe lén',stay:1,flag:'nghe',check:['tamco',hasGu('diathinh')?6:12],ok:()=>'Man Thạch dặn cả tổ: chiến công lần này khai hết về mình, còn mấy học trò mới thì đẩy đi canh chỗ nguy hiểm nhất.',fail:()=>{S.hp=Math.max(1,S.hp-10);return 'Cành khô gãy dưới chân. Ngươi lùi lại kịp, nhưng bị gai cào rách vai. Khí huyết −10.'}},
+          {t:hasGu('diathinh')?'Lắng nghe bằng Địa Thính Nhục Nhĩ Thảo':'Bò lại gần nghe lén',stay:1,result:'Dẫn bầy sói vào khe núi: điểm kiểm tra Sát phạt +3.',flag:'nghe',check:['tamco',hasGu('diathinh')?6:12],ok:()=>'Man Thạch dặn cả tổ: chiến công lần này khai hết về mình, còn mấy học trò mới thì đẩy đi canh chỗ nguy hiểm nhất.',fail:()=>{S.hp=Math.max(1,S.hp-10);return 'Cành khô gãy dưới chân. Ngươi lùi lại kịp, nhưng bị gai cào rách vai. Khí huyết −10.'}},
           {t:'Chọc giận Hào Điện Lang, dẫn cả bầy vào khe núi',canon:1,dao:15,check:['satphat',12],bonus:()=>S.sc&&S.sc.flags.nghe?3:0,okGo:'soi_an',failGo:'soi_quay'},
           {t:'Báo cho tổ Man Thạch có bầy sói, rồi cùng đánh',go:'cung'},
           {t:'Lặng lẽ rút đi',eff:()=>'Chuyện của tổ khác, không phải việc của ngươi.'},
@@ -2088,7 +2088,7 @@ k_nui_vuongnhi:{loc:'nui',w:3,once:1,cond:()=>S.turn>=5&&S.turn<=14,title:'Con l
       bay:{
         talk:[['','Dưới chân núi, ngươi lần theo dấu một con lợn rừng. Nó đã sa vào hố bẫy cắm mâu trúc của thợ săn. Ngươi vừa hạ nó bằng nguyệt nhận thì mấy thợ săn trẻ chạy tới.'],['','Dẫn đầu là Vương Nhị, cung đeo sau lưng, ánh mắt đầy tham vọng.'],['','"Con lợn đó rơi vào bẫy của bọn ta. Còn không mau cút đi!"']],
         choices:[
-          {t:'Nhìn kỹ bọn họ',stay:1,say:'Bẫy của họ bố trí rất khéo, khắp khu rừng đều có. Nhà Vương Nhị hẳn biết rõ lợn rừng hay đi đâu.',flag:'biet'},
+          {t:'Nhìn kỹ bọn họ',stay:1,freeTalk:true,say:'Bẫy của họ bố trí rất khéo, khắp khu rừng đều có. Nhà Vương Nhị hẳn biết rõ lợn rừng hay đi đâu.',flag:'biet'},
           {t:'Nhường con lợn, hỏi mua bản đồ bẫy của họ',tag:'chinh',req:()=>S.stones>=15,reqT:'Cần 15 nguyên thạch',eff:()=>{S.stones-=15;S.f.banDoDa=1;S.f.vuongNhi='ban';return 'Vương Nhị ngạc nhiên, rồi bán cho ngươi một tấm bản đồ bẫy vẽ trên giấy trúc. Không ai phải chết.'}},
           {t:'Ra tay',canon:1,dao:15,drift:6,go:'giet'},
           {t:'Bỏ đi',eff:()=>'Một con lợn không đáng.'},
@@ -2141,7 +2141,7 @@ k_nv_benhxa:{loc:'nhiemvu',w:4,once:1,cond:()=>S.turn>=8&&S.turn<18,title:'Tiể
           ['','Giác Tam nhận hối lộ của Cậu Đống Thổ, muốn mượn tay dã thú làm ngươi trọng thương cản trở thăng Nhị chuyển. Hắn hô lớn: "Phương Nguyên, ngươi sức lớn, mau lên đè nanh giữ đầu nó lại để Hoa Hân trồng Hủ Huyết Thảo Cổ!"']
         ],
         choices:[
-          {t:'Quan sát Giác Tam',stay:1,check:['tamco',11],flag:'gian',ok:()=>'Giác Tam đứng lùi phía sau, tay đặt sẵn lên túi cổ. Hắn cố tình đẩy ngươi vào nanh lợn và không hề có ý định cứu nếu gặp nguy.',fail:()=>'Giác Tam ra lệnh rất bình thường.'},
+          {t:'Quan sát Giác Tam',stay:1,result:'Đã mở lựa chọn vạch trần Giác Tam trước cả tổ.',check:['tamco',11],flag:'gian',ok:()=>'Giác Tam đứng lùi phía sau, tay đặt sẵn lên túi cổ. Hắn cố tình đẩy ngươi vào nanh lợn và không hề có ý định cứu nếu gặp nguy.',fail:()=>'Giác Tam ra lệnh rất bình thường.'},
           {t:'Lên đè nanh lợn, rồi bất thình lình thu toàn bộ lực!',canon:1,dao:20,drift:6,go:'thuluc'},
           {t:'Cản con lợn thật lòng, bảo vệ Hoa Hân',tag:'chinh',go:'can'},
           {t:'Nói thẳng trước cả tổ: Giác Tam đang cố tình hãm hại ngươi',hidden:'gian',check:['tamco',13],ok:()=>{S.f.benhXa='lat';rel('toctruong',5);S.danh+=6;return 'Cả tổ sững người. Giác Tam đỏ mặt chối cãi nhưng ai cũng thấy hắn lùi quá xa. Danh vọng +6. Nhiệm vụ bỏ dở.'},fail:()=>{S.danh-=5;S.f.benhXa='lat';return 'Không ai tin một học trò mới nhập ngũ. Giác Tam ghi thù ngươi. Danh vọng −5.'}},

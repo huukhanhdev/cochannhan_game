@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Be+Vietnam+Pro:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap&text=书事人仇令伤修光冰利功劫卫压反启味商嗅城婢学守家寒寨射尸山岩市幽弱徒怒息悟愈战技护招拳捕撞攻敌斩方族旱晕月木查正毒洞源炉烟煞熊狂狼猛猪玉王疫白真石竹终群翠老考耳脉舅舍芒若荒药莫蓬蛊蝉血袭规警贫贼贾赤走酒醉金铁长雨雷魔黑风铜丝旋银裳刀水鳞草蜈魅蝠盾齿吸甲枪锥刺灰清跳气苏刚冲爆蝎焰炎魂翼">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦗</text></svg>">
-  <link rel="stylesheet" href="css/tactical_battle.css">
+  <link rel="stylesheet" href="css/tactical_battle.css?v=bd85ebc-2">
   <style>
   :root{
     color-scheme:dark;
@@ -414,6 +414,12 @@
   .hud-time b{display:block;font-family:var(--display);font-size:24px;line-height:1;color:var(--moon);text-align:right}
   .hud-time small{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-align:right}
   .hud-btns{display:flex;gap:6px}
+  .fight-modes{display:inline-flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--line);border-radius:6px;background:#10171a}
+  .fight-modes>span{padding:0 5px;color:var(--dim);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  .fight-mode{appearance:none;border:1px solid transparent;border-radius:4px;padding:5px 7px;background:transparent;color:var(--dim);font:500 10.5px/1.1 var(--body);cursor:pointer}
+  .fight-mode:hover,.fight-mode:focus-visible{color:var(--moon);border-color:#4a5a61;outline:none}
+  .fight-mode.on{color:#bcebd3;border-color:#39705a;background:#173226;box-shadow:inset 0 0 10px rgba(91,184,139,.1)}
+  .fight-mode:disabled{cursor:not-allowed;opacity:.55}
 
   /* Dòng thời gian */
   .timeline{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding:4px}
@@ -870,6 +876,7 @@
     .hud-id{min-width:0;gap:8px}.avatar{width:40px;height:40px}.who .rk{font-size:11px}
     .hud-bars{min-width:0;flex:1 1 140px;gap:3px}
     .hud-social,.hud-btns #soundBtn,.hud-time svg{display:none}
+    .fight-modes>span{display:none}.fight-mode{padding:5px;font-size:9.5px}
     .hud-time b{font-size:17px}.hud-res{gap:4px;font-size:12px}
     .choice,.skill,.tab{min-height:44px}
     .choice{grid-template-columns:26px minmax(0,1fr);padding:10px;gap:8px}
@@ -906,13 +913,13 @@
   <script src="js/story.js"></script>
   <script src="js/events.js"></script>
   <script src="js/living.js"></script>
-  <script src="js/battle.js"></script>
+  <script src="js/battle.js?v=kp2"></script>
   <script src="js/minigame.js"></script>
-  <script src="js/ui.js"></script>
+  <script src="js/ui.js?v=bd85ebc-2"></script>
   <script src="js/present.js"></script>
   <script src="js/aperture.js"></script>
   <script src="js/auto.js"></script>
-  <script src="js/rt.js"></script>
+  <script src="js/rt.js?v=bd85ebc-2"></script>
   <script src="js/ff.js"></script>
   <script src="js/cicada.js"></script>
   <script src="js/butterfly.js"></script>
@@ -922,14 +929,14 @@
   <script src="js/q2/truyenthua.js"></script>
   <script src="js/q2/ch1_hoanglong.js"></script>
   <script src="js/q2/ch2_bachcot.js"></script>
-  <script src="js/q2/ch3_thuongdoi.js"></script>
-  <script src="js/q2/ch4_thanh.js"></script>
-  <script src="js/q2/ch5_thieuchu.js"></script>
-  <script src="js/q2/ch6_tamxoa.js"></script>
-  <script src="js/q2/ch7_ngu.js"></script>
+  <script src="js/q2/ch3_thuongdoi.js?v=bd85ebc-2"></script>
+  <script src="js/q2/ch4_thanh.js?v=bd85ebc-2"></script>
+  <script src="js/q2/ch5_thieuchu.js?v=bd85ebc-2"></script>
+  <script src="js/q2/ch6_tamxoa.js?v=bd85ebc-2"></script>
+  <script src="js/q2/ch7_ngu.js?v=bd85ebc-2"></script>
   <script src="js/q2/ch8_baquy.js"></script>
   <script src="js/q2/ch9_phanboi.js"></script>
-  <script src="js/tactical_battle.js"></script>
-  <script src="js/engine.js"></script>
+  <script src="js/tactical_battle.js?v=bd85ebc-2"></script>
+  <script src="js/engine.js?v=bd85ebc-2"></script>
 </body>
 </html>

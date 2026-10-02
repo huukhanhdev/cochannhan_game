@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#132a28">
+  <title>Nghịch Mệnh · Bản thiết kế B</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Đến nội dung chính</a>
+  <div class="preview-bar"><span><b>BẢN B</b> · NGHỊCH MỆNH <span class="desktop">/ PR-01 · Prototype độc lập, dữ liệu mô phỏng</span></span><a href="../../ui_v2_preview.html" target="_blank" rel="noopener">Mở bản A để so sánh ↗</a></div>
+  <header class="hud">
+    <a class="brand" href="#journey" aria-label="Nghịch Mệnh — Hành trình"><span class="seal" aria-hidden="true">逆<br>命</span><span>NGHỊCH MỆNH<small>CỔ CHÂN NHÂN · FAN GAME</small></span></a>
+    <div class="identity"><img src="../../assets/art/p_hero_q1.jpg" alt=""><div><b>Phương Nguyên</b><small id="rank">Nhất chuyển · Trung giai</small></div></div>
+    <div class="vitals"><div><span>Khí huyết</span><b id="hp-value">86 / 100</b><i><em id="hp-bar" style="width:86%"></em></i></div><div><span>Chân nguyên</span><b id="ess-value">42 / 60</b><i><em id="ess-bar" style="width:70%"></em></i></div></div>
+    <div class="wealth"><span aria-hidden="true">◇</span><div><b id="stone-value">128</b><small>Nguyên thạch</small></div></div>
+    <button class="menu-button" data-action="settings" aria-label="Mở tùy chọn">☰</button>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <nav class="dock" aria-label="Điều hướng bản mẫu">
+    <a href="#journey" data-view="journey"><span aria-hidden="true">山</span>Hành trình</a>
+    <a href="#story" data-view="story"><span aria-hidden="true">言</span>Câu chuyện</a>
+    <a href="#gu" data-view="gu"><span aria-hidden="true">蛊</span>Cổ trùng</a>
+    <a href="#combat" data-view="combat"><span aria-hidden="true">刃</span>Chiến đấu</a>
+    <a href="#journal" data-view="journal"><span aria-hidden="true">書</span>Nhân quả</a>
+  </nav>
+  <dialog id="dialog" aria-labelledby="dialog-title"></dialog>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

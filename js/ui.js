@@ -175,13 +175,13 @@ function renderJournalModal(){
         const ch=e.chap&&typeof CHAPTERS!=='undefined'?CHAPTERS[e.chap]:null;
         const timeStr=e.book===2&&ch?`${ch.unit[0].toUpperCase()+ch.unit.slice(1)} ${e.turn||1} · ${ch.n}`:`Tuần ${e.turn||1} · Tháng ${Math.ceil((e.turn||1)/3)}`;
         const kind=e.isLech===true?'diso':e.isLech===false?'canon':'effect';
-        const kindText=kind==='diso'?'Dị số':kind==='canon'?'Nguyên tác':'Hệ quả';
+        const kindText=kind==='diso'?'Dị số':kind==='canon'?'Biến cố':'Hệ quả';
         return `<div class="journal-card ${kind}">
           <div class="journal-top">
             <span class="journal-ev">${esc(title)}</span>
             <div style="display:flex;gap:6px;align-items:center">
               <span class="pill">${timeStr}</span>
-              <span class="pill ${kind==='canon'?'canonp':kind==='diso'?'danger':''}">${kindText}</span>
+              ${kind==='canon'?'':`<span class="pill ${kind==='diso'?'danger':''}">${kindText}</span>`}
             </div>
           </div>
           <div class="journal-choice">${kind==='effect'?'Ghi nhận':'Ngươi đã định'}: <b>${esc(e.choiceText||e.outcomeId||'Đã định đoạt')}</b></div>
@@ -207,11 +207,19 @@ function renderJournalModal(){
 }
 
 // === [BATTLE-01/02: TACTICAL TURN-BASED] START ===
-function fightModeLabel() {
-  const m = (META && META.opt && META.opt.fightMode) || (META && META.opt && META.opt.turn ? 'turn' : 'rt');
-  if (m === 'tactical') return 'Đánh: đấu trí';
-  if (m === 'turn') return 'Đánh: theo lượt';
-  return 'Đánh: thời gian thực';
+function fightModeValue(){
+  return (META&&META.opt&&META.opt.fightMode)||(META&&META.opt&&META.opt.turn?'turn':'rt');
+}
+function fightModeButtons(){
+  const current=fightModeValue();
+  return `<div class="fight-modes" role="group" aria-label="Chế độ chiến đấu">
+    <span>Đánh</span>
+    ${[
+      ['tactical','Đấu trí'],
+      ['turn','Theo lượt'],
+      ['rt','Realtime']
+    ].map(([mode,label])=>`<button class="fight-mode ${current===mode?'on':''}" data-a="fightmode" data-mode="${mode}" ${S.combat?'disabled':''} aria-pressed="${current===mode}">${label}</button>`).join('')}
+  </div>`;
 }
 // === [BATTLE-01/02: TACTICAL TURN-BASED] END ===
 
@@ -253,7 +261,7 @@ function renderHUD(){
       <button class="btn ghost" id="journalBtn" title="Xem lịch sử các lựa chọn và biến cố nhân quả">Nhân Quả Lục</button>
       <button class="btn ghost" id="codexBtn">Cổ Đồ Giám</button>
       <!-- === [BATTLE-01/02: TACTICAL TURN-BASED] START === -->
-      <button class="btn ghost" data-a="fightmode" ${S.combat?'disabled':''} title="Đổi kiểu chiến đấu cho các trận sau">${fightModeLabel()}</button>
+      ${fightModeButtons()}
       <!-- === [BATTLE-01/02: TACTICAL TURN-BASED] END === -->
       <button class="btn ghost" id="soundBtn">${window.SFX&&SFX.isMuted()?'Âm thanh: tắt':'Âm thanh: bật'}</button>
     </div>`;
@@ -417,9 +425,8 @@ function choiceExtraMeta(c, ok){
 /* ---------- Sân khấu chính ---------- */
 function choiceBtn(c,i,evId){
   const ok=!c.req||c.req();
-  const seen=META.seen&&META.seen[evId];
   // Không gắn nhãn Chính/Ma: người chơi tự đọc tình huống mà chọn
-  const tags=[c.mem?'<span class="tag mem">憶 Ký ức</span>':'',c.canon&&seen?'<span class="tag canon">Nguyên tác</span>':'',].join('');
+  const tags=[c.mem?'<span class="tag mem">憶 Ký ức</span>':'',c.stay?'<span class="tag stay">Dò xét</span>':''].join('');
   let chk='';
   if(c.check){
     const p=chance(c.check[0],c.check[1],c.bonus?c.bonus():0);
@@ -432,15 +439,14 @@ function choiceBtn(c,i,evId){
 
 function scChoiceBtn(c, i, sc){
   let tags = '';
-  if(c.canon) tags += `<span class="tag canon">Nguyên tác</span>`;
   if(c.mem) tags += `<span class="tag mem">Ký ức</span>`;
   if(c.hidden) tags += `<span class="tag mem">Tâm cơ</span>`;
-  if(c.stay) tags += `<span class="tag stay">Dò xét</span>`;
+  if(c.stay) tags += `<span class="tag stay">${c.freeTalk?(c.talk||/^(Hỏi|Gặng hỏi|Lắng nghe)/.test(c.t)?'Hỏi thêm':'Quan sát'): "Dò xét · 1 lượt"}</span>`;
 
   let ok = true;
   let chk = '';
   if(c.req && !c.req()) ok = false;
-  if(c.stay && sc.budget <= 0) ok = false;
+  if(c.stay && !c.freeTalk && sc.budget <= 0) ok = false;
   if(c.check){
     const bonus = c.bonus ? c.bonus() : 0;
     const rate = chance(c.check[0], c.check[1], bonus);
@@ -482,7 +488,7 @@ function renderScene(st, id, ev){
     <div class="story-art" style="background-image:url('${node.art?asset('art/'+node.art+'.jpg'):eventArt(id)}')">
       ${speakerHTML(speakerKey)}
       <div class="story-cap">
-        <span class="label">${ev.canon ? 'Mốc nguyên tác' : diso ? 'Dị số' : 'Kỳ ngộ'} · ${timeLabel()} ${sc.budget !== undefined ? `· Dò xét: ${sc.budget}` : ''}</span>
+        <span class="label">${diso ? 'Dị số' : 'Sự kiện'} · ${timeLabel()} ${(node.choices&&(typeof node.choices==='function'?node.choices():node.choices).some(c=>c.stay&&!c.freeTalk)) ? `· Lượt dò xét còn lại: ${sc.budget}` : ''}</span>
         <h2>${ev.title}</h2>
       </div>
     </div>
@@ -573,7 +579,7 @@ function renderStage(){
     st.innerHTML=`<article class="story ${ev.canon?'canon':''} ${diso?'diso':''}">
       <div class="story-art" style="background-image:url('${eventArt(id)}')">
         ${speakerHTML(evSpeaker(id))}
-        <div class="story-cap"><span class="label">${ev.canon?'Mốc nguyên tác':diso?'Dị số':'Kỳ ngộ'} · ${timeLabel()}</span><h2>${ev.title}</h2></div>
+        <div class="story-cap"><span class="label">${diso?'Dị số':'Sự kiện'} · ${timeLabel()}</span><h2>${ev.title}</h2></div>
       </div>
       <div class="story-body">
         <p class="story-text">${esc(evText(id))}</p>${remark(id)?`<p class="story-remark">${esc(remark(id))}</p>`:''}

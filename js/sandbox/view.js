@@ -7,7 +7,7 @@ const SBView=(function(){
   // Dải mặt đất trên màn hình (z=0 → GY0, z=Z1 → GY1). Map pixel ghi ground_screen_y trong map.json
   // để mỗi ảnh nền khớp sàn của nó; view, input, bóng và telegraph cùng dùng phép chiếu này.
   let GY0=250,GY1=400,syk=(GY1-GY0)/(B?.arena.Z1||240);
-  let MARGIN=127,KX=W/1000,OX=0;
+  const EDGE_PAD=36;let MARGIN=EDGE_PAD,KX=W/1000,OX=0;
   const sx=x=>OX+x*KX,sy=z=>GY0+(z/(B?.arena.Z1||240))*(GY1-GY0);
   const PICK_TOL=12;                          // click lệch khỏi mép sàn tối đa 12px vẫn nhận (kéo về mép)
   const depthK=z=>.9+.16*(z/(B?.arena.Z1||240));
@@ -56,8 +56,9 @@ const SBView=(function(){
       spr[a.id].flash.tint=a.id===B.ids.player?0xff3a20:0xffffff;
     }
     // Lề màn hình theo bề vươn sprite thật (reach_px trong manifest) ở hàng gần nhất, để pose rộng/KO không tràn mép.
-    const reach=Math.max(...Object.values(kp).map(K=>K.man.reach_px||K.man.frame_size[0]/2));
-    MARGIN=Math.min(W/3,Math.ceil(reach*SCALE*depthK(B.arena.Z1)+2));
+    // Người dùng 02/10: “cho đi hết cỡ sân”. Lề chỉ bằng nửa thân (EDGE_PAD) để chân đi sát mép màn hình;
+    // pose vươn rộng (đòn, KO) ở sát mép có thể bị cắt một phần — chấp nhận để có trọn sân.
+    MARGIN=EDGE_PAD;
     KX=(W-2*MARGIN)/(B.arena.X1-B.arena.X0);OX=MARGIN-B.arena.X0*KX;
     return app;
   }

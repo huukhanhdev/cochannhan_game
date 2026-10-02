@@ -169,6 +169,22 @@ Kiểm: `sandbox_regression.cjs` (thêm phí huỷ, Sương Yêu, nổ tay/rút 
 
 Bằng chứng: [ảnh vỏ băng](../../previews/bnb-detonate-review/shell.png), [ảnh rút lui](../../previews/bnb-detonate-review/retreat.png), [kết quả Chrome](../../previews/bnb-detonate-review/browser_report.json). Hồi quy `sandbox_regression.cjs`, `sandbox_input_regression.cjs`, `fx_import_regression.py` đạt sau sửa.
 
+## 9. BNB đánh có chủ đích (Orange-kun, 02/10/2026, theo phản hồi người dùng “BNB cứ lao vào spam chiêu tầm gần”)
+
+- `ai.js` thêm bộ não `smart()` cho **Thường / Khó / Cao thủ** (mức mới `cao`: dmgK 1, không tăng chỉ số). Dễ giữ bộ não cũ. Các mức khác nhau ở phản xạ (0,35 / 0,28 / 0,25s), nhịp nghĩ và độ né.
+- Hành vi: giữ thế đứng cách khoảng 168 (ngoài tầm đấm/Cự Xỉ của PN). Chỉ tiếp cận khi có lý do: PN tự vào tầm, PN kẹt đủ lâu (vận/thu chiêu), PN bị chậm/khựng, PN lộ ra đang hồi máu/bật giáp, PN bị dồn biên, hoặc quá 6s không ai trúng đòn (kiêu ngạo ch134; 40% đòn vung thật). Bị áp sát thì lùi, trừ khi đang vững thế. Đánh xong thì lùi. PN đã ra khỏi ô báo thì huỷ Băng nhận. Lốc chỉ khi PN không kịp chạy khỏi vòng.
+- **Thêm Lam Điểu Băng Quan** cho hồ sơ trận đầu (ch136, ch140): đạn chim tự đuổi, góc lượn 2,2 rad/s, tốc độ 300, sát thương 26 + chậm 1s, phí 26, CD 7. Sim có thêm `turn` (đạn tự đuổi) cho mọi proj.
+- Bench: bot `move` né đạn địch và bắn Nguyệt từ cự ly 150 (trước là 170, đúng bằng thế đứng nên hai bên đứng nhìn nhau).
+- Đo (wide, seed 20261002, 300 trận, bot human / expert):
+
+| Mức | Đứng yên | Spam áp sát | Né + phạt | Né + phạt hết giờ 120s |
+|---|---:|---:|---:|---:|
+| Thường | 21 / 32% | 44 / 61% | 60 / 67% | 120 / 100 trận |
+| Khó | 10 / 15% | 6 / 18% | 28 / 15% | 210 / 255 |
+| Cao thủ | 9 / 18% | 25 / 51% | 22 / 10% | 230 / 270 |
+
+**Giới hạn:** gặp bot né thụ động thì nhiều trận hết giờ, vì BNB không còn tặng sơ hở mà bot né lại ít chủ động ra đòn. Người chơi thật sẽ khác. Thường giờ dễ hơn với lối đánh áp sát (44%, trước 0%). Núm chỉnh ở đầu `smart()`: `STANDOFF`, `IMPATIENT`, `COMMIT`, `BACKOFF`. Chờ người dùng chơi thử.
+
 ## 10. Blue-chan — sửa giật tư thế khi BNB giữ tầm (02/10/2026)
 
 Người dùng báo giật liên tục gần thông báo “khớp đông cứng”. Tái hiện bằng simulation production: PN đứng x600/z130, BNB x520/z130, Thường, seed123. BNB tới khoảng đứng rồi đổi `move → idle` mỗi ~0,067s: điểm giữ tầm có `wobble` cập nhật liên tục, mỗi bước chỉ 1–2px; `afterFree()` lúc tới đích kéo nhịp nghĩ AI về 0,06s. Đây là giật state/pose, không phải đo được FPS thấp hay do text hết Sương Yêu.

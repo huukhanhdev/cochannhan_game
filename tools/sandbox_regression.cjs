@@ -232,20 +232,21 @@ console.log('Release thiếu phí do upkeep: không đòn/CD/khóa chung; AoE g�
   SBAI.tick(B,SBSim.DT);assert.equal(b.decision.role,'cut');assert.ok(b.decision.x>p.x-70);assert.ok(b.move||b.act?.s.id==='dash');
   SBAI.level=old;
 }
-// Bộ não có chủ đích (Thường/Khó/Cao thủ): không đọc đích đi/aim ẩn; giữ thế đứng, không lao vào PN đứng yên ngoài tầm.
+// Bộ não có chủ đích (Thường/Khó/Cao thủ): không đọc đích đi/aim ẩn; PN đứng yên thì vào đánh; PN vận chiêu thì phạt.
 for(const lv of ['thuong','kho','cao']){
   const old=SBAI.level;SBAI.level=lv;
   const B=battle(),p=B.actors.pn,b=B.actors.bnb;b.ai=true;b.aiT=0;B.rng=()=>.99;b.ess=0;   // không đủ phí Lam Điểu/Lốc
   p.x=400;b.x=800;p.z=b.z=120;Object.defineProperty(p,'move',{get(){throw Error('AI đọc đích đi ẩn')}});
-  for(let i=0;i<120;i++){SBSim.step(B);b.ess=0}
-  const gap=Math.abs(b.x-p.x);assert.ok(gap>b.sk.atk.range&&gap<b.sk.atk.range+90,lv+' giữ thế đứng: '+gap);
-  assert.equal(B.events.filter(e=>e.type==='act'&&e.who==='bnb'&&e.skill==='atk').length,0);
+  // PN đứng yên: BNB tiến vào đánh thường trong vài giây, không đứng nhìn chờ nóng vội.
+  for(let i=0;i<180;i++){SBSim.step(B);b.ess=0}
+  assert.ok(B.events.some(e=>e.type==='act'&&e.who==='bnb'&&e.skill==='atk'),lv+' đánh PN đứng yên');
+  p.hp=p.maxHp;p.act=null;p.state='idle';p.x=400;b.x=p.x+250;b.z=p.z;b.act=null;b.state='idle';b.move=null;B.events.length=0;
   // PN vận Thiên Bồng 0,9s trong tầm lướt: BNB phạt (lướt vào hoặc đánh), sau thời gian phản xạ
   SBSim.issue(B,'pn',{skill:'thienbong'});for(let i=0;i<70;i++){SBSim.step(B);b.ess=0}
   assert.ok(B.events.some(e=>e.who==='bnb'&&e.type==='act'&&['dash','atk'].includes(e.skill)),lv+' phạt khi PN vận');
   SBAI.level=old;
 }
-console.log('Sân cấu hình/id riêng, telegraph công khai, cắt góc từ quan sát; BNB giữ thế đứng và phạt khi PN vận: đạt.');
+console.log('Sân cấu hình/id riêng, telegraph công khai, cắt góc từ quan sát; BNB vào đánh PN đứng yên và phạt khi PN vận: đạt.');
 // Khi bị đẩy vị trí trong lúc vận, đạn vẫn giữ hướng công khai đã khóa.
 {
   const B=battle(),p=B.actors.pn;SBSim.issue(B,'pn',{skill:'nguyet',x:800,z:p.z});
@@ -321,14 +322,18 @@ console.log('Sương Yêu tăng công/tự hại, nổ tay chuyển pha một l�
 }
 console.log('Nổ tay: giữ knockback trước Cường Thủ, ngắt armor không sót act: đạt.');
 
-// Đứng giữ tầm không tạo lệnh nhích/wobble hoặc đổi move-idle liên tục.
+// Không nhích/wobble: PN đứng yên thì BNB đi thẳng vào đánh (người dùng 02/10: “đứng yên nhìn một lát mới hành động”
+// là lỗi), không đổi move-idle liên tục; PN đi lại nhỏ trong vùng chết thì BNB giữ chỗ.
 {
   const B=battle(),p=B.actors.pn,b=B.actors.bnb;
-  p.x=600;b.x=432;p.z=b.z=130;b.ai=true;b.aiT=0;
+  p.x=600;b.x=432;p.z=b.z=130;b.ai=true;b.aiT=0;b.ess=0;
   B.rng=()=>.99;b.calmFrom=0;
   advance(B,180);
-  assert.equal(b.state,'idle');assert.equal(b.x,432);assert.equal(b.z,130);
-  assert.equal(B.events.filter(e=>e.type==='arrive').length,0);
+  assert.ok(B.events.some(e=>e.type==='act'&&e.who==='bnb'&&e.skill==='atk'));
+  assert.ok(B.events.filter(e=>e.type==='arrive'&&e.who==='bnb').length<=2);
+  const C=battle(),q=C.actors.pn,c=C.actors.bnb;q.x=600;c.x=432;q.z=c.z=130;c.ai=true;c.aiT=0;c.ess=0;C.rng=()=>.99;
+  for(let i=0;i<180;i++){if(i%40===0)SBSim.issue(C,'pn',{skill:'move',x:q.x+(i%80?25:-25),z:130});SBSim.step(C);c.ess=0}
+  assert.ok(C.events.filter(e=>e.type==='arrive'&&e.who==='bnb').length<=3);
 }
 // Đến đích đi không tăng nhịp AI lên 0,06s; lệnh buffer vẫn được xử lý.
 {
@@ -337,3 +342,12 @@ console.log('Nổ tay: giữ knockback trước Cường Thủ, ngắt armor kh�
   assert.equal(b.state,'idle');assert.ok(b.aiT>.4);
 }
 console.log('AI giữ tầm: không nhích/wobble, không tăng nhịp nghĩ khi tới đích: đạt.');
+// Bấm đánh tay lần hai trong lúc thu chiêu (0,46s > bộ đệm 0,25s cũ) không được mất lệnh.
+{
+  const B=battle(),p=B.actors.pn,b=B.actors.bnb;b.x=p.x+70;b.z=p.z;
+  SBSim.issue(B,'pn',{skill:'atk'});advance(B,24);
+  assert.equal(p.act.phase,'recovery');assert.equal(SBSim.issue(B,'pn',{skill:'atk'}).queued,true);
+  advance(B,60);
+  assert.equal(B.events.filter(e=>e.type==='release'&&e.who==='pn'&&e.skill==='atk').length,2);
+}
+console.log('Lệnh chờ giữ tới khi rảnh tay (đánh tay liên tiếp không mất lệnh): đạt.');

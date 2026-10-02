@@ -10,7 +10,7 @@
 // TÍCH HỢP: campaign gọi SBSim.create() với kit sinh từ S.gu / EN; khi B.over gọi win() hoặc die(c.n)
 // của engine.js và đồng bộ S.hp ← actor.hp.
 (function(root){
-  const DT=1/60,X0=110,X1=890,Z1=240,BUFFER=.25,BODY=60,BODYZ=34,CANCEL_FREE=.15,CANCEL_FEE=.25;
+  const DT=1/60,X0=110,X1=890,Z1=240,BUFFER=.25,BUFFER_MAX=.7,BODY=60,BODYZ=34,CANCEL_FREE=.15,CANCEL_FEE=.25;
 
   function create(kits,opt){
     opt=opt||{};
@@ -63,6 +63,12 @@
     return {ok:true};
   }
 
+  // Thời gian giữ lệnh chờ khi đang bận: tối thiểu BUFFER, kéo tới lúc rảnh tay (+0,05s) nhưng không quá BUFFER_MAX.
+  // Trước đây cố định 0,25s nên bấm đánh lần hai trong lúc thu chiêu 0,46s bị mất lệnh (cảm giác đánh tay bị trễ).
+  function busyLeft(a){
+    const left=a.state==='hit'?.32-a.since:a.act?totalT(a.act.s)-a.act.t:0;
+    return Math.min(BUFFER_MAX,Math.max(BUFFER,left+.05));
+  }
   // Huỷ chiêu đang ra bằng lệnh di chuyển: được khi đang lấy đà (chiêu không armor) hoặc đã qua nửa thu chiêu
   function cancelable(a){
     const A=a.act;if(!A)return false;const s=A.s;
@@ -89,7 +95,7 @@
     }
     if(cmd.skill==='stop'){a.chase=false;a.buffer=null;if(a.state==='move'){a.move=null;setState(a,'idle')}return {ok:true}}
     const r=check(B,a,cmd);
-    if(!r.ok){if(r.busy){a.buffer={cmd,until:B.t+(a.state==='hit'?Math.max(BUFFER,.32-a.since+.05):BUFFER)};return {ok:true,queued:true}}return r}
+    if(!r.ok){if(r.busy){a.buffer={cmd,until:B.t+busyLeft(a)};return {ok:true,queued:true}}return r}
     const s=a.sk[cmd.skill],t=other(B,a);
     if(s.kind==='melee'&&!inMelee(a,t,s,true)){            // ngoài tầm cận chiến: đánh thường thì đuổi tới
       if(s.id!=='atk')return {ok:false,reason:'Ngoài tầm '+s.n};

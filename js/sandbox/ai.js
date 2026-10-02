@@ -13,7 +13,8 @@
     cao:{think:.16,jitter:.05,dodge:.85,dmgK:1,gap:.6,react:.25,smart:true}};
   // Bộ não BNB "đánh có chủ đích" (Thường/Khó/Cao thủ, khác nhau ở react/think). Chỉ đọc thứ người chơi cũng thấy:
   // động tác đã hiện ≥ react giây, vệt đạn công khai, vị trí/vận tốc quan sát được. Không đọc con trỏ/đích đi/lệnh chưa phát.
-  //  · Thế đứng: giữ khoảng cách STANDOFF (ngoài tầm đấm/Cự Xỉ của PN), khớp chiều sâu, không tự lao vào.
+  //  · PN đứng yên → tiến vào đánh. PN trong tầm → đánh thường. PN đi lại ngoài tầm → giữ chỗ (chỉ chỉnh khi lệch nhiều),
+  //    phun Lam Điểu, cắt đường khi bị thả diều. Không bám theo từng bước.
   //  · Chỉ tiếp cận khi có lý do: PN tự bước vào tầm Băng nhận; PN kẹt trong vận/thu chiêu đủ lâu; PN bị chậm/khựng;
   //    PN bị dồn sát biên; hoặc quá IMPATIENT giây không ai trúng đòn (kiêu ngạo, ch134).
   //  · Đánh xong (trúng hay trượt) thì lùi về thế đứng, không đánh liên hoàn.
@@ -80,38 +81,28 @@
     const sp=Math.hypot(vx,vz),away=sp>40&&(vx*(t.x-a.x)+vz*(t.z-a.z))/Math.max(1,dist)>40;
     const toward=sp>40&&(vx*(a.x-t.x)+vz*(a.z-t.z))/Math.max(1,dist)>40;
     if(inRange&&poised){a.intent='melee';Sim.issue(B,a.id,{skill:'atk'});return}
-    // PN áp sát (tầm đấm của PN, hoặc đang lao tới): đòn 0,65s sẽ thua đòn đấm 0,28s → lùi giữ tầm, sát biên thì lách chiều sâu.
-    const pnReach=(t.sk.atk?.range||85)+20;
-    if(!impatient&&(dist<pnReach||(toward&&dist<stand))){
-      const bx=clampX(a.x-side*90),blocked=Math.abs(bx-a.x)<30;
-      a.intent='guard';a.backoffUntil=B.t+.4;
-      if(blocked&&ok('dash'))Sim.issue(B,a.id,{skill:'dash',x:clampX(a.x+side*60),z:clampZ(a.z+(a.z>Z1/2?-1:1)*150)});
-      else Sim.issue(B,a.id,{skill:'move',x:bx,z:clampZ(a.z+(blocked?(a.z>Z1/2?-1:1)*90:0))});
-      return;
-    }
-    // PN đứng trong tầm Băng nhận nhưng ngoài tầm đấm: đánh (trừ lúc đang lùi sau đòn)
+    // Trong tầm Băng nhận thì đánh thường (trừ lúc vừa đánh xong). Không lùi trước PN đứng yên hay đi tới:
+    // đòn PN đã lộ thì phần Né ở trên xử lý; nếu PN né được đòn của mình thì bước 0 huỷ.
     if(inRange&&B.t>=(a.backoffUntil||0)){a.intent='melee';Sim.issue(B,a.id,{skill:'atk'});return}
+    const idle=sp<40&&!ta;                                   // PN đứng yên, không ra chiêu
     const edge=t.x<X0+140?-1:t.x>X1-140?1:0;
-    // Nóng vội hoặc PN bị dồn biên: ép vào tầm
-    if((impatient||edge)&&B.t>=(a.backoffUntil||0)){
+    // PN đứng yên, bị dồn biên hoặc mình đã nóng vội: tiến vào đánh, không đứng nhìn.
+    if((idle||impatient||edge)&&B.t>=(a.backoffUntil||0)){
       const gx=clampX(t.x-side*atk.range*.75);
-      if(impatient&&dist>atk.range+10&&ok('dash')&&B.rng()<L.gap){a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:gx,z:t.z});return}
+      if(dist>stand+40&&ok('dash')&&B.rng()<L.gap){a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:gx,z:t.z});return}
       a.intent='near';Sim.issue(B,a.id,{skill:'move',x:gx,z:t.z});return;
     }
-    // Lam Điểu từ thế đứng: gây áp lực khi PN không đe dọa, giữ chân nguyên cho một Lốc.
+    // PN đang đi lại ngoài tầm: Lam Điểu gây áp lực, giữ chân nguyên cho một Lốc.
     const ld=a.sk.lamdieu;
-    if(ld&&ok('lamdieu')&&dist>=atk.range+20&&dist<ld.range*.8&&a.ess>=ld.cost+(lc?.cost||0)&&B.rng()<(impatient?.8:.45)){
+    if(ld&&ok('lamdieu')&&dist>=stand&&dist<ld.range*.8&&a.ess>=ld.cost+(lc?.cost||0)&&B.rng()<.45){
       a.intent='big';Sim.issue(B,a.id,{skill:'lamdieu',x:t.x,z:t.z});return}
-    // PN thả diều xa: cắt đường về khoảng thế đứng, không bám sát
+    // PN thả diều xa: cắt đường, không bám sát từng bước.
     if(away&&dist>stand+150&&ok('dash')&&B.rng()<L.gap*.5){
       a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:clampX(t.x+vx*.4-side*stand),z:clampZ(t.z+vz*.4)});return}
-    // Thế đứng ổn định: bỏ wobble và dùng deadband để không lướt/dừng mỗi vài tick.
-    const gx=clampX(t.x-side*stand+(away?vx*.3:0)),gz=clampZ(t.z);
-    a.intent='guard';
-    if(Math.hypot(gx-a.x,gz-a.z)<=12){
-      if(a.state==='move')Sim.issue(B,a.id,{skill:'stop'});
-      return;
-    }
+    // Còn lại: giữ chỗ. Chỉ chỉnh vị trí khi lệch nhiều (không bám theo mỗi bước của PN).
+    const gx=clampX(t.x-side*stand),gz=clampZ(t.z);
+    a.intent='near';
+    if(Math.abs(a.x-gx)<=70&&Math.abs(a.z-gz)<=60){if(a.state==='move')Sim.issue(B,a.id,{skill:'stop'});return}
     Sim.issue(B,a.id,{skill:'move',x:gx,z:gz});
   }
   const SBAI={level:'thuong',LEVEL,

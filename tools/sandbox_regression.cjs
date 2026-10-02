@@ -134,3 +134,44 @@ console.log('Cooldown chung 2s: release, cooldown cũ, miễn đi/lướt/đấm
   SBAI.level=previous;
 }
 console.log('AI Khó: né startup đã lộ và áp sát người đang hồi máu: đạt.');
+
+// Thiên Bồng: vận đứng yên, phí bật 18; đủ 3s mất thêm 15, không regen trong giáp.
+function activateCanopy(B){
+  assert.equal(SBSim.issue(B,'pn',{skill:'thienbong'}).ok,true);
+  for(let i=0;i<60&&!B.actors.pn.shield;i++)SBSim.step(B);
+  assert.ok(B.actors.pn.shield);
+}
+{
+  const B=battle(),p=B.actors.pn,x=p.x,z=p.z;
+  SBSim.issue(B,'pn',{skill:'thienbong'});advance(B,53);
+  assert.equal(p.shield,null);assert.equal(p.ess,100);
+  assert.equal(p.x,x);assert.equal(p.z,z);
+  while(!p.shield)SBSim.step(B);
+  assert.ok(B.t>=.9);assert.equal(p.ess,82);
+  const releaseAt=B.t;
+  advance(B,60);assert.ok(Math.abs(p.ess-77)<1e-9);assert.ok(p.shield);
+  advance(B,120);assert.equal(p.shield,null);
+  assert.ok(Math.abs(p.ess-67)<1e-9);assert.ok(Math.abs(B.t-releaseAt-3)<1e-9);
+  assert.equal(B.events.filter(e=>e.type==='shieldEnd'&&e.who==='pn').length,1);
+  advance(B,60);assert.ok(Math.abs(p.ess-68.8)<1e-9);
+}
+// Hết tài nguyên tắt sớm; thay giáp không tiếp tục thu phí Thiên Bồng.
+{
+  const B=battle(),p=B.actors.pn;activateCanopy(B);p.ess=1;
+  advance(B,12);assert.equal(p.shield,null);assert.ok(p.ess<1e-9);
+  advance(B,1);assert.ok(p.ess>0);
+  const C=battle(),q=C.actors.pn;activateCanopy(C);advance(C,121);
+  SBSim.issue(C,'pn',{skill:'bachngoc'});
+  while(q.shield?.id!=='bachngoc')SBSim.step(C);
+  const ess=q.ess;advance(C,30);
+  assert.ok(Math.abs(q.ess-ess-.9)<1e-9);
+}
+// Huỷ trước release không có giáp/phí bật; kết trận ngừng cả upkeep và regen.
+{
+  const B=battle(),p=B.actors.pn;SBSim.issue(B,'pn',{skill:'thienbong'});advance(B,20);
+  SBSim.issue(B,'pn',{skill:'move',x:150,z:0,cancel:true});advance(B,60);
+  assert.equal(p.shield,null);assert.equal(p.ess,100);assert.equal(p.cd.thienbong,undefined);
+  const C=battle(),q=C.actors.pn;activateCanopy(C);const ess=q.ess;
+  C.over={winner:'pn',loser:'bnb',at:C.t};advance(C,240);assert.equal(q.ess,ess);
+}
+console.log('Thiên Bồng: vận 0,9s, phí 18+15/3s, ngừng regen, hết nguyên/thay giáp/huỷ/kết trận: đạt.');

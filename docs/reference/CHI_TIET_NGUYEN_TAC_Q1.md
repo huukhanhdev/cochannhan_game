@@ -1,4 +1,6 @@
 # Toàn Văn Đối Chiếu Nguyên Tác Quyển 1 (Chương 1 – 206)
+
+> Đính chính 02/10/2026: các dòng “mượn Thiên Bồng” và suy sở hữu Cự Xỉ từ ch.129 không chính xác. Đối chiếu chương truyện và mốc PN–BNB mới ở [kế hoạch cân bằng, mục 1](../undone/KE_HOACH_CAN_BANG_CO_TRUNG_VA_BNB_THEO_MOC_TRUYEN.md#1-đối-chiếu-truyện-những-điểm-phải-sửa). Phần ghi chép bên dưới chưa được rà lại toàn bộ, không dùng một mình để chốt bộ cổ battle.
 *Ghi chép chi tiết từng chương theo bản dịch tiếng Việt gốc từ truyenmoiss.org/co-chan-nhan/*
 *Mục đích: Đối chiếu chính xác từng tình tiết, lời thoại đắt giá, cổ trùng, nhân vật để game không bị thiếu sót hay sai lệch.*
 

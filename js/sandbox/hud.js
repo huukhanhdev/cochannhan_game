@@ -27,7 +27,7 @@ const SBHud=(function(){
     for(const id of ['pn','bnb']){const a=B.actors[id],b=el.bars[id];
       b.querySelector('.hp i').style.width=(a.hp/a.maxHp*100)+'%';b.querySelector('.hp span').textContent=Math.ceil(a.hp)+' / '+a.maxHp;
       b.querySelector('.ess i').style.width=(a.ess/a.maxEss*100)+'%';b.querySelector('.ess span').textContent=Math.floor(a.ess)+' chân nguyên';
-      b.querySelector('.buff').textContent=[a.shield?a.sk[a.shield.id].n+' '+Math.max(0,a.shield.until-B.t).toFixed(1)+'s':'',a.bleed?'chảy máu':'',a.slowUntil>B.t?'bị chậm':''].filter(Boolean).join(' · ')}
+      b.querySelector('.buff').textContent=[a.shield?a.sk[a.shield.id].n+' '+Math.max(0,a.shield.until-B.t).toFixed(1)+'s'+(a.shield.upkeepPerSecond?' · −'+a.shield.upkeepPerSecond+' c.n/s':''):'',a.bleed?'chảy máu':'',a.slowUntil>B.t?'bị chậm':''].filter(Boolean).join(' · ')}
     const p=B.actors.pn;
     [...el.sbar.children].forEach(c=>{
       const s=p.sk[c.dataset.id],cd=p.cd[s.id]||0,lack=(s.cost||0)>p.ess,out=s.uses&&!(p.uses[s.id]>0);

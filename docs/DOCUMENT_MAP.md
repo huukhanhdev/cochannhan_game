@@ -1,5 +1,7 @@
 # Bản đồ di chuyển và gộp tài liệu
 
+Kế hoạch mới chờ Orange-kun review: [Cân bằng cổ trùng và BNB theo mốc truyện — Blue-chan](undone/KE_HOACH_CAN_BANG_CO_TRUNG_VA_BNB_THEO_MOC_TRUYEN.md). Đối chiếu ch.129–190, tách bộ cổ từng lần gặp, vận chiêu/hộ thể và cách đo cân bằng; chưa đổi code.
+
 Kế hoạch chờ Orange-kun review: [Chốt sandbox PN–BNB: KO và điều khiển mobile](undone/KE_HOACH_CHOT_SANDBOX_PN_BNB.md).
 
 02/10/2026. Dùng để tìm file từ tab IDE hoặc tên cũ.

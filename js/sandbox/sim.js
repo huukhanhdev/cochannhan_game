@@ -122,8 +122,7 @@
     for(const a of Object.values(B.actors)){
       a.since+=DT;
       for(const k in a.cd)if(a.cd[k]>0)a.cd[k]=Math.max(0,a.cd[k]-DT);
-      if(a.state!=='ko'&&!B.over)a.ess=Math.min(a.maxEss,a.ess+a.kit.essRegen*DT);
-      if(a.shield&&B.t>=a.shield.until){a.shield=null;emit(B,{type:'shieldEnd',who:a.id})}
+      if(a.state!=='ko'&&!B.over)stepEss(B,a);
       if(a.bleed&&a.state!=='ko'){
         a.bleed.acc+=a.bleed.dps*DT;
         if(a.bleed.acc>=1){const n=Math.floor(a.bleed.acc);a.bleed.acc-=n;hurt(B,a,n,null,0,{dot:true})}
@@ -142,6 +141,23 @@
     stepZones(B);if(B.over)return;
     separate(B);
     if(typeof SBAI!=='undefined')SBAI.tick(B,DT);
+  }
+  // Phí duy trì theo thời gian thực của simulation: không thu phí lúc đang vận,
+  // không thu vượt thời hạn và không hồi chân nguyên trong phần tick giáp còn bật.
+  function stepEss(B,a){
+    const sh=a.shield;let regenTime=DT;
+    if(sh){
+      const elapsed=Math.max(0,Math.min(B.t,sh.until)-sh.accountedAt);
+      const upkeep=sh.upkeepPerSecond||0;
+      const maintained=upkeep>0?Math.min(elapsed,a.ess/upkeep):elapsed;
+      if(upkeep>0)a.ess=Math.max(0,a.ess-maintained*upkeep);
+      if(sh.pauseEssRegen)regenTime=Math.max(0,DT-maintained);
+      sh.accountedAt=Math.min(B.t,sh.until);
+      if(B.t>=sh.until-1e-9||(upkeep>0&&a.ess<=1e-9)){
+        a.shield=null;emit(B,{type:'shieldEnd',who:a.id});
+      }
+    }
+    a.ess=Math.min(a.maxEss,a.ess+a.kit.essRegen*regenTime);
   }
   function speedOf(B,a){return a.kit.speed*(a.slowUntil>B.t?a.slowF||.7:1)}
   function stepMove(B,a){
@@ -193,7 +209,9 @@
         emit(B,{type:'grab',who:a.id,target:t.id});
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
     }else if(s.kind==='buff'){
-      a.shield={id:s.id,red:s.red,until:B.t+s.dur,tint:s.tint};emit(B,{type:'shield',who:a.id,skill:s.id});
+      a.shield={id:s.id,red:s.red,until:B.t+s.dur,tint:s.tint,
+        accountedAt:B.t,upkeepPerSecond:s.upkeepPerSecond||0,pauseEssRegen:!!s.pauseEssRegen};
+      emit(B,{type:'shield',who:a.id,skill:s.id});
     }else if(s.kind==='heal'){
       const n=Math.min(s.amt,a.maxHp-a.hp);a.hp+=n;emit(B,{type:'heal',who:a.id,amount:n});
     }else if(s.kind==='escape'){

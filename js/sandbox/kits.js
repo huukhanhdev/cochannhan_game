@@ -37,8 +37,8 @@
       story:{detonateAt:.3,shellDur:2.5,shellRed:.8,shellHeal:24,knock:150,knockSlow:{f:.6,dur:1.5},retreatOnDefeat:true,
         src:'ch139: nổ Sương Yêu cổ ở lòng bàn tay phải, băng thành vỏ giáp để hồi phục; ch140: cổ đã mất · số liệu là game'},
       // Bạch Ngọc / Băng Trùy tạm bỏ khỏi kit sandbox, chờ xác minh nguồn Q1 (vẫn còn trong js/data.js)
-      atk:{id:'atk',n:'Băng nhận',icon:'冰',kind:'melee',clip:['atk','attack'],startup:.65,active:.10,recovery:.42,cd:0,cost:0,range:118,depth:46,dmg:24,
-        slow:{f:.7,dur:1.2},fx:'ice',src:'ch135,172: dải hàn băng phóng từ tay',d:'Một tay hất dải hàn băng chém ra, làm chậm.'},
+      atk:{id:'atk',n:'Băng nhận',icon:'冰',kind:'melee',clip:['atk','attack'],startup:.65,active:.10,recovery:.42,cd:0,cost:0,range:165,depth:46,dmg:24,
+        slow:{f:.7,dur:1.2},fx:'ice',src:'ch135,172: dải hàn băng phóng từ tay · tầm 165 (người dùng 03/10: tầm xa hơn để BNB không phải bám sát PN) là game',d:'Một tay hất dải hàn băng chém ra, làm chậm.'},
       skills:[
         {key:'q',id:'locbangnhan',n:'Lốc băng nhận',icon:'旋',kind:'aoe',clip:['sk_locbangnhan','heavy'],startup:1.15,active:.15,recovery:.60,cd:10,cost:22,
           radius:125,castRange:340,dmg:96,armor:true,fx:'blizzard',src:'ch140',d:'Khóa vùng lúc lấy đà, nổ sau 1,15 giây: 96 sát thương trước hộ thể. Bước khỏi vòng đỏ hoặc lướt để né. Không bị ngắt khi lấy đà.'},

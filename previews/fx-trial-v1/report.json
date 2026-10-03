@@ -1,0 +1,56 @@
+{
+ "fx_bang_truy": {
+  "frames": 3,
+  "cell": [
+   72,
+   72
+  ],
+  "colors": 16,
+  "pink_px": 0
+ },
+ "fx_hit_nguyet": {
+  "frames": 5,
+  "cell": [
+   64,
+   64
+  ],
+  "colors": 15,
+  "pink_px": 0
+ },
+ "fx_nguyet_nhan": {
+  "frames": 4,
+  "cell": [
+   96,
+   96
+  ],
+  "colors": 13,
+  "pink_px": 0
+ },
+ "fx_st_choang": {
+  "frames": 4,
+  "cell": [
+   48,
+   48
+  ],
+  "colors": 14,
+  "pink_px": 0
+ },
+ "fx_st_phong_cam": {
+  "frames": 4,
+  "cell": [
+   64,
+   64
+  ],
+  "colors": 15,
+  "pink_px": 0
+ },
+ "fx_st_troi": {
+  "frames": 4,
+  "cell": [
+   96,
+   96
+  ],
+  "colors": 16,
+  "pink_px": 0
+ }
+}

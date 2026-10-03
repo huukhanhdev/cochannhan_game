@@ -130,6 +130,11 @@
       }
       return false;                                                     // lao đang hồi: để nhánh chung đánh thường/giữ tầm
     }
+    if(style==='tester'){                                     // hình nộm thử trạng thái: lần lượt bắn mọi chiêu có applies
+      const S=Object.values(a.sk).find(s=>s.applies&&ok(s.id));
+      if(S){a.intent='big';Sim.issue(B,a.id,{skill:S.id,x:t.x,z:t.z});return true}
+      return false;
+    }
     if(style==='midrange'){
       const P=Object.values(a.sk).filter(s=>s.tags?.includes('poke')),G=Object.values(a.sk).find(s=>s.tags?.includes('guard'));
       const readyP=P.find(s=>ok(s.id));

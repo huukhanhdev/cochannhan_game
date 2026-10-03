@@ -81,6 +81,7 @@ const SBView=(function(){
         return [clip,r+1+Math.min(rest-1,Math.floor((A.t-A.s.startup-A.s.active)/A.s.recovery*rest))];
       }
       case 'hit':return [c('hit'),a.since<.14?0:Math.min(1,c('hit').tex.length-1)];
+      case 'stun':{const h=c('hit');return [h,Math.min(1,h.tex.length-1)]}
       case 'shell':{const g=c('guard');return [g,g.tex.length-1]}
       case 'ko':{if(B.over?.retreat&&B.over.loser===a.id)return [c('move'),Math.floor((B.t-B.over.at)*5)%Math.max(1,c('move').tex.length)];
         const k=c('ko');return [k,KPSprite.frameAt(Object.assign({},k,{loop:false}),a.since)]}
@@ -105,7 +106,9 @@ const SBView=(function(){
       const noKo=a.state==='ko'&&!fleeing&&!kp[a.id].clips.ko,kt=noKo?Math.min(1,a.since/.5):0;
       S.s.rotation=noKo?-a.face*1.2*kt:0;if(noKo)S.c.alpha=1-.5*kt;
       S.flash.alpha=Math.max(0,1-(B.t-a.flashAt)/.16);
-      S.intent.text=a.ai&&!B.over?(INTENT[a.intent]||''):'';S.intent.y=-S.hy*1.02*k;
+      // Trạng thái xấu đang dính hiện thay ý đồ AI (ưu tiên khống chế): icon + giây còn lại.
+      const bad=B.over?null:SB_STATUS.view(B,a).find(v=>!v.good);
+      S.intent.text=bad?bad.icon+' '+bad.left.toFixed(1):a.ai&&!B.over?(INTENT[a.intent]||''):'';S.intent.y=-S.hy*1.02*k;
       // hộ thể: vầng sáng quanh thân
       S.aura.clear();
       if(a.shield){
@@ -149,6 +152,8 @@ const SBView=(function(){
       else if(e.type==='fizzle')floatText(a,'thiếu chân nguyên',0xffb070,.7);
       else if(e.type==='heal')floatText(a,'+'+e.amount,0x8fe0b0,1);
       else if(e.type==='escape'){floatText(a,'thoát thân',0xbfe8ff,.75);burst(a.x,a.z,0xd8f4ff,22,140)}
+      else if(e.type==='status'){const D=SB_STATUS.DEF[e.st];floatText(a,D.n+'!',D.color,.8)}
+      else if(e.type==='statusImmune')floatText(a,'miễn',0xcfd8e0,.6)
       else if(e.type==='transform'){floatText(a,a.sk[e.skill]?.n||'Biến thân',0x9fe08a,.85);burst(a.x,a.z,0x6fbf5a,14,60)}
       else if(e.type==='transformEnd')floatText(a,'trở lại thân người',0xa8c89a,.7);
       else if(e.type==='phase'){floatText(a,e.n||'Chuyển pha',0xffe14a,.85);burst(a.x,a.z,0xffe14a,16,70)}

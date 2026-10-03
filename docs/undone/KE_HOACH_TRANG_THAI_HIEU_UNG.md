@@ -116,3 +116,62 @@ Game cũ chỉ gắn trạng thái vào cổ **có nguồn chương**. Trạng t
 2. **Hỗn loạn** (đảo phím): có làm không? Đề xuất: không, hoặc chỉ dùng cho boss đặc biệt.
 3. **Mù** với người chơi: tối viền + mất vòng báo đòn (đề xuất), hay chỉ lệch đạn?
 4. Thời gian khống chế cứng tối đa: đề xuất **1,5s**, giảm dần như §1.
+
+## 7. Chốt sau review Blue (03/10/2026)
+
+Orange đồng ý cả 6 điểm. Các mục trên được sửa như sau (mục này thay chỗ mâu thuẫn ở §1–5):
+
+1. **Chia nhỏ S1:**
+   - **S1a** chuyển `slow`, `bleed`.
+   - **S1b** chuyển `shield`, `empower`.
+   - `transform`, `absorb` và pha truyện (`phases`) **giữ cơ chế riêng**; hệ trạng thái chỉ **đọc** chúng (`statusView(a)`) để hiện icon và cho AI biết. Mỗi bước đều phải trùng trace baseline.
+2. **Tách hai khái niệm:**
+   - `interruptResist`: luật `armor` hiện tại, chống bị **ngắt chiêu** do khựng hoặc đẩy lùi.
+   - `ccImmune`: miễn khống chế, gán riêng theo tag (`hard`/`root`/`seal`).
+
+   `armor` **chỉ** = `interruptResist`, không miễn trói hay phong cấm.
+
+   Riêng **choáng** (khống chế cứng) vẫn ngắt cả chiêu `armor`. **Trói/phong cấm** không ngắt chiêu đang vận, chỉ chặn lệnh mới thuộc loại bị cấm.
+3. **Miễn và giảm dần:**
+   - Khoảng miễn 1,2s tính **sau khi khống chế kết thúc**.
+   - Giảm dần theo **nhóm**: `hard` (choáng, đóng băng, hóa tượng, hất ngã, sợ hãi), `root` (trói), `seal` (phong cấm). Mỗi nhóm đếm riêng trong cửa sổ 6s: 100% → 50% → 25% → miễn.
+   - **Khựng** do trúng đòn thường (state `hit` 0,32s + `poise` 1,2s) giữ luật cũ, **không** tính vào giảm dần và không mở khoảng miễn khống chế.
+4. **Cộng dồn: mỗi trạng thái có danh sách instance theo nguồn**, `a.st[id] = [{src, until, stacks, power, data}]`. Chế độ:
+   - `refresh` (một instance): thời hạn = max(còn lại, mới); `power` lấy cái lớn hơn.
+   - `perSource` (vd độc): mỗi nguồn một instance, thời hạn riêng. Hiệu lực = tổng tầng, có `maxStacks` chung; vượt trần thì instance sắp hết hạn bị thay.
+   - `keep`: so `power` (mức tác dụng) trước, bằng nhau thì so thời gian còn lại.
+   - **DoT** ghi công cho `src`. Nguồn chết thì DoT vẫn chạy tới hết hạn. Trận kết thúc (`B.over`) hoặc mục tiêu KO thì **xóa hết** trạng thái của bên đó.
+5. **Giữ đúng dossier:**
+   - Trấn Ma Thiết Tác là **trói + trấn áp không khiếu**, có thể ghép trói + phong cấm. Chỉ gắn khi dossier đợt 2 duyệt cơ chế.
+   - Trị Liệu **chỉ giải chảy máu** (data.js `cure` = cầm máu), **không** giải độc.
+   - Độc của cương thi chưa xác minh, **không gắn**.
+   - Hóa tượng "vỡ khi trúng đòn +50%" và tàng hình "đòn đầu ×1,3" ghi `src:'game'` (thông số chuyển thể).
+6. **Test bảo toàn bắt buộc** (thêm vào S1/S2):
+   - Thiên Bồng vẫn trả phí duy trì và ngừng hồi chân nguyên.
+   - DoT bỏ qua hộ thể.
+   - Lệnh đệm khi bị khống chế: bị choáng thì **xóa** lệnh đệm. Lệnh mới trong lúc bị khống chế bị **từ chối kèm lý do**, không xếp hàng.
+   - Giải trạng thái.
+   - Dọn sạch khi KO và kết trận.
+   - Trace PN/BNB giữ chân nguyên và thời điểm phát chiêu (trace hiện có: event `release` kèm `t`, ess mỗi 0,5s).
+
+**Bốn lựa chọn cuối plan (đề xuất Blue, Orange đồng ý; chờ người dùng chơi thử chốt số):**
+- S2 chỉ thêm **Choáng, Trói, Phong cấm** vào sim. Các trạng thái khác thử trên **hình nộm** trước.
+- **Hoãn Hỗn loạn.**
+- **Mù:** vòng báo đòn mờ nhưng vẫn đọc được; độ lệch đạn thử nhỏ (±10°) trước.
+- **Choáng thường 0,6–1s, trần 1,5s**; số cuối chốt bằng chơi thử.
+
+Blue làm icon/FX sau khi Orange chốt danh sách và event (`status`, `statusEnd`, `statusBlocked`, `statusImmune`).
+
+## 8. Đã làm (03/10/2026, Orange)
+- **S1a xong:** `js/sandbox/status.js` có store `a.st` + `apply/active/blocked/expire/clearAll/view`. Làm chậm và chảy máu chạy qua store, giữ luật cũ (mode `replace`). Trường cũ `slowUntil/slowF/bleed` vẫn đọc/ghi được nhờ getter/setter. **Trace 45/45 trùng.**
+- **S2 xong:** choáng (state `stun`, ngắt cả chiêu armor, xóa lệnh đệm), trói, phong cấm.
+  - Chiêu khai báo `applies:[{st,dur,chance}]`, áp ở mọi nhánh trúng (cận chiến, đạn, vùng, chộp, lao).
+  - Giảm dần theo nhóm và miễn 1,2s sau khi kết thúc; trần choáng 1,5s.
+  - Lệnh bị chặn trả lý do, không xếp hàng.
+  - Event: `status`, `statusEnd`, `statusImmune`.
+- **S3 (hình nộm) có sẵn:** profile `hinh_nom`.
+  - Q choáng 0,8s, W trói 1,5s, E phong cấm 2s.
+  - Chơi bên hình nộm để gây trạng thái lên PN máy (`?p=hinh_nom&e=pn_demo`), hoặc xem máy đấu máy (`?p=pn_demo&e=hinh_nom&mode=auto`).
+- **Hiển thị tạm:** icon + giây còn lại trên đầu (ưu tiên choáng), chữ nổi "Choáng!", "miễn", nhãn trên thanh máu. Icon vẽ riêng chờ Blue.
+- **Chưa:** S1b (shield/empower), mù và các trạng thái khác (thử trên hình nộm trước), AI đọc trạng thái đối thủ (S5), gắn cổ theo dossier (S6).
+- **Test:** chuyển slow/bleed giữ luật, DoT bỏ qua hộ thể, choáng ngắt armor và xóa lệnh đệm, trói, phong cấm (vật phẩm vẫn dùng được), giảm dần + miễn, dọn khi KO.

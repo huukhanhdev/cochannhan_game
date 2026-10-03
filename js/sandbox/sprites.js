@@ -17,7 +17,7 @@
     },
     use:{},                          // ghi đè từng visual: {visualId:'pilot_v1'}
     // visual id → tên thư mục khác trong set. Hai khôi tạm dùng chung sprite gộp cũ tới khi Blue tách hình.
-    alias:{tuu_khoi:'tuu_khoi_huyet_khoi',huyet_khoi:'tuu_khoi_huyet_khoi'},
+    alias:{tuu_khoi:'tuu_khoi_huyet_khoi',huyet_khoi:'tuu_khoi_huyet_khoi',hinh_nom:'tuu_khoi_huyet_khoi'},
     resolve(visual){
       const set=SB_SPRITES.use[visual]||SB_SPRITES.active,S=SB_SPRITES.sets[set];
       if(!S)throw new Error('Bộ hình không tồn tại: '+set);

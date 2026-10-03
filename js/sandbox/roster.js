@@ -149,6 +149,19 @@
     ],
     src:'game: Tam chuyển (EN.madutam), hp 380 theo data.js'});
 
+  // Hình nộm thử trạng thái (KE_HOACH_TRANG_THAI_HIEU_UNG S3): mỗi phím gây một trạng thái. Sát thương gần 0, máu lớn.
+  // Chơi bên hình nộm để gây trạng thái lên PN máy; hoặc để hình nộm máy bắn lên bạn. Thông số khống chế là thử nghiệm (src game).
+  const HINH_NOM={n:'Hình nộm thử trạng thái',hp:5000,ess:0,essRegen:0,speed:200,ai:{style:'tester'},
+    atk:{id:'atk',n:'Gõ nhẹ',icon:'木',kind:'melee',clip:['atk'],startup:.4,active:.08,recovery:.3,cd:0,cost:0,range:90,depth:44,dmg:1,src:'game: hình nộm thử'},
+    skills:[
+      {key:'q',id:'thu_choang',n:'Thử choáng',icon:'暈',kind:'proj',clip:['atk'],startup:.45,active:.05,recovery:.3,cd:3,cost:0,speed:420,range:600,dmg:1,fx:'fire',tags:['poke'],
+        applies:[{st:'stun',dur:.8}],src:'game: choáng 0,8s (thử 0,6–1s)',d:'Choáng 0,8s: không làm gì được, ngắt chiêu.'},
+      {key:'w',id:'thu_troi',n:'Thử trói',icon:'縛',kind:'proj',clip:['atk'],startup:.45,active:.05,recovery:.3,cd:3,cost:0,speed:420,range:600,dmg:1,fx:'wood',tags:['poke'],
+        applies:[{st:'root',dur:1.5}],src:'game: trói 1,5s',d:'Trói 1,5s: không đi/lướt, vẫn ra chiêu.'},
+      {key:'e',id:'thu_phongcam',n:'Thử phong cấm',icon:'封',kind:'proj',clip:['atk'],startup:.45,active:.05,recovery:.3,cd:3,cost:0,speed:420,range:600,dmg:1,fx:'blood',tags:['poke'],
+        applies:[{st:'seal',dur:2}],src:'game: phong cấm 2s',d:'Phong cấm 2s: không dùng cổ, vẫn đánh tay/vật phẩm.'},
+    ]};
+
   // Preset PN theo cảnh = save giả, dựng bằng cùng adapter với campaign (SB_GU.pnKitFromSave). Chỉ dùng trong sandbox.
   const PN_SCENE={
     ch70:{chuyen:1,giai:2,tuchat:44,herbs:0,stones:3,gu:['xuanthu','tuutrung','nguyetquang','tieuguang'],
@@ -185,6 +198,7 @@
     tuu_khoi_game:{char:'tuu_khoi',kit:()=>TUU_KHOI,label:'Tửu Khôi (thiết kế game)',ch:'—',vs:'pn_ch84',status:'kit',note:'Động Hoa Tửu tầng 4; tái tụ.'},
     huyet_khoi_game:{char:'huyet_khoi',kit:()=>HUYET_KHOI,label:'Huyết Khôi (thiết kế game)',ch:'—',vs:'pn_demo',status:'kit',note:'Lăng mộ Nhất Đại; chảy máu thì không tái tụ (PN demo có Cứ Xỉ gây chảy máu).'},
     huyet_thu_game:{char:'huyet_thu_ma_tu',kit:MADUTAM,label:'Huyết Thủ ma tu (thiết kế game)',ch:'—',vs:'pn_ch70',status:'kit',note:'Tam chuyển gặp sớm: thường thua (đúng sự kiện). Cổ trị liệu làm đòn hút trượt.'},
+    hinh_nom:{char:'hinh_nom',tool:true,kit:()=>HINH_NOM,label:'Hình nộm thử trạng thái',ch:'—',vs:'pn_demo',status:'kit',note:'Thử choáng/trói/phong cấm; chơi bên hình nộm để gây lên PN.'},
     bnb_q1_ch140:{char:'bach_ngung_bang_nam',kit:BNB_CH140,label:'Bạch Ngưng Băng (Q1, sau nổ tay)',ch:'140–143',vs:'thanh_thu_ch141',status:'kit'},
   };
 
@@ -232,6 +246,7 @@
     ba_quy_spirit:C('Bá Quy địa linh',0,'468–478','khong_dau','NPC'),
     // Thiết kế game (batch 5), người dùng chốt 03/10. Hình tạm: sprite gộp cũ tuu_khoi_huyet_khoi cho cả hai khôi (alias ở SB_SPRITES).
     huyet_thu_ma_tu:C('Huyết Thủ ma tu',5,'—','kit','Ma tu Tam chuyển hút máu (sự kiện r_tukiep); không phải Thương Yến Phi',{profiles:['huyet_thu_game']}),
+    hinh_nom:C('Hình nộm thử trạng thái',0,'—','kit','Công cụ thử, không phải nhân vật',{profiles:['hinh_nom']}),
     tuu_khoi:C('Tửu Khôi',5,'—','kit','Rối vò rượu, tái tụ (động Hoa Tửu tầng 4)',{profiles:['tuu_khoi_game']}),
     huyet_khoi:C('Huyết Khôi',5,'—','kit','Người máu, tái tụ, chảy máu thì không tái tụ (lăng mộ Nhất Đại)',{profiles:['huyet_khoi_game']}),
   };

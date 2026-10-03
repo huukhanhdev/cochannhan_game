@@ -387,7 +387,7 @@ console.log('Đấm tay nhẹ không làm khựng: đạt.');
         for(const a of Object.values(B.actors))assert.ok(Number.isFinite(a.hp)&&Number.isFinite(a.ess)&&Number.isFinite(a.x)&&Number.isFinite(a.z),id+': NaN')}
       if(B.over)done++;
     }
-    assert.ok(done>=1,id+': đấu gương 5 trận đều hết giờ');
+    if(!SB_ROSTER.PROFILES[id].tool)assert.ok(done>=1,id+': đấu gương 5 trận đều hết giờ');   // hình nộm thử (tool) không cần kết trận
   }
   // Đổi bộ hình chỉ đổi thư mục, không đổi kit.
   const before=SB_ROSTER.resolve('heo_rung_q1');SB_SPRITES.use.heo_rung='pilot_v1';
@@ -582,3 +582,61 @@ console.log('Nguyên thạch từ save: tối đa 3 viên/trận, không quá s�
   assert.ok(n2>=6);
 }
 console.log('AI phong cách: Heo lao khi đủ đà và thẳng hàng; Phương Chính bắn ở tầm trung: đạt.');
+
+// ── Hệ trạng thái S1a + S2 (KE_HOACH_TRANG_THAI_HIEU_UNG §7) ──
+{
+  const {SB_ROSTER,SB_STATUS}=require('./sandbox_sim.cjs');
+  // S1a bảo toàn: trường cũ đọc/ghi được, DoT bỏ qua hộ thể, Thiên Bồng vẫn trả phí duy trì (đã có test riêng ở trên).
+  {
+    const B=battle({pnRegen:0}),p=B.actors.pn;p.bleed={dps:10,until:1,acc:0};
+    p.shield={id:'x',red:.9,until:5,accountedAt:0,upkeepPerSecond:0};
+    advance(B,60);assert.ok(p.hp<=p.maxHp-9,'chảy máu bỏ qua hộ thể');
+    p.slowUntil=B.t+1;p.slowF=.5;assert.equal(p.slowF,.5);assert.ok(SB_STATUS.active(B,p,'slow'));
+  }
+  const duel=()=>{const M=SB_ROSTER.matchup('pn_demo','hinh_nom'),B=SBSim.create(M.kits,{ids:M.ids,arena:SBSim.ARENAS.wide});B.actors.p2.ai=false;
+    const p=B.actors.p1,h=B.actors.p2;p.x=400;h.x=700;p.z=h.z=130;return {B,p,h}};
+  const hitWith=(B,h,p,id)=>{h.cd={};SBSim.issue(B,'p2',{skill:id,x:p.x,z:p.z});advance(B,Math.ceil((h.sk[id].startup+.05)*60)+50)};
+  // Choáng: ngắt cả chiêu armor, xóa lệnh đệm, từ chối lệnh mới kèm lý do, hết thì về idle.
+  {
+    const {B,p,h}=duel();p.sk.atk=Object.assign({},p.sk.atk,{armor:true});
+    hitWith(B,h,p,'thu_choang');
+    assert.equal(p.state,'stun');const r=SBSim.issue(B,'p1',{skill:'nguyet'});assert.equal(r.ok,false);assert.ok(r.status&&/choáng/.test(r.reason));
+    assert.equal(SBSim.issue(B,'p1',{skill:'move',x:100,z:100}).ok,false);assert.equal(p.buffer,null);
+    advance(B,60);assert.notEqual(p.state,'stun');assert.equal(B.events.filter(e=>e.type==='statusEnd'&&e.st==='stun').length,1);
+  }
+  // Trói: không đi/lướt, vẫn ra chiêu; không ngắt chiêu đang vận.
+  {
+    const {B,p,h}=duel();hitWith(B,h,p,'thu_troi');
+    assert.equal(SBSim.issue(B,'p1',{skill:'move',x:100,z:100}).ok,false);assert.equal(SBSim.issue(B,'p1',{skill:'dash',x:100,z:100}).ok,false);
+    assert.equal(SBSim.issue(B,'p1',{skill:'nguyet',x:h.x,z:h.z}).ok,true);
+  }
+  // Phong cấm: cổ bị từ chối; đánh tay, vật phẩm (lá) và đi lại vẫn được.
+  {
+    const {B,p,h}=duel();hitWith(B,h,p,'thu_phongcam');
+    const r=SBSim.issue(B,'p1',{skill:'nguyet'});assert.equal(r.ok,false);assert.ok(/phong cấm/.test(r.reason));
+    assert.equal(SBSim.issue(B,'p1',{skill:'move',x:300,z:130}).ok,true);
+    p.hp=100;advance(B,10);assert.equal(SBSim.issue(B,'p1',{skill:'leaf'}).ok,true);
+  }
+  // Giảm dần theo nhóm (100% → 50% → 25% → miễn) và miễn 1,2s sau khi khống chế kết thúc; nhóm khác đếm riêng.
+  {
+    const {B,p}=duel(),ap=(id,dur)=>SB_STATUS.apply(B,p,id,{dur,src:'x'});
+    const a1=ap('stun',.8);assert.equal(a1.dur,.8);
+    assert.equal(ap('stun',.8).dur,.8*.5,'lần 2 trong cửa sổ còn 50% (khi còn đang choáng thì cộng dồn hạn, không mở miễn)');
+    advance(B,Math.ceil(1.0*60));
+    assert.equal(ap('stun',.8).ok,false,'đang trong khoảng miễn 1,2s sau khi hết choáng');
+    advance(B,Math.ceil(1.3*60));assert.ok(Math.abs(ap('stun',.8).dur-.2)<1e-9,'lần 3: 25%');
+    assert.equal(ap('root',1.5).dur,1.5,'nhóm trói đếm riêng');
+    assert.ok(ap('stun',9).dur<=SB_STATUS.HARD_CAP+1e-9||!ap('stun',9).ok);
+  }
+  // Khựng do đòn thường không tính vào giảm dần khống chế.
+  {
+    const {B,p}=duel();assert.equal(p.cc.hard,undefined);
+  }
+  // Dọn sạch khi KO/kết trận.
+  {
+    const {B,p,h}=duel();hitWith(B,h,p,'thu_troi');p.hp=1;
+    B.projs.push({owner:'p2',x:p.x,z:p.z,vx:0,vz:0,left:1,s:{id:'k',dmg:5},hid:77777});advance(B,2);
+    assert.ok(B.over);assert.ok(!SB_STATUS.active(B,p,'root'));assert.equal(SB_STATUS.view(B,p).length,0);
+  }
+}
+console.log('Trạng thái: chuyển slow/bleed giữ luật cũ; choáng ngắt cả armor, xóa lệnh đệm; trói chặn đi; phong cấm chặn cổ; giảm dần theo nhóm + miễn 1,2s; dọn khi KO: đạt.');

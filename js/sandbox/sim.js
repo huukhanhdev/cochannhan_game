@@ -33,9 +33,28 @@
     const sk={atk:kit.atk},uses={};
     kit.skills.forEach(s=>{sk[s.id]=s;if(s.uses)uses[s.id]=s.uses});
     // kit.start: máu/chân nguyên lúc vào trận (PN dựng từ save mang theo trạng thái hiện tại); không có thì đầy.
-    return {id,kit,sk,uses,x,z,face,hp:kit.start?.hp??kit.hp,maxHp:kit.hp,ess:kit.start?.ess??kit.ess,maxEss:kit.ess,cd:{},
+    const a={id,kit,sk,uses,x,z,face,hp:kit.start?.hp??kit.hp,maxHp:kit.hp,ess:kit.start?.ess??kit.ess,maxEss:kit.ess,cd:{},
       state:'idle',since:0,act:null,move:null,chase:false,buffer:null,stopAt:-9,flashAt:-9,
       shield:null,empower:null,slowUntil:0,bleed:null,poiseUntil:0,ai:false,oneArm:!!kit.start?.oneArm,detonated:!!kit.start?.detonated};
+    root.SB_STATUS.install(a);           // slow/bleed chuyển sang hệ trạng thái, giữ trường cũ qua getter/setter
+    return a;
+  }
+  const STS=()=>root.SB_STATUS;
+  // Áp các trạng thái chiêu khai báo (s.applies) khi trúng. Choáng ngắt cả chiêu armor (armor chỉ chống khựng);
+  // trói/phong cấm không ngắt chiêu đang vận, chỉ chặn lệnh mới.
+  function applyOnHit(B,a,t,s){
+    if(!s.applies||B.over||t.state==='ko'||t.state==='shell')return;
+    for(const ap of s.applies){
+      if((ap.on||'hit')!=='hit')continue;
+      if(ap.chance!=null&&B.rng()>=ap.chance)continue;
+      const r=STS().apply(B,t,ap.st,{dur:ap.dur,src:a.id,power:ap.power});
+      if(!r.ok){emit(B,{type:'statusImmune',who:t.id,st:ap.st,source:a.id});continue}
+      emit(B,{type:'status',who:t.id,st:ap.st,dur:+r.dur.toFixed(3),source:a.id,skill:s.id});
+      if(STS().DEF[ap.st].interrupt){
+        if(t.act)emit(B,{type:'interrupt',who:t.id,skill:t.act.s.id,hid:t.act.hid});
+        t.act=null;t.move=null;t.chase=false;t.buffer=null;setState(t,'stun');
+      }
+    }
   }
   const other=(B,a)=>B.opponentOf(a);
   const free=a=>a.state==='idle'||a.state==='move';
@@ -59,6 +78,10 @@
     if(B.over)return {ok:false,reason:'Trận đã kết thúc'};
     if(!s)return {ok:false,reason:'Không có chiêu này'};
     if(a.state==='ko')return {ok:false,reason:'Đã gục'};
+    // Trạng thái chặn lệnh: từ chối kèm lý do, không xếp hàng (review Blue §7.6).
+    if(STS().blocked(B,a,'act'))return {ok:false,reason:'Đang bị choáng',status:true};
+    if(guAction(s)&&s.kind!=='heal'&&s.kind!=='absorb'&&STS().blocked(B,a,'gu'))return {ok:false,reason:'Đang bị phong cấm: chỉ đánh tay, vật phẩm được',status:true};
+    if(['dash','rush','escape'].includes(s.kind)&&STS().blocked(B,a,'move'))return {ok:false,reason:'Đang bị trói: không di chuyển được',status:true};
     if(s.uses&&!(a.uses[s.id]>0))return {ok:false,reason:s.kind==='escape'?'Đã dùng trong trận này':'Hết '+s.n};
     if((a.cd[s.id]||0)>0)return {ok:false,reason:s.n+' đang hồi, còn '+a.cd[s.id].toFixed(1)+'s'};
     if((s.cost||0)>a.ess)return {ok:false,reason:'Thiếu chân nguyên ('+s.cost+')'};
@@ -100,6 +123,7 @@
     const a=B.actors[id];if(!a||a.state==='ko'||B.over)return {ok:false,reason:'Không ra lệnh được'};
     if((cmd.skill==='move'||cmd.skill==='stop')&&cmd.cancel&&a.state==='act'&&cancelable(a))cancelAct(B,a);
     if(cmd.skill==='move'){
+      if(STS().blocked(B,a,'move'))return {ok:false,reason:a.state==='stun'?'Đang bị choáng':'Đang bị trói: không di chuyển được',status:true};
       if(!free(a)){a.buffer={cmd,until:B.t+BUFFER};return {ok:true,queued:true}}
       a.chase=false;a.move={x:clamp(cmd.x,X0,X1),z:clamp(cmd.z,0,Z1)};if(a.state!=='move')setState(a,'move');
       return {ok:true};
@@ -169,6 +193,8 @@
       }
       if(a.empower&&B.t>=a.empower.until)endEmpower(B,a);
       if(a.transform)stepTransform(B,a);
+      for(const id of STS().expire(B,a))emit(B,{type:'statusEnd',who:a.id,st:id});
+      if(a.state==='stun'&&!STS().active(B,a,'stun')){setState(a,'idle');afterFree(B,a)}
       // Cổ trị liệu ký sinh (vd Lôi Quan Đầu Lang, ch.164): hồi máu theo giây, không vượt tối đa.
       // regenNoBleed: đang chảy máu thì không tái tụ (Huyết Khôi, gợi ý RT_WEAK của campaign).
       if(a.kit.regen&&a.state!=='ko'&&a.hp<a.maxHp&&!(a.kit.regenNoBleed&&a.bleed))a.hp=Math.min(a.maxHp,a.hp+a.kit.regen*DT);
@@ -245,6 +271,7 @@
   function speedOf(B,a){return a.kit.speed*(a.slowUntil>B.t?a.slowF||.7:1)*(a.enrage?.speed||1)}
   function stepMove(B,a){
     const {X0,X1,Z1}=B.arena;
+    if(STS().blocked(B,a,'move')){a.move=null;a.chase=false;setState(a,'idle');return}   // vừa bị trói: đứng lại
     const t=other(B,a);
     if(a.chase){
       if(t.state==='ko'){a.chase=false;setState(a,'idle');return}
@@ -291,7 +318,7 @@
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind,hid:A.hid});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
-        const dealt=hurt(B,t,s.dmg,a,A.hid,{skill:s.id,light:!!s.light});drainHit(B,a,t,s,dealt);
+        const dealt=hurt(B,t,s.dmg,a,A.hid,{skill:s.id,light:!!s.light});drainHit(B,a,t,s,dealt);applyOnHit(B,a,t,s);
         if(s.slow&&t.state!=='shell'){t.slowUntil=B.t+s.slow.dur;t.slowF=s.slow.f}
         if(s.bleed&&t.state!=='ko'&&t.state!=='shell')t.bleed={dps:s.bleed.dps,until:B.t+s.bleed.dur,acc:0};
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
@@ -305,7 +332,7 @@
         B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:Math.cos(g)*s.speed,vz:Math.sin(g)*s.speed,left:s.range,s,hid:i?++B.seq:A.hid,face:Math.sign(dx)||a.face})}}
     }else if(s.kind==='grab'){
       if(t.state!=='ko'&&Math.abs(t.x-a.x)<=s.range&&Math.abs(t.z-a.z)<=s.depth&&Math.sign(t.x-a.x)===a.face){
-        hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
+        hurt(B,t,s.dmg,a,A.hid,{skill:s.id});applyOnHit(B,a,t,s);
         // Vỏ băng/chuyển pha giữ vị trí; không kéo ngược lại sau knockback của detonate().
         if(t.state!=='ko'&&t.state!=='shell'){
           t.x=clamp(a.x+a.face*Math.max(BODY+6,Math.abs(t.x-a.x)-s.pull),X0,X1);t.z=a.z;
@@ -333,7 +360,7 @@
   }
   // Trúng lao húc: một lần mỗi lần lao, đẩy lùi theo hướng lao (ch.80: PN đỡ bằng vai vẫn lùi ba bước).
   function rushHit(B,a,t,s,A){
-    drainHit(B,a,t,s,hurt(B,t,s.dmg,a,A.hid,{skill:s.id}));
+    drainHit(B,a,t,s,hurt(B,t,s.dmg,a,A.hid,{skill:s.id}));applyOnHit(B,a,t,s);
     if(!B.over&&s.knock&&t.state!=='ko'&&t.state!=='shell'){t.x=clamp(t.x+Math.sign(A.vec.x||a.face)*s.knock,B.arena.X0,B.arena.X1);emit(B,{type:'knock',who:t.id,source:a.id,skill:s.id})}
   }
   // Pha truyện của boss: mỗi pha có id, chỉ kích hoạt một lần (t.phaseFired). Kit cũ BNB khai báo detonateAt → pha 'detonate'.
@@ -361,6 +388,7 @@
       if(t.state!=='ko'&&Math.abs(t.x-p.x)<28&&Math.abs(t.z-p.z)<36){
         hurt(B,t,p.s.dmg,B.actors[p.owner],p.hid,{pierce:p.s.pierce,skill:p.s.id,contact:{x:p.x,z:p.z}});
         if(p.s.slow&&t.state!=='ko'&&t.state!=='shell'){t.slowUntil=B.t+p.s.slow.dur;t.slowF=p.s.slow.f}
+        applyOnHit(B,B.actors[p.owner],t,p.s);
         if(B.over)return;
         B.projs.splice(B.projs.indexOf(p),1);continue}
       if(p.left<=0||p.x<X0-40||p.x>X1+40){B.projs.splice(B.projs.indexOf(p),1);emit(B,{type:'projEnd',who:p.owner,x:p.x,z:p.z})}
@@ -373,7 +401,8 @@
       if(B.t>=z.fireAt){
         const t=other(B,own);
         if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r){hurt(B,t,z.s.dmg,own,z.hid,{skill:z.s.id});
-          if(z.s.slow&&t.state!=='ko'&&t.state!=='shell'){t.slowUntil=B.t+z.s.slow.dur;t.slowF=z.s.slow.f}}
+          if(z.s.slow&&t.state!=='ko'&&t.state!=='shell'){t.slowUntil=B.t+z.s.slow.dur;t.slowF=z.s.slow.f}
+          applyOnHit(B,own,t,z.s)}
         emit(B,{type:'zoneFire',who:z.owner,skill:z.s.id,hid:z.hid,x:z.x,z:z.z,r:z.r});
         if(B.over)return;
         B.zones.splice(B.zones.indexOf(z),1);
@@ -398,10 +427,10 @@
       if(phase.do==='enrage'){t.enrage={speed:phase.speed||1,mul:phase.dmgMul||1};emit(B,{type:'phase',who:t.id,id:phase.id,n:phase.n||''})}
     }
     if(t.hp<=0){
-      t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;setState(t,'ko');
+      t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;STS().clearAll(t);setState(t,'ko');
       const w=other(B,t);B.over={winner:w.id,loser:t.id,at:B.t,retreat:!!t.kit.story?.retreatOnDefeat};
       B.projs.length=0;B.zones.length=0;
-      w.bleed=null;w.buffer=null;
+      w.bleed=null;w.buffer=null;STS().clearAll(w);
       if(w.state==='act')w.winPending=true;else{w.move=null;w.chase=false;setState(w,'win')}
       emit(B,{type:'ko',who:t.id});return d;
     }

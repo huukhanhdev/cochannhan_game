@@ -157,8 +157,9 @@
       src:'VN ch.79–80: Bạch Thỉ đã dùng (ch.70–71), Ngọc Bì (ch.63, 79); giai đỉnh phong là game'},
     ch84:{chuyen:2,giai:0,tuchat:44,herbs:0,stones:3,gu:['xuanthu','tuutrung','nguyetquang','tieuguang','bachthi','ngocbi'],
       src:'VN ch.81 Nhị chuyển sơ giai; ch.82 PN có sáu cổ; ch.84 dùng Nguyệt Quang'},
-    ch130:{chuyen:2,giai:1,tuchat:44,herbs:1,stones:3,gu:['xuanthu','tuvi','nguyetmang','bachngoc','bachthi','hacthi','anlan','cuudiep'],
-      src:'VN ch.130: Nhị chuyển trung giai, Bạch Ngọc, sức hai trư, Ẩn Lân; Nguyệt Mang (ch.106), Tứ Vị (ch.105), Cửu Diệp (ch.102); số lá là game'},
+    // Hắc Thỉ đã đổi lấy Ngư Lân ở ch.127 (Blue kiểm chéo 03/10): không còn trong túi; sức trư đã luyện vào thân → bodyAtk.
+    ch130:{chuyen:2,giai:1,tuchat:44,herbs:1,stones:3,bodyAtk:5,gu:['xuanthu','tuvi','nguyetmang','bachngoc','bachthi','anlan','cuudiep'],
+      src:'VN ch.130: Nhị chuyển trung giai, Bạch Ngọc, sức hai trư, Ẩn Lân; Nguyệt Mang (ch.106), Tứ Vị (ch.105), Cửu Diệp (ch.102); Hắc Thỉ đã đổi ở ch.127, lực trư thứ hai đã luyện vào thân (bodyAtk); số lá là game'},
   };
   const pnScene=id=>()=>{const S=JSON.parse(JSON.stringify(PN_SCENE[id]));S.gu=S.gu.map(k=>({k,h:0}));S.hp=undefined;S.ess=undefined;
     const k=SBG().pnKitFromSave(S,Object.assign({GU:GUD()},SBG().campaignMax(S,GUD())));delete k.start;k.src=PN_SCENE[id].src;return k};
@@ -210,7 +211,7 @@
     cuong_thi:C('Cương thi Bạch Mao',2,'288–292','cho_dossier','Không cổ riêng (Cản Thi)'),
     ca_sau_dung_nham:C('Cá sấu dung nham',3,'217–218','cho_dossier','Dung Nham Tạc Liệt, Viêm Trụ, Tích Hôi'),
     hien_vien_than_ke:C('Hiên Viên Thần Kê',3,'217–218','khong_dau','Chỉ có clip idle/warn'),
-    ca_sau_sau_chan:C('Cá sấu sáu chân',3,'191–213','cho_dossier','Huyết Cuồng làm cuồng bạo'),
+    ca_sau_sau_chan:C('Cá sấu sáu chân',3,'191–213','cho_dossier','Chờ dossier (Huyết Cuồng ch.191 là của nhện, không phải cá sấu — Blue kiểm 03/10)'),
     tran_thuy_hoa:C('Trần Thúy Hoa',3,'222–224','cho_dossier','Tiêu Lôi Thổ Đậu'),
     thiet_dao_kho:C('Thiết Đao Khổ',3,'229–248','cho_dossier','?'),
     bach_lien:C('Bách Liên',3,'233–350','cho_dossier','Liên Y'),
@@ -235,6 +236,10 @@
     huyet_khoi:C('Huyết Khôi',5,'—','kit','Người máu, tái tụ, chảy máu thì không tái tụ (lăng mộ Nhất Đại)',{profiles:['huyet_khoi_game']}),
   };
   for(const [id,c] of Object.entries(characters))c.visual=c.visual||id;
+  // Tỉ lệ thân tương đối (PN = 1), bảng thử của Blue 03/10 (docs/roster/BLUE_REVIEW_DOT_1_VA_BNB_166.md). Chỉ đổi hình, không đổi hitbox.
+  // Sprite cũ (chibi_kp) đã chuẩn hóa diện tích lúc import nên size áp trên nền đó; khi đổi bộ hình mới phải đo lại.
+  const SIZE={phuong_chinh:.95,xich_thanh:.8,thiet_huyet_lanh:1.15,tran_thuy_hoa:.95,thach_hau:.54};
+  for(const [id,v] of Object.entries(SIZE))if(characters[id])characters[id].size=v;
 
   const clone=o=>JSON.parse(JSON.stringify(o));
   // Gắn hình cho một kit (profile cố định hoặc kit dựng từ save): visual của nhân vật → thư mục theo bộ hình đang chọn.
@@ -242,6 +247,7 @@
     const ch=characters[charId];if(!ch)throw new Error('Không có nhân vật '+charId);
     kit.n=kit.n||ch.n;kit.profile=pid;kit.char=charId;
     kit.visual=ch.visual;const r=SPR.resolve(ch.visual);kit.sprite=ch.visual;kit.spriteDir=r.dir;kit.spriteSet=r.set;
+    if(ch.size&&kit.size==null)kit.size=ch.size;
     return kit;
   }
   // Kit sẵn dùng cho sim: bản sao + visual/sprite đã resolve. Profile sai → lỗi (không âm thầm dùng PN/BNB).

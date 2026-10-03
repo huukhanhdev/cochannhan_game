@@ -93,13 +93,14 @@ const SBView=(function(){
 
   function render(evs){
     for(const a of Object.values(B.actors)){
-      const S=spr[a.id],[clip,i]=pick(a),k=depthK(a.z)*SCALE;
+      // kit.size: tỉ lệ thân tương đối theo hồ sơ (chỉ hình; hitbox world không đổi).
+      const S=spr[a.id],[clip,i]=pick(a),k=depthK(a.z)*SCALE*(a.kit.size||1);
       S.s.texture=clip.tex[i];S.s.scale.set(k*a.face,k);
       const [dx,dy]=KPSprite.offset(kp[a.id].man,clip,i);S.s.position.set(dx*k*a.face,dy*k);
       // Thua mà kịch bản là rút lui (TR-3): chạy khỏi sân và mờ dần, không nằm gục.
       const fleeing=B.over?.retreat&&B.over.loser===a.id,ft=fleeing?Math.max(0,B.t-B.over.at-.25):0,fdir=fleeing?(Math.sign(a.x-B.actors[B.over.winner].x)||1):0;
       if(fleeing)S.s.scale.set(k*fdir,k);
-      S.c.position.set(sx(a.x+fdir*a.kit.speed*ft),sy(a.z));S.c.zIndex=a.z;S.sh.scale.set(depthK(a.z)*SCALE/ORIGINAL_SCALE);S.c.alpha=fleeing?Math.max(0,1-ft/1.2):1;
+      S.c.position.set(sx(a.x+fdir*a.kit.speed*ft),sy(a.z));S.c.zIndex=a.z;S.sh.scale.set(depthK(a.z)*SCALE*(a.kit.size||1)/ORIGINAL_SCALE);S.c.alpha=fleeing?Math.max(0,1-ft/1.2):1;
       // Bộ hình thiếu clip ko (vd thiet_huyet_lanh cũ): ngã nghiêng quanh chân và mờ dần, không đứng idle như còn sống.
       const noKo=a.state==='ko'&&!fleeing&&!kp[a.id].clips.ko,kt=noKo?Math.min(1,a.since/.5):0;
       S.s.rotation=noKo?-a.face*1.2*kt:0;if(noKo)S.c.alpha=1-.5*kt;
@@ -167,7 +168,7 @@ const SBView=(function(){
   }
   // Điểm phát: dùng hand của clip nếu đã có; fallback thủ công, không đo alpha bbox.
   function hand(a){
-    const k=depthK(a.z)*SCALE,[clip,index]=pick(a),man=kp[a.id].man;
+    const k=depthK(a.z)*SCALE*(a.kit.size||1),[clip,index]=pick(a),man=kp[a.id].man;   // điểm phát theo cỡ thân
     const name=a.act?.s.anchor||'hand',v=KPSprite.anchor(man,clip,index,name);
     if(v)return {x:sx(a.x)+v[0]*k*a.face,y:sy(a.z)+v[1]*k};
     // Legacy fallback is for v1 only; v2 missing anchors must not guess limb tips.
@@ -287,7 +288,7 @@ const SBView=(function(){
     return {x:Math.max(B.arena.X0,Math.min(B.arena.X1,wx)),z:Math.max(0,Math.min((B?.arena.Z1||240),z)),inGround:ok}}
   function hitActor(cx,cy){
     const r=app.view.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H;
-    for(const a of Object.values(B.actors)){const k=depthK(a.z)*SCALE;if(Math.abs(x-sx(a.x))<40*k&&y<sy(a.z)+12&&y>sy(a.z)-spr[a.id].hy*k)return a.id}
+    for(const a of Object.values(B.actors)){const k=depthK(a.z)*SCALE*(a.kit.size||1);if(Math.abs(x-sx(a.x))<40*k&&y<sy(a.z)+12&&y>sy(a.z)-spr[a.id].hy*k)return a.id}
     return null;
   }
   return {mount,render,toWorld,hitActor,setHover:s=>hover=s,pingGround:w=>pings.push({x:w.x,z:w.z,t:B.t}),get app(){return app}};

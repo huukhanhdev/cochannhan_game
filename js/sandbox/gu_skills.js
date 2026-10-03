@@ -80,7 +80,8 @@
     }
     const demo=root.SB_KITS.pn,inj=S.inj?.k;
     const atk=JSON.parse(JSON.stringify(demo.atk));
-    const pAtk=Math.round(passive.atk*DMG_K),pMoon=Math.round(passive.moon*DMG_K);
+    // bodyAtk: sức đã luyện vào thân (vd lực trư sau khi đã dùng/đổi con cổ), không gắn với cổ còn sở hữu.
+    const pAtk=Math.round((passive.atk+(S.bodyAtk||0))*DMG_K),pMoon=Math.round(passive.moon*DMG_K);
     atk.dmg+=pAtk;if(inj==='tay')atk.dmg=Math.max(1,Math.round(atk.dmg*.7));
     for(const s of out){if(s.kind==='melee'&&pAtk)s.dmg+=pAtk;if((s.nguyet||s.fx==='moon')&&pMoon)s.dmg+=pMoon}
     out.push(JSON.parse(JSON.stringify(demo.skills.find(s=>s.id==='dash'))));

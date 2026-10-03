@@ -181,7 +181,7 @@ Do đó cần một adapter `pnKitFromSave(S)`: đọc `S.gu`, tu vi, trạng th
 |---|---|---|---|
 | ca_sau_dung_nham | ch.217–218 · Hiên Viên Thần Kê | ✓ ch.217: Dung Nham Tạc Liệt (nổ dung nham, để lại hố → `aoe`+`zone`), Viêm Trụ (phòng ngự), Tích Hôi (trị liệu → `regen`); cả ba đều Tam chuyển | atk, sk_spit |
 | hien_vien_than_ke | ch.217–218 · cá sấu dung nham | Thần gà Hiên Viên giết cá sấu ✓ ch.218. **Chỉ có clip idle/warn** → tạm `không đấu`, hoặc máy đấu máy dùng idle | idle, warn |
-| ca_sau_sau_chan | ch.191–213 | Bị Huyết Cuồng làm ô nhiễm ✓ ch.191 (cuồng bạo → `empower`); Bối Giáp ? Ngạc Lực ? (ch.212–215: cổ lấy được sau trận, chưa rõ có trên con nào) | atk, sk_rage |
+| ca_sau_sau_chan | ch.191–213 | ~~Huyết Cuồng ch.191~~ **sai: Huyết Cuồng ở ch.191 là của nhện** (Blue kiểm chéo 03/10). Bối Giáp ? Ngạc Lực ? (ch.212–215: cổ lấy được sau trận, chưa rõ có trên con nào) | atk, sk_rage |
 | tran_thuy_hoa | ch.222–224 · bách thú vương / PN | Tiêu Lôi Thổ Đậu ✓ ch.224 (đậu sấm đặt dưới đất → `zone` nổ); có cổ phụ trợ giữ chân nguyên ? ch.224 | atk, cast_ground, sk_poison |
 | thiet_dao_kho | ch.229–248 | ? chưa tìm thấy cổ riêng (Cốt Thứ ch.242 là cổ nhặt được) | atk, guard, sk_daokhi, sk_flurry |
 | bach_lien / bach_chien_liep / bach_chien_on | ch.233–350 | Bách Liên: Liên Y ✓ ch.350; hai người còn lại ? | atk, sk_* |

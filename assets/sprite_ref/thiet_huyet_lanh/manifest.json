@@ -1,0 +1,67 @@
+{
+  "id": "thiet_huyet_lanh",
+  "frame_size": [
+    288,
+    208
+  ],
+  "pivot_px": [
+    144,
+    198
+  ],
+  "reach_px": 55,
+  "approved": false,
+  "actions": {
+    "idle": {
+      "sheet": "idle.png",
+      "frames": 2,
+      "durations_ms": [
+        650,
+        650
+      ],
+      "release": null,
+      "loop": true,
+      "source": "thiet_huyet_lanh_idle_v2.png",
+      "scale": 0.2626641651031895,
+      "source_scale": 0.2626641651031895,
+      "anchors": {
+        "ground": [
+          [
+            143.874,
+            197.576
+          ],
+          [
+            144.041,
+            198.101
+          ]
+        ],
+        "body": [
+          [
+            143.874,
+            141.891
+          ],
+          [
+            144.041,
+            142.206
+          ]
+        ]
+      },
+      "frameOffsets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "hoverOffset": 0,
+      "pixel_processing": {
+        "palette": 32,
+        "alpha_cut": 110,
+        "resample": "BOX",
+        "dither": false
+      }
+    }
+  }
+}

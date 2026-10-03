@@ -1,0 +1,67 @@
+{
+  "id": "tran_thuy_hoa",
+  "frame_size": [
+    288,
+    208
+  ],
+  "pivot_px": [
+    144,
+    198
+  ],
+  "reach_px": 51,
+  "approved": false,
+  "actions": {
+    "idle": {
+      "sheet": "idle.png",
+      "frames": 2,
+      "durations_ms": [
+        650,
+        650
+      ],
+      "release": null,
+      "loop": true,
+      "source": "tran_thuy_hoa_idle_v2.png",
+      "scale": 0.27613412228796846,
+      "source_scale": 0.27613412228796846,
+      "anchors": {
+        "ground": [
+          [
+            144.181,
+            197.657
+          ],
+          [
+            144.333,
+            197.657
+          ]
+        ],
+        "body": [
+          [
+            144.181,
+            141.988
+          ],
+          [
+            144.333,
+            141.988
+          ]
+        ]
+      },
+      "frameOffsets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "hoverOffset": 0,
+      "pixel_processing": {
+        "palette": 32,
+        "alpha_cut": 110,
+        "resample": "BOX",
+        "dither": false
+      }
+    }
+  }
+}

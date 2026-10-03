@@ -1,0 +1,1594 @@
+[
+  {
+    "id": "phuong_nguyen",
+    "name": "Phương Nguyên",
+    "face_spec": "slender oval face, narrow deep-set dark grey eyes, straight dark eyebrows, small straight nose, thin firmly closed lips, pale skin, quiet cold gaze. Teenage twin facial structure, not a rounded amber-eyed anime mascot",
+    "body_spec": "15–16-year-old male Chinese cultivator, long straight black hair, charcoal Chinese robe with dark belt, dark boots, empty hands. Slender teenage build and composed upright stance.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://in.pinterest.com/pin/1074671529833743095/",
+      "https://gu-daoist-master.fandom.com/wiki/Fang_Yuan"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://in.pinterest.com/pin/1074671529833743095/",
+    "source_image_url": "https://i.pinimg.com/736x/82/54/06/82540699f4fa1587fa237609b0ee3159.jpg",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/phuong_nguyen_base_v2.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Phương Nguyên (phuong_nguyen). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: slender oval face, narrow deep-set dark grey eyes, straight dark eyebrows, small straight nose, thin firmly closed lips, pale skin, quiet cold gaze. Teenage twin facial structure, not a rounded amber-eyed anime mascot. Authoritative BODY/CLOTHES: 15–16-year-old male Chinese cultivator, long straight black hair, charcoal Chinese robe with dark belt, dark boots, empty hands. Slender teenage build and composed upright stance..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. PN and PC are twins with identical facial structure; dark grey eyes, identity-specific clothing/expression, PC slimmer and slightly shorter.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/phuong_nguyen.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/phuong_nguyen_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-68a224d9-7cb3-4b8a-8d40-f6e984257dc4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "2b68700b8038866bfec70050cfaf081d3f8e568d80e906b5d8ecd20cff62b7f0"
+  },
+  {
+    "id": "phuong_chinh",
+    "name": "Phương Chính",
+    "face_spec": "slender oval face, dark grey eyes, straight dark eyebrows, small straight nose, thin closed lips, pale skin. Same underlying teenage twin facial structure as Fang Yuan, but alert earnest eyes and a serious open expression",
+    "body_spec": "15–16-year-old male Chinese cultivator, teenage twin of Fang Yuan, slightly thinner and shorter, long black hair tied with a blue band, pale blue Chinese training robe and dark blue belt, dark boots, empty hands.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/2",
+      "https://cochannhann.pages.dev/api/chapters/4",
+      "https://cochannhann.pages.dev/api/chapters/98",
+      "https://cochannhann.pages.dev/api/chapters/104",
+      "https://shapes.inc/fandom/reverend-insanity-gu-daolang-fang-yuan/quotes"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://shapes.inc/fandom/reverend-insanity-gu-daolang-fang-yuan/quotes",
+    "source_image_url": "https://sxhodsrixg8meuri.public.blob.vercel-storage.com/fandom-lore/characters/reverend-insanity-gu-daolang-fang-yuan/fang-zheng-636d86ae9911.jpg",
+    "height_constraint": "Thin, slightly shorter than PN; VN ch.2. Existing 0.95 proposal is art, not canon measurement.",
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/phuong_chinh_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Phương Chính (phuong_chinh). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: slender oval face, dark grey eyes, straight dark eyebrows, small straight nose, thin closed lips, pale skin. Same underlying teenage twin facial structure as Fang Yuan, but alert earnest eyes and a serious open expression. Authoritative BODY/CLOTHES: 15–16-year-old male Chinese cultivator, teenage twin of Fang Yuan, slightly thinner and shorter, long black hair tied with a blue band, pale blue Chinese training robe and dark blue belt, dark boots, empty hands..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. PN and PC are twins with identical facial structure; dark grey eyes, identity-specific clothing/expression, PC slimmer and slightly shorter.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/phuong_chinh.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/phuong_chinh_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-f119845c-43e6-4444-b5bf-463f91e556d8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "e8f7e562feef75ea738d766d08aa1747d4b40e54f99ab86ac4b7bac05fdc1782",
+    "variants": [
+      "images/phuong_chinh_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Phương Chính. Only simplify glossy eye rendering to small matte dark-grey irises with minimal highlights. Keep the underlying twin face, hairstyle, blue hairband, pale-blue robe, sash, pose and body proportions unchanged. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phuong_chinh_base_v1.png"
+        ],
+        "image": "images/phuong_chinh_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-85482e48-1f27-4d6f-a640-71f2a567e7b8.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1254,
+          1254
+        ],
+        "sha256": "e8f7e562feef75ea738d766d08aa1747d4b40e54f99ab86ac4b7bac05fdc1782"
+      }
+    ]
+  },
+  {
+    "id": "thanh_thu",
+    "name": "Thanh Thư",
+    "face_spec": "elongated gentle oval face, soft narrow dark green-grey eyes, fine gently curved eyebrows, long straight nose, relaxed lips with a modest reassuring smile. Mature young man, graceful cheekbones, not a teenage twin face",
+    "body_spec": "Adult male Gu Yue Qing Shu, fit graceful build, long GREEN hair falling down the back, calm gentle expression, dark green Chinese robe, empty hands. Normal human before Wood Charm transformation, no leaves or wooden skin.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/82",
+      "https://cochannhann.pages.dev/api/chapters/104",
+      "https://reverend-insanity.fandom.com/wiki/Gu_Yue_Qing_Shu"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://cl.pinterest.com/pin/667799451036441109/",
+    "source_image_url": "https://i.pinimg.com/736x/7b/57/60/7b57601a0016aedc0cc447096ce14c2f.jpg",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thanh_thu_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thanh Thư (thanh_thu). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: elongated gentle oval face, soft narrow dark green-grey eyes, fine gently curved eyebrows, long straight nose, relaxed lips with a modest reassuring smile. Mature young man, graceful cheekbones, not a teenage twin face. Authoritative BODY/CLOTHES: Adult male Gu Yue Qing Shu, fit graceful build, long GREEN hair falling down the back, calm gentle expression, dark green Chinese robe, empty hands. Normal human before Wood Charm transformation, no leaves or wooden skin..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thanh_thu.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thanh_thu_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-4c5a55bf-2c96-4f4c-88d7-8d551a72077b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "cff6a5657df4bc3a9ee66b5b1c5888501c055bc751a10960142d638a3a6b0045"
+  },
+  {
+    "id": "bach_ngung_bang_nam",
+    "name": "Bạch Ngưng Băng nam",
+    "face_spec": "delicate sharp heart-shaped face, long narrow ICE BLUE eyes, thin sharply sloping silver eyebrows, small pointed straight nose, thin lips with an arrogant mischievous half-smile, very pale skin. Beautiful androgynous teenage male, angular chin",
+    "body_spec": "Proud teenage MALE human, long silver-white hair, ice-blue eyes, arrogant cold expression, white robe with subtle pale-blue trims, dark boots. Both arms intact, empty hands. No horns, dragon traits, breasts or sword.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/134",
+      "https://cochannhann.pages.dev/api/chapters/136",
+      "https://cochannhann.pages.dev/api/chapters/139",
+      "https://reverend-insanity.fandom.com/wiki/Bai_Ning_Bing"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://www.readreverendinsanity.com/manga/master-of-gu-chapter-1/",
+    "source_image_url": "https://qubn.us/uploads/master-of-gu/1/master-of-gu-ch1-013.webp",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/bach_ngung_bang_nam_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Bạch Ngưng Băng nam (bach_ngung_bang_nam). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: delicate sharp heart-shaped face, long narrow ICE BLUE eyes, thin sharply sloping silver eyebrows, small pointed straight nose, thin lips with an arrogant mischievous half-smile, very pale skin. Beautiful androgynous teenage male, angular chin. Authoritative BODY/CLOTHES: Proud teenage MALE human, long silver-white hair, ice-blue eyes, arrogant cold expression, white robe with subtle pale-blue trims, dark boots. Both arms intact, empty hands. No horns, dragon traits, breasts or sword..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/bach_ngung_bang_nam_full.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/bach_ngung_bang_nam_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-b54beca5-7d74-4d86-9253-9689d6be180c.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1268,
+      1240
+    ],
+    "sha256": "e95ca80490d92160fc42ddb699316de4b22809accacc80d7f3287b31c5d8dd52",
+    "variants": [
+      "images/bach_ngung_bang_nam_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Bạch Ngưng Băng nam. Remove the spurious black curved marks drawn over the white forehead bangs. Preserve real eyebrows on skin, silver hair, ornament, male identity and outfit. Simplify eye highlights to small matte ice-blue eyes; retain their shape and color. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/bach_ngung_bang_nam_base_v1.png"
+        ],
+        "image": "images/bach_ngung_bang_nam_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-96925789-08fe-4f86-a6b7-f70867989364.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1268,
+          1240
+        ],
+        "sha256": "e95ca80490d92160fc42ddb699316de4b22809accacc80d7f3287b31c5d8dd52"
+      }
+    ]
+  },
+  {
+    "id": "bach_ngung_bang_nu",
+    "name": "Bạch Ngưng Băng nữ",
+    "face_spec": "delicate sharp heart-shaped face, long narrow ICE BLUE eyes, thin sharply sloping silver eyebrows, small pointed straight nose, thin lips with a cool arrogant half-smile, very pale skin. Same identity as Bai Ning Bing before transformation; female human, no horns or pointed ears",
+    "body_spec": "Young FEMALE human after Yin Gu transformation, long silver-white hair, ice-blue eyes, proud cold expression, white Chinese robe with pale-blue trims, dark boots. Human ears, no horns or dragon traits, empty hands.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/215",
+      "https://cochannhann.pages.dev/api/chapters/233",
+      "https://reverend-insanity.fandom.com/wiki/Bai_Ning_Bing"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/bach_ngung_bang_nu_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Bạch Ngưng Băng nữ (bach_ngung_bang_nu). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: delicate sharp heart-shaped face, long narrow ICE BLUE eyes, thin sharply sloping silver eyebrows, small pointed straight nose, thin lips with a cool arrogant half-smile, very pale skin. Same identity as Bai Ning Bing before transformation; female human, no horns or pointed ears. Authoritative BODY/CLOTHES: Young FEMALE human after Yin Gu transformation, long silver-white hair, ice-blue eyes, proud cold expression, white Chinese robe with pale-blue trims, dark boots. Human ears, no horns or dragon traits, empty hands..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/bach_ngung_bang.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/bach_ngung_bang_nu_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-d86aa514-94bf-4838-b564-d3f175b47a33.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "ae7698f7dde1cc126590a14be7995031b42e6939366a3755449e632bd3f04fee"
+  },
+  {
+    "id": "heo_rung",
+    "name": "Heo rừng",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Adult wild boar, stocky grey-black bristly body, exactly four short sturdy legs, long stiff back bristles, small ears, natural long boar muzzle and TWO WHITE tusks curving forward. Reference photo is body anatomy only; add story tusks. No clothes.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/70",
+      "https://cochannhann.pages.dev/api/chapters/71",
+      "https://commons.wikimedia.org/wiki/File:Locha(js).jpg"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://commons.wikimedia.org/wiki/File:Locha(js).jpg",
+    "source_image_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Locha%28js%29.jpg",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/heo_rung_base_v2.png",
+    "status": "generated",
+    "image": "images/heo_rung_base_v1.png",
+    "background_mode": "magenta",
+    "prompt": "Use case: stylized-concept. ONE new wild-boar battle BASE, animal style pilot. Image 1 is this boar's old chibi_ref; images 2–3 ape and bear are STYLE EXAMPLES ONLY. Learn compact pixel clusters and flat game shading, do NOT copy ape/bear anatomy, fur, faces or limbs.\nAuthoritative v03 species identity: natural species-specific head, muzzle, beak and eye structure as described; no human anime face. Body: Adult wild boar, stocky grey-black bristly body, exactly four short sturdy legs, long stiff back bristles, small ears, natural long boar muzzle and TWO WHITE tusks curving forward. Reference photo is body anatomy only; add story tusks. No clothes..\nCorrect natural BOAR anatomy, stocky grey-black body and bristles, long muzzle, small ears, FOUR short sturdy legs with cloven hooves, TWO visibly WHITE tusks curving forward. Do NOT use brown reference fur or yellow reference tusks as identity. No human features, human hands, standing upright, clothes or oversized baby head. Natural species head size, compact readable silhouette, natural ready standing posture, forelegs and hindlegs clearly distinguished, slight three-quarter body view facing RIGHT so near/far anatomy reads. Do not force human 3-head proportion on animal. Match a 16-bit game sprite with bold dark contour and simplified 2–3-tone shading, readable at 120px character height. Approximate logical 200px sprite-detail density; tool may output larger PNG for importer to handle. Full body and tusks inside generous margins. Actual transparent alpha, no pink rim, no realistic microtexture, magical effects, particles, shadow, props, labels, text or additional figures. Preserve species/canon details; references only for drawing technique.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/heo_rung.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/phi_hau.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hac_hung.png"
+    ],
+    "pilot_selected": "heo_rung_pilot_v2.png",
+    "edit_prompt": "Edit only the background of this wild boar pilot. Remove ALL gray glow, radial halo, haze and shadow around the boar. Background must be uniform solid pure magenta #FF00FF everywhere outside silhouette, including gaps between legs, tusks and tail. Keep exact boar shape, FOUR legs, TWO WHITE tusks, bristles, colors, eyes, pose and pixel-style drawing. Crisp clear boundary, no antialiased background fade and no floor shadow. No other edits, text, effects or objects. Background is an opaque flat color, not transparent.",
+    "edit_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/pilot_style/heo_rung_pilot_v1.png"
+    ],
+    "batch": "beast_pilot"
+  },
+  {
+    "id": "au_duong_cong",
+    "name": "Âu Dương Công",
+    "face_spec": "old narrow hollow-cheeked face, very small dark watchful eyes, bushy greying brows, prominent hooked EAGLE nose, downturned thin mouth, short grey moustache and beard, weathered tan wrinkled skin",
+    "body_spec": "Thin SHORT elderly male merchant with HOOKED nose, ageing shrewd face, grey hair tied up, muted purple Chinese merchant robe, simple belt and dark shoes. No broad muscular physique.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/282",
+      "https://cochannhann.pages.dev/api/chapters/283"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/au_duong_cong_base_v1.png",
+    "status": "generated",
+    "image": "images/au_duong_cong_base_v1.png",
+    "background_mode": "alpha",
+    "prompt": "Use case: stylized-concept. Generate ONE Âu Dương Công / Au Duong Cong base sprite using the authoritative text below. Image 1 is his own old chibi_ref, style ONLY. Images 2–3 are muscular bald fighter and grey-robed teacher with distinctly different faces, style ONLY. Borrow pixel rendering, proportions and compact stance; NEVER borrow faces, clothing, beard shape, skin colors or physiques from the images.\nv03 FACE identity: old narrow hollow-cheeked face, very small dark watchful eyes, bushy greying brows, prominent hooked EAGLE nose, downturned thin mouth, short grey moustache and beard, weathered tan wrinkled skin.\nv03 BODY/CLOTHES identity: Thin SHORT elderly male merchant with HOOKED nose, ageing shrewd face, grey hair tied up, muted purple Chinese merchant robe, simple belt and dark shoes. No broad muscular physique..\nImportant: short thin elderly human merchant, noticeably HOOKED EAGLE NOSE, very SMALL SLIT-LIKE dark watchful eyes, hollow cheeks, grey brows, short grey moustache/beard; keep muted PURPLE robe, NOT blue/grey or armor from refs. Slightly hunched back and both hands clasped together in front of belly, elbows close to body. Both feet visible in a compact stance.\n3/4 THREE-QUARTER view facing screen right, with face rotated partly toward viewer so BOTH EYES are visibly drawn; NOT pure side profile. Pixel-art chibi head must be noticeably smaller: crown-to-chin exactly about 30% of entire crown-to-sole height, 3.3 head units; remaining torso/legs 70%, do not make huge baby head. Simplify face to same detail as body, use just 1–2 broad age lines, no realistic fine wrinkle texture, no glossy big anime eyes.\nOne clean 256x256 native pixel art sprite, hard 1-pixel dark outline, 24–32 solid colors, flat shading, strictly square pixel clusters and no anti-aliasing. Full body centered with margin, transparent alpha, clean edges without pink fringe, no scenery, floor shadow, magic, weapons, particles, text or extra people. Three style examples do not determine identity.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png"
+    ],
+    "pilot_selected": "au_duong_cong_pilot_v3.png",
+    "edit_prompt": "Precise local edit to this approved-style Âu Dương Công / Au Duong Cong pilot. Change ONLY his NOSE. Make it visibly EAGLE-HOOKED and prominent, with a clearly convex bony bridge, strong projecting hooked tip curved downward toward upper lip and a firm dark outline that remains readable when full character is 120px high. Not a straight ordinary small nose. Keep the nose believable for a human old merchant, not beak or animal anatomy. Preserve EVERYTHING ELSE: same small head-to-body ratio, exact eye shape and small dark eyes, grey eyebrows/hair bun and short beard, age, skin, expression, face angle, body outline, hunched posture, clasped hands, purple robe, belt/pouch/shoes, pixel drawing style, colors, canvas and transparent background. Do NOT redraw whole body, enlarge head, change pose or add fine face texture. Only reshape a few nose contours/pixel clusters; no new props, text, scenery, FX or floor shadow. Keep current three-quarter right view and identity. Transparent alpha preserved.",
+    "edit_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/pilot_style/au_duong_cong_pilot_v2.png"
+    ],
+    "batch": "human_pilot"
+  },
+  {
+    "id": "ba_quy_spirit",
+    "name": "Bá Quy địa linh",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Ancient enormous weary intelligent turtle, four sturdy limbs, short neck, weathered rigid olive-brown shell, natural turtle head. No human face or clothing.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/468"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/ba_quy_spirit_base_v3.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Bá Quy địa linh (ba_quy_spirit). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Ancient enormous weary intelligent turtle, four sturdy limbs, short neck, weathered rigid olive-brown shell, natural turtle head. No human face or clothing.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/ba_quy_spirit_base_v3.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-b3778149-11da-4a7d-9b5b-e011ca157cc9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/ba_quy_spirit_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "af8903ef02e709eb736d3ff4340fc9ad737114700b945b1d75dbde0347fc5952"
+  },
+  {
+    "id": "bach_chien_liep",
+    "name": "Bách Chiến Liệp",
+    "face_spec": "broad youthful square jaw, narrow upturned dark brown eyes, thick angled brows, blunt straight nose, asymmetric disdainful upper lip, warm beige skin, jealous proud expression",
+    "body_spec": "Lean young male cultivator, long dark hair tied back, resentful determined gaze, practical dark burgundy Chinese clothes and dark boots, bare hands. No crossbow or bow.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon. Orange review: burgundy robe chosen for visual distinction from Phuong Chinh, not a canon color claim.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/233"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/bach_chien_liep_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Bách Chiến Liệp (bach_chien_liep). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: broad youthful square jaw, narrow upturned dark brown eyes, thick angled brows, blunt straight nose, asymmetric disdainful upper lip, warm beige skin, jealous proud expression. Authoritative BODY/CLOTHES: Lean young male cultivator, long dark hair tied back, resentful determined gaze, practical pale blue Chinese clothes and dark boots, bare hands. No crossbow or bow..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/bach_chien_liep.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/bach_chien_liep_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-50dfe56b-8188-43a7-85b2-1b1a6b69ab54.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "e10e5f24419ebbbddced917d15f2a245bf388799bab05801214d3be471bb1c6d",
+    "variants": [
+      "images/bach_chien_liep_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Bách Chiến Liệp. Change ONLY the pale blue robe to distinctly dark burgundy red with darker burgundy shading, preserve the earth-brown sash, black ponytail, face, pose and physique. Simplify eye gloss to restrained matte dark eyes. This robe color is an art choice to distinguish him from pale-blue-robed Fang Zheng. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/bach_chien_liep_base_v1.png"
+        ],
+        "image": "images/bach_chien_liep_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-64bd3ccb-ff80-472b-a583-1a8525cd3b5e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1254,
+          1254
+        ],
+        "sha256": "e10e5f24419ebbbddced917d15f2a245bf388799bab05801214d3be471bb1c6d"
+      }
+    ],
+    "body_spec_before_review": "Lean young male cultivator, long dark hair tied back, resentful determined gaze, practical pale blue Chinese clothes and dark boots, bare hands. No crossbow or bow."
+  },
+  {
+    "id": "bach_chien_on",
+    "name": "Bách Chiến Ôn",
+    "face_spec": "broad elderly face with heavy sagging cheeks, deep-set dark eyes beneath heavy white brows, wide blunt nose, tight downward mouth, deep forehead creases and a short white beard",
+    "body_spec": "Elderly male clan cultivator, weathered face, grey-white hair and beard, sober white-grey robe with subdued red trim, dark boots. Ordinary human base without flames.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/248"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/bach_chien_on_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Bách Chiến Ôn (bach_chien_on). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: broad elderly face with heavy sagging cheeks, deep-set dark eyes beneath heavy white brows, wide blunt nose, tight downward mouth, deep forehead creases and a short white beard. Authoritative BODY/CLOTHES: Elderly male clan cultivator, weathered face, grey-white hair and beard, sober white-grey robe with subdued red trim, dark boots. Ordinary human base without flames..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/bach_chien_on.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/bach_chien_on_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-c49f28d2-0fc1-4fc6-b8b4-485db2aa6b23.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "7dba05e8075c573d5ec202207234e77edf09513957eacfbcb4b420792cc659c1"
+  },
+  {
+    "id": "bach_lien",
+    "name": "Bách Liên",
+    "face_spec": "soft rounded oval female face, large rounded dark violet-grey eyes with long lashes, fine arched brows, small rounded nose, softly curved lips, fair skin and serene natural beauty",
+    "body_spec": "Graceful young adult woman with fair skin, long black hair tied loosely, gentle composed face, modest ivory Chinese robe with pale lavender trim, empty hands and cloth shoes. No fan or lotus.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/233",
+      "https://cochannhann.pages.dev/api/chapters/235"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/bach_lien_base_v1.png",
+    "status": "generated",
+    "batch": "human_1",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Bách Liên (bach_lien). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: soft rounded oval female face, large rounded dark violet-grey eyes with long lashes, fine arched brows, small rounded nose, softly curved lips, fair skin and serene natural beauty. Authoritative BODY/CLOTHES: Graceful young adult woman with fair skin, long black hair tied loosely, gentle composed face, modest ivory Chinese robe with pale lavender trim, empty hands and cloth shoes. No fan or lotus..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/bach_lien.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/bach_lien_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-0684514d-82db-4d2f-97ff-063ed6eaf4e1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "528920deed01921591f10a371555fe603100e4f01a5deb88bb1cb86d454f31ea"
+  },
+  {
+    "id": "ca_sau_dung_nham",
+    "name": "Cá sấu dung nham",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Lava crocodile king, huge low FOUR-legged crocodile with DARK RED armored scales, copper eyes, massive long metallic-looking scaled tail, and TWO volcano-like bumps on its back with visible openings. No smoke, lava, fire particles or wings in neutral base.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/216",
+      "https://cochannhann.pages.dev/api/chapters/217"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/ca_sau_dung_nham_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Cá sấu dung nham (ca_sau_dung_nham). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Lava crocodile king, huge low FOUR-legged crocodile with DARK RED armored scales, copper eyes, massive long metallic-looking scaled tail, and TWO volcano-like bumps on its back with visible openings. No smoke, lava, fire particles or wings in neutral base.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/ca_sau_dung_nham_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-bc26bf0e-a585-4066-a902-bef1949a9c6b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/ca_sau_dung_nham_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1774,
+      887
+    ],
+    "sha256": "d4f82856d80f0792d0afc4419b53d8c74f4dc3de44793deee687b1a5310aa877"
+  },
+  {
+    "id": "ca_sau_sau_chan",
+    "name": "Cá sấu sáu chân",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Large elongated armored crocodile with EXACTLY SIX legs in THREE pairs, offset near/far legs so all six read clearly in profile, olive-grey scales, long toothed muzzle and heavy tail. No extra legs or wings.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/191",
+      "https://cochannhann.pages.dev/api/chapters/210",
+      "https://cochannhann.pages.dev/api/chapters/211"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/ca_sau_sau_chan_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Cá sấu sáu chân (ca_sau_sau_chan). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Large elongated armored crocodile with EXACTLY SIX legs in THREE pairs, offset near/far legs so all six read clearly in profile, olive-grey scales, long toothed muzzle and heavy tail. No extra legs or wings.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/ca_sau_sau_chan_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-7d7e0382-94af-40c8-8b1d-ca742ea743ed.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/ca_sau_sau_chan_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "afbd9343400ddca650a1561c22f053fb554caeba83661b5e11206a5286228222"
+  },
+  {
+    "id": "co_kim_sinh",
+    "name": "Giả Kim Sinh — legacy co_kim_sinh",
+    "face_spec": "handsome long oval adult face, small calculating dark eyes, well-groomed fine brows, prominent straight nose, smiling asymmetric lips, pointed chin and smooth light tan skin",
+    "body_spec": "Young adult male travelling merchant, sly self-confident expression, dark hair tied up, ochre-gold Chinese robe with restrained trim, dark belt and shoes, bare hands. Ordinary youthful human.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/42"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/co_kim_sinh_base_v1.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Giả Kim Sinh — legacy co_kim_sinh (co_kim_sinh). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: handsome long oval adult face, small calculating dark eyes, well-groomed fine brows, prominent straight nose, smiling asymmetric lips, pointed chin and smooth light tan skin. Authoritative BODY/CLOTHES: Young adult male travelling merchant, sly self-confident expression, dark hair tied up, ochre-gold Chinese robe with restrained trim, dark belt and shoes, bare hands. Ordinary youthful human..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/co_kim_sinh.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/co_kim_sinh_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-415400e7-6ec3-461d-b4d5-fa4c8ecae17d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "faf12a90c091564b0f2539012a51f25902cd794997cb1b6f2d11f22dcdd2cd41"
+  },
+  {
+    "id": "cu_khai_bi",
+    "name": "Cự Khai Bi",
+    "face_spec": "large rectangular adult face, heavy square jaw, small deep-set black eyes, straight heavy brows, broad flattened nose, wide firm mouth, thick cheek planes and sun-tanned skin. Stern mature strength fighter, not pretty boy",
+    "body_spec": "Very tall massive muscular adult male strength cultivator, stern disciplined face, dark hair tied back, broad shoulders, plain dark sleeveless Chinese fighter tunic and trousers, thick belt and boots, bare hands. Normal base before ivory armor activation, no rock body.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon. Orange review: clean-shaven face is an art choice for distinction from Thiet Ba Tu.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/380",
+      "https://cochannhann.pages.dev/api/chapters/381",
+      "https://reverend-insanity.fandom.com/wiki/Ju_Kai_Bei"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/cu_khai_bi_base_v1.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Cự Khai Bi (cu_khai_bi). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: large rectangular adult face, heavy square jaw, small deep-set black eyes, straight heavy brows, broad flattened nose, wide firm mouth, thick cheek planes and sun-tanned skin. Stern mature strength fighter, not pretty boy. Authoritative BODY/CLOTHES: Very tall massive muscular adult male strength cultivator, stern disciplined face, dark hair tied back, broad shoulders, plain dark sleeveless Chinese fighter tunic and trousers, thick belt and boots, bare hands. Normal base before ivory armor activation, no rock body..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/cu_khai_bi_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-eea1237c-bb7f-4ada-830e-599636934fe6.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "4d1774ac66905066df08322a65be738437626d80f810a423a21709b5559ea5b0",
+    "variants": [
+      "images/cu_khai_bi_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Cự Khai Bi. Remove all facial hair: completely clean-shaven upper lip, chin and jaw, no beard, moustache or stubble. Preserve stern adult masculine face, broad jaw, muscular build, skin, sleeveless clothes, posture and every other detail. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/cu_khai_bi_base_v1.png"
+        ],
+        "image": "images/cu_khai_bi_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-6ba4c2a1-2be7-4caf-b657-47ab2bfbb2aa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1254,
+          1254
+        ],
+        "sha256": "4d1774ac66905066df08322a65be738437626d80f810a423a21709b5559ea5b0"
+      }
+    ]
+  },
+  {
+    "id": "cuong_thi",
+    "name": "Cương thi Bạch Mao",
+    "face_spec": "corpse-grey gaunt face, blank small dark sunken eyes, sparse white eyebrows, flattened damaged-looking nose, slack thin mouth, hollow cheeks, white shaggy hair. Stylized undead without exposed wounds",
+    "body_spec": "Stiff humanoid zombie with grey skin, WHITE shaggy body hair visible on exposed forearms and head, dull expression, torn dark simple clothes, both empty arms slightly stretched forward. Non-graphic stylized undead, no gore or western costume.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/288",
+      "https://cochannhann.pages.dev/api/chapters/291"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/cuong_thi_base_v1.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Cương thi Bạch Mao (cuong_thi). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: corpse-grey gaunt face, blank small dark sunken eyes, sparse white eyebrows, flattened damaged-looking nose, slack thin mouth, hollow cheeks, white shaggy hair. Stylized undead without exposed wounds. Authoritative BODY/CLOTHES: Stiff humanoid zombie with grey skin, WHITE shaggy body hair visible on exposed forearms and head, dull expression, torn dark simple clothes, both empty arms slightly stretched forward. Non-graphic stylized undead, no gore or western costume..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cuong_thi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/cuong_thi_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-350ead73-b20e-4833-9cb2-f6c95eba15cc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "ab18f72d7b7f86e099f034ab6e641285dda239b82d6f9796a72107e82660cf88"
+  },
+  {
+    "id": "dian_lang_boss",
+    "name": "Lôi Quan Đầu Lang",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Lightning Crown Wolf King, very tall lean FOUR-legged powerful wolf with dark BLUE SCALES covering the body. GOLDEN fur tufts at paws and tail, stiff golden head fur raised into a tall crown. Long natural wolf muzzle, noble alert stance, no lightning particles, metal crown, horns or blue furry coat.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/159",
+      "https://cochannhann.pages.dev/api/chapters/163",
+      "https://cochannhann.pages.dev/api/chapters/164"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/dian_lang_boss_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Lôi Quan Đầu Lang (dian_lang_boss). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Lightning Crown Wolf King, very tall lean FOUR-legged powerful wolf with dark BLUE SCALES covering the body. GOLDEN fur tufts at paws and tail, stiff golden head fur raised into a tall crown. Long natural wolf muzzle, noble alert stance, no lightning particles, metal crown, horns or blue furry coat.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/dian_lang_boss_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-123f60e1-0c95-4e19-ba8d-b8b4a44f88b4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/dian_lang_boss_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "d58a95d375e24463ed708bc5267c13d739d04786cbc8eee06221522e0aed196a"
+  },
+  {
+    "id": "dien_lang",
+    "name": "Điện Lang",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Lean FOUR-legged wolf, blue-grey fur, alert ears, long natural muzzle, silver-white teeth, bushy tail, no horn, no human body or lightning effects.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/130"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/dien_lang_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Điện Lang (dien_lang). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Lean FOUR-legged wolf, blue-grey fur, alert ears, long natural muzzle, silver-white teeth, bushy tail, no horn, no human body or lightning effects.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/dien_lang_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-7d5aac93-dd57-4068-a42b-822c4bd61c7a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/dien_lang_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "2666ae60e5da7e11bd092092676851e0fc9cc5b1e289a959e5fbeb4ce4147a66"
+  },
+  {
+    "id": "hac_hung",
+    "name": "Hắc Hùng",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Heavy adult black bear on FOUR legs, thick black fur, rounded ears, broad brown-black muzzle, muscular forepaws, short tail, natural animal proportions. No clothing.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/151"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/hac_hung_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Hắc Hùng (hac_hung). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Heavy adult black bear on FOUR legs, thick black fur, rounded ears, broad brown-black muzzle, muscular forepaws, short tail, natural animal proportions. No clothing.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/hac_hung_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-16aee48f-d837-4b66-ba4f-1820e6203203.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/hac_hung_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "5700dc7e1c7df60fad8444e07aef967adddf17a7d2d0bc097efe7f3f528f44ad"
+  },
+  {
+    "id": "han_bat_luu",
+    "name": "Hàn Bất Lưu",
+    "face_spec": "48-year-old weathered elongated face, hooded dark brown eyes, uneven grey-black brows, strong broad nose, dry thin lips, stubbled squared chin, crow feet and tan skin",
+    "body_spec": "Weathered 48-year-old male cultivator, stern practical face, dark hair with grey temples tied back, muted brown travelling clothes, dark belt and boots, hands empty. No wizard staff, bells or dogs in image.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/425"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/han_bat_luu_base_v1.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Hàn Bất Lưu (han_bat_luu). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: 48-year-old weathered elongated face, hooded dark brown eyes, uneven grey-black brows, strong broad nose, dry thin lips, stubbled squared chin, crow feet and tan skin. Authoritative BODY/CLOTHES: Weathered 48-year-old male cultivator, stern practical face, dark hair with grey temples tied back, muted brown travelling clothes, dark belt and boots, hands empty. No wizard staff, bells or dogs in image..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/han_bat_luu.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/han_bat_luu_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-632ff8e5-0d1b-4474-8503-625ed90b403b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "bb3da45d631ac2cafe83eddd8d70f51f3a77b16ba5041966cafae52c3d29c216"
+  },
+  {
+    "id": "hien_vien_than_ke",
+    "name": "Hiên Viên Thần Kê",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Enormous proud rooster, tall GOLDEN comb, beak, TWO legs, TWO folded feather wings, rich iridescent five-colored plumage and elaborate long tail. Clearly rooster anatomy, no human hands.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/218"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/hien_vien_than_ke_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Hiên Viên Thần Kê (hien_vien_than_ke). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Enormous proud rooster, tall GOLDEN comb, beak, TWO legs, TWO folded feather wings, rich iridescent five-colored plumage and elaborate long tail. Clearly rooster anatomy, no human hands.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/hien_vien_than_ke_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-7137e91f-1055-4e5e-93d8-0ba6b73ad86b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/hien_vien_than_ke_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "c5024274794575a4792fdcc7ae7e2fd0e7d6aa509a90e59b3ecf0479bcc4a8ce"
+  },
+  {
+    "id": "hoanh_mi",
+    "name": "Hoành Mi",
+    "face_spec": "very broad square brutish face, massive horizontal black eyebrows, small squinting black eyes, broad blunt nose, heavy protruding lower lip, fleshy jaw, rough tan skin and a smug scowl",
+    "body_spec": "Robust adult male strength cultivator Heng Mei, bare broad flat chest with black chest hair, very muscular arms, rough brown trousers, thick belt, boots, short dark hair, empty hands, swaggering solid stance.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/414",
+      "https://cochannhann.pages.dev/api/chapters/416"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/hoanh_mi_base_v1.png",
+    "status": "generated",
+    "image": "images/hoanh_mi_base_v1.png",
+    "background_mode": "alpha",
+    "prompt": "Use case: stylized-concept. ONE battle base sprite of Hoành Mi / Heng Mei. Image 1 is his old CHIBI STYLE reference only. Images 2 and 3 show contrasting elderly/thin and bald/armored faces: STYLE only, NOT identity. Borrow only pixel technique, smaller head/body proportions and compact ready stance. Do NOT copy any reference face, beard, vest, armor, age, skin or clothes.\nAuthoritative v03 identity: very broad square brutish face, massive horizontal black eyebrows, small squinting black eyes, broad blunt nose, heavy protruding lower lip, fleshy jaw, rough tan skin and a smug scowl. Body/outfit: Robust adult male strength cultivator Heng Mei, bare broad flat chest with black chest hair, very muscular arms, rough brown trousers, thick belt, boots, short dark hair, empty hands, swaggering solid stance..\nRedraw as compact readable 256x256 PIXEL ART on a literal square pixel grid, 1-pixel dark outline, 24–32 solid colors, no antialiasing or gradients. Head from crown to chin must be 30% of full character crown-to-sole height (3.3 heads tall), NOT 40%. Face simplified to same detail level as body, bold broad square jaw, massive horizontal black eyebrows, small squinting BLACK eyes, blunt wide nose and heavy lower lip; no glossy anime eyes, no fine realistic wrinkle lattice. Adult male, rugged tan skin, short black hair, BARE muscular chest with a small bold chest-hair patch, bulky arms, brown trousers and boots. No vest. THREE-QUARTER view toward screen RIGHT, both eyes visible, compact cocky ready stance, feet spread, chest forward, fists held close to waist and elbows close to torso. Hands must not reach outside silhouette. Exactly one full-body sprite, hair and boots clear of image boundaries, around 16px margin on a 256px grid. Actual transparent alpha with hard clean pixel edges, no magenta rim, no floor shadow, particles, scenery, weapons, text or second sprite. Keep all v03 identity constraints; refs are only rendering technique.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "pilot_selected": "hoanh_mi_pilot_v3.png",
+    "edit_prompt": "Precise local edit to this Hoành Mi / Heng Mei pilot. Change ONLY the CHEST HAIR patch. Remove the regular checkerboard/mesh pattern entirely and replace it with 5–8 short irregular dark curved hair strokes or uneven tapered pixel tufts centered on the sternum, varying angle and length, with skin gaps. It must read as natural coarse chest hair at 120px character height, not woven fabric, tattoo, crosshatching or a black solid emblem. Keep EXACTLY the same face, brows, eyes, nose, hair, skin tone, chest musculature, body size, smaller head ratio, compact ready pose, hands, trousers, belt, boots, three-quarter right view, pixel drawing style, shading and canvas. No changes outside chest-hair area. One full body, transparent alpha preserved, no props, effects, text, background or shadow.",
+    "edit_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/pilot_style/hoanh_mi_pilot_v2.png"
+    ],
+    "batch": "human_pilot"
+  },
+  {
+    "id": "hoc_duong_gia_lao",
+    "name": "Học đường gia lão",
+    "face_spec": "elderly long face, deeply wrinkled forehead and cheeks, narrow grey eyes, long white eyebrows, sharp long nose, white moustache and pointed white beard. Stern but alert old teacher, match the upper-left old man in the reference",
+    "body_spec": "Elderly male Gu Yue academy teacher, WHITE hair and beard, simple tied hair, formal dark green robe with cream collar, cloth shoes, empty hands, upright but aged stance. Source manhua cream robe is not a required palette.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/4"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://www.readreverendinsanity.com/manga/master-of-gu-chapter-4/",
+    "source_image_url": "https://qubn.us/uploads/master-of-gu/4/master-of-gu-ch4-006.webp",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/hoc_duong_gia_lao_base_v1.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Học đường gia lão (hoc_duong_gia_lao). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: elderly long face, deeply wrinkled forehead and cheeks, narrow grey eyes, long white eyebrows, sharp long nose, white moustache and pointed white beard. Stern but alert old teacher, match the upper-left old man in the reference. Authoritative BODY/CLOTHES: Elderly male Gu Yue academy teacher, WHITE hair and beard, simple tied hair, formal dark green robe with cream collar, cloth shoes, empty hands, upright but aged stance. Source manhua cream robe is not a required palette..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/hoc_duong_gia_lao_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-922bf8dd-8af7-4bdd-8301-08a7d8e02ee5.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "b96fe6d7d9f74f71b999a367bb532f0bd53b106251572056db46826d46b8fa33"
+  },
+  {
+    "id": "mac_bac",
+    "name": "Mạc Bắc",
+    "face_spec": "Elongated human horse-face: long lower face, straight long jaw and chin; narrow dark eyes, heavy brows. VN ch.4 directly describes horse-faced youth.",
+    "body_spec": "Tall sturdy teenage male Gu Yue Mo Bei, dark brown hair pulled back, brown linen training clothes, cloth sash, wrapped forearms and boots, empty hands. Upright proud stance.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/4",
+      "https://cochannhann.pages.dev/api/chapters/63",
+      "https://reverend-insanity.fandom.com/wiki/Gu_Yue_Mo_Bei"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://www.readreverendinsanity.com/manga/master-of-gu-chapter-4/",
+    "source_image_url": "https://qubn.us/uploads/master-of-gu/4/master-of-gu-ch4-006.webp",
+    "height_constraint": "Taller and sturdier than teenage peers; VN ch.4; numerical import scale not fixed.",
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/mac_bac_base_v2.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Mạc Bắc (mac_bac). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: Elongated human horse-face: long lower face, straight long jaw and chin; narrow dark eyes, heavy brows. VN ch.4 directly describes horse-faced youth.. Authoritative BODY/CLOTHES: Tall sturdy teenage male Gu Yue Mo Bei, dark brown hair pulled back, brown linen training clothes, cloth sash, wrapped forearms and boots, empty hands. Upright proud stance..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. Human horse-face with unmistakably elongated lower jaw/chin, NOT animal muzzle.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/mac_bac.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/mac_bac_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-6493ee56-6b8d-40ae-ac19-b71a6d473268.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "33fff00e865d0822b1780c77c4860422bc3d36836f7e2c4930a1d2dc7bb04195",
+    "variants": [
+      "images/mac_bac_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Mạc Bắc. Make the HUMAN face unmistakably long: elongate the lower facial half, narrow long cheeks and longer chin, distinctly horse-faced human physiognomy, without an animal muzzle. Change brown hair to nearly black. Preserve proud teenage identity, warm brown clothes, pose and body proportions. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/mac_bac_base_v1.png"
+        ],
+        "image": "images/mac_bac_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-df53d29b-e004-46f0-a818-fd1e5fa1ef5d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1254,
+          1254
+        ],
+        "sha256": "33fff00e865d0822b1780c77c4860422bc3d36836f7e2c4930a1d2dc7bb04195"
+      }
+    ]
+  },
+  {
+    "id": "nhat_dai_boss",
+    "name": "Cổ Nguyệt Nhất Đại — Huyết Quỷ Thi",
+    "face_spec": "ancient gaunt blood-wight face, crimson skin, deeply hollow temples and cheeks, blood-red sunken eyes, sparse grey brows, long bony nose, sinister thin mouth, deep age creases and grey-red tangled hair",
+    "body_spec": "Ancient male First Gen Gu Yue in blood-wight form, old gaunt crimson-grey body, tangled grey-red hair, ragged dark crimson Chinese robes, two black bat-like wings visible, empty hands. Restrained non-graphic undead design, no blood particles.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/194",
+      "https://cochannhann.pages.dev/api/chapters/195",
+      "https://reverend-insanity.fandom.com/wiki/First_Gen_Gu_Yue"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/nhat_dai_boss_base_v3.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Cổ Nguyệt Nhất Đại — Huyết Quỷ Thi (nhat_dai_boss). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: ancient gaunt blood-wight face, crimson skin, deeply hollow temples and cheeks, blood-red sunken eyes, sparse grey brows, long bony nose, sinister thin mouth, deep age creases and grey-red tangled hair. Authoritative BODY/CLOTHES: Ancient male First Gen Gu Yue in blood-wight form, old gaunt crimson-grey body, tangled grey-red hair, ragged dark crimson Chinese robes, two black bat-like wings visible, empty hands. Restrained non-graphic undead design, no blood particles..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/nhat_dai_boss.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/nhat_dai_boss_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-1cbd3902-8346-4642-b940-e4efd2b88568.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "e8f1fd79f15d6b529d75364bba6208f75f2cd7c7c1602f0d1537dfd7990092ba"
+  },
+  {
+    "id": "phi_hau",
+    "name": "Phỉ Hầu",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Bandit monkey, powerful giant ape-like beast with enormous arms thicker than its legs. Bare brown skin on upper torso, head, arms and shoulders; golden-yellow fur with black tiger stripes ONLY from waist downward and on its tail. Two arms, two legs, one tail. No lion mane or furry upper body.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/266",
+      "https://cochannhann.pages.dev/api/chapters/268"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/phi_hau_base_v2.png",
+    "status": "generated",
+    "image": "images/phi_hau_base_v1.png",
+    "background_mode": "magenta",
+    "prompt": "Use case: stylized-concept. ONE Phỉ Hầu / Bandit Monkey animal battle base. Images 1–3 (old Phỉ Hầu, boar, bear) are STYLE ONLY: use compact game sprite drawing and simple shading, not identity. Old image 1 has WRONG all-over striped fur. DO NOT COPY that fur layout.\nAuthoritative v03: Bandit monkey, powerful giant ape-like beast with enormous arms thicker than its legs. Bare brown skin on upper torso, head, arms and shoulders; golden-yellow fur with black tiger stripes ONLY from waist downward and on its tail. Two arms, two legs, one tail. No lion mane or furry upper body.. Face: natural ape face, not human anime.\nStrong giant ape/monkey, massive arms thicker than thighs, compact slightly crouched ready stance, two arms, two legs, ONE tail. BARE BROWN SKIN on entire head, neck, shoulders, chest/back and arms; no upper-body fur, no lion mane. GOLDEN-YELLOW fur with BLACK TIGER STRIPES only waist downward, legs and tail. Distinct bare upper body vs striped lower half at 120px scale. No armor/clothes/weapons. Slight 3/4 view facing RIGHT, natural species head size, no human chibi-head formula. Tail curves close behind body and fully in frame, fists near ground with separate visible legs. Keep correct animal anatomy and compact silhouette.\nPixel-art game drawing, bold dark outline, simplified 2–3 tones per material, no realistic microtexture, gradients or blurry edge. Logical detail suited to 200px sprite; importer later reduces/quantizes, do not fake source resolution. One full-body figure with generous margin. SOLID FLAT PURE MAGENTA #FF00FF background, no transparent fade/halo, drop shadow, floor, scenery, FX, labels, text or second figure. Keep species/canon details specified above; refs only teach how to draw.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/phi_hau.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/heo_rung.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hac_hung.png"
+    ],
+    "pilot_selected": "phi_hau_pilot_v1.png",
+    "edit_prompt": null,
+    "edit_input_paths": null,
+    "batch": "beast_pilot"
+  },
+  {
+    "id": "phi_tuong",
+    "name": "Phi Tượng",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "White feather flying elephant, natural elephant anatomy, exactly four thick legs, one long trunk, two long curved ivory tusks. Whole body covered with WHITE BIRD FEATHERS, not mammal fur. Four feet suspended slightly above a virtual floor, no wings or flight particles.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/277"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/phi_tuong_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Phi Tượng (phi_tuong). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: White feather flying elephant, natural elephant anatomy, exactly four thick legs, one long trunk, two long curved ivory tusks. Whole body covered with WHITE BIRD FEATHERS, not mammal fur. Four feet suspended slightly above a virtual floor, no wings or flight particles.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/phi_tuong_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-5b64fc56-1b36-48b0-90c4-83f63cd3ba52.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/phi_tuong_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "046e4e7fcc892295dd4e0efb898a8e348641cc028dbed2a7f102d5bd63945612"
+  },
+  {
+    "id": "thach_hau",
+    "name": "Ngọc Nhãn Thạch Hầu",
+    "face_spec": "natural species-specific head, muzzle, beak and eye structure as described; no human anime face",
+    "body_spec": "Small agile monkey, stone-grey fur, striking JADE GREEN eyes, natural monkey face, TWO arms TWO legs and ONE long tail. Living animal, not rock golem. No clothes.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/79",
+      "https://cochannhann.pages.dev/api/chapters/115"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thach_hau_base_v2.png",
+    "status": "generated",
+    "reason": "Await Orange review of boar and bandit-monkey animal style pilots.",
+    "batch": "beasts_after_pilot",
+    "prompt": "Use case: stylized-concept game character BASE. Create ONE Ngọc Nhãn Thạch Hầu (thach_hau). Image 1 defines this animal's individual IDENTITY and anatomy only; images 2 and 3 define ONLY the approved compact pixel-cluster drawing style, outlines and restrained shading. Do not copy their species, face or anatomy. Authoritative identity: Small agile monkey, stone-grey fur, striking JADE GREEN eyes, natural monkey face, TWO arms TWO legs and ONE long tail. Living animal, not rock golem. No clothes.\nNatural animal proportions, small natural species head, powerful anatomically appropriate limbs, no cute baby mascot proportions. Three-quarter view facing RIGHT, readable compact neutral alert pose; all required near/far limbs clearly distinguishable. Full body, ears, tail and tusks inside generous blank margins. Preserve species identity from image 1 while simplifying detail to match style images. No humanoid anime face, no extra appendages. For six-legged crocodile show exactly three near legs and three staggered far legs. For floating elephant retain subtle hovering posture but do not draw wings. Bold dark outline, flat two or three tones per color, pixel clusters suited for later reduction to 200px. Solid flat magenta #FF00FF background. No shadow, text, scenery, smoke, dust, particles, lightning, fire or magic effects. Do not depict another character. Unspecified palette details are art choices.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-base-v03/images/thach_hau_base_v2.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/phi_hau_base_v1.png"
+    ],
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-64205a0d-950d-4f82-ae45-aecbe25a9f4e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "image": "images/thach_hau_base_v1.png",
+    "background_mode": "magenta",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "sha256": "2a769e6877fe4e8d08d2778ba386b130d59b185fd5f53fc792c4fa355a352181"
+  },
+  {
+    "id": "thiet_ba_tu",
+    "name": "Thiết Phách Tu",
+    "face_spec": "mature stern commander, dark short beard stubble, rounded heavy-lidded eyes, grey bushy brows, convex nose bridge and short downturned broad mouth; differentiated facial details are art",
+    "body_spec": "Massive muscular mature male strength fighter, short dark hair, stern face, practical dark brown armor over simple fighter trousers, thick belt, boots, empty hands and stable wide stance. No boulder weapon.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/441",
+      "https://cochannhann.pages.dev/api/chapters/444"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thiet_ba_tu_base_v2.png",
+    "status": "generated",
+    "batch": "human_2",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thiết Phách Tu (thiet_ba_tu). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: mature stern commander, dark short beard stubble, rounded heavy-lidded eyes, grey bushy brows, convex nose bridge and short downturned broad mouth; differentiated facial details are art. Authoritative BODY/CLOTHES: Massive muscular mature male strength fighter, short dark hair, stern face, practical dark brown armor over simple fighter trousers, thick belt, boots, empty hands and stable wide stance. No boulder weapon..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thiet_ba_tu.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thiet_ba_tu_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-19637ff5-f14a-4448-a422-d8f8ac8849ce.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "781c9256b104ab5908dc4dc9ca3f290ebb8d6a8ede6c41393dedd30ccfab3351"
+  },
+  {
+    "id": "thiet_dao_kho",
+    "name": "Thiết Đao Khổ",
+    "face_spec": "lean oblong adult face, strongly defined cheekbones, thin horizontal black eyes, angled stern brows, sharp nose bridge, narrow unsmiling lips, angular chin, muted tan skin",
+    "body_spec": "Resolute adult male cultivator, dark hair tied back, practical charcoal armor and trousers, dark boots, one EMPTY hand held flat like a blade, other relaxed. No held sword, saber or knife.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/229",
+      "https://cochannhann.pages.dev/api/chapters/445"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thiet_dao_kho_base_v1.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thiết Đao Khổ (thiet_dao_kho). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: lean oblong adult face, strongly defined cheekbones, thin horizontal black eyes, angled stern brows, sharp nose bridge, narrow unsmiling lips, angular chin, muted tan skin. Authoritative BODY/CLOTHES: Resolute adult male cultivator, dark hair tied back, practical charcoal armor and trousers, dark boots, one EMPTY hand held flat like a blade, other relaxed. No held sword, saber or knife..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. Idle base: withdraw blade hand close to torso; no outstretched arm making idle excessively wide.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thiet_dao_kho.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thiet_dao_kho_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-4652a95c-c4a6-4f68-8aaa-f098e92a7cab.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "34594680bca066836db699d97a4468d014f78c935c819983dd83ab92b130e7a3"
+  },
+  {
+    "id": "thiet_huyet_lanh",
+    "name": "Thiết Huyết Lãnh",
+    "face_spec": "Ancient bronze mask with eye openings and an open mouth area exposing downturned human lips; exposed pale ears. Patina/engraving are art.",
+    "body_spec": "Tall upright older detective with greying tied hair, ancient bronze mask, dark robe/armor/cloak, empty hands, pale exposed ears.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/170",
+      "https://cochannhann.pages.dev/api/chapters/178",
+      "https://cochannhann.pages.dev/api/chapters/186",
+      "https://reverend-insanity.fandom.com/wiki/Tie_Xue_Leng"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": "Tall adult with straight back; VN ch.170; numerical import scale not fixed.",
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thiet_huyet_lanh_base_v2.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thiết Huyết Lãnh (thiet_huyet_lanh). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: Ancient bronze mask with eye openings and an open mouth area exposing downturned human lips; exposed pale ears. Patina/engraving are art.. Authoritative BODY/CLOTHES: Tall upright older detective with greying tied hair, ancient bronze mask, dark robe/armor/cloak, empty hands, pale exposed ears..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. Ancient bronze mask, exposed pale ears and real downturned lips, patina/engraving allowed art; not modern copper helmet.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thiet_huyet_lanh.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thiet_huyet_lanh_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-28ebe49b-84d8-4ba6-8449-e26265ac2474.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "dd8ab3f91fc5f361dcfab0cc805e9cbe83d425c91de4d524a69ba5c93256f5a2",
+    "variants": [
+      "images/thiet_huyet_lanh_base_v1.png"
+    ],
+    "edit_history": [
+      {
+        "kind": "edit",
+        "prompt": "Use case: identity-preserving sprite edit. Edit the attached base of Thiết Huyết Lãnh. Keep the ornate antique bronze-green mask. Make clear openings for both eyes and a separate opening revealing the actual human lips. Lips must be downturned, sharply chiseled and stern, with pale skin visible around the lip opening. The two exposed ears must be chalk-pale white, not peach. Preserve mask ornament, age, dark clothes, chain, posture and body. Preserve all unmentioned features and the exact full-body composition, compact three-quarter right-facing pose, small-head chibi drawing, flat restrained shading and dark outline. One character, full feet and hair with empty margins. Real transparent alpha background. No scenery, text, added effects or additional characters. This remains a review base for VS and identity, not an animation sheet.",
+        "input_paths": [
+          "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/thiet_huyet_lanh_base_v1.png"
+        ],
+        "image": "images/thiet_huyet_lanh_base_v2.png",
+        "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-d580bac6-b768-4352-b4c9-029dc9af9569.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "tool": "built-in imagegen",
+        "source_dimensions": [
+          1254,
+          1254
+        ],
+        "sha256": "dd8ab3f91fc5f361dcfab0cc805e9cbe83d425c91de4d524a69ba5c93256f5a2"
+      }
+    ]
+  },
+  {
+    "id": "thiet_mo_bach",
+    "name": "Thiết Mộ Bạch",
+    "face_spec": "thin dignified elderly face, deep-set small steel-grey eyes, long white brows, narrow high nose, firm thin lips partly hidden by long white beard, hollow cheeks, pale weathered skin",
+    "body_spec": "Thin venerable elderly male master, long white hair and beard, severe composed face, formal muted-gold Chinese robe with dark belt, cloth shoes, hands empty. No golden skin or glowing effects.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/457",
+      "https://cochannhann.pages.dev/api/chapters/461"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thiet_mo_bach_base_v1.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thiết Mộ Bạch (thiet_mo_bach). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: thin dignified elderly face, deep-set small steel-grey eyes, long white brows, narrow high nose, firm thin lips partly hidden by long white beard, hollow cheeks, pale weathered skin. Authoritative BODY/CLOTHES: Thin venerable elderly male master, long white hair and beard, severe composed face, formal muted-gold Chinese robe with dark belt, cloth shoes, hands empty. No golden skin or glowing effects..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thiet_mo_bach.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thiet_mo_bach_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-8fb560b4-12d9-48d5-9123-991a7fbf892e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "9692e13eb510882673f6d5acf43b8ea314ac16ef68c4ed48c5c343de0d0a5e0d"
+  },
+  {
+    "id": "thiet_nhuoc_nam",
+    "name": "Thiết Nhược Nam — Q2",
+    "face_spec": "heroic young female face, upright sword-like eyebrows, bright sharp dark eyes, pursed lips, slightly dark complexion, strong cheekbones and firm rounded-square jaw. Determined investigator, not pale doll",
+    "body_spec": "Determined young adult woman detective, dark hair tied into long high ponytail before haircut, practical dark grey Chinese armor over fitted robes, belt, boots, hands empty. No needles, grass soldiers or sword.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/441",
+      "https://cochannhann.pages.dev/api/chapters/445"
+    ],
+    "source_mode": "own_image",
+    "source_page_url": "https://in.pinterest.com/pin/145381894219390541/",
+    "source_image_url": "https://i.pinimg.com/736x/68/85/70/688570ace549ddfd6bf151ce14c0cc04.jpg",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/thiet_nhuoc_nam_base_v1.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Thiết Nhược Nam — Q2 (thiet_nhuoc_nam). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: heroic young female face, upright sword-like eyebrows, bright sharp dark eyes, pursed lips, slightly dark complexion, strong cheekbones and firm rounded-square jaw. Determined investigator, not pale doll. Authoritative BODY/CLOTHES: Determined young adult woman detective, dark hair tied into long high ponytail before haircut, practical dark grey Chinese armor over fitted robes, belt, boots, hands empty. No needles, grass soldiers or sword..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/thiet_nhuoc_nam.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/thiet_nhuoc_nam_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-8e9b8d98-0ec4-404d-a3fe-e31bd8e90e2a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "6be1b7ba9137a44c36125fb13d9d6c63b01749f89151925690ae566ef92da180"
+  },
+  {
+    "id": "tiet_tam_tu",
+    "name": "Tiết Tam Tứ",
+    "face_spec": "ordinary-looking athletic adult woman, broad oval face, small round dark eyes, thick practical brows, broad rounded nose, wide firm mouth, warm tan skin. Plain strong features rather than glamorous anime beauty",
+    "body_spec": "Athletic adult female Xue San Si, ordinary rather than exceptionally beautiful, practical dark plum fighter tunic and trousers, dark hair tied back, empty hands, strong balanced posture. Human base before wing activation, no wings or tiger transformation.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/418",
+      "https://cochannhann.pages.dev/api/chapters/419",
+      "https://reverend-insanity.fandom.com/wiki/Xue_San_Si"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/tiet_tam_tu_base_v1.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Tiết Tam Tứ (tiet_tam_tu). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: ordinary-looking athletic adult woman, broad oval face, small round dark eyes, thick practical brows, broad rounded nose, wide firm mouth, warm tan skin. Plain strong features rather than glamorous anime beauty. Authoritative BODY/CLOTHES: Athletic adult female Xue San Si, ordinary rather than exceptionally beautiful, practical dark plum fighter tunic and trousers, dark hair tied back, empty hands, strong balanced posture. Human base before wing activation, no wings or tiger transformation..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tiet_tam_tu.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/tiet_tam_tu_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-7a7384aa-1891-42cd-9835-81337829ad45.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "3b9291221fc224db0999bfce625884f7be575d45d4ab60a2428f615b643f1663"
+  },
+  {
+    "id": "tran_thuy_hoa",
+    "name": "Trần Thúy Hoa",
+    "face_spec": "adult rural woman with round heavy face, tired small dark eyes with dark circles, sparse straight brows, broad flat nose, dry downturned mouth, sallow pale sickly skin, age lines. Clearly a peasant woman, not young swordsman",
+    "body_spec": "Adult female former farmer Chen Cui Hua, weary sickly rural woman, practical black-grey hair tied in a plain low bun, patched faded BROWN tunic and loose trousers, simple cloth belt and straw-cloth shoes, empty hands, slightly stooped working-woman posture. No sword, armor, elegant long flowing robe or glamorous ponytail.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/221",
+      "https://cochannhann.pages.dev/api/chapters/224"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/tran_thuy_hoa_base_v1.png",
+    "status": "generated",
+    "image": "images/tran_thuy_hoa_base_v1.png",
+    "background_mode": "alpha",
+    "prompt": "Use case: stylized-concept. ONE pixel-art battle base of Trần Thúy Hoa / Chen Cui Hua.\nInputs 1–3 are ONLY style examples: image 1 is her old chibi_ref with INCORRECT green zombie skin; images 2 and 3 elderly man and muscular fighter. Do not copy their identities, skins or outfits. Only learn simple compact pixel drawing.\nAuthoritative v03 face: adult rural woman with round heavy face, tired small dark eyes with dark circles, sparse straight brows, broad flat nose, dry downturned mouth, sallow pale sickly skin, age lines. Clearly a peasant woman, not young swordsman. Authoritative v03 body and clothing: Adult female former farmer Chen Cui Hua, weary sickly rural woman, practical black-grey hair tied in a plain low bun, patched faded BROWN tunic and loose trousers, simple cloth belt and straw-cloth shoes, empty hands, slightly stooped working-woman posture. No sword, armor, elegant long flowing robe or glamorous ponytail..\nMature FEMALE peasant, tired small DARK eyes, dark circles, sparse brows, broad flat nose, downturned dry mouth, plain black-grey LOW BUN, faded patched BROWN tunic and trousers and straw-cloth shoes. Sallow yellowish pale HUMAN skin, NOT GREEN, not undead, no armor or sword, not a young girl. Simplify wrinkles to one or two broad strokes, no realistic fine textures, no glossy anime eyes.\nTHREE-QUARTER view to screen right, face turned partially toward viewer showing BOTH eyes, slightly stooped laboring woman's posture, feet modestly apart, both hands loosely held near hips and elbows close in. Compact silhouette.\nHead MUST be SMALLER than typical huge-headed chibi: 30% of full body crown-to-sole height, 3.3 head heights. On 256x256 sprite, body occupies about 220px tall, HEAD ONLY 65px including hair, remaining shoulder-to-sole 155px. Do NOT draw a 90px head. Face details as simple as torso details.\nNative 256x256 pixel art, literal square pixel grid, 1px crisp dark outline, 24–32 colors, flat shading, no antialiasing. One full-body figure within ample margins. Actual transparent alpha, hard clean edge, no pink or green rim. No FX, background, floor shadow, text, weapons, particles or other figures. Preserve v03 identity and brown patched clothes, use ref only for technique.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoc_duong_gia_lao.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "pilot_selected": "tran_thuy_hoa_pilot_v1.png",
+    "edit_prompt": null,
+    "edit_input_paths": null,
+    "batch": "human_pilot"
+  },
+  {
+    "id": "viem_dot",
+    "name": "Viêm Đột",
+    "face_spec": "extremely thin old face, sunken nearly closed eyes, messy sparse grey brows, long angular nose, pinched mouth, deeply hollow cheeks, yellow-grey weathered skin and deep wrinkles",
+    "body_spec": "Emaciated elderly male beggar cultivator, long UNKEMPT grey-black hair, hunched back, lined face, long crooked natural fingers with long nails, ragged earth-grey robe, BARE lower legs and BARE feet. No staff or flames.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/374",
+      "https://reverend-insanity.fandom.com/wiki/Yan_Tu"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/viem_dot_base_v2.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Viêm Đột (viem_dot). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: extremely thin old face, sunken nearly closed eyes, messy sparse grey brows, long angular nose, pinched mouth, deeply hollow cheeks, yellow-grey weathered skin and deep wrinkles. Authoritative BODY/CLOTHES: Emaciated elderly male beggar cultivator, long UNKEMPT grey-black hair, hunched back, lined face, long crooked natural fingers with long nails, ragged earth-grey robe, BARE lower legs and BARE feet. No staff or flames..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/viem_dot.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/cu_khai_bi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/viem_dot_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-c3cda21a-47fb-4cf4-abe7-966e71ab69fb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "ec99c9ea1b47cd43d2b7c87986b0ac8d3c4b33e5a7b24f5520af980e855bd669"
+  },
+  {
+    "id": "vu_quy",
+    "name": "Vu Quỷ",
+    "face_spec": "ancient gaunt face, deep eye sockets, tiny black eyes, prominent aquiline nose, projecting thin lips resembling a beak, grey-yellow skin, sparse wild grey brows, sinister crow-like expression",
+    "body_spec": "Gaunt very old male demonic cultivator, long untidy grey hair, thin sinister face, loose black Chinese robe, dark belt and shoes, hands empty. No skull staff, cloud effects or floating hand.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/461",
+      "https://cochannhann.pages.dev/api/chapters/474"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/vu_quy_base_v2.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Vu Quỷ (vu_quy). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: ancient gaunt face, deep eye sockets, tiny black eyes, prominent aquiline nose, projecting thin lips resembling a beak, grey-yellow skin, sparse wild grey brows, sinister crow-like expression. Authoritative BODY/CLOTHES: Gaunt very old male demonic cultivator, long untidy grey hair, thin sinister face, loose black Chinese robe, dark belt and shoes, hands empty. No skull staff, cloud effects or floating hand..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/vu_quy.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/hoanh_mi.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/vu_quy_base_v1.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-bd4d61db-7a38-4651-825e-b8e7e0df3f08.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "15f30b9d693eb88b79f920caf9cdf2a5bff2c5475d602f9f0305759d437eeb33"
+  },
+  {
+    "id": "xich_thanh",
+    "name": "Xích Thành",
+    "face_spec": "Short teenage face with conspicuous recessed healed pockmarks on cheek/forehead, narrow dark eyes, short nose, crooked mouth.",
+    "body_spec": "Short small teenage boy, compact short torso/legs and relatively large head, blue-grey linen robe, dark slate sash/hair tie. Clothing colors are art.",
+    "art_choices": "Unspecified facial geometry, complexion details, palette and clothing design are art; do not present them as verbatim canon.",
+    "source_urls": [
+      "https://cochannhann.pages.dev/api/chapters/4",
+      "https://cochannhann.pages.dev/api/chapters/63"
+    ],
+    "source_mode": "story_with_labelled_art",
+    "source_page_url": null,
+    "source_image_url": null,
+    "height_constraint": "Short/small relative to teenage peers; VN ch.4; numerical import scale not fixed.",
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_pass02_2026_10_03",
+    "v03_image": "images/xich_thanh_base_v2.png",
+    "status": "generated",
+    "batch": "human_3",
+    "prompt": "Use case: stylized-concept. ONE battle BASE sprite of Xích Thành (xich_thanh). Input image 1 is this character's old chibi_ref, images 2–3 contrasting-face style examples ONLY. Learn compact proportions, pixel drawing and ready stance. Do NOT copy reference face, gender, age, clothes or incorrect lore. Authoritative v03 FACE: Short teenage face with conspicuous recessed healed pockmarks on cheek/forehead, narrow dark eyes, short nose, crooked mouth.. Authoritative BODY/CLOTHES: Short small teenage boy, compact short torso/legs and relatively large head, blue-grey linen robe, dark slate sash/hair tie. Clothing colors are art..\nKeep this identity distinct; simplify face to same detail as body, small non-glossy eyes, broad readable nose/jaw/brows and 1–2 age lines if appropriate, no fine realistic texture. Do not reuse an anime amber-eye doll template. Human head skull-to-chin about 25–30% of standing figure, excluding bun/beard; small chibi head, not v03 giant 40% head. THREE-QUARTER view facing RIGHT with BOTH eyes visible (mask retains natural openings), slight ready stance, feet apart and arms close to body, compact silhouette. Teacher/elder may hunch if identity says so; preserve unusual species/transform anatomy when explicitly described. Keep full hair, feet and any wings inside generous margin. Important identity constraints override style reference. A weapon appears ONLY if body spec requires it; otherwise empty hands.\nBold dark outline, compact pixel clusters, restrained flat 2–3-tone shading, detail suited to a 200px game sprite. No photorealistic skin, tiny wrinkles, glossy eyes, gradients, particles, magic, scenery, shadow, text or second character. Actual transparent alpha, clean edges without colored halo. Tool source resolution may be larger; importer later handles pixelization. Palette and unspecified visual traits remain art, not newly asserted canon. SHORT small boy, conspicuous pitted pockmarks at 120px, blue-grey clothes/dark hair tie, not earth-gold merchant clothes.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/xich_thanh.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/au_duong_cong.png",
+      "/Users/huukhanh/cochannhan_game/assets/chibi_ref/tran_thuy_hoa.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/xich_thanh_base_v2.png",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-03e53c94-6290-44f0-a08a-7025c428b74a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "tool": "built-in imagegen",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "497a05b3cc196ca7f0879c459079322368659392a7fd4a507a50318a92639faf",
+    "variants": [
+      "images/xich_thanh_base_v1.png"
+    ],
+    "edit_prompt": "Use case: precise-object-edit. Edit this Xich Thanh base ONLY to reduce the whole head including hair/bun by approximately 18–20 percent relative to the SAME unchanged body. Target skull-to-chin about 28–32 percent of this short boy's standing height, excluding the bun. Keep him short and compact, do NOT lengthen his legs or make him taller. Preserve the exact pockmarked face, small narrow dark eyes, scowling eyebrows, dark hair with slate tie, blue-grey patched robe, stance, all limb anatomy, shading palette and compact sprite style. Reconnect neck and hair naturally. Keep full body with generous margin, 3/4 facing right, actual transparent background with clean edges, no extra objects, text, effects, scenery or shadows. Do not change anything else.",
+    "edit_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/xich_thanh_base_v1.png"
+    ],
+    "edit_output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-72b13e90-41a5-4ae7-9089-eb8532197f18.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "blue_visual_note": "Reduced head relative to unchanged compact short body; pockmarks retained. Exact landmarks and game-relative height still need Orange."
+  },
+  {
+    "id": "huyet_thu_ma_tu",
+    "name": "Huyết Thủ ma tu",
+    "face_spec": "long gaunt angular face, deep-set narrow dark eyes, harsh lowered brows, thin sneering mouth, sallow complexion; distinct from teenage characters.",
+    "body_spec": "Mature male rank-three demonic cultivator; dark crimson Chinese robe, sleeves ending above the elbows; exposed forearms stained dark red up to the elbows, relaxed menacing upright stance, hands empty. Deep red stains are part of appearance, not an effect.",
+    "art_choices": "GAME-ORIGINAL: identity and all visual details are game design, not canon.",
+    "source_urls": [],
+    "source_mode": "game_design",
+    "source_file": "js/data.js",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_v05_2026_10_03",
+    "status": "generated",
+    "batch": "game_original",
+    "prompt": "Use case: stylized-concept. ONE full-body BASE of Huyết Thủ ma tu. This is a GAME-ORIGINAL character, not a named canon character. Identity/body: Mature male rank-three demonic cultivator; dark crimson Chinese robe, sleeves ending above the elbows; exposed forearms stained dark red up to the elbows, relaxed menacing upright stance, hands empty. Deep red stains are part of appearance, not an effect. Face: long gaunt angular face, deep-set narrow dark eyes, harsh lowered brows, thin sneering mouth, sallow complexion; distinct from teenage characters.. Attached images are ONLY contrasting style examples; copy their small-head proportions, compact three-quarter RIGHT-facing pose, dark outlines and flat pixel-cluster shading. Do not copy their face, outfit or identity. Natural appropriate proportions; human skull-to-chin about one-quarter figure height. Full feet and hair inside generous margins. Empty hands unless body explicitly requires an object. No text, scene, glow, particles, blood spray or cast effects. True transparent alpha. Base for VS and identity; not an animation sheet.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/vu_quy_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/han_bat_luu_base_v1.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/huyet_thu_ma_tu_base_v1.png",
+    "tool": "built-in imagegen",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-5102be53-e6e9-479f-9b25-779d4585e762.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "3c2711b62446c5e8ddcfdbe01764db8c3a302f7a36aebbb4f95f44deb725e877",
+    "orange_review_ref": "previews/blue-handoff-v05/README.md"
+  },
+  {
+    "id": "tuu_khoi",
+    "name": "Tửu Khôi",
+    "face_spec": "nonhuman ceramic jar head with two simple dark carved eye openings, no human skin, no anime face.",
+    "body_spec": "A squat humanoid guardian assembled from BROKEN WINE JARS, rough brown clay fragments and pottery joints; exactly two arms and two short legs, rounded large jar torso, small pot head, visible cracked ceramic seams. No human clothing, no red blood.",
+    "art_choices": "GAME-ORIGINAL: identity and all visual details are game design, not canon.",
+    "source_urls": [],
+    "source_mode": "game_design",
+    "source_file": "js/data.js",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_v05_2026_10_03",
+    "status": "generated",
+    "batch": "game_original",
+    "prompt": "Use case: stylized-concept. ONE full-body BASE of Tửu Khôi. This is a GAME-ORIGINAL character, not a named canon character. Identity/body: A squat humanoid guardian assembled from BROKEN WINE JARS, rough brown clay fragments and pottery joints; exactly two arms and two short legs, rounded large jar torso, small pot head, visible cracked ceramic seams. No human clothing, no red blood. Face: nonhuman ceramic jar head with two simple dark carved eye openings, no human skin, no anime face.. Attached images are ONLY contrasting style examples; copy their small-head proportions, compact three-quarter RIGHT-facing pose, dark outlines and flat pixel-cluster shading. Do not copy their face, outfit or identity. Natural appropriate proportions; human skull-to-chin about one-quarter figure height. Full feet and hair inside generous margins. Empty hands unless body explicitly requires an object. No text, scene, glow, particles, blood spray or cast effects. True transparent alpha. Base for VS and identity; not an animation sheet.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/cuong_thi_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/hoanh_mi_base_v1.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/tuu_khoi_base_v1.png",
+    "tool": "built-in imagegen",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-c96f392c-bae0-4496-9ca3-4327501c51b4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "d6c94968826c01ab2da3e4919bbf041103e32c346aa07826221f863e23de3a09",
+    "orange_review_ref": "previews/blue-handoff-v05/README.md"
+  },
+  {
+    "id": "huyet_khoi",
+    "name": "Huyết Khôi",
+    "face_spec": "featureless red humanoid head, two dark shallow eye sockets, no anime eyes or human skin.",
+    "body_spec": "A solid squat humanoid guardian formed from CONGEALED DARK RED BLOOD, cohesive body with exactly two arms and two legs, broad torso and compact stance; simple irregular hardened liquid-like surface. No jars or pottery, no human clothing, no gore or dripping particles.",
+    "art_choices": "GAME-ORIGINAL: identity and all visual details are game design, not canon.",
+    "source_urls": [],
+    "source_mode": "game_design",
+    "source_file": "js/data.js",
+    "height_constraint": null,
+    "approved": false,
+    "animation_ready": false,
+    "orange_review": "accepted_v05_2026_10_03",
+    "status": "generated",
+    "batch": "game_original",
+    "prompt": "Use case: stylized-concept. ONE full-body BASE of Huyết Khôi. This is a GAME-ORIGINAL character, not a named canon character. Identity/body: A solid squat humanoid guardian formed from CONGEALED DARK RED BLOOD, cohesive body with exactly two arms and two legs, broad torso and compact stance; simple irregular hardened liquid-like surface. No jars or pottery, no human clothing, no gore or dripping particles. Face: featureless red humanoid head, two dark shallow eye sockets, no anime eyes or human skin.. Attached images are ONLY contrasting style examples; copy their small-head proportions, compact three-quarter RIGHT-facing pose, dark outlines and flat pixel-cluster shading. Do not copy their face, outfit or identity. Natural appropriate proportions; human skull-to-chin about one-quarter figure height. Full feet and hair inside generous margins. Empty hands unless body explicitly requires an object. No text, scene, glow, particles, blood spray or cast effects. True transparent alpha. Base for VS and identity; not an animation sheet.",
+    "generation_input_paths": [
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/cuong_thi_base_v1.png",
+      "/Users/huukhanh/cochannhan_game/previews/roster-style-v04/images/tuu_khoi_base_v1.png"
+    ],
+    "background_mode": "alpha",
+    "image": "images/huyet_khoi_base_v1.png",
+    "tool": "built-in imagegen",
+    "output_hint": "Generated images are saved to /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58 as /Users/huukhanh/.codex/generated_images/01a0f543-f448-7e33-96e5-895ddea31d58/exec-d730da2d-6ee2-4433-b4c1-ffb1856323ef.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "sha256": "c57bdd40619f8aebe7d53f4403d8fd1638334807552b41ca33733513f2af7017",
+    "orange_review_ref": "previews/blue-handoff-v05/README.md"
+  }
+]

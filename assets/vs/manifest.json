@@ -1,0 +1,992 @@
+{
+  "portraits": [
+    {
+      "id": "phuong_nguyen",
+      "source": "previews/roster-style-v04/images/phuong_nguyen_base_v1.png",
+      "source_sha256": "2b68700b8038866bfec70050cfaf081d3f8e568d80e906b5d8ecd20cff62b7f0",
+      "output": "assets/vs/phuong_nguyen.png",
+      "dimensions": [
+        279,
+        512
+      ],
+      "colors": 31,
+      "sha256": "8bf9a887d2fe130ed0620a1553310678bbb546c685f6afb1b724d734c3eda720",
+      "crop": [
+        325,
+        122,
+        907,
+        1190
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "phuong_chinh",
+      "source": "previews/roster-style-v04/images/phuong_chinh_base_v2.png",
+      "source_sha256": "e8f7e562feef75ea738d766d08aa1747d4b40e54f99ab86ac4b7bac05fdc1782",
+      "output": "assets/vs/phuong_chinh.png",
+      "dimensions": [
+        350,
+        512
+      ],
+      "colors": 31,
+      "sha256": "e3b74944b668a0f6616a874fb09cfb1c67309596d5c8eadac3ab64deef947e5a",
+      "crop": [
+        235,
+        128,
+        945,
+        1166
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thanh_thu",
+      "source": "previews/roster-style-v04/images/thanh_thu_base_v1.png",
+      "source_sha256": "cff6a5657df4bc3a9ee66b5b1c5888501c055bc751a10960142d638a3a6b0045",
+      "output": "assets/vs/thanh_thu.png",
+      "dimensions": [
+        330,
+        512
+      ],
+      "colors": 32,
+      "sha256": "25aa5139fffae5bea880259f2d020c945427613855432044573dadf23e977e07",
+      "crop": [
+        267,
+        92,
+        978,
+        1194
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "bach_ngung_bang_nam",
+      "source": "previews/roster-style-v04/images/bach_ngung_bang_nam_base_v2.png",
+      "source_sha256": "e95ca80490d92160fc42ddb699316de4b22809accacc80d7f3287b31c5d8dd52",
+      "output": "assets/vs/bach_ngung_bang_nam.png",
+      "dimensions": [
+        335,
+        512
+      ],
+      "colors": 32,
+      "sha256": "895c1f619cf05cbcef0e0e6fe725e39faa3f03741acea99b748047426350c8ef",
+      "crop": [
+        280,
+        166,
+        956,
+        1199
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "bach_ngung_bang_nu",
+      "source": "previews/roster-style-v04/images/bach_ngung_bang_nu_base_v1.png",
+      "source_sha256": "ae7698f7dde1cc126590a14be7995031b42e6939366a3755449e632bd3f04fee",
+      "output": "assets/vs/bach_ngung_bang_nu.png",
+      "dimensions": [
+        360,
+        512
+      ],
+      "colors": 31,
+      "sha256": "50458368fcc05ca7477186440bbdb11f3a8ccf559699a1e7611e888e524d4815",
+      "crop": [
+        242,
+        126,
+        973,
+        1165
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "heo_rung",
+      "source": "previews/roster-style-v04/images/heo_rung_base_v1.png",
+      "source_sha256": "49fde3c91e035d6d5c6b40bc111ed44a3585b9f022a8988b7c81d34ce08e98e1",
+      "output": "assets/vs/heo_rung.png",
+      "dimensions": [
+        870,
+        512
+      ],
+      "colors": 31,
+      "sha256": "b5992a14438ced9053d8fe47328c8424f3107eedc1090148b22a9b67d157d415",
+      "crop": [
+        0,
+        120,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "au_duong_cong",
+      "source": "previews/roster-style-v04/images/au_duong_cong_base_v1.png",
+      "source_sha256": "7dae5c6414022e41f4d817f784d775cb3d15488a0b828c54f3c396647b2cf86d",
+      "output": "assets/vs/au_duong_cong.png",
+      "dimensions": [
+        196,
+        512
+      ],
+      "colors": 31,
+      "sha256": "c2c14cf9fec8c043c426facc140e502cf776113b1747eae545d5e01595f797a5",
+      "crop": [
+        450,
+        183,
+        813,
+        1131
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "ba_quy_spirit",
+      "source": "previews/roster-style-v04/images/ba_quy_spirit_base_v1.png",
+      "source_sha256": "af8903ef02e709eb736d3ff4340fc9ad737114700b945b1d75dbde0347fc5952",
+      "output": "assets/vs/ba_quy_spirit.png",
+      "dimensions": [
+        851,
+        512
+      ],
+      "colors": 32,
+      "sha256": "16a2c74b6281b9162e60a9872abd0340f4727259539e86ab148f271cbd8df8de",
+      "crop": [
+        0,
+        100,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "bach_chien_liep",
+      "source": "previews/roster-style-v04/images/bach_chien_liep_base_v2.png",
+      "source_sha256": "e10e5f24419ebbbddced917d15f2a245bf388799bab05801214d3be471bb1c6d",
+      "output": "assets/vs/bach_chien_liep.png",
+      "dimensions": [
+        330,
+        512
+      ],
+      "colors": 32,
+      "sha256": "5bdea577569c74fe8e01b909386adf44bf6f9d42d9c03d0c2df89a867dcda4ae",
+      "crop": [
+        295,
+        146,
+        962,
+        1181
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "bach_chien_on",
+      "source": "previews/roster-style-v04/images/bach_chien_on_base_v1.png",
+      "source_sha256": "7dba05e8075c573d5ec202207234e77edf09513957eacfbcb4b420792cc659c1",
+      "output": "assets/vs/bach_chien_on.png",
+      "dimensions": [
+        329,
+        512
+      ],
+      "colors": 32,
+      "sha256": "7019c183c794ec2993cf897b552c8429e747eb1c06d541494a0ffd59d8a9ea97",
+      "crop": [
+        313,
+        117,
+        992,
+        1174
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "bach_lien",
+      "source": "previews/roster-style-v04/images/bach_lien_base_v1.png",
+      "source_sha256": "528920deed01921591f10a371555fe603100e4f01a5deb88bb1cb86d454f31ea",
+      "output": "assets/vs/bach_lien.png",
+      "dimensions": [
+        294,
+        512
+      ],
+      "colors": 32,
+      "sha256": "336bf9fac254d69330d0b2f96a6e26882f901048affc25575d1a2d616a2fe07c",
+      "crop": [
+        319,
+        148,
+        898,
+        1155
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "ca_sau_dung_nham",
+      "source": "previews/roster-style-v04/images/ca_sau_dung_nham_base_v1.png",
+      "source_sha256": "d4f82856d80f0792d0afc4419b53d8c74f4dc3de44793deee687b1a5310aa877",
+      "output": "assets/vs/ca_sau_dung_nham.png",
+      "dimensions": [
+        1263,
+        512
+      ],
+      "colors": 32,
+      "sha256": "133856a5546aa3202b0ef9ff577af3649e359b1351e16bc296225d16511f4051",
+      "crop": [
+        0,
+        168,
+        1774,
+        887
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "ca_sau_sau_chan",
+      "source": "previews/roster-style-v04/images/ca_sau_sau_chan_base_v1.png",
+      "source_sha256": "afbd9343400ddca650a1561c22f053fb554caeba83661b5e11206a5286228222",
+      "output": "assets/vs/ca_sau_sau_chan.png",
+      "dimensions": [
+        1025,
+        512
+      ],
+      "colors": 32,
+      "sha256": "573f5b872c9715b5a26d00164e834f7367f20745beae3e361c9891731fbdd9f9",
+      "crop": [
+        0,
+        257,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "co_kim_sinh",
+      "source": "previews/roster-style-v04/images/co_kim_sinh_base_v1.png",
+      "source_sha256": "faf12a90c091564b0f2539012a51f25902cd794997cb1b6f2d11f22dcdd2cd41",
+      "output": "assets/vs/co_kim_sinh.png",
+      "dimensions": [
+        259,
+        512
+      ],
+      "colors": 32,
+      "sha256": "0d0acd81dfdeea807a19f5b484beeae5573aee18e079b60d06486d91b672246a",
+      "crop": [
+        393,
+        131,
+        901,
+        1137
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "cu_khai_bi",
+      "source": "previews/roster-style-v04/images/cu_khai_bi_base_v2.png",
+      "source_sha256": "4d1774ac66905066df08322a65be738437626d80f810a423a21709b5559ea5b0",
+      "output": "assets/vs/cu_khai_bi.png",
+      "dimensions": [
+        361,
+        512
+      ],
+      "colors": 32,
+      "sha256": "ec66b3b77a17c263dc350ebb034057f21df1065e44edca72f7f4fd99a848d4c7",
+      "crop": [
+        249,
+        93,
+        1032,
+        1205
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "cuong_thi",
+      "source": "previews/roster-style-v04/images/cuong_thi_base_v1.png",
+      "source_sha256": "ab18f72d7b7f86e099f034ab6e641285dda239b82d6f9796a72107e82660cf88",
+      "output": "assets/vs/cuong_thi.png",
+      "dimensions": [
+        271,
+        512
+      ],
+      "colors": 30,
+      "sha256": "fab94de36048316b92b5730303d0b1a7d64c4da6f90568c2b57c3c67a6b8d836",
+      "crop": [
+        342,
+        67,
+        947,
+        1211
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "dian_lang_boss",
+      "source": "previews/roster-style-v04/images/dian_lang_boss_base_v1.png",
+      "source_sha256": "d58a95d375e24463ed708bc5267c13d739d04786cbc8eee06221522e0aed196a",
+      "output": "assets/vs/dian_lang_boss.png",
+      "dimensions": [
+        787,
+        512
+      ],
+      "colors": 32,
+      "sha256": "3cf08505a2a14f0817d1d931f07a940577e4be5be1c1d126a4b659d70cf76368",
+      "crop": [
+        0,
+        25,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "dien_lang",
+      "source": "previews/roster-style-v04/images/dien_lang_base_v1.png",
+      "source_sha256": "2666ae60e5da7e11bd092092676851e0fc9cc5b1e289a959e5fbeb4ce4147a66",
+      "output": "assets/vs/dien_lang.png",
+      "dimensions": [
+        843,
+        512
+      ],
+      "colors": 32,
+      "sha256": "8beef863e4a1e48e462dc73727b9589a5d83786a67def09e6c9b9710ceecc62b",
+      "crop": [
+        0,
+        91,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "hac_hung",
+      "source": "previews/roster-style-v04/images/hac_hung_base_v1.png",
+      "source_sha256": "5700dc7e1c7df60fad8444e07aef967adddf17a7d2d0bc097efe7f3f528f44ad",
+      "output": "assets/vs/hac_hung.png",
+      "dimensions": [
+        859,
+        512
+      ],
+      "colors": 32,
+      "sha256": "166e66a7dd6a5a019bc1e5ddb905c763ea62aa0ab5e33996b95c5bc5584e4562",
+      "crop": [
+        0,
+        109,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "han_bat_luu",
+      "source": "previews/roster-style-v04/images/han_bat_luu_base_v1.png",
+      "source_sha256": "bb3da45d631ac2cafe83eddd8d70f51f3a77b16ba5041966cafae52c3d29c216",
+      "output": "assets/vs/han_bat_luu.png",
+      "dimensions": [
+        296,
+        512
+      ],
+      "colors": 32,
+      "sha256": "9ba828bb21144bd036763f2c731eca36e30dea99bc38fe72a71d64e64332c250",
+      "crop": [
+        321,
+        65,
+        986,
+        1215
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "hien_vien_than_ke",
+      "source": "previews/roster-style-v04/images/hien_vien_than_ke_base_v1.png",
+      "source_sha256": "c5024274794575a4792fdcc7ae7e2fd0e7d6aa509a90e59b3ecf0479bcc4a8ce",
+      "output": "assets/vs/hien_vien_than_ke.png",
+      "dimensions": [
+        777,
+        512
+      ],
+      "colors": 32,
+      "sha256": "e24e6864eea41d39f455f67457ecbb137d8665601fb1f3d39aca0dcbd18dc581",
+      "crop": [
+        0,
+        12,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "hoanh_mi",
+      "source": "previews/roster-style-v04/images/hoanh_mi_base_v1.png",
+      "source_sha256": "4e77c3553b7a253e52e6a06ca3b1849f88eae9b581c089ea59273b557f4c98d4",
+      "output": "assets/vs/hoanh_mi.png",
+      "dimensions": [
+        375,
+        512
+      ],
+      "colors": 32,
+      "sha256": "92fb0e4f37684e5f692cb23e75fddd007e61fa2e37daeb98dfad90e25410641b",
+      "crop": [
+        288,
+        177,
+        1030,
+        1191
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "hoc_duong_gia_lao",
+      "source": "previews/roster-style-v04/images/hoc_duong_gia_lao_base_v1.png",
+      "source_sha256": "b96fe6d7d9f74f71b999a367bb532f0bd53b106251572056db46826d46b8fa33",
+      "output": "assets/vs/hoc_duong_gia_lao.png",
+      "dimensions": [
+        286,
+        512
+      ],
+      "colors": 32,
+      "sha256": "5b4f8385d2e4b9f0050efdebeb4681eb363b75ab8935830cdfa040d396838bfe",
+      "crop": [
+        350,
+        99,
+        939,
+        1154
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "mac_bac",
+      "source": "previews/roster-style-v04/images/mac_bac_base_v2.png",
+      "source_sha256": "33fff00e865d0822b1780c77c4860422bc3d36836f7e2c4930a1d2dc7bb04195",
+      "output": "assets/vs/mac_bac.png",
+      "dimensions": [
+        311,
+        512
+      ],
+      "colors": 32,
+      "sha256": "ae9c89458c30c65a3683414d84790a007a2560bd525ebf320751f4a9533993bd",
+      "crop": [
+        332,
+        146,
+        958,
+        1175
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "nhat_dai_boss",
+      "source": "previews/roster-style-v04/images/nhat_dai_boss_base_v1.png",
+      "source_sha256": "e8f1fd79f15d6b529d75364bba6208f75f2cd7c7c1602f0d1537dfd7990092ba",
+      "output": "assets/vs/nhat_dai_boss.png",
+      "dimensions": [
+        434,
+        512
+      ],
+      "colors": 31,
+      "sha256": "4745384d9b8d613c4e2b4217d46f9aa76674beda122ef46d1e88c9a28f5ba431",
+      "crop": [
+        149,
+        132,
+        1023,
+        1163
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "phi_hau",
+      "source": "previews/roster-style-v04/images/phi_hau_base_v1.png",
+      "source_sha256": "a5e29e8c904639a7f24acd3a19bf37b3bef4c72da50cb59ed64d60ceac791e92",
+      "output": "assets/vs/phi_hau.png",
+      "dimensions": [
+        584,
+        512
+      ],
+      "colors": 29,
+      "sha256": "32fa8c8eadcc49c74915ad4768f8a1e48c1d5b2e9f3ce1b9bc7293d7e2800c22",
+      "crop": [
+        0,
+        155,
+        1254,
+        1254
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "phi_tuong",
+      "source": "previews/roster-style-v04/images/phi_tuong_base_v1.png",
+      "source_sha256": "046e4e7fcc892295dd4e0efb898a8e348641cc028dbed2a7f102d5bd63945612",
+      "output": "assets/vs/phi_tuong.png",
+      "dimensions": [
+        806,
+        512
+      ],
+      "colors": 26,
+      "sha256": "d898bca789fe7b9301e1a2cff3bd988402545b7f82686986a3818974eda59767",
+      "crop": [
+        0,
+        48,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thach_hau",
+      "source": "previews/roster-style-v04/images/thach_hau_base_v1.png",
+      "source_sha256": "2a769e6877fe4e8d08d2778ba386b130d59b185fd5f53fc792c4fa355a352181",
+      "output": "assets/vs/thach_hau.png",
+      "dimensions": [
+        865,
+        512
+      ],
+      "colors": 32,
+      "sha256": "f99250022052bb6622b1d0b49f75184085e2a97bec5e357e6ae91810a5b55cd5",
+      "crop": [
+        0,
+        115,
+        1536,
+        1024
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thiet_ba_tu",
+      "source": "previews/roster-style-v04/images/thiet_ba_tu_base_v1.png",
+      "source_sha256": "781c9256b104ab5908dc4dc9ca3f290ebb8d6a8ede6c41393dedd30ccfab3351",
+      "output": "assets/vs/thiet_ba_tu.png",
+      "dimensions": [
+        347,
+        512
+      ],
+      "colors": 32,
+      "sha256": "fbb148a2a2a7e3906876b68759c4f256487d1f38c9e0724a881882aaa1dab5ff",
+      "crop": [
+        289,
+        151,
+        965,
+        1148
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thiet_dao_kho",
+      "source": "previews/roster-style-v04/images/thiet_dao_kho_base_v1.png",
+      "source_sha256": "34594680bca066836db699d97a4468d014f78c935c819983dd83ab92b130e7a3",
+      "output": "assets/vs/thiet_dao_kho.png",
+      "dimensions": [
+        329,
+        512
+      ],
+      "colors": 32,
+      "sha256": "16d3a4a12226988c265a3e13f18031af7a38e541131773c84b1a7aaaec01504c",
+      "crop": [
+        310,
+        135,
+        966,
+        1155
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thiet_huyet_lanh",
+      "source": "previews/roster-style-v04/images/thiet_huyet_lanh_base_v2.png",
+      "source_sha256": "dd8ab3f91fc5f361dcfab0cc805e9cbe83d425c91de4d524a69ba5c93256f5a2",
+      "output": "assets/vs/thiet_huyet_lanh.png",
+      "dimensions": [
+        294,
+        512
+      ],
+      "colors": 32,
+      "sha256": "ba464c04ef98944871a755e0d86d5257a179abcea1a0028faa4cc61cf3f87f7e",
+      "crop": [
+        323,
+        164,
+        882,
+        1138
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thiet_mo_bach",
+      "source": "previews/roster-style-v04/images/thiet_mo_bach_base_v1.png",
+      "source_sha256": "9692e13eb510882673f6d5acf43b8ea314ac16ef68c4ed48c5c343de0d0a5e0d",
+      "output": "assets/vs/thiet_mo_bach.png",
+      "dimensions": [
+        323,
+        512
+      ],
+      "colors": 32,
+      "sha256": "fc104c134fc8a0af009a85a7fe87f59574735d400c1d9e8300cc20000769d750",
+      "crop": [
+        326,
+        177,
+        917,
+        1113
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "thiet_nhuoc_nam",
+      "source": "previews/roster-style-v04/images/thiet_nhuoc_nam_base_v1.png",
+      "source_sha256": "6be1b7ba9137a44c36125fb13d9d6c63b01749f89151925690ae566ef92da180",
+      "output": "assets/vs/thiet_nhuoc_nam.png",
+      "dimensions": [
+        283,
+        512
+      ],
+      "colors": 32,
+      "sha256": "524de1582d768da744ee067192d990fe17c83413d9809ddfd12923a9d2bb1c41",
+      "crop": [
+        320,
+        162,
+        863,
+        1146
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "tiet_tam_tu",
+      "source": "previews/roster-style-v04/images/tiet_tam_tu_base_v1.png",
+      "source_sha256": "3b9291221fc224db0999bfce625884f7be575d45d4ab60a2428f615b643f1663",
+      "output": "assets/vs/tiet_tam_tu.png",
+      "dimensions": [
+        337,
+        512
+      ],
+      "colors": 32,
+      "sha256": "fe4cf7eab576c5120e8623ae416c3bf54783cc46920122b7e11de129fe61953c",
+      "crop": [
+        310,
+        97,
+        1020,
+        1176
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "tran_thuy_hoa",
+      "source": "previews/roster-style-v04/images/tran_thuy_hoa_base_v1.png",
+      "source_sha256": "d65dfff719f7b028b474ca32948f90ea717b544ac20c4cc1878f89b43b43da27",
+      "output": "assets/vs/tran_thuy_hoa.png",
+      "dimensions": [
+        238,
+        512
+      ],
+      "colors": 32,
+      "sha256": "baacd92656a85765f1a2010ce7b645a58610e64599917f0dc5121e352d1bc0df",
+      "crop": [
+        395,
+        152,
+        853,
+        1138
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "viem_dot",
+      "source": "previews/roster-style-v04/images/viem_dot_base_v1.png",
+      "source_sha256": "ec99c9ea1b47cd43d2b7c87986b0ac8d3c4b33e5a7b24f5520af980e855bd669",
+      "output": "assets/vs/viem_dot.png",
+      "dimensions": [
+        369,
+        512
+      ],
+      "colors": 32,
+      "sha256": "d25115c5234054252cb24c23bfe170f54c3fc84f83285feb2413e0c32eb71dd0",
+      "crop": [
+        282,
+        111,
+        1036,
+        1157
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "vu_quy",
+      "source": "previews/roster-style-v04/images/vu_quy_base_v1.png",
+      "source_sha256": "15f30b9d693eb88b79f920caf9cdf2a5bff2c5475d602f9f0305759d437eeb33",
+      "output": "assets/vs/vu_quy.png",
+      "dimensions": [
+        317,
+        512
+      ],
+      "colors": 32,
+      "sha256": "98afd94be2120adce04ec841a6f782d3abf8a4a1969700ea865608828d0db1cd",
+      "crop": [
+        302,
+        139,
+        944,
+        1175
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "xich_thanh",
+      "source": "previews/roster-style-v04/images/xich_thanh_base_v2.png",
+      "source_sha256": "497a05b3cc196ca7f0879c459079322368659392a7fd4a507a50318a92639faf",
+      "output": "assets/vs/xich_thanh.png",
+      "dimensions": [
+        295,
+        512
+      ],
+      "colors": 32,
+      "sha256": "7ebf1de4e365fcc77872910973dc6e3f982c8b2d59ce0b8f911dd184bd26f46c",
+      "crop": [
+        409,
+        270,
+        904,
+        1130
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_pass02_2026_10_03"
+    },
+    {
+      "id": "huyet_thu_ma_tu",
+      "source": "previews/roster-style-v04/images/huyet_thu_ma_tu_base_v1.png",
+      "source_sha256": "3c2711b62446c5e8ddcfdbe01764db8c3a302f7a36aebbb4f95f44deb725e877",
+      "output": "assets/vs/huyet_thu_ma_tu.png",
+      "dimensions": [
+        290,
+        512
+      ],
+      "colors": 32,
+      "sha256": "ca549249dcc59574167ead3a0455f35508ec29b279e7a07612e44794b1698d58",
+      "crop": [
+        336,
+        76,
+        978,
+        1208
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_v05_2026_10_03",
+      "source_review_ref": "previews/blue-handoff-v05/README.md"
+    },
+    {
+      "id": "tuu_khoi",
+      "source": "previews/roster-style-v04/images/tuu_khoi_base_v1.png",
+      "source_sha256": "d6c94968826c01ab2da3e4919bbf041103e32c346aa07826221f863e23de3a09",
+      "output": "assets/vs/tuu_khoi.png",
+      "dimensions": [
+        430,
+        512
+      ],
+      "colors": 32,
+      "sha256": "1f2ec58a508d1df8cc53a1b533ecbfb65c3a42422965452b10b2a474bce4cd56",
+      "crop": [
+        225,
+        164,
+        1084,
+        1187
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_v05_2026_10_03",
+      "source_review_ref": "previews/blue-handoff-v05/README.md"
+    },
+    {
+      "id": "huyet_khoi",
+      "source": "previews/roster-style-v04/images/huyet_khoi_base_v1.png",
+      "source_sha256": "c57bdd40619f8aebe7d53f4403d8fd1638334807552b41ca33733513f2af7017",
+      "output": "assets/vs/huyet_khoi.png",
+      "dimensions": [
+        435,
+        512
+      ],
+      "colors": 32,
+      "sha256": "1f9a525539a94afa197a98a4a36466e8b52d56941cf1d5533dff54393480a2b0",
+      "crop": [
+        201,
+        108,
+        1138,
+        1212
+      ],
+      "target_h": 512,
+      "palette": 32,
+      "alpha_cut": 110,
+      "resample": "BOX",
+      "dither": false,
+      "source_review": "accepted_v05_2026_10_03",
+      "source_review_ref": "previews/blue-handoff-v05/README.md"
+    }
+  ],
+  "limits": "VS identity portraits only; relative actor size and runtime integration are separate."
+}

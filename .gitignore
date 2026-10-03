@@ -39,3 +39,7 @@ incoming_maps/
 
 # Ảnh FX nguồn chưa duyệt (không deploy)
 incoming_fx/
+
+# Tham khảo mạng: giữ nguồn văn bản, không deploy ảnh
+refs_web/*/*
+!refs_web/*/SOURCES.md

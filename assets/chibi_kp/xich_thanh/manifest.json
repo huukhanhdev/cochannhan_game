@@ -1,0 +1,109 @@
+{
+ "id": "xich_thanh",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "xich_thanh_atk_v1.png",
+   "scale": 0.1518,
+   "hand": [
+    213,
+    138
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "xich_thanh_hit_v1.png",
+   "scale": 0.1269
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "xich_thanh_idle_v1.png",
+   "scale": 0.1243
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "xich_thanh_ko_v1.png",
+   "scale": 0.1485
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "xich_thanh_move_v1.png",
+   "scale": 0.1194
+  },
+  "sk_nguyet": {
+   "sheet": "sk_nguyet.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "xich_thanh_sk_nguyet_v1.png",
+   "scale": 0.1432,
+   "hand": [
+    199,
+    107
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "xich_thanh_win_v1.png",
+   "scale": 0.0918
+  }
+ },
+ "reach_px": 78
+}

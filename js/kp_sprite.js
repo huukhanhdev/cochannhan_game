@@ -6,10 +6,11 @@
 // kpFlash(s) → KPSprite.flash(s).
 const KPSprite=(function(){
   const cache={};
-  function load(id){
-    if(cache[id])return cache[id];
-    const dir='assets/chibi_kp/'+id+'/';
-    return cache[id]=fetch(dir+'manifest.json').then(r=>r.ok?r.json():null).then(man=>{
+  function load(id,reviewDir){
+    const dir=reviewDir||'assets/chibi_kp/'+id+'/';
+    if(reviewDir&&!/^(previews|assets)\/[a-zA-Z0-9_/-]+\/$/.test(reviewDir))return Promise.resolve(null);   // bộ hình khác (SB_SPRITES) nằm trong assets/
+    if(cache[dir])return cache[dir];
+    return cache[dir]=fetch(dir+'manifest.json').then(r=>r.ok?r.json():null).then(man=>{
       if(!man)return null;
       const [fw,fh]=man.frame_size;
       return Promise.all(Object.entries(man.actions).map(([act,c])=>new Promise(res=>{
@@ -40,5 +41,16 @@ const KPSprite=(function(){
       f.matrix=[1-a,0,0,0,r*a, 0,1-a,0,0,g*a, 0,0,1-a,0,b*a, 0,0,0,1,0];sprite.filters=a>0.01?[f]:null};
     return {get alpha(){return A},set alpha(v){A=Math.max(0,Math.min(1,v));set()},get tint(){return tint},set tint(v){tint=v;set()}};
   }
-  return {load,frameAt,flash};
+  // Sprite pixel offsets are visual only; mirror X, keep floor/hitbox in world space.
+  function offset(man,clip,index){
+    const o=clip?.frameOffsets?.[index]||[0,0];
+    return [o[0]||0,(o[1]||0)-(clip?.hoverOffset??man.hoverOffset??0)];
+  }
+  function anchor(man,clip,index,name='hand'){
+    const p=clip?.anchors?.[name]?.[index];
+    if(!p)return null;
+    const [dx,dy]=offset(man,clip,index),[px,py]=man.pivot_px;
+    return [p[0]-px+dx,p[1]-py+dy];
+  }
+  return {load,frameAt,flash,offset,anchor};
 })();

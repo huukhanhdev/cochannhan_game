@@ -1,0 +1,108 @@
+{
+ "id": "han_bat_luu",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "han_bat_luu_atk_v1.png",
+   "scale": 0.1669,
+   "hand": [
+    221,
+    129
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "han_bat_luu_hit_v1.png",
+   "scale": 0.147
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "han_bat_luu_idle_v1.png",
+   "scale": 0.1487
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "han_bat_luu_ko_v1.png",
+   "scale": 0.1548
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "han_bat_luu_move_v1.png",
+   "scale": 0.1291
+  },
+  "sk_command": {
+   "sheet": "sk_command.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "han_bat_luu_sk_command_v1.png",
+   "scale": 0.1423,
+   "hand": [
+    212,
+    126
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "han_bat_luu_win_v1.png",
+   "scale": 0.1505
+  }
+ },
+ "reach_px": 80
+}

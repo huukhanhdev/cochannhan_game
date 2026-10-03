@@ -1,0 +1,591 @@
+{
+ "note": "Baseline trace PN/BNB trước refactor roster (A0). So bằng node tools/sandbox_trace.cjs",
+ "created": "2026-10-03T10:04:20.452Z",
+ "cases": [
+  {
+   "seed": 20261003,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "4e826db296723b6d",
+   "events": 194,
+   "over": {
+    "winner": "E",
+    "at": 25.417,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "8730fd7026acd746",
+   "events": 176,
+   "over": {
+    "winner": "E",
+    "at": 23.117,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "7896d161e78108b3",
+   "events": 187,
+   "over": {
+    "winner": "E",
+    "at": 25.367,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20284760,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "d6a8d452d00661c3",
+   "events": 204,
+   "over": {
+    "winner": "E",
+    "at": 24.7,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20292679,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "8696b7f20ed4b4e8",
+   "events": 250,
+   "over": {
+    "winner": "E",
+    "at": 33.567,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20300598,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "fa790dae0ad935c9",
+   "events": 196,
+   "over": {
+    "winner": "E",
+    "at": 27.05,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20308517,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "5850001aa59f0e82",
+   "events": 339,
+   "over": {
+    "winner": "E",
+    "at": 45.183,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20316436,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "9032c6c13267b481",
+   "events": 252,
+   "over": {
+    "winner": "E",
+    "at": 32.517,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20324355,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "77310250574af343",
+   "events": 162,
+   "over": {
+    "winner": "E",
+    "at": 22.933,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20332274,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "fcb06aa14e65e582",
+   "events": 192,
+   "over": {
+    "winner": "E",
+    "at": 24.35,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20340193,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "04255be8cd85e6f1",
+   "events": 166,
+   "over": {
+    "winner": "E",
+    "at": 20.65,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20348112,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "5e06b2414207e764",
+   "events": 216,
+   "over": {
+    "winner": "E",
+    "at": 28.3,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "fd5bc002a46f6c5c",
+   "events": 374,
+   "over": {
+    "winner": "E",
+    "at": 52.55,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "3105854b90225bd4",
+   "events": 150,
+   "over": {
+    "winner": "E",
+    "at": 21.267,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "thuong",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "c496a8cb2be69442",
+   "events": 124,
+   "over": {
+    "winner": "E",
+    "at": 15.167,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "f2d08bbdf07b009f",
+   "events": 194,
+   "over": {
+    "winner": "E",
+    "at": 26.5,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "b31411424e204e1d",
+   "events": 243,
+   "over": {
+    "winner": "E",
+    "at": 34.833,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "5a5822ae51336046",
+   "events": 212,
+   "over": {
+    "winner": "E",
+    "at": 27.267,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "9b859c4177db93fb",
+   "events": 182,
+   "over": {
+    "winner": "E",
+    "at": 22.217,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "8c1c706e96b59fd0",
+   "events": 198,
+   "over": {
+    "winner": "E",
+    "at": 28.533,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "thuong",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "26a3b96cb0269fa4",
+   "events": 171,
+   "over": {
+    "winner": "E",
+    "at": 23.533,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "a31a3981ae3cd012",
+   "events": 174,
+   "over": {
+    "winner": "E",
+    "at": 23.15,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "cb5e3f7ca354e5cd",
+   "events": 180,
+   "over": {
+    "winner": "E",
+    "at": 22.5,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "ad0213baee847240",
+   "events": 244,
+   "over": {
+    "winner": "E",
+    "at": 34,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "a31a3981ae3cd012",
+   "events": 174,
+   "over": {
+    "winner": "E",
+    "at": 23.15,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "cb5e3f7ca354e5cd",
+   "events": 180,
+   "over": {
+    "winner": "E",
+    "at": 22.5,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "cao",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "ad0213baee847240",
+   "events": 244,
+   "over": {
+    "winner": "E",
+    "at": 34,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "bcbc89d3cbd1f04f",
+   "events": 248,
+   "over": {
+    "winner": "E",
+    "at": 29.033,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "7052d2e570232565",
+   "events": 188,
+   "over": {
+    "winner": "E",
+    "at": 25.967,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "4a33e7ea5f7825c0",
+   "events": 174,
+   "over": {
+    "winner": "E",
+    "at": 25.033,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "bcbc89d3cbd1f04f",
+   "events": 248,
+   "over": {
+    "winner": "E",
+    "at": 29.033,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "7052d2e570232565",
+   "events": 188,
+   "over": {
+    "winner": "E",
+    "at": 25.967,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "cao",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "4a33e7ea5f7825c0",
+   "events": 174,
+   "over": {
+    "winner": "E",
+    "at": 25.033,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "de",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "4b7ee5273c82e427",
+   "events": 215,
+   "over": {
+    "winner": "E",
+    "at": 26.433,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "de",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "5dc1e2bb01de9e6e",
+   "events": 239,
+   "over": {
+    "winner": "E",
+    "at": 28.3,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "de",
+   "arena": "wide",
+   "mode": "pressure",
+   "hash": "8a4cf41cbe80081c",
+   "events": 277,
+   "over": {
+    "winner": "E",
+    "at": 33.767,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "de",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "ff64777e8896bf02",
+   "events": 154,
+   "over": {
+    "winner": "E",
+    "at": 20.3,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "de",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "58808e3eac41754e",
+   "events": 186,
+   "over": {
+    "winner": "E",
+    "at": 22.65,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "de",
+   "arena": "wide",
+   "mode": "legacy",
+   "hash": "72c7a9a9722bb62f",
+   "events": 203,
+   "over": {
+    "winner": "E",
+    "at": 24.05,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "de",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "f58b196f76434e9c",
+   "events": 188,
+   "over": {
+    "winner": "E",
+    "at": 21.65,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "de",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "65218d378abd9dd5",
+   "events": 199,
+   "over": {
+    "winner": "E",
+    "at": 22.417,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "de",
+   "arena": "classic",
+   "mode": "pressure",
+   "hash": "7429eba572d20d49",
+   "events": 167,
+   "over": {
+    "winner": "E",
+    "at": 21.733,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20261003,
+   "level": "de",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "18984eb70684aa3f",
+   "events": 163,
+   "over": {
+    "winner": "E",
+    "at": 21.133,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20268922,
+   "level": "de",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "814867e8466b771c",
+   "events": 128,
+   "over": {
+    "winner": "E",
+    "at": 19.017,
+    "retreat": false
+   }
+  },
+  {
+   "seed": 20276841,
+   "level": "de",
+   "arena": "classic",
+   "mode": "legacy",
+   "hash": "162c02489074bb11",
+   "events": 181,
+   "over": {
+    "winner": "E",
+    "at": 21.883,
+    "retreat": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,108 @@
+{
+ "id": "mac_bac",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "mac_bac_atk_v1.png",
+   "scale": 0.1619,
+   "hand": [
+    226,
+    123
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "mac_bac_hit_v1.png",
+   "scale": 0.1449
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "mac_bac_idle_v1.png",
+   "scale": 0.1507
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "mac_bac_ko_v1.png",
+   "scale": 0.1703
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "mac_bac_move_v1.png",
+   "scale": 0.1375
+  },
+  "sk_drain": {
+   "sheet": "sk_drain.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "mac_bac_sk_drain_v1.png",
+   "scale": 0.1466,
+   "hand": [
+    189,
+    127
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "mac_bac_win_v1.png",
+   "scale": 0.118
+  }
+ },
+ "reach_px": 90
+}

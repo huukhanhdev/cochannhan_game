@@ -359,3 +359,156 @@ console.log('Lệnh chờ giữ tới khi rảnh tay (đánh tay liên tiếp kh
   assert.ok(b.hp<b.maxHp);assert.equal(b.state,'act');assert.equal(b.act.s.id,'atk');
 }
 console.log('Đấm tay nhẹ không làm khựng: đạt.');
+
+// ── Roster (KE_HOACH_DUA_ROSTER_VAO_BATTLE bước A) ──
+{
+  const fs=require('fs'),path=require('path');
+  const {SB_ROSTER,SB_SPRITES}=require('./sandbox_sim.cjs');
+  assert.throws(()=>SB_ROSTER.resolve('khong_co'),/Không có profile/);
+  // Mọi profile: kit hợp lệ, clip của mỗi chiêu có ít nhất một clip thật trong manifest (fallback cuối là idle),
+  // chiêu có nguồn, AI hai bên đánh hết trận không NaN.
+  for(const {id} of SB_ROSTER.profileList()){
+    const k=SB_ROSTER.resolve(id),dir=path.join(__dirname,'..',k.spriteDir),man=JSON.parse(fs.readFileSync(path.join(dir,'manifest.json'),'utf8'));
+    assert.ok(man.actions.idle,id+': thiếu idle');
+    for(const s of [k.atk,...k.skills]){
+      assert.ok(s.src,id+'.'+s.id+': thiếu src');
+      // Nguồn: có chương (VN ch.N / chN) hoặc ghi rõ là game / mô tả data.js (chờ đối chiếu chương).
+      assert.ok(/ch\.?\s?\d|^game|data\.js/.test(s.src),id+'.'+s.id+': src không có chương hoặc nhãn game: '+s.src);
+      const clips=[].concat(s.clip||[]);assert.ok(clips.some(c=>man.actions[c])||man.actions.idle,id+'.'+s.id+': không có clip nào');
+      assert.ok(['melee','proj','aoe','grab','buff','empower','dash','heal','escape','rush','transform'].includes(s.kind),id+'.'+s.id+': kind lạ '+s.kind);
+    }
+    const seeds=[1,2,3,4,5];let done=0;
+    for(const sd of seeds){
+      let x=sd*7919;const r=()=>{x=(x*16807)%2147483647;return x/2147483647};
+      const M=SB_ROSTER.matchup(id,id);              // đấu gương: cùng profile, hai slot riêng
+      const B=SBSim.create(M.kits,{ids:M.ids,rng:r,arena:SBSim.ARENAS.wide});B.actors.p1.ai=true;
+      assert.notEqual(B.actors.p1.kit,B.actors.p2.kit);
+      for(let i=0;i<60*120&&!B.over;i++){SBSim.step(B);B.events.length=0;
+        for(const a of Object.values(B.actors))assert.ok(Number.isFinite(a.hp)&&Number.isFinite(a.ess)&&Number.isFinite(a.x)&&Number.isFinite(a.z),id+': NaN')}
+      if(B.over)done++;
+    }
+    assert.ok(done>=1,id+': đấu gương 5 trận đều hết giờ');
+  }
+  // Đổi bộ hình chỉ đổi thư mục, không đổi kit.
+  const before=SB_ROSTER.resolve('heo_rung_q1');SB_SPRITES.use.heo_rung='pilot_v1';
+  const after=SB_ROSTER.resolve('heo_rung_q1');delete SB_SPRITES.use.heo_rung;
+  assert.equal(after.spriteDir,'assets/chibi_v2/heo_rung/');assert.deepEqual(after.skills,before.skills);
+}
+console.log('Roster: mọi profile có nguồn, clip, đấu gương hết trận không NaN; đổi bộ hình không đổi kit: đạt.');
+
+// Lao húc (rush): khóa hướng lúc ra lệnh, trúng một lần + đẩy lùi; bước ngang khỏi làn thì trượt.
+function rushCase(sidestep){
+  const {SB_ROSTER}=require('./sandbox_sim.cjs');
+  const M=SB_ROSTER.matchup('pn_demo','heo_rung_q1'),B=SBSim.create(M.kits,{ids:M.ids,arena:SBSim.ARENAS.wide});
+  const p=B.actors.p1,h=B.actors.p2;h.ai=false;p.x=400;h.x=650;p.z=h.z=130;
+  assert.equal(SBSim.issue(B,'p2',{skill:'lao'}).ok,true);
+  assert.ok(h.act.telegraph&&h.act.telegraph.range===h.sk.lao.dist);
+  advance(B,15);if(sidestep)SBSim.issue(B,'p1',{skill:'move',x:p.x,z:230});
+  const x0=p.x;advance(B,90);
+  return {B,p,h,x0};
+}
+{
+  const hit=rushCase(false),dodge=rushCase(true);
+  const dm=hit.B.events.filter(e=>e.type==='dmg'&&e.skill==='lao');
+  assert.equal(dm.length,1);assert.equal(hit.B.events.filter(e=>e.type==='knock').length,1);assert.ok(hit.p.x<hit.x0);
+  assert.equal(dodge.B.events.filter(e=>e.type==='dmg'&&e.skill==='lao').length,0);
+  assert.equal(dodge.B.events.filter(e=>e.type==='miss'&&e.skill==='lao').length,1);
+}
+console.log('Lao húc: khóa hướng, trúng một lần + đẩy lùi, bước ngang thì trượt: đạt.');
+
+// Pha truyện chỉ kích hoạt một lần (phaseFired), kể cả khi máu tụt qua ngưỡng nhiều lần.
+{
+  const B=battle({story:true}),b=B.actors.bnb,p=B.actors.pn;
+  b.hp=b.maxHp*.32;p.x=b.x-70;p.z=b.z;
+  const hurtOnce=()=>{B.projs.push({owner:'pn',x:b.x,z:b.z,vx:0,vz:0,left:1,s:{id:'t',dmg:20},hid:9000+B.seq++})};
+  hurtOnce();advance(B,2);assert.ok(b.phaseFired?.suongyeu_blast);assert.equal(b.state,'shell');
+  advance(B,60*3);b.hp=b.maxHp*.31;hurtOnce();advance(B,2);
+  assert.equal(B.events.filter(e=>e.type==='detonate').length,1);
+}
+console.log('Pha boss: id riêng, kích hoạt đúng một lần: đạt.');
+
+// ── A2: bộ chiêu PN dựng từ save ──
+{
+  const {SB_GU,SB_ROSTER}=require('./sandbox_sim.cjs');
+  const src=require('fs').readFileSync(require('path').join(__dirname,'..','js/data.js'),'utf8');
+  const GU=new Function('return ({'+src.match(/const GU=\{([\s\S]*?)\n\};/)[1]+'})')();
+  const env={GU,maxHp:()=>210,maxEss:()=>100};
+  const mk=(keys,extra)=>Object.assign({chuyen:2,giai:0,hp:180,ess:70,herbs:1,gu:keys.map(k=>({k,h:0}))},extra);
+  assert.throws(()=>SB_GU.pnKitFromSave(mk([]),{}),/env.GU/);
+  // Chỉ cổ đang có mới thành nút; cổ đã hợp luyện/tiêu hao (không còn trong S.gu) không có nút.
+  const a=SB_GU.pnKitFromSave(mk(['xuanthu','nguyetquang','ngocbi','cuudiep']),env);
+  assert.deepEqual(a.skills.map(s=>s.id).sort(),['dash','leaf','ngocbi','nguyetquang']);
+  const b=SB_GU.pnKitFromSave(mk(['xuanthu','nguyetmang','ngocbi']),env);   // Nguyệt Quang đã đem hợp luyện thành Nguyệt Mang
+  assert.ok(!b.skills.some(s=>s.id==='nguyetquang'));assert.ok(b.skills.some(s=>s.id==='nguyet'));
+  assert.ok(!b.skills.some(s=>s.id==='leaf'),'không có Cửu Diệp thì không có lá');
+  // Lá Sinh Cơ = vật phẩm: lượt theo S.herbs; hết lá thì không có ô và ghi vào missing.
+  assert.equal(a.skills.find(s=>s.id==='leaf').uses,1);
+  const c=SB_GU.pnKitFromSave(mk(['cuudiep'],{herbs:0}),env);
+  assert.ok(!c.skills.some(s=>s.id==='leaf'));assert.ok(c.missing.some(m=>m.k==='cuudiep'));
+  // Cổ chủ động chưa có chiêu: không có nút, có lý do. Bị động cộng sát thương, không thành nút.
+  const d=SB_GU.pnKitFromSave(mk(['cuongthu','mokmi','bachthi','hacthi','uguang','nguyetquang']),env);
+  assert.deepEqual(d.missing.map(m=>m.k).sort(),['cuongthu','mokmi']);
+  assert.ok(d.missing.every(m=>m.reason));
+  assert.equal(d.atk.dmg,SB_ROSTER.resolve('pn_demo').atk.dmg+Math.round(10*SB_GU.DMG_K));
+  const nq=d.skills.find(s=>s.id==='nguyetquang');assert.equal(nq.dmg,Math.round(GU.nguyetquang.dmg*SB_GU.DMG_K)+Math.round(6*SB_GU.DMG_K));
+  // Chấn thương tay giảm đánh tay; trạng thái máu/chân nguyên mang vào trận.
+  const e=SB_GU.pnKitFromSave(mk([],{inj:{k:'tay',t:2},hp:90,ess:30}),env);
+  assert.ok(e.atk.dmg<SB_ROSTER.resolve('pn_demo').atk.dmg);
+  const B=SBSim.create({p1:SB_ROSTER.dress(e,'phuong_nguyen','pn_save'),p2:SB_ROSTER.resolve('bnb_q1')},{ids:{player:'p1',enemy:'p2'}});
+  assert.equal(B.actors.p1.hp,90);assert.equal(B.actors.p1.maxHp,210);assert.equal(B.actors.p1.ess,30);
+  // Phím không trùng; quá 8 cổ chủ động thì phần dư ghi "hết ô phím", không mất âm thầm.
+  const many=['nguyetquang','nguyetmang','nguyetngan','huyetnguyet','nguyettoan','toanphong','bangdao','ngocbi','dongbi','thietbi','thuytrao'];
+  const f=SB_GU.pnKitFromSave(mk(many),env),keys=f.skills.map(s=>s.key);
+  const bound=keys.filter(k=>k!=null);assert.equal(new Set(bound).size,bound.length);
+  // Không mất cổ vì thiếu phím: đủ 11 chiêu (+ lướt), 3 chiêu không phím ghi ở unbound, không lẫn vào missing.
+  assert.equal(f.skills.filter(s=>s.id!=='dash').length,many.length);assert.equal(f.unbound.length,many.length-8);
+  assert.ok(!f.missing.length);
+  // Mọi GU_SKILL dựng được, có src, kind hợp lệ; đánh một trận máy đấu máy với kit đầy đủ không NaN.
+  for(const k of Object.keys(SB_GU.GU_SKILL)){const s=SB_GU.GU_SKILL[k](GU[k]);assert.ok(s&&s.src&&s.kind,k)}
+  const full=SB_ROSTER.dress(SB_GU.pnKitFromSave(mk(many.slice(0,8).concat('trilieu','cuudiep'),{herbs:2}),env),'phuong_nguyen','pn_save');
+  let x=11;const r=()=>{x=(x*16807)%2147483647;return x/2147483647};
+  const C=SBSim.create({p1:full,p2:SB_ROSTER.resolve('bnb_q1')},{ids:{player:'p1',enemy:'p2'},rng:r});C.actors.p1.ai=true;
+  for(let i=0;i<60*120&&!C.over;i++){SBSim.step(C);C.events.length=0;assert.ok(Number.isFinite(C.actors.p1.hp)&&Number.isFinite(C.actors.p2.hp))}
+}
+console.log('PN từ save: chỉ cổ đang có, hợp luyện/tiêu hao thì mất nút, lá theo S.herbs, bị động cộng đòn, chấn thương, phím không trùng, dư phím vẫn giữ chiêu: đạt.');
+
+// ── Bước D (kiểu chiêu/pha cho đợt 1): kiểm hiệu lực, không chỉ kiểm có event ──
+{
+  const {SB_ROSTER}=require('./sandbox_sim.cjs');
+  const duel=(a,b)=>{const M=SB_ROSTER.matchup(a,b),B=SBSim.create(M.kits,{ids:M.ids,arena:SBSim.ARENAS.wide});B.actors.p2.ai=false;return B};
+  // Biến thân Mộc Mị: hồi chân nguyên + máu, chiêu hệ mộc ×1,4, khí huyết tối đa giảm, hết hạn có event, không hồi đầy máu/ess, không xóa CD.
+  {
+    const B=duel('thanh_thu_ch141','bnb_q1_ch140'),t=B.actors.p1,b=B.actors.p2;t.ai=false;b.x=t.x+700;
+    t.ess=20;t.hp=150;const max0=t.maxHp;
+    assert.equal(SBSim.issue(B,'p1',{skill:'mocmi'}).ok,true);advance(B,Math.ceil(.85*60));
+    assert.ok(t.transform);assert.ok(t.hp<=t.maxHp);
+    advance(B,60*3);assert.ok(t.ess>20+6*2.5,'hồi chân nguyên khi biến thân');assert.ok(t.maxHp<max0,'khí huyết tối đa giảm');
+    assert.ok((t.cd.mocmi||0)>30);
+    // chiêu hệ mộc mạnh hơn: Tùng Châm từng mũi 6 → 8
+    b.x=t.x+120;b.z=t.z;t.cd.tungcham=0;t.cd.thanhdang=0;for(const k in t.cd)t.cd[k]=0;
+    SBSim.issue(B,'p1',{skill:'tungcham',x:b.x,z:b.z});advance(B,60);
+    const hits=B.events.filter(e=>e.type==='dmg'&&e.skill==='tungcham');
+    assert.ok(hits.length>=2,'nhiều mũi trúng được nhiều lần');assert.ok(hits.every(e=>e.amount===Math.round(6*1.4)||e.blocked>0));
+    advance(B,60*10);assert.equal(t.transform,null);assert.equal(B.events.filter(e=>e.type==='transformEnd').length,1);
+    assert.ok(t.maxHp>=max0*.4-1e-9);
+  }
+  // Hồi máu ký sinh (regen) và pha tru lên (enrage): kích hoạt một lần, tốc độ ×2, không chặn đòn kết liễu.
+  {
+    const B=duel('pn_demo','dian_lang_boss_q1'),w=B.actors.p2;w.hp=400;advance(B,60);assert.ok(w.hp>403&&w.hp<=405);
+    const sp0=w.kit.speed;w.hp=w.maxHp*.52;
+    B.projs.push({owner:'p1',x:w.x,z:w.z,vx:0,vz:0,left:1,s:{id:'t',dmg:20},hid:99001});advance(B,2);
+    assert.ok(w.enrage&&w.phaseFired.tru);assert.equal(B.events.filter(e=>e.type==='phase').length,1);
+    w.hp=10;w.kit.regen=0;B.projs.push({owner:'p1',x:w.x,z:w.z,vx:0,vz:0,left:1,s:{id:'t',dmg:50},hid:99002});advance(B,2);
+    assert.equal(B.over?.winner,'p1','pha không chặn đòn kết liễu');
+    void sp0;
+  }
+  // Băng Trùy năm mũi: xòe quạt, mỗi mũi một hid.
+  {
+    const B=duel('bnb_q1_ch140','pn_demo'),b=B.actors.p1;b.ai=false;
+    assert.equal(b.oneArm,true);assert.ok(!b.sk.suongyeu);assert.equal(b.hp,Math.round(b.maxHp*.7));
+    SBSim.issue(B,'p1',{skill:'bangtruy'});advance(B,Math.ceil(.56*60)+1);
+    assert.equal(B.projs.filter(p=>p.s.id==='bangtruy').length,5);
+    assert.equal(new Set(B.projs.map(p=>p.hid)).size,5);
+  }
+}
+console.log('Bước D (đợt 1): biến thân Mộc Mị, hồi máu ký sinh, pha tru lên một lần, đạn nhiều mũi: đạt.');

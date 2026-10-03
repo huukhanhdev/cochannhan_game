@@ -1,0 +1,107 @@
+{
+ "id": "heo_rung",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "heo_rung_atk_v1.png",
+   "scale": 0.2036,
+   "hand": [
+    236,
+    62
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "heo_rung_hit_v1.png",
+   "scale": 0.1816
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "heo_rung_idle_v1.png",
+   "scale": 0.1779
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "heo_rung_ko_v1.png",
+   "scale": 0.1853
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "heo_rung_move_v1.png",
+   "scale": 0.1912
+  },
+  "sk_charge": {
+   "sheet": "sk_charge.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "heo_rung_sk_charge_v1.png",
+   "scale": 0.187,
+   "hand": [
+    245,
+    155
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "heo_rung_win_v1.png",
+   "scale": 0.1459
+  }
+ },
+ "reach_px": 122
+}

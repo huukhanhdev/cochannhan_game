@@ -23,7 +23,7 @@
   const ENV=typeof process!=='undefined'&&process.env||{},IMPATIENT=+(ENV.SB_IMP||6),COMMIT=+(ENV.SB_COMMIT||.4),STANDOFF=50,BACKOFF=.9;
   function smart(B,a,t,L,Sim,vx,vz){
     const {X0,X1,Z1}=B.arena,ok=id=>a.sk[id]&&Sim.check(B,a,{skill:id}).ok,clampX=x=>Math.max(X0,Math.min(X1,x)),clampZ=z=>Math.max(0,Math.min(Z1,z));
-    const dist=Math.hypot(t.x-a.x,t.z-a.z),side=Math.sign(t.x-a.x)||a.face,atk=a.sk.atk,stand=atk.range+STANDOFF;
+    const dist=Math.hypot(t.x-a.x,t.z-a.z),side=Math.sign(t.x-a.x)||a.face,atk=a.sk.atk,stand=a.kit.ai?.stand??atk.range+STANDOFF;
     const ta=t.act,seen=!!ta&&ta.t>=L.react;
     const left=ta?ta.s.startup+ta.s.active+ta.s.recovery-ta.t:0;
     const locked=seen&&ta.s.kind!=='dash'&&left>=.35;
@@ -65,6 +65,7 @@
     const sy=a.sk.suongyeu;
     if(sy&&ok('suongyeu')&&!a.empower&&!locked&&dist<stand+60&&a.ess>=sy.cost+(lc?.cost||0)&&(impatient||B.rng()<.25)){
       a.intent='power';Sim.issue(B,a.id,{skill:'suongyeu'});return}
+    if(tagged(B,a,t,Sim,ok,dist,stand))return;
     const inRange=Sim.inMelee(a,t,atk,true)&&Math.abs(t.z-a.z)<atk.depth*.8;
     // Vững thế (không bị ngắt) còn đủ cho cả pha lấy đà: đổi đòn có lợi (24 so với 13).
     const poised=a.poiseUntil>B.t+atk.startup;
@@ -75,7 +76,7 @@
     if(punish){
       if(inRange){a.intent='melee';Sim.issue(B,a.id,{skill:'atk'});return}
       const gx=clampX(t.x-side*atk.range*.7);
-      if(dist<a.sk.dash.dist+atk.range&&ok('dash')){a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:gx,z:t.z});return}
+      if(a.sk.dash&&dist<a.sk.dash.dist+atk.range&&ok('dash')){a.intent='near';Sim.issue(B,a.id,{skill:'dash',x:gx,z:t.z});return}
       a.intent='near';Sim.issue(B,a.id,{skill:'move',x:gx,z:t.z});return;
     }
     const sp=Math.hypot(vx,vz),away=sp>40&&(vx*(t.x-a.x)+vz*(t.z-a.z))/Math.max(1,dist)>40;
@@ -104,6 +105,29 @@
     a.intent='near';
     if(Math.abs(a.x-gx)<=70&&Math.abs(a.z-gz)<=60){if(a.state==='move')Sim.issue(B,a.id,{skill:'stop'});return}
     Sim.issue(B,a.id,{skill:'move',x:gx,z:gz});
+  }
+  // Chiêu của roster mới khai báo tags (vai trò); BNB cũ không có tags nên không đi qua đây (giữ nguyên trace).
+  // Mỗi tag một điều kiện dùng đơn giản; thứ tự theo thứ tự chiêu trong kit. Không đọc con trỏ/đích đi của đối thủ.
+  function tagged(B,a,t,Sim,ok,dist,stand){
+    const list=a.tagSkills||(a.tagSkills=Object.values(a.sk).filter(s=>s.tags&&s.tags.length));
+    if(!list.length)return false;
+    const dz=Math.abs(t.z-a.z),low=a.hp<a.maxHp*.65;
+    for(const s of list){
+      if(!ok(s.id))continue;
+      const has=k=>s.tags.includes(k);let go=false;
+      if(has('heal'))go=a.hp<a.maxHp*.45&&dist>150;
+      else if(has('guard'))go=low&&!a.shield&&dist<220&&B.rng()<.5;
+      else if(has('power'))go=!a.empower&&!a.transform&&dist<stand+60&&B.rng()<.3;
+      else if(s.kind==='transform')go=!a.transform&&dist<stand+120&&B.rng()<.4;
+      else if(s.kind==='rush')go=dist>=a.sk.atk.range+30&&dist<=s.dist*.95&&dz<s.depth+20&&B.rng()<.5;
+      else if(s.kind==='proj')go=dist>=stand&&dist<s.range*.8&&B.rng()<.45;
+      else if(s.kind==='melee'||s.kind==='grab')go=Sim.inMelee(a,t,s,true)&&dz<(s.depth||40)*.8&&B.rng()<.5;
+      else if(s.kind==='aoe')go=dist<=s.castRange&&B.rng()<.35;
+      if(!go)continue;
+      a.intent=has('guard')?'guard':has('heal')?'guard':s.kind==='rush'?'near':'big';
+      if(Sim.issue(B,a.id,{skill:s.id,x:t.x,z:t.z}).ok)return true;
+    }
+    return false;
   }
   const SBAI={level:'thuong',LEVEL,
     tick(B,dt){

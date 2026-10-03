@@ -1,0 +1,107 @@
+{
+ "id": "ca_sau_dung_nham",
+ "frame_size": [
+  362,
+  208
+ ],
+ "pivot_px": [
+  181,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "ca_sau_dung_nham_atk_v1.png",
+   "scale": 0.2335,
+   "hand": [
+    353,
+    84
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "ca_sau_dung_nham_hit_v1.png",
+   "scale": 0.1797
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "ca_sau_dung_nham_idle_v1.png",
+   "scale": 0.1231
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "ca_sau_dung_nham_ko_v1.png",
+   "scale": 0.195
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "ca_sau_dung_nham_move_v1.png",
+   "scale": 0.199
+  },
+  "sk_spit": {
+   "sheet": "sk_spit.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "ca_sau_dung_nham_sk_spit_v1.png",
+   "scale": 0.1682,
+   "hand": [
+    286,
+    101
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "ca_sau_dung_nham_win_v1.png",
+   "scale": 0.1252
+  }
+ },
+ "reach_px": 173
+}

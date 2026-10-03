@@ -26,16 +26,20 @@
   <div class="bar" id="acts"></div>
   <canvas id="line" width="960" height="1080"></canvas>
 </main>
+<script src="js/kp_sprite.js"></script>
 <script>
+const reviewParam=new URLSearchParams(location.search).get('manifest');
+const review=reviewParam&&/^previews\/[a-zA-Z0-9_/-]+\/manifest\.json$/.test(reviewParam)?reviewParam:null;
 const R='assets/chibi_kp/',cache={};
-const load=id=>cache[id]||(cache[id]=fetch(R+id+'/manifest.json').then(r=>r.json()).then(m=>Promise.all(Object.entries(m.actions).map(([a,c])=>new Promise(ok=>{const i=new Image();i.onload=()=>ok([a,i]);i.onerror=()=>ok([a,null]);i.src=R+id+'/'+c.sheet}))).then(L=>({m,img:Object.fromEntries(L)}))));
+const dir=id=>review?review.slice(0,review.lastIndexOf('/')+1):R+id+'/';
+const load=id=>cache[id]||(cache[id]=fetch(dir(id)+'manifest.json').then(r=>r.json()).then(m=>Promise.all(Object.entries(m.actions).map(([a,c])=>new Promise(ok=>{const i=new Image();i.onload=()=>ok([a,i]);i.onerror=()=>ok([a,null]);i.src=dir(id)+c.sheet}))).then(L=>({m,img:Object.fromEntries(L)}))));
 function frameAt(c,ms){const d=c.durations_ms,tot=d.reduce((s,v)=>s+v,0);let t=ms%(tot+(c.loop?0:500)),i=0;if(t>=tot)return d.length-1;while(i<d.length-1&&t>=d[i]){t-=d[i];i++}return i}
 function blit(g,K,a,i,x,y,s,dir){const [fw,fh]=K.m.frame_size,[px,py]=K.m.pivot_px,im=K.img[a];if(!im)return;
-  g.save();g.translate(Math.round(x),y);g.scale(dir*s,s);g.drawImage(im,i*fw,0,fw,fh,-px,-py,fw,fh);g.restore()}
+  g.save();g.translate(Math.round(x),y);g.scale(dir*s,s);const [dx,dy]=KPSprite.offset(K.m,K.m.actions[a],i);g.translate(dx,dy);g.drawImage(im,i*fw,0,fw,fh,-px,-py,fw,fh);g.restore()}
 const st=document.getElementById('stage'),sg=st.getContext('2d'),ln=document.getElementById('line'),lg=ln.getContext('2d');
 sg.imageSmoothingEnabled=lg.imageSmoothingEnabled=false;
 let ids=[],cur=null,act='idle',t0=performance.now(),all=[],choice=0;
-fetch(R+'index.json').then(r=>r.json()).then(L=>{ids=L;const p=document.getElementById('pick');
+(review?fetch(review).then(r=>r.json()).then(m=>[m.id]):fetch(R+'index.json').then(r=>r.json())).then(L=>{ids=L;const p=document.getElementById('pick');
   for(const id of L){const o=document.createElement('option');o.value=o.textContent=id;p.append(o)}
   const q=new URLSearchParams(location.search).get('id');p.value=L.includes(q)?q:L[0];p.onchange=()=>choose(p.value);choose(p.value);
   Promise.all(L.map(load)).then(K=>{all=K.map((k,i)=>[L[i],k])});requestAnimationFrame(loop)});

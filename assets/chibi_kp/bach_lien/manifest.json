@@ -1,0 +1,108 @@
+{
+ "id": "bach_lien",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bach_lien_atk_v1.png",
+   "scale": 0.152,
+   "hand": [
+    207,
+    133
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_lien_hit_v1.png",
+   "scale": 0.1216
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "bach_lien_idle_v1.png",
+   "scale": 0.1313
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_lien_ko_v1.png",
+   "scale": 0.1404
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_lien_move_v1.png",
+   "scale": 0.1197
+  },
+  "sk_anxiety": {
+   "sheet": "sk_anxiety.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bach_lien_sk_anxiety_v1.png",
+   "scale": 0.1321,
+   "hand": [
+    181,
+    87
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_lien_win_v1.png",
+   "scale": 0.0799
+  }
+ },
+ "reach_px": 72
+}

@@ -1,0 +1,120 @@
+{
+ "id": "au_duong_cong",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "au_duong_cong_atk_v1.png",
+   "scale": 0.1616,
+   "hand": [
+    212,
+    140
+   ]
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "au_duong_cong_guard_v1.png",
+   "scale": 0.13
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "au_duong_cong_hit_v1.png",
+   "scale": 0.1253
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "au_duong_cong_idle_v1.png",
+   "scale": 0.0893
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "au_duong_cong_ko_v1.png",
+   "scale": 0.1526
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "au_duong_cong_move_v1.png",
+   "scale": 0.121
+  },
+  "sk_suppress": {
+   "sheet": "sk_suppress.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "au_duong_cong_sk_suppress_v1.png",
+   "scale": 0.1227,
+   "hand": [
+    221,
+    156
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "au_duong_cong_win_v1.png",
+   "scale": 0.0871
+  }
+ },
+ "reach_px": 79
+}

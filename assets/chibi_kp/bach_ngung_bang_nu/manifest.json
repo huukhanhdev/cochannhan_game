@@ -1,0 +1,104 @@
+{
+ "id": "bach_ngung_bang_nu",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_ngung_bang_nu_guard_v1.png",
+   "scale": 0.1264
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_ngung_bang_nu_hit_v1.png",
+   "scale": 0.1275
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "bach_ngung_bang_nu_idle_v4.png",
+   "scale": 0.1358
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_ngung_bang_nu_ko_v1.png",
+   "scale": 0.1547
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_ngung_bang_nu_move_v1.png",
+   "scale": 0.1252
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_ngung_bang_nu_win_v1.png",
+   "scale": 0.0991
+  },
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bach_ngung_bang_nu_atk_v1.png",
+   "scale": 0.1547,
+   "hand": [
+    214,
+    122
+   ]
+  }
+ },
+ "reach_px": 86
+}

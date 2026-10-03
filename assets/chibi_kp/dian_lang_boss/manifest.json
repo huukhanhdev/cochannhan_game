@@ -1,0 +1,108 @@
+{
+ "id": "dian_lang_boss",
+ "frame_size": [
+  448,
+  222
+ ],
+ "pivot_px": [
+  224,
+  212
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "dian_lang_boss_atk_v1.png",
+   "scale": 0.2428,
+   "hand": [
+    240,
+    178
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "dian_lang_boss_hit_v1.png",
+   "scale": 0.202
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "dian_lang_boss_idle_v2.png",
+   "scale": 0.2048
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "dian_lang_boss_ko_v1.png",
+   "scale": 0.2152
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "dian_lang_boss_move_v1.png",
+   "scale": 0.2111
+  },
+  "sk_thunder": {
+   "sheet": "sk_thunder.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "dian_lang_boss_sk_thunder_v1.png",
+   "scale": 0.253,
+   "hand": [
+    305,
+    108
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "dian_lang_boss_win_v1.png",
+   "scale": 0.1421
+  }
+ },
+ "reach_px": 216
+}

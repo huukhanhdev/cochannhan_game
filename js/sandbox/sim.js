@@ -18,6 +18,8 @@
     if(![arena.width,arena.X0,arena.X1,arena.Z1].every(Number.isFinite)||arena.X0<0||arena.X1<=arena.X0||arena.X1>arena.width||arena.Z1<=0)throw new Error('Cấu hình sân không hợp lệ');
     const ids=Object.assign({player:'pn',enemy:'bnb'},opt.ids||{});
     if(ids.player===ids.enemy)throw new Error('Hai actor phải khác id');
+    // Slot actor (ids) tách khỏi profile: cùng một profile có thể đứng hai bên (đấu gương) nếu kits trỏ hai bản sao.
+    // sim giữ fallback cũ (kits.pn / kits.bnb) cho adapter/test legacy; profile sai được chặn ở SB_ROSTER.resolve(), không tới đây.
     const B={arena,ids,t:0,events:[],seq:0,over:null,rng:opt.rng||Math.random,actors:{},projs:[],zones:[]};
     const mid=(arena.X0+arena.X1)/2;
     B.actors[ids.player]=actor(ids.player,kits[ids.player]||kits.pn,clamp(mid-200,arena.X0,arena.X1),arena.Z1*.55,1);
@@ -29,9 +31,10 @@
   function actor(id,kit,x,z,face){
     const sk={atk:kit.atk},uses={};
     kit.skills.forEach(s=>{sk[s.id]=s;if(s.uses)uses[s.id]=s.uses});
-    return {id,kit,sk,uses,x,z,face,hp:kit.hp,maxHp:kit.hp,ess:kit.ess,maxEss:kit.ess,cd:{},
+    // kit.start: máu/chân nguyên lúc vào trận (PN dựng từ save mang theo trạng thái hiện tại); không có thì đầy.
+    return {id,kit,sk,uses,x,z,face,hp:kit.start?.hp??kit.hp,maxHp:kit.hp,ess:kit.start?.ess??kit.ess,maxEss:kit.ess,cd:{},
       state:'idle',since:0,act:null,move:null,chase:false,buffer:null,stopAt:-9,flashAt:-9,
-      shield:null,empower:null,slowUntil:0,bleed:null,poiseUntil:0,ai:false};
+      shield:null,empower:null,slowUntil:0,bleed:null,poiseUntil:0,ai:false,oneArm:!!kit.start?.oneArm,detonated:!!kit.start?.detonated};
   }
   const other=(B,a)=>B.opponentOf(a);
   const free=a=>a.state==='idle'||a.state==='move';
@@ -110,7 +113,7 @@
     const t=other(B,a),ax=cmd.x??t.x,az=cmd.z??t.z;
     a.chase=false;a.move=null;a.buffer=null;
     if(s.uses)a.uses[s.id]--;                        // vật phẩm: mất ngay khi bắt đầu dùng
-    if(s.kind!=='dash'&&s.kind!=='escape')a.face=Math.sign((s.kind==='proj'?ax:t.x)-a.x)||a.face;
+    if(s.kind!=='dash'&&s.kind!=='escape'&&s.kind!=='rush')a.face=Math.sign((s.kind==='proj'?ax:t.x)-a.x)||a.face;
     const A={s,t:0,phase:'startup',fired:false,hid:++B.seq,aim:{x:ax,z:az}};
     if(s.kind==='proj'){const dx=ax-a.x,dz=az-a.z,n=Math.hypot(dx,dz)||1;A.telegraph={x:a.x,z:a.z,dx:dx/n,dz:dz/n,range:s.range,visibleAt:B.t}}
     if(s.kind==='aoe'){                                     // vùng đặt tại vị trí mục tiêu lúc nhận lệnh
@@ -119,6 +122,8 @@
       B.zones.push(A.zone);
     }
     if(s.kind==='dash'){const dx=ax-a.x,dz=az-a.z,d=Math.hypot(dx,dz)||1;A.vec={x:dx/d,z:dz/d}}
+    // Lao húc: khóa hướng lúc nhận lệnh (thú đổi hướng kém), công khai làn lao như đạn để né được.
+    if(s.kind==='rush'){const dx=t.x-a.x,dz=t.z-a.z,d=Math.hypot(dx,dz)||1;A.vec={x:dx/d,z:dz/d};A.telegraph={x:a.x,z:a.z,dx:dx/d,dz:dz/d,range:s.dist,visibleAt:B.t}}
     if(s.kind==='escape'){const dir=Math.sign(a.x-t.x)||-a.face;A.vec={x:dir,z:(Z1/2-a.z)/Z1}}
     a.act=A;setState(a,'act');
     emit(B,{type:'act',who:a.id,skill:s.id,kind:s.kind,hid:A.hid});
@@ -148,6 +153,9 @@
         if(a.bleed&&B.t>=a.bleed.until)a.bleed=null;
       }
       if(a.empower&&B.t>=a.empower.until)endEmpower(B,a);
+      if(a.transform)stepTransform(B,a);
+      // Cổ trị liệu ký sinh (vd Lôi Quan Đầu Lang, ch.164): hồi máu theo giây, không vượt tối đa.
+      if(a.kit.regen&&a.state!=='ko'&&a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+a.kit.regen*DT);
       if(B.over)break;
       if(a.state==='shell')stepShell(B,a);
       else if(a.state==='move')stepMove(B,a);
@@ -178,13 +186,22 @@
         a.shield=null;emit(B,{type:'shieldEnd',who:a.id,skill:sh.id,hid:sh.hid});
       }
     }
-    a.ess=Math.min(a.maxEss,a.ess+a.kit.essRegen*regenTime);
+    a.ess=Math.min(a.maxEss,a.ess+(a.kit.essRegen+(a.transform?.essRegen||0))*regenTime);
   }
   // Sương Yêu hết hiệu lực: tự hại (khớp đông cứng) bằng làm chậm, ch137.
   function endEmpower(B,a){
     const E=a.empower;a.empower=null;
     if(E.after){a.slowUntil=B.t+E.after.dur;a.slowF=E.after.f}
     emit(B,{type:'empowerEnd',who:a.id,skill:E.id,hid:E.hid});
+  }
+  // Biến thân (Mộc Mị hóa yêu tinh cây, ch.126/141): trong thời hạn hút nguyên khí thiên nhiên (hồi chân nguyên),
+  // vết thương khép nhanh (hồi máu), chiêu cùng hệ (tags chứa s.tag) mạnh hơn. Cái giá: thân thể hóa gỗ dần
+  // → khí huyết tối đa giảm theo giây khi đang biến thân, không hồi lại trong trận. Hết hạn thì trở lại người.
+  function stepTransform(B,a){
+    const T=a.transform;
+    if(T.regen&&a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+T.regen*DT);
+    if(T.drain){a.maxHp=Math.max(T.floor,a.maxHp-T.drain*DT);if(a.hp>a.maxHp)a.hp=a.maxHp}
+    if(B.t>=T.until){a.transform=null;emit(B,{type:'transformEnd',who:a.id,skill:T.id,hid:T.hid})}
   }
   // Nổ Sương Yêu + tay phải (ch139): sự kiện truyện, không phải nút. Một lần; cổ mất (ch140).
   function detonate(B,t){
@@ -207,7 +224,7 @@
     a.hp=Math.min(a.maxHp,a.hp+a.shellHeal*DT);
     if(B.t>=a.shellUntil){setState(a,'idle');emit(B,{type:'shellEnd',who:a.id});afterFree(B,a)}
   }
-  function speedOf(B,a){return a.kit.speed*(a.slowUntil>B.t?a.slowF||.7:1)}
+  function speedOf(B,a){return a.kit.speed*(a.slowUntil>B.t?a.slowF||.7:1)*(a.enrage?.speed||1)}
   function stepMove(B,a){
     const {X0,X1,Z1}=B.arena;
     const t=other(B,a);
@@ -228,8 +245,10 @@
     if(A.phase==='startup'&&A.t>=s.startup){A.phase='active';fire(B,a)}
     if(a.act!==A)return; // thiếu phí tại release: act đã kết thúc, không chạy active
     if(A.phase==='active'){
-      if(A.vec){const sp=s.dist/s.active*DT;a.x=clamp(a.x+A.vec.x*sp,X0,X1);a.z=clamp(a.z+A.vec.z*sp,0,Z1);if(Math.abs(A.vec.x)>.2&&s.kind==='dash')a.face=Math.sign(A.vec.x)}
-      if(A.t>=s.startup+s.active)A.phase='recovery';
+      if(A.vec&&s.kind==='rush'&&!A.hitDone){const t=other(B,a);
+        if(t.state!=='ko'&&Math.abs(t.x-a.x)<=s.hitR&&Math.abs(t.z-a.z)<=s.depth){A.hitDone=true;rushHit(B,a,t,s,A);if(B.over||a.act!==A)return}}
+      if(A.vec){const sp=s.dist/s.active*DT;a.x=clamp(a.x+A.vec.x*sp,X0,X1);a.z=clamp(a.z+A.vec.z*sp,0,Z1);if(Math.abs(A.vec.x)>.2&&(s.kind==='dash'||s.kind==='rush'))a.face=Math.sign(A.vec.x)}
+      if(A.t>=s.startup+s.active){A.phase='recovery';if(s.kind==='rush'&&!A.hitDone)emit(B,{type:'miss',who:a.id,skill:s.id})}
     }
     if(a.act&&A.t>=totalT(s)){a.act=null;setState(a,'idle');afterFree(B,a)}
   }
@@ -261,7 +280,11 @@
     }else if(s.kind==='proj'){
       const dx=A.telegraph?.dx??(A.aim.x-a.x),dz=A.telegraph?.dz??(A.aim.z-a.z),d=Math.hypot(dx,dz)||1;
       B.events[B.events.length-1].origin={x:a.x+a.face*30,z:a.z};   // điểm phát của đạn cho FX/âm
-      B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:dx/d*s.speed,vz:dz/d*s.speed,left:s.range,s,hid:A.hid,face:Math.sign(dx)||a.face});
+      const n=s.count||1;
+      if(n===1)B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:dx/d*s.speed,vz:dz/d*s.speed,left:s.range,s,hid:A.hid,face:Math.sign(dx)||a.face});
+      // Nhiều mũi (Băng Trùy năm mũi ch.141, Tùng Châm mưa lá thông ch.104/141): xòe quạt, mỗi mũi một hid nên trúng được nhiều mũi.
+      else{const base=Math.atan2(dz/d,dx/d);for(let i=0;i<n;i++){const g=base+(i-(n-1)/2)*(s.spread||.12);
+        B.projs.push({owner:a.id,x:a.x+a.face*30,z:a.z,vx:Math.cos(g)*s.speed,vz:Math.sin(g)*s.speed,left:s.range,s,hid:i?++B.seq:A.hid,face:Math.sign(dx)||a.face})}}
     }else if(s.kind==='grab'){
       if(t.state!=='ko'&&Math.abs(t.x-a.x)<=s.range&&Math.abs(t.z-a.z)<=s.depth&&Math.sign(t.x-a.x)===a.face){
         hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
@@ -276,6 +299,10 @@
       a.shield={hid:A.hid,id:s.id,red:s.red,until:B.t+s.dur,tint:s.tint,
         accountedAt:B.t,upkeepPerSecond:s.upkeepPerSecond||0,pauseEssRegen:!!s.pauseEssRegen};
       emit(B,{type:'shield',who:a.id,skill:s.id,hid:A.hid});
+    }else if(s.kind==='transform'){
+      a.transform={hid:A.hid,id:s.id,until:B.t+s.dur,tag:s.tag||null,mul:s.dmgMul||1,essRegen:s.essRegen||0,regen:s.regen||0,
+        drain:(s.drainPct||0)*a.maxHp,floor:a.maxHp*(s.floor??.4)};
+      emit(B,{type:'transform',who:a.id,skill:s.id,hid:A.hid});
     }else if(s.kind==='empower'){
       a.empower={hid:A.hid,id:s.id,until:B.t+s.dur,mul:s.dmgMul||1,pierce:s.pierce||0,after:s.after||null};
       emit(B,{type:'empower',who:a.id,skill:s.id,hid:A.hid});
@@ -285,6 +312,23 @@
       a.bleed=null;a.slowUntil=0;emit(B,{type:'escape',who:a.id,skill:s.id,hid:A.hid});
     }
     // aoe phát trong stepZones đúng lúc fireAt; dash/escape di chuyển trong pha active
+  }
+  // Trúng lao húc: một lần mỗi lần lao, đẩy lùi theo hướng lao (ch.80: PN đỡ bằng vai vẫn lùi ba bước).
+  function rushHit(B,a,t,s,A){
+    hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
+    if(!B.over&&s.knock&&t.state!=='ko'&&t.state!=='shell'){t.x=clamp(t.x+Math.sign(A.vec.x||a.face)*s.knock,B.arena.X0,B.arena.X1);emit(B,{type:'knock',who:t.id,source:a.id,skill:s.id})}
+  }
+  // Pha truyện của boss: mỗi pha có id, chỉ kích hoạt một lần (t.phaseFired). Kit cũ BNB khai báo detonateAt → pha 'detonate'.
+  // t.detonated giữ làm cờ tương thích (test cũ đặt true để tắt nổ tay).
+  function phasesOf(S){return S.phases||(S.detonateAt!=null?[{id:'suongyeu_blast',at:S.detonateAt,do:'detonate',needSkill:'suongyeu'}]:[])}
+  function pendingPhase(t,d){
+    const S=t.kit.story;if(!S)return null;
+    for(const P of phasesOf(S)){
+      if(t.phaseFired?.[P.id]||(P.do==='detonate'&&t.detonated))continue;
+      if(P.needSkill&&!t.sk[P.needSkill])continue;
+      if(t.hp-d<=t.maxHp*P.at)return P;
+    }
+    return null;
   }
   function stepProjs(B){
     const {X0,X1,Z1}=B.arena;
@@ -310,7 +354,8 @@
       if(!own.act||own.act.zone!==z){B.zones.splice(B.zones.indexOf(z),1);emit(B,{type:'zoneCancel',who:z.owner,skill:z.s.id,hid:z.hid});continue}   // chủ bị ngắt
       if(B.t>=z.fireAt){
         const t=other(B,own);
-        if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r)hurt(B,t,z.s.dmg,own,z.hid,{skill:z.s.id});
+        if(t.state!=='ko'&&Math.hypot(t.x-z.x,(t.z-z.z)*1.6)<=z.r){hurt(B,t,z.s.dmg,own,z.hid,{skill:z.s.id});
+          if(z.s.slow&&t.state!=='ko'&&t.state!=='shell'){t.slowUntil=B.t+z.s.slow.dur;t.slowF=z.s.slow.f}}
         emit(B,{type:'zoneFire',who:z.owner,skill:z.s.id,hid:z.hid,x:z.x,z:z.z,r:z.r});
         if(B.over)return;
         B.zones.splice(B.zones.indexOf(z),1);
@@ -321,11 +366,19 @@
     if(B.over||t.state==='ko'||(hid&&t.lastHid===hid))return;
     if(hid)t.lastHid=hid;
     const E=!o.dot&&src?.empower,pierce=Math.max(o.pierce||0,E?E.pierce:0);
-    let d=E?Math.round(dmg*E.mul):dmg;if(t.shield&&!o.dot)d=Math.round(d*(1-t.shield.red*(1-pierce)));
-    const S=t.kit.story,blast=S&&!t.detonated&&t.sk.suongyeu&&t.hp-d<=t.maxHp*S.detonateAt;
-    t.hp=Math.max(blast?1:0,t.hp-d);t.flashAt=B.t;
+    let d=E?Math.round(dmg*E.mul):dmg;
+    if(!o.dot&&src?.enrage)d=Math.round(d*src.enrage.mul);
+    const T=!o.dot&&src?.transform,ts=T&&o.skill&&src.sk[o.skill];
+    if(T&&ts&&(!T.tag||(ts.tags||[]).includes(T.tag)))d=Math.round(d*T.mul);
+    if(t.shield&&!o.dot)d=Math.round(d*(1-t.shield.red*(1-pierce)));
+    // Pha nổ tay giữ BNB ở 1 máu để chuyển pha; pha khác (vd tru lên tăng tốc) không chặn đòn kết liễu.
+    const phase=pendingPhase(t,d),blast=!!phase;
+    t.hp=Math.max(phase?.do==='detonate'?1:0,t.hp-d);t.flashAt=B.t;
     emit(B,{type:'dmg',who:t.id,source:src?.id,skill:o.skill,hid,contact:o.contact||{x:t.x,z:t.z},amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0,shield:t.shield&&!o.dot?t.shield.id:null});
-    if(blast){detonate(B,t);return}
+    if(blast){(t.phaseFired||(t.phaseFired={}))[phase.id]=B.t;
+      if(phase.do==='detonate'){detonate(B,t);return}
+      if(phase.do==='enrage'){t.enrage={speed:phase.speed||1,mul:phase.dmgMul||1};emit(B,{type:'phase',who:t.id,id:phase.id,n:phase.n||''})}
+    }
     if(t.hp<=0){
       t.act=null;t.move=null;t.chase=false;t.buffer=null;t.bleed=null;setState(t,'ko');
       const w=other(B,t);B.over={winner:w.id,loser:t.id,at:B.t,retreat:!!t.kit.story?.retreatOnDefeat};

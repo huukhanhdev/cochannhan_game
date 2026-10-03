@@ -9,6 +9,8 @@
 
 - [Review roster 40 ID: lỗi nguồn, tạo hình, anchor và danh sách cần sửa/gen lại](../previews/roster-validation-v01/README.md).
 
+- [Kế hoạch roster v2 từ nguyên tác](undone/KE_HOACH_TAO_LAI_ROSTER_TU_NGUYEN_TAC.md), [style bible đề xuất](roster/STYLE_BIBLE.md), [pipeline v2 và phần còn thiếu](roster/PIPELINE_V2.md).
+
 ## Tra tên tài liệu cũ
 
 | Đường dẫn cũ | Tài liệu mới | Xử lý |

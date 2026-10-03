@@ -1,0 +1,121 @@
+{
+ "id": "nhat_dai_boss",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "nhat_dai_boss_atk_v1.png",
+   "scale": 0.1648,
+   "hand": [
+    219,
+    181
+   ]
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "nhat_dai_boss_guard_v1.png",
+   "scale": 0.1444
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "nhat_dai_boss_hit_v1.png",
+   "scale": 0.1479
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "nhat_dai_boss_idle_v1.png",
+   "scale": 0.1487
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "nhat_dai_boss_ko_v1.png",
+   "scale": 0.1647
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "nhat_dai_boss_move_v1.png",
+   "scale": 0.144
+  },
+  "sk_blood": {
+   "sheet": "sk_blood.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "nhat_dai_boss_sk_blood_v1.png",
+   "scale": 0.1713,
+   "hand": [
+    219,
+    81
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "nhat_dai_boss_win_v1.png",
+   "scale": 0.1196
+  }
+ },
+ "reach_px": 129
+}

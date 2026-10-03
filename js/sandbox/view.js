@@ -11,10 +11,12 @@ const SBView=(function(){
   const sx=x=>OX+x*KX,sy=z=>GY0+(z/(B?.arena.Z1||240))*(GY1-GY0);
   const PICK_TOL=12;                          // click lệch khỏi mép sàn tối đa 12px vẫn nhận (kéo về mép)
   const depthK=z=>.9+.16*(z/(B?.arena.Z1||240));
-  const SCALE=1.12;                            // px màn hình / px sprite gốc
+  const ORIGINAL_SCALE=1.12;
+  let SCALE=ORIGINAL_SCALE;                   // cỡ hình; không thay luật world/hitbox
   const INTENT={melee:'⚔',near:'»',big:'⚠',guard:'🛡',dodge:'↯',escape:'❄',power:'❄'};
 
-  async function mount(el,battle,bg){
+  async function mount(el,battle,bg,options={}){
+    SCALE=Number.isFinite(options.figureScale)&&options.figureScale>0?options.figureScale:ORIGINAL_SCALE;
     B=battle;KX=(W-2*MARGIN)/(B.arena.X1-B.arena.X0);OX=MARGIN-B.arena.X0*KX;
     app=new PIXI.Application({width:W,height:H,backgroundColor:0x1b2028,antialias:true,resolution:Math.min(2,window.devicePixelRatio||1),autoDensity:true});
     el.appendChild(app.view);app.view.style.width='100%';app.view.style.height='auto';
@@ -45,7 +47,8 @@ const SBView=(function(){
     L.guide=new PIXI.Graphics();L.ground.addChild(L.guide);L.proj=new PIXI.Graphics();L.fx.addChild(L.proj);
     L.windup=new PIXI.Graphics();L.fx.addChild(L.windup);
     for(const a of Object.values(B.actors)){
-      kp[a.id]=await KPSprite.load(a.kit.sprite);
+      // Thư mục sprite do SB_SPRITES quyết định (kit.spriteDir, qua SB_ROSTER.resolve); kit cũ không có thì dùng mặc định.
+      kp[a.id]=await KPSprite.load(a.kit.sprite,a.kit.spriteDir||a.kit.spriteReviewDir);
       const c=new PIXI.Container(),sh=new PIXI.Graphics(),aura=new PIXI.Graphics(),s=new PIXI.Sprite(kp[a.id].clips.idle.tex[0]);
       sh.beginFill(0x000000,.4);sh.drawEllipse(0,0,38,9);sh.endFill();
       const [fw,fh]=kp[a.id].man.frame_size,[px,py]=kp[a.id].man.pivot_px;s.anchor.set(px/fw,py/fh);
@@ -92,10 +95,14 @@ const SBView=(function(){
     for(const a of Object.values(B.actors)){
       const S=spr[a.id],[clip,i]=pick(a),k=depthK(a.z)*SCALE;
       S.s.texture=clip.tex[i];S.s.scale.set(k*a.face,k);
+      const [dx,dy]=KPSprite.offset(kp[a.id].man,clip,i);S.s.position.set(dx*k*a.face,dy*k);
       // Thua mà kịch bản là rút lui (TR-3): chạy khỏi sân và mờ dần, không nằm gục.
       const fleeing=B.over?.retreat&&B.over.loser===a.id,ft=fleeing?Math.max(0,B.t-B.over.at-.25):0,fdir=fleeing?(Math.sign(a.x-B.actors[B.over.winner].x)||1):0;
       if(fleeing)S.s.scale.set(k*fdir,k);
-      S.c.position.set(sx(a.x+fdir*a.kit.speed*ft),sy(a.z));S.c.zIndex=a.z;S.sh.scale.set(depthK(a.z));S.c.alpha=fleeing?Math.max(0,1-ft/1.2):1;
+      S.c.position.set(sx(a.x+fdir*a.kit.speed*ft),sy(a.z));S.c.zIndex=a.z;S.sh.scale.set(depthK(a.z)*SCALE/ORIGINAL_SCALE);S.c.alpha=fleeing?Math.max(0,1-ft/1.2):1;
+      // Bộ hình thiếu clip ko (vd thiet_huyet_lanh cũ): ngã nghiêng quanh chân và mờ dần, không đứng idle như còn sống.
+      const noKo=a.state==='ko'&&!fleeing&&!kp[a.id].clips.ko,kt=noKo?Math.min(1,a.since/.5):0;
+      S.s.rotation=noKo?-a.face*1.2*kt:0;if(noKo)S.c.alpha=1-.5*kt;
       S.flash.alpha=Math.max(0,1-(B.t-a.flashAt)/.16);
       S.intent.text=a.ai&&!B.over?(INTENT[a.intent]||''):'';S.intent.y=-S.hy*1.02*k;
       // hộ thể: vầng sáng quanh thân
@@ -114,6 +121,11 @@ const SBView=(function(){
         }
       }
       // Sương Yêu: viền sương lạnh nhấp nháy quanh thân, tách khỏi hộ thể
+      // Biến thân (Mộc Mị): vòng lá xanh; pha tru lên (enrage): tia điện vàng quanh thân.
+      if(a.transform){const y=-S.hy*.5*k;S.aura.lineStyle(3,0x6fbf5a,.55+.25*Math.sin(B.t*6));
+        for(let i=0;i<8;i++){const an=i/8*6.283+B.t,r=44*k;S.aura.drawEllipse(Math.cos(an)*r,y+Math.sin(an)*r*.8,4*k,2*k)}}
+      if(a.enrage){const y=-S.hy*.4*k;S.aura.lineStyle(2,0xffe14a,.5+.4*Math.sin(B.t*20));
+        for(let i=0;i<5;i++){const an=i/5*6.283+B.t*5,r=48*k;S.aura.moveTo(Math.cos(an)*r*.5,y+Math.sin(an)*r*.5);S.aura.lineTo(Math.cos(an+.3)*r,y+Math.sin(an+.3)*r)}}
       if(a.empower){const y=-S.hy*.5*k,left=a.empower.until-B.t;S.aura.lineStyle(2,0xe8fbff,Math.min(1,left)*(.55+.35*Math.sin(B.t*14)));
         for(let i=0;i<6;i++){const an=i/6*6.283+B.t*2,r=40*k;S.aura.moveTo(Math.cos(an)*r*.6,y+Math.sin(an)*r);S.aura.lineTo(Math.cos(an)*r*.9,y+Math.sin(an)*r*1.25)}}
       // thanh lấy đà dưới chân (chỉ chiêu có lấy đà dài)
@@ -121,7 +133,7 @@ const SBView=(function(){
       if(a.act&&a.act.phase==='startup'&&a.act.s.startup>=.35){const p=a.act.t/a.act.s.startup;S.bar.beginFill(0x000000,.6);S.bar.drawRect(-32,12,64,6);S.bar.endFill();S.bar.beginFill(a.act.s.kind==='aoe'?0xff5a44:0xf0c46a);S.bar.drawRect(-32,12,64*p,6);S.bar.endFill()}
       // bóng mờ khi lướt / thoát thân / di chuyển
       const fast=a.act&&(a.act.s.kind==='dash'||a.act.s.kind==='escape')&&a.act.phase==='active';
-      if((a.state==='move'||fast)&&B.t-S.ghostAt>(fast?.025:.05)){S.ghostAt=B.t;const g=new PIXI.Sprite(S.s.texture);g.anchor.copyFrom(S.s.anchor);g.scale.copyFrom(S.s.scale);g.position.copyFrom(S.c.position);g.alpha=g.startAlpha=fast?.45:.3;g.born=B.t;if(a.act&&a.act.s.kind==='escape')g.tint=0xbfe8ff;L.ghost.addChild(g)}
+      if((a.state==='move'||fast)&&B.t-S.ghostAt>(fast?.025:.05)){S.ghostAt=B.t;const g=new PIXI.Sprite(S.s.texture);g.anchor.copyFrom(S.s.anchor);g.scale.copyFrom(S.s.scale);g.position.set(S.c.x+S.s.x,S.c.y+S.s.y);g.alpha=g.startAlpha=fast?.45:.3;g.born=B.t;if(a.act&&a.act.s.kind==='escape')g.tint=0xbfe8ff;L.ghost.addChild(g)}
     }
     for(const g of [...L.ghost.children]){const age=B.t-g.born;g.alpha=g.startAlpha*Math.max(0,1-age/.3);if(age>.3)g.destroy()}
     drawProj();drawWindup();
@@ -136,7 +148,10 @@ const SBView=(function(){
       else if(e.type==='fizzle')floatText(a,'thiếu chân nguyên',0xffb070,.7);
       else if(e.type==='heal')floatText(a,'+'+e.amount,0x8fe0b0,1);
       else if(e.type==='escape'){floatText(a,'thoát thân',0xbfe8ff,.75);burst(a.x,a.z,0xd8f4ff,22,140)}
-      else if(e.type==='empower'){floatText(a,'Sương Yêu',0xd8f4ff,.85);burst(a.x,a.z,0xe8fbff,14,60)}
+      else if(e.type==='transform'){floatText(a,a.sk[e.skill]?.n||'Biến thân',0x9fe08a,.85);burst(a.x,a.z,0x6fbf5a,14,60)}
+      else if(e.type==='transformEnd')floatText(a,'trở lại thân người',0xa8c89a,.7);
+      else if(e.type==='phase'){floatText(a,e.n||'Chuyển pha',0xffe14a,.85);burst(a.x,a.z,0xffe14a,16,70)}
+      else if(e.type==='empower'){floatText(a,a.sk[e.skill]?.n||'Tăng công',0xd8f4ff,.85);burst(a.x,a.z,0xe8fbff,14,60)}
       else if(e.type==='empowerEnd')floatText(a,'khớp đông cứng',0xa8c8e0,.7);
       else if(e.type==='detonate'){floatText(a,'Tự nổ tay phải!',0xd8f4ff,1.1);burst(a.x,a.z,0xd8f4ff,40,220);burst(a.x,a.z,0xffffff,18,120)}
       else if(e.type==='shellEnd')floatText(a,'phá vỏ băng',0xbfe8ff,.75);
@@ -152,9 +167,12 @@ const SBView=(function(){
   }
   // Điểm phát: dùng hand của clip nếu đã có; fallback thủ công, không đo alpha bbox.
   function hand(a){
-    const k=depthK(a.z)*SCALE,clip=a.act?clipOf(a,a.act.s):null,h=clip&&clip.hand;
-    const [px,py]=kp[a.id].man.pivot_px;
-    return {x:sx(a.x)+(h?h[0]-px:38)*k*a.face,y:sy(a.z)+(h?h[1]-py:-78)*k};
+    const k=depthK(a.z)*SCALE,[clip,index]=pick(a),man=kp[a.id].man;
+    const name=a.act?.s.anchor||'hand',v=KPSprite.anchor(man,clip,index,name);
+    if(v)return {x:sx(a.x)+v[0]*k*a.face,y:sy(a.z)+v[1]*k};
+    // Legacy fallback is for v1 only; v2 missing anchors must not guess limb tips.
+    const h=clip.hand,[px,py]=man.pivot_px,[dx,dy]=KPSprite.offset(man,clip,index);
+    return {x:sx(a.x)+((h?h[0]-px:38)+dx)*k*a.face,y:sy(a.z)+((h?h[1]-py:-78)+dy)*k};
   }
   function drawWindup(){
     const g=L.windup;g.clear();
@@ -221,6 +239,11 @@ const SBView=(function(){
         const fl=Math.sin(B.t*22)*6;for(let i=3;i>0;i--){g.beginFill(0x9fd6ee,.25/i);g.drawCircle(Math.round(x-f*i*10),Math.round(y),5);g.endFill()}
         g.beginFill(0x4f9fd0,1);g.drawEllipse(x,y,11,7);g.endFill();g.beginFill(0x8fd8ff,1);g.drawPolygon([x-f*4,y-2,x+f*2,y-14-fl,x+f*6,y-2]);g.endFill();
         g.beginFill(0xe8fbff,1);g.drawPolygon([x+f*10,y-3,x+f*16,y,x+f*10,y+2]);g.endFill();continue}
+      // Đạn roster khác nguyệt nhận: vẽ theo hệ (fx). Nhiều mũi (count) vẽ thành gai mảnh.
+      const FXC={thunder:0x7fd0ff,wood:0x6fbf5a,ice:0xbfe8ff,blood:0xc84040,fire:0xff8a3a};
+      if(FXC[p.s.fx]){const c=FXC[p.s.fx],a=Math.atan2(p.vz,p.vx),len=p.s.count>1?14:10;
+        g.lineStyle(p.s.count>1?3:6,c,1);g.moveTo(x-Math.cos(a)*len*1.4,y-Math.sin(a)*len*.6);g.lineTo(x+Math.cos(a)*len,y+Math.sin(a)*len*.5);g.lineStyle(0);
+        g.beginFill(0xffffff,.8);g.drawRect(Math.round(x+Math.cos(a)*len)-1,Math.round(y+Math.sin(a)*len*.5)-1,3,3);g.endFill();continue}
       for(let i=3;i>0;i--){g.beginFill(0x71adc9,.32/i);g.drawRect(Math.round(x-f*i*12)-4,Math.round(y)-3,8,6);g.endFill()}
       const poly=[-10,-18,0,-16,8,-10,12,-4,12,4,8,10,0,16,-10,18,-2,8,2,2,2,-2,-2,-8];
       g.beginFill(0x639fbe,1);g.drawPolygon(poly.map((v,i)=>i%2?Math.round(y+v):Math.round(x+v*f)));g.endFill();

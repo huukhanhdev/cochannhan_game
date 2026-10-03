@@ -1,0 +1,121 @@
+{
+ "id": "viem_dot",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "viem_dot_atk_v1.png",
+   "scale": 0.1527,
+   "hand": [
+    228,
+    140
+   ]
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "viem_dot_guard_v1.png",
+   "scale": 0.1297
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "viem_dot_hit_v1.png",
+   "scale": 0.1315
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "viem_dot_idle_v1.png",
+   "scale": 0.0996
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "viem_dot_ko_v1.png",
+   "scale": 0.1509
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "viem_dot_move_v1.png",
+   "scale": 0.1207
+  },
+  "sk_firehand": {
+   "sheet": "sk_firehand.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "viem_dot_sk_firehand_v1.png",
+   "scale": 0.1587,
+   "hand": [
+    213,
+    137
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "viem_dot_win_v1.png",
+   "scale": 0.0983
+  }
+ },
+ "reach_px": 85
+}

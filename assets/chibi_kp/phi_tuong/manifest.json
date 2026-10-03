@@ -1,0 +1,95 @@
+{
+ "id": "phi_tuong",
+ "frame_size": [
+  368,
+  208
+ ],
+ "pivot_px": [
+  184,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "phi_tuong_atk_v1.png",
+   "scale": 0.2128,
+   "hand": [
+    316,
+    112
+   ]
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "phi_tuong_idle_v1.png",
+   "scale": 0.1863
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "phi_tuong_ko_v1.png",
+   "scale": 0.2116
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "phi_tuong_move_v1.png",
+   "scale": 0.1981
+  },
+  "sk_charge": {
+   "sheet": "sk_charge.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "phi_tuong_sk_charge_v1.png",
+   "scale": 0.194,
+   "hand": [
+    194,
+    143
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "phi_tuong_win_v1.png",
+   "scale": 0.1379
+  }
+ },
+ "reach_px": 176
+}

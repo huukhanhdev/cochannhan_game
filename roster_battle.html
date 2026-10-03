@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roster đấu thử</title>
+<style>
+  :root{--bg:#14171d;--panel:#1f242d;--line:#343b48;--ink:#ece6d6;--mute:#98a0ad;--gold:#f0c46a;--ok:#5fae8a;--warn:#ffb070;--off:#6b7280}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,"Be Vietnam Pro",sans-serif}
+  main{max-width:1180px;margin:0 auto;padding:14px 16px 32px}
+  h1{font-size:18px;margin:0 0 4px}
+  .note{color:var(--mute);font-size:13px;margin:0 0 12px}
+  .filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .filters button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font:inherit;cursor:pointer}
+  .filters button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;grid-template-columns:96px 1fr;gap:10px}
+  .card canvas{width:96px;height:96px;image-rendering:pixelated;background:#11141a;border-radius:6px}
+  .card h2{font-size:14px;margin:0}
+  .meta{color:var(--mute);font-size:12px}
+  .badge{display:inline-block;font-size:11px;border-radius:4px;padding:0 6px;margin-top:3px;border:1px solid}
+  .b-kit{color:var(--ok);border-color:var(--ok)} .b-demo,.b-preset{color:var(--gold);border-color:var(--gold)}
+  .b-cho_dossier{color:var(--warn);border-color:var(--warn)} .b-khong_dau,.b-cho_quyet{color:var(--off);border-color:var(--off)}
+  .seen{font-size:12px;margin-top:4px}
+  .prof{grid-column:1/-1;border-top:1px solid var(--line);padding-top:6px;font-size:12px}
+  .prof ul{margin:4px 0;padding-left:16px}
+  .prof li{margin:2px 0} .prof .src{color:var(--mute)}
+  .acts{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+  .acts a{background:#2a313c;color:var(--ink);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px}
+  .acts a:hover{border-color:var(--gold)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Roster đấu thử</h1>
+  <p class="note">Mỗi nhân vật đấu được khi có profile (bộ chiêu theo mốc trận, đủ nguồn chương). Hình đang dùng: <b id="set"></b>.
+    Danh sách “đã đọc” chỉ là điểm xuất phát, chưa thành chiêu. Kế hoạch: <code>docs/undone/KE_HOACH_DUA_ROSTER_VAO_BATTLE.md</code>.
+    <a href="battle_sandbox.html" style="color:var(--gold)">Mở sandbox</a></p>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</main>
+<script src="js/data.js"></script>
+<script src="js/sandbox/kits.js"></script>
+<script src="js/sandbox/sprites.js"></script>
+<script src="js/sandbox/roster.js"></script>
+<script src="js/sandbox/gu_skills.js"></script>
+<script>
+(function(){
+  const ST={kit:'Đấu được',demo:'Demo',preset:'Preset sandbox',cho_dossier:'Chờ dossier',khong_dau:'Không đấu',cho_quyet:'Chờ người dùng quyết'};
+  const BATCH=['Khác','Đợt 1 · Q1','Đợt 2 · boss Q1','Đợt 3 · Q2 thương đội','Đợt 4 · Q2 lực đạo'];
+  const R=SB_ROSTER,chars=Object.entries(R.characters);
+  document.getElementById('set').textContent=SB_SPRITES.active+' ('+SB_SPRITES.sets[SB_SPRITES.active].note+')';
+  let filter='all';
+  const filters=[['all','Tất cả'],['kit','Đấu được'],['cho_dossier','Chờ dossier'],['other','Khác']];
+  const fEl=document.getElementById('filters');
+  for(const [k,l] of filters){const b=document.createElement('button');b.textContent=l;b.onclick=()=>{filter=k;draw()};b.dataset.k=k;fEl.appendChild(b)}
+  const esc=t=>String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  // Khung đầu của idle theo manifest (bộ hình đang chọn trong SB_SPRITES)
+  function thumb(cv,visual){
+    const {dir}=SB_SPRITES.resolve(visual),ctx=cv.getContext('2d');cv.width=cv.height=96;
+    fetch(dir+'manifest.json').then(r=>r.ok?r.json():null).then(m=>{
+      if(!m||!m.actions?.idle)return;const [fw,fh]=m.frame_size,img=new Image();
+      // Trạng thái asset: clip chung còn thiếu (battle dùng dự phòng: idle / ngã mờ cho ko).
+      const need=['move','hit','ko'].filter(c=>!m.actions[c]);
+      if(need.length){const n=document.createElement('div');n.className='meta';n.style.color='var(--warn)';n.textContent='Thiếu clip: '+need.join(', ')+' (đang dùng dự phòng)';cv.parentNode.querySelector('div').appendChild(n)}
+      img.onload=()=>{const k=Math.min(96/fw,96/fh)*1.25,w=fw*k,h=fh*k;ctx.imageSmoothingEnabled=false;
+        ctx.drawImage(img,0,0,fw,fh,(96-w)/2,96-h+6,w,h)};
+      img.src=dir+m.actions.idle.sheet;
+    }).catch(()=>{});
+  }
+  function draw(){
+    [...fEl.children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.k===filter)));
+    const g=document.getElementById('grid');g.innerHTML='';
+    const list=chars.filter(([,c])=>filter==='all'||(filter==='other'?!['kit','cho_dossier'].includes(c.st):c.st===filter))
+      .sort((a,b)=>(a[1].st==="cho_quyet"||a[1].st==="khong_dau")-(b[1].st==="cho_quyet"||b[1].st==="khong_dau")||(a[1].batch??9)-(b[1].batch??9));
+    for(const [id,c] of list){
+      const el=document.createElement('div');el.className='card';
+      const profs=c.profiles.map(pid=>{const P=R.PROFILES[pid],k=R.resolve(pid);
+        const vs=P.vs||'bnb_q1';
+        const skills=[k.atk,...k.skills].map(s=>`<li><b>${esc(s.n)}</b> · ${esc(s.kind)}${s.tags?' · '+esc(s.tags.join(', ')):''} <span class="src">— ${esc(s.src)}</span></li>`).join('');
+        return `<div class="prof"><b>${esc(P.label)}</b> <span class="badge b-${esc(P.status)}">${esc(ST[P.status]||P.status)}</span>
+          <span class="meta">ch.${esc(P.ch)} · ${k.hp} khí huyết${k.ess?' · '+k.ess+' chân nguyên':''} · hình: ${esc(k.spriteSet)}</span>
+          ${P.note?`<div class="meta">${esc(P.note)}</div>`:''}<ul>${skills}</ul>
+          <div class="acts">${pid==='pn_demo'?'':`<a href="battle_sandbox.html?p=pn_demo&e=${pid}">Đấu thử (PN demo)</a>
+          <a href="battle_sandbox.html?p=${P.vs||'pn_demo'}&e=${pid}&mode=auto">Máy đấu máy${P.vs?' · cặp nguyên tác':''}</a>`}
+          <a href="battle_sandbox.html?p=${pid}&e=${pid==='pn_demo'?'bnb_q1':vs}">Chơi nhân vật này</a></div></div>`}).join('');
+      el.innerHTML=`<canvas aria-label="${esc(c.n)}"></canvas><div><h2>${esc(c.n)}</h2>
+        <div class="meta">${esc(BATCH[c.batch]||'')} · ch.${esc(c.ch)} · <code>${esc(id)}</code></div>
+        <span class="badge b-${esc(c.st)}">${esc(ST[c.st]||c.st)}</span>
+        <div class="seen"><span class="meta">Đã đọc:</span> ${esc(c.seen)}</div></div>${profs}`;
+      g.appendChild(el);thumb(el.querySelector('canvas'),c.visual);
+    }
+  }
+  draw();
+})();
+</script>
+</body>
+</html>

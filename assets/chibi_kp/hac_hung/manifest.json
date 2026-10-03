@@ -1,0 +1,107 @@
+{
+ "id": "hac_hung",
+ "frame_size": [
+  326,
+  243
+ ],
+ "pivot_px": [
+  163,
+  233
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "hac_hung_atk_v1.png",
+   "scale": 0.214,
+   "hand": [
+    298,
+    132
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "hac_hung_hit_v1.png",
+   "scale": 0.1868
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "hac_hung_idle_v1.png",
+   "scale": 0.1756
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "hac_hung_ko_v1.png",
+   "scale": 0.1995
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "hac_hung_move_v1.png",
+   "scale": 0.2082
+  },
+  "sk_rage": {
+   "sheet": "sk_rage.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "hac_hung_sk_rage_v1.png",
+   "scale": 0.2037,
+   "hand": [
+    251,
+    131
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "hac_hung_win_v1.png",
+   "scale": 0.1562
+  }
+ },
+ "reach_px": 155
+}

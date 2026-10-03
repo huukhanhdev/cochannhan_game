@@ -1,0 +1,108 @@
+{
+ "id": "bach_chien_liep",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bach_chien_liep_atk_v1.png",
+   "scale": 0.1608,
+   "hand": [
+    226,
+    132
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_chien_liep_hit_v1.png",
+   "scale": 0.1432
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "bach_chien_liep_idle_v1.png",
+   "scale": 0.1519
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_chien_liep_ko_v1.png",
+   "scale": 0.1488
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_chien_liep_move_v1.png",
+   "scale": 0.1238
+  },
+  "sk_charge": {
+   "sheet": "sk_charge.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "bach_chien_liep_sk_charge_v1.png",
+   "scale": 0.131,
+   "hand": [
+    221,
+    136
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "bach_chien_liep_win_v1.png",
+   "scale": 0.097
+  }
+ },
+ "reach_px": 83
+}

@@ -1,0 +1,39 @@
+{
+ "id": "hien_vien_than_ke",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "hien_vien_than_ke_idle_v1.png",
+   "scale": 0.095
+  },
+  "warn": {
+   "sheet": "warn.png",
+   "frames": 2,
+   "durations_ms": [
+    300,
+    600
+   ],
+   "loop": false,
+   "release": null,
+   "source": "hien_vien_than_ke_warn_v1.png",
+   "scale": 0.0989
+  }
+ },
+ "reach_px": 56
+}

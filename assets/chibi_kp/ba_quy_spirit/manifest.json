@@ -1,0 +1,39 @@
+{
+ "id": "ba_quy_spirit",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "ba_quy_spirit_idle_v1.png",
+   "scale": 0.1184
+  },
+  "warn": {
+   "sheet": "warn.png",
+   "frames": 2,
+   "durations_ms": [
+    300,
+    600
+   ],
+   "loop": false,
+   "release": null,
+   "source": "ba_quy_spirit_warn_v1.png",
+   "scale": 0.1235
+  }
+ },
+ "reach_px": 77
+}

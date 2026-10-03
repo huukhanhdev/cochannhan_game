@@ -1,0 +1,108 @@
+{
+ "id": "thiet_huyet_lanh",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "thiet_huyet_lanh_atk_v1.png",
+   "scale": 0.1582,
+   "hand": [
+    262,
+    125
+   ]
+  },
+  "guard": {
+   "sheet": "guard.png",
+   "frames": 2,
+   "durations_ms": [
+    160,
+    400
+   ],
+   "loop": false,
+   "release": null,
+   "source": "thiet_huyet_lanh_guard_v1.png",
+   "scale": 0.1341
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "thiet_huyet_lanh_hit_v1.png",
+   "scale": 0.1318
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "thiet_huyet_lanh_idle_v1.png",
+   "scale": 0.1391
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "thiet_huyet_lanh_move_v1.png",
+   "scale": 0.1274
+  },
+  "sk_chain": {
+   "sheet": "sk_chain.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "thiet_huyet_lanh_sk_chain_v1.png",
+   "scale": 0.161,
+   "hand": [
+    230,
+    123
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "thiet_huyet_lanh_win_v1.png",
+   "scale": 0.0996
+  }
+ },
+ "reach_px": 119
+}

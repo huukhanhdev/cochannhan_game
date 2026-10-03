@@ -1,0 +1,108 @@
+{
+ "id": "huyet_thu_ma_tu",
+ "frame_size": [
+  288,
+  208
+ ],
+ "pivot_px": [
+  144,
+  198
+ ],
+ "facing": "right",
+ "actions": {
+  "atk": {
+   "sheet": "atk.png",
+   "frames": 3,
+   "durations_ms": [
+    220,
+    120,
+    320
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "huyet_thu_ma_tu_atk_v1.png",
+   "scale": 0.1476,
+   "hand": [
+    217,
+    136
+   ]
+  },
+  "hit": {
+   "sheet": "hit.png",
+   "frames": 2,
+   "durations_ms": [
+    140,
+    300
+   ],
+   "loop": false,
+   "release": null,
+   "source": "huyet_thu_ma_tu_hit_v1.png",
+   "scale": 0.129
+  },
+  "idle": {
+   "sheet": "idle.png",
+   "frames": 2,
+   "durations_ms": [
+    700,
+    700
+   ],
+   "loop": true,
+   "release": null,
+   "source": "huyet_thu_ma_tu_idle_v1.png",
+   "scale": 0.093
+  },
+  "ko": {
+   "sheet": "ko.png",
+   "frames": 3,
+   "durations_ms": [
+    200,
+    300,
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "huyet_thu_ma_tu_ko_v1.png",
+   "scale": 0.144
+  },
+  "move": {
+   "sheet": "move.png",
+   "frames": 2,
+   "durations_ms": [
+    200,
+    260
+   ],
+   "loop": false,
+   "release": null,
+   "source": "huyet_thu_ma_tu_move_v1.png",
+   "scale": 0.1146
+  },
+  "sk_drain": {
+   "sheet": "sk_drain.png",
+   "frames": 2,
+   "durations_ms": [
+    240,
+    360
+   ],
+   "loop": false,
+   "release": 1,
+   "source": "huyet_thu_ma_tu_sk_drain_v1.png",
+   "scale": 0.1239,
+   "hand": [
+    179,
+    142
+   ]
+  },
+  "win": {
+   "sheet": "win.png",
+   "frames": 1,
+   "durations_ms": [
+    900
+   ],
+   "loop": false,
+   "release": null,
+   "source": "huyet_thu_ma_tu_win_v1.png",
+   "scale": 0.0879
+  }
+ },
+ "reach_px": 92
+}

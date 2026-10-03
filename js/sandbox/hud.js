@@ -3,7 +3,7 @@
 // TÍCH HỢP: thanh kỹ năng thay #skillbar của battle.js khi fightMode==='e'; thanh máu dùng lại UI cũ.
 const SBHud=(function(){
   let B,el={};
-  const KEYLBL=k=>k===' '?'Space':k.toUpperCase();
+  const KEYLBL=k=>k==null?'·':k===' '?'Space':k.toUpperCase();   // · = chiêu chưa gán phím, bấm bằng ô
   function mount(root,battle){
     B=battle;const p=B.actors[B.ids.player];
     root.innerHTML=`
@@ -13,7 +13,14 @@ const SBHud=(function(){
       <div class="controls"><button type="button" class="stop">Dừng</button><button type="button" class="cancel-aim" hidden>Hủy nhắm</button></div>
       <div class="desc"></div>`;
     el={sbar:root.querySelector('.sbar'),desc:root.querySelector('.desc'),bars:{}};
-    for(const id of [B.ids.player,B.ids.enemy])el.bars[id]=root.querySelector('.bar-box.'+(id===B.ids.player?'pn':'bnb'));
+    for(const id of [B.ids.player,B.ids.enemy]){el.bars[id]=root.querySelector('.bar-box.'+(id===B.ids.player?'pn':'bnb'));
+      if(!B.actors[id].maxEss)el.bars[id].querySelector('.bar.ess').hidden=true}   // thú: không có chân nguyên
+    // Dòng gợi ý dựng theo kit người chơi và tên đối thủ (roster nhiều nhân vật, không viết cứng PN/BNB).
+    const gu=p.kit.skills.filter(s=>s.kind!=='dash'&&s.kind!=='heal'&&s.key!=null).map(s=>KEYLBL(s.key)),dash=p.kit.skills.find(s=>s.kind==='dash'),
+      item=p.kit.skills.find(s=>s.kind==='heal');
+    el.hint=['Chuột phải hoặc phím mũi tên: đi','chuột vào '+B.actors[B.ids.enemy].kit.n+': đánh',
+      gu.length?gu.join(' ')+': chiêu (nhắm theo con trỏ) · Phát cổ: các cổ sẵn sàng khác hồi 2s':'',dash?KEYLBL(dash.key)+': lướt':'',
+      item?KEYLBL(item.key)+': '+item.n:'','S: dừng'].filter(Boolean).join(' · ');
     const cells=[Object.assign({},p.kit.atk,{key:'chuột'}),...p.kit.skills];
     root.querySelector('.stop').onclick=()=>SBInput.stop();
     root.querySelector('.cancel-aim').onclick=()=>SBInput.cancelAim();
@@ -34,9 +41,9 @@ const SBHud=(function(){
   }
   function update(){
     for(const id of [B.ids.player,B.ids.enemy]){const a=B.actors[id],b=el.bars[id];
-      b.querySelector('.hp i').style.width=(a.hp/a.maxHp*100)+'%';b.querySelector('.hp span').textContent=Math.ceil(a.hp)+' / '+a.maxHp;
+      b.querySelector('.hp i').style.width=(a.hp/a.maxHp*100)+'%';b.querySelector('.hp span').textContent=Math.ceil(a.hp)+' / '+Math.round(a.maxHp);
       b.querySelector('.ess i').style.width=(a.ess/a.maxEss*100)+'%';b.querySelector('.ess span').textContent=Math.floor(a.ess)+' chân nguyên';
-      b.querySelector('.buff').textContent=[a.empower?'Sương Yêu '+Math.max(0,a.empower.until-B.t).toFixed(1)+'s':'',a.state==='shell'?'trong vỏ băng':'',a.oneArm?'cụt tay phải':'',a.shield?(a.shield.n||a.sk[a.shield.id]?.n||a.shield.id)+' '+Math.max(0,a.shield.until-B.t).toFixed(1)+'s'+(a.shield.upkeepPerSecond?' · −'+a.shield.upkeepPerSecond+' c.n/s':''):'',a.bleed?'chảy máu':'',a.slowUntil>B.t?'bị chậm':''].filter(Boolean).join(' · ')}
+      b.querySelector('.buff').textContent=[a.empower?(a.sk[a.empower.id]?.n||'Tăng công')+' '+Math.max(0,a.empower.until-B.t).toFixed(1)+'s':'',a.state==='shell'?'trong vỏ băng':'',a.transform?(a.sk[a.transform.id]?.n||'Biến thân')+' '+Math.max(0,a.transform.until-B.t).toFixed(1)+'s':'',a.enrage?'cuồng nộ':'',a.oneArm?'cụt tay phải':'',a.shield?(a.shield.n||a.sk[a.shield.id]?.n||a.shield.id)+' '+Math.max(0,a.shield.until-B.t).toFixed(1)+'s'+(a.shield.upkeepPerSecond?' · −'+a.shield.upkeepPerSecond+' c.n/s':''):'',a.bleed?'chảy máu':'',a.slowUntil>B.t?'bị chậm':''].filter(Boolean).join(' · ')}
     const p=B.actors[B.ids.player];
     [...el.sbar.children].forEach(c=>{
       const s=p.sk[c.dataset.id],cd=p.cd[s.id]||0,lack=(s.cost||0)>p.ess,out=s.uses&&!(p.uses[s.id]>0);
@@ -51,7 +58,7 @@ const SBHud=(function(){
     const h=SBInput.hover,m=SBInput.msg;
     if(SBInput.selected){el.desc.textContent=(m?m+' · ':'')+SBInput.selected.n+': chạm vào sân để nhắm · trận vẫn chạy';return}
     el.desc.innerHTML=m?`<span class="warn">${m}</span>`:h?`<b>${h.n}</b> — ${h.d||''}${h.startup!=null?` · lấy đà ${h.startup}s`:''}${h.cd?` · hồi ${h.cd}s`:''}${h.cost?` · ${h.cost} chân nguyên`:''}<span class="src"> · ${h.src||''}</span>`:
-      '<span class="hint">Chuột phải hoặc phím mũi tên: đi · chuột vào Bạch Ngưng Băng: đánh · Q W E R D: cổ (nhắm theo con trỏ) · Phát cổ: các cổ sẵn sàng khác hồi 2s · Space: lướt · 1: Sinh Mệnh Diệp · S: dừng</span>';
+      `<span class="hint">${el.hint}</span>`;
   }
   return {mount,update};
 })();

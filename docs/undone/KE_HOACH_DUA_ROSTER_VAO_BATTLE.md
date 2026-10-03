@@ -33,7 +33,10 @@ Asset cũ còn sai truyện ở vài nhân vật (Trần Thúy Hoa da xanh, Ph�
 | Cỡ nhân vật | Bản nhỏ 0,74 của Blue đang thử (`?fig=small`). **Chưa có** tỉ lệ tương đối từng nhân vật (`size`) |
 | Ô phím PN | Sửa: cổ dư phím vẫn có chiêu (bấm ô), cảnh báo tách "chưa có cơ chế" / "chưa gán phím" |
 | Thiếu clip ko/hit | Dự phòng: ko → ngã nghiêng + mờ; trang roster ghi "thiếu clip" |
-| AI theo phong cách | **Chưa**: mới có `tagged()` + `ai.stand`. Policy brawler/zoner/skirmisher/beast chờ làm (§2.3) |
+| AI theo phong cách | **Có 2 kiểu** (03/10): `charge` (Heo: canh thẳng hàng → lao theo đợt → lùi; trọng thương thì bỏ lùi) và `midrange` (Phương Chính: giữ tầm trung, bắn ở ≥120, bật Ngọc Bì trước khi bị áp sát). PN demo và GU_SKILL có tags nên PN do máy điều khiển biết dùng cổ. Đo: `tools/sandbox_style_bench.cjs`, báo cáo `tools/reports/sandbox_ai_style_2026_10_03.jsonl` (Heo đánh tay 6,1→2,4 lần/trận; PC Nguyệt Quang 2,1→6,5). Kiểu khác (brawler/zoner/skirmisher/pack) làm theo đợt |
+| Nhân vật thiết kế game | Xong: `huyet_thu_game` (Tam chuyển hút máu; cổ trị liệu làm đòn hút trượt), `tuu_khoi_game` (tái tụ), `huyet_khoi_game` (tái tụ, ngừng khi chảy máu). Hai khôi tạm dùng chung sprite gộp cũ (alias) |
+| Khóa chung | `?lock=1` để thử; mặc định vẫn 2s. Bench (`tools/reports/sandbox_lock_2s_vs_1s_2026_10_03.json`): 1s làm lối **bấm dồn** thắng 43% (2s: 7%), lối né không đổi (~35–38%). Chờ người dùng chơi thử chốt |
+| Nguyên thạch | Xong: phím 2, +5 chân nguyên/viên trong 2,5s, đi lại được, trúng đòn thì đứt, AI ép sát khi thấy hấp thu, **tối đa 3 viên/trận** (người dùng chốt sau bench `tools/reports/sandbox_nguyen_thach_2026_10_03.md`). Campaign cần trừ lại `S.stones` theo số viên đã dùng khi kết trận (nối ở bước campaign) |
 | Luật cảnh (`rules.guDisabled`…) | Chưa: làm khi Hàn Bất Lưu vào battle |
 | Asset | Base v04 = ảnh VS + nguồn danh tính; sprite trong trận giữ v01, gen lại bản lỗi (`KE_HOACH_VS_PORTRAIT_VA_SUA_SPRITE.md`) |
 | Đợt 2–4 | Chưa: Blue đọc truyện và lập dossier, Orange review |

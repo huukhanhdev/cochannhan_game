@@ -52,7 +52,7 @@ const SBHud=(function(){
       c.classList.toggle('busy',p.act&&p.act.s.id===s.id);
       c.querySelector('.sub').textContent=out?'hết':lack?'thiếu c.nguyên':s.uses?'còn '+p.uses[s.id]:s.cost?s.cost+' c.n':'';
       c.querySelector('.cdv').textContent=cd>0?cd.toFixed(1):'';
-      c.style.setProperty('--cd',Math.min(1,cd/Math.max(s.cd||0,SBSim.GU_LOCK)));
+      c.style.setProperty("--cd",Math.min(1,cd/Math.max(s.cd||0,B.guLock??SBSim.GU_LOCK)));
     });
     el.sbar.parentNode.querySelector('.cancel-aim').hidden=!SBInput.selected;
     const h=SBInput.hover,m=SBInput.msg;

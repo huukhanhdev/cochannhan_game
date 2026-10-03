@@ -7,6 +7,7 @@ if(!Number.isInteger(N)||N<1||!SBAI.LEVEL[level]||!['move','spam','stand','compa
 SBAI.level=level;
 const K=JSON.parse(JSON.stringify(SB_KITS)),dk=SBAI.LEVEL[level].dmgK;
 if(process.argv[8]==='blade3')K.bnb.atk.cost=3;
+{const ns=K.pn.skills.find(s=>s.id==='nguyenthach');if(ns){if(process.env.SB_STONE_USES)ns.uses=+process.env.SB_STONE_USES;if(process.env.SB_STONE_DUR)ns.dur=+process.env.SB_STONE_DUR}}
 [K.bnb.atk,...K.bnb.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
 function rng(seed){let s=seed>>>0;return()=>{s=(s+0x6D2B79F5)|0;let t=Math.imul(s^(s>>>15),1|s);t^=t+Math.imul(t^(t>>>7),61|t);return((t^(t>>>14))>>>0)/4294967296}}
 // Hồ sơ bot người chơi: expert = phản xạ 0,15s (nhanh hơn người, mức trần); human = phản xạ 0,3s, nghĩ mỗi 0,15s.
@@ -39,6 +40,8 @@ function bot(B,style){
   // Các bot không liên tục đè bộ đệm và không liên tục đè bộ đệm lúc đang bận.
   if(p.state!=='idle'&&p.state!=='move')return;
   if(p.hp<p.maxHp*.45&&(style!=='move'||d>200)&&tryS('leaf'))return;
+  // SB_STONES=1: người chơi hấp thu nguyên thạch khi cạn và đang ở xa (đo ảnh hưởng tới số trận hết giờ).
+  if(process.env.SB_STONES&&p.ess<p.maxEss*.3&&d>220&&!p.absorb)SBSim.issue(B,'pn',{skill:'nguyenthach'});
   if(p.hp<p.maxHp*.6&&!p.shield&&(tryS('thienbong')||tryS('bachngoc')))return;
   if(style==='move'){
     if(d<170&&!b.act){
@@ -62,7 +65,7 @@ function run(style){
   const stats={style,wins:0,losses:0,timeouts:0,seconds:0,hp:0,moving:0,events:{},pnDamage:0,bnbDamage:0,damageBySkill:{},cancelBySkill:{},cancelByPhase:{},lowEss:{pn:0,bnb:0},minEss:{pn:0,bnb:0}};
   for(let n=0;n<N;n++){
     const arena=process.argv[6]==='wide'?SBSim.ARENAS.wide:undefined;
-    const B=SBSim.create(K,{rng:rng(seed+n),arena});B.aiMode=process.argv[7]==='legacy'?'legacy':'pressure';let think=0;const minEss={pn:B.actors.pn.ess,bnb:B.actors.bnb.ess};
+    const B=SBSim.create(K,{rng:rng(seed+n),arena,guLock:process.env.SB_LOCK!=null?+process.env.SB_LOCK:undefined});B.aiMode=process.argv[7]==='legacy'?'legacy':'pressure';let think=0;const minEss={pn:B.actors.pn.ess,bnb:B.actors.bnb.ess};
     for(let i=0;!B.over&&i<60*120;i++){
       SBSim.step(B);think-=SBSim.DT;
       if(think<=0){think=THINK;bot(B,style)}

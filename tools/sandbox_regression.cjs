@@ -375,7 +375,7 @@ console.log('Đấm tay nhẹ không làm khựng: đạt.');
       // Nguồn: có chương (VN ch.N / chN) hoặc ghi rõ là game / mô tả data.js (chờ đối chiếu chương).
       assert.ok(/ch\.?\s?\d|^game|data\.js/.test(s.src),id+'.'+s.id+': src không có chương hoặc nhãn game: '+s.src);
       const clips=[].concat(s.clip||[]);assert.ok(clips.some(c=>man.actions[c])||man.actions.idle,id+'.'+s.id+': không có clip nào');
-      assert.ok(['melee','proj','aoe','grab','buff','empower','dash','heal','escape','rush','transform'].includes(s.kind),id+'.'+s.id+': kind lạ '+s.kind);
+      assert.ok(['melee','proj','aoe','grab','buff','empower','dash','heal','escape','rush','transform','absorb'].includes(s.kind),id+'.'+s.id+': kind lạ '+s.kind);
     }
     const seeds=[1,2,3,4,5];let done=0;
     for(const sd of seeds){
@@ -512,3 +512,73 @@ console.log('PN từ save: chỉ cổ đang có, hợp luyện/tiêu hao thì m�
   }
 }
 console.log('Bước D (đợt 1): biến thân Mộc Mị, hồi máu ký sinh, pha tru lên một lần, đạn nhiều mũi: đạt.');
+
+// ── Nhân vật thiết kế game: hút máu (cổ trị liệu chặn), tái tụ ngừng khi chảy máu ──
+{
+  const {SB_ROSTER,SB_GU}=require('./sandbox_sim.cjs');
+  const mk=(e,pk)=>{const M=SB_ROSTER.matchup(pk||'pn_demo',e),B=SBSim.create(M.kits,{ids:M.ids,arena:SBSim.ARENAS.wide});B.actors.p2.ai=false;return B};
+  {
+    const B=mk('huyet_thu_game'),m=B.actors.p2,p=B.actors.p1;m.hp=200;p.x=m.x-80;p.z=m.z;m.face=-1;
+    SBSim.issue(B,'p2',{skill:'atk'});advance(B,40);
+    const heal=B.events.find(e=>e.type==='heal'&&e.drain);assert.ok(heal&&heal.amount===Math.round(m.sk.atk.dmg*m.sk.atk.drain));
+  }
+  {
+    const S={chuyen:1,giai:0,tuchat:44,herbs:0,gu:[{k:'trilieu',h:0}]},k=SB_GU.pnKitFromSave(S,Object.assign({GU:global.GU},SB_GU.campaignMax(S,global.GU)));
+    assert.equal(k.antiDrain,true);
+    const M=SB_ROSTER.matchup(SB_ROSTER.dress(k,'phuong_nguyen','pn_save'),'huyet_thu_game'),B=SBSim.create(M.kits,{ids:M.ids});
+    const m=B.actors.p2,p=B.actors.p1;m.ai=false;m.hp=200;p.x=m.x-80;p.z=m.z;m.face=-1;
+    SBSim.issue(B,'p2',{skill:'atk'});advance(B,40);
+    assert.ok(!B.events.some(e=>e.type==='heal'&&e.drain));assert.equal(B.events.filter(e=>e.type==='drainFail').length,1);assert.equal(m.hp,200);
+  }
+  {
+    const B=mk('huyet_khoi_game'),h=B.actors.p2;h.hp=100;advance(B,60);assert.ok(h.hp>103);
+    const before=h.hp;h.bleed={dps:0,until:B.t+5,acc:0};advance(B,60);assert.equal(h.hp,before,'chảy máu thì không tái tụ');
+  }
+}
+console.log('Thiết kế game: hút máu, cổ trị liệu chặn hút, Huyết Khôi chảy máu thì ngừng tái tụ: đạt.');
+
+// ── Nguyên thạch trong trận: chậm, đi lại được, trúng đòn thì đứt, không phải action/không khóa chung ──
+{
+  const B=battle(),p=B.actors.pn,b=B.actors.bnb;b.x=p.x+600;p.ess=40;
+  const s=p.sk.nguyenthach,u0=p.uses.nguyenthach;
+  assert.equal(SBSim.issue(B,'pn',{skill:'move',x:p.x-200,z:p.z}).ok,true);advance(B,5);
+  assert.equal(SBSim.issue(B,'pn',{skill:'nguyenthach'}).ok,true);       // đang đi vẫn hấp thu được
+  assert.equal(p.state,'move');assert.equal(p.uses.nguyenthach,u0-1);assert.ok(!(p.cd.nguyet>0),'không khóa chung');
+  assert.equal(SBSim.issue(B,'pn',{skill:'nguyenthach'}).ok,false);      // một viên mỗi lần
+  advance(B,60);assert.ok(p.ess>41.9&&p.ess<42.1,'2 chân nguyên/giây');
+  assert.equal(SBSim.issue(B,'pn',{skill:'nguyet',x:b.x,z:b.z}).ok,true); // ra chiêu không làm đứt
+  advance(B,Math.ceil(1.6*60));
+  const end=B.events.find(e=>e.type==='absorbEnd');assert.ok(end&&Math.abs(end.amount-s.amt)<.05);
+  // trúng đòn thì đứt, phần chưa hấp thu mất
+  const C=battle(),q=C.actors.pn,c=C.actors.bnb;q.ess=10;q.z=c.z=120;c.x=q.x+90;
+  SBSim.issue(C,'pn',{skill:'nguyenthach'});advance(C,30);SBSim.issue(C,'bnb',{skill:'atk'});advance(C,Math.ceil(c.sk.atk.startup*60)+2);
+  const br=C.events.find(e=>e.type==='absorbBreak');assert.ok(br&&br.amount<s.amt);assert.equal(q.absorb,null);
+  // đầy chân nguyên thì không cho dùng
+  const D=battle();assert.equal(SBSim.issue(D,'pn',{skill:'nguyenthach'}).ok,false);
+}
+console.log('Nguyên thạch: 2 chân nguyên/s, vừa đi vừa hấp thu, một viên mỗi lần, trúng đòn thì đứt, đầy thì không dùng: đạt.');
+{
+  const {SB_GU}=require('./sandbox_sim.cjs');
+  const k=SB_GU.pnKitFromSave({chuyen:1,giai:0,tuchat:44,stones:40,gu:[]},Object.assign({GU:global.GU},SB_GU.campaignMax({chuyen:1,gu:[]},global.GU)));
+  assert.equal(k.skills.find(s=>s.id==='nguyenthach').uses,SB_GU.STONE_CAP);
+  const k2=SB_GU.pnKitFromSave({chuyen:1,giai:0,tuchat:44,stones:2,gu:[]},Object.assign({GU:global.GU},SB_GU.campaignMax({chuyen:1,gu:[]},global.GU)));
+  assert.equal(k2.skills.find(s=>s.id==='nguyenthach').uses,2);
+  assert.ok(!SB_GU.pnKitFromSave({chuyen:1,giai:0,gu:[],stones:0},{GU:global.GU}).skills.some(s=>s.id==='nguyenthach'));
+}
+console.log('Nguyên thạch từ save: tối đa 3 viên/trận, không quá số đá có: đạt.');
+
+// ── AI theo phong cách: kiểm hành vi đúng điều kiện, không chỉ kết quả ──
+{
+  const {SB_ROSTER}=require('./sandbox_sim.cjs');
+  const watch=(p1,p2,skill,fn)=>{let seen=0;for(let sd=1;sd<=6;sd++){let x=sd*977;const r=()=>{x=(x*16807)%2147483647;return x/2147483647};
+    const M=SB_ROSTER.matchup(p1,p2),B=SBSim.create(M.kits,{ids:M.ids,rng:r,arena:SBSim.ARENAS.wide});B.actors.p1.ai=true;
+    for(let i=0;i<60*60&&!B.over;i++){SBSim.step(B);for(const e of B.events.splice(0))if(e.type==='act'&&e.who==='p2'&&e.skill===skill){seen++;fn(B)}}}return seen};
+  // Heo (charge): chỉ lao khi đủ xa để lấy đà và gần thẳng hàng theo chiều sâu.
+  const n1=watch('pn_ch70','heo_rung_q1','lao',B=>{const a=B.actors.p2,t=B.actors.p1;
+    assert.ok(Math.hypot(t.x-a.x,t.z-a.z)>=150-1e-6,'lao khi quá gần');assert.ok(Math.abs(t.z-a.z)<a.sk.lao.depth*.6+1e-6,'lao lệch làn')});
+  assert.ok(n1>=4);
+  // Phương Chính (midrange): chỉ bắn Nguyệt Quang ở tầm trung (>=120), không bắn sát người.
+  const n2=watch('pn_ch84','phuong_chinh_ch83','nguyetquang',B=>{const a=B.actors.p2,t=B.actors.p1;assert.ok(Math.hypot(t.x-a.x,t.z-a.z)>=120-1e-6)});
+  assert.ok(n2>=6);
+}
+console.log('AI phong cách: Heo lao khi đủ đà và thẳng hàng; Phương Chính bắn ở tầm trung: đạt.');

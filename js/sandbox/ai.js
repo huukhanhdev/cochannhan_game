@@ -56,6 +56,8 @@
         return;
       }
     }
+    // Phong cách theo nhân vật (kit.ai.style). BNB không khai báo nên đi đường cũ (trace baseline giữ nguyên).
+    if(a.kit.ai?.style&&!(typeof process!=='undefined'&&process.env&&process.env.SB_NOSTYLE)&&styleAct(B,a,t,L,Sim,ok,dist,stand))return;
     // Lốc khi PN không kịp thoát vòng (hoặc nóng vội)
     const lc=a.sk.locbangnhan;
     if(lc&&ok('locbangnhan')&&dist<=lc.castRange){
@@ -71,7 +73,8 @@
     const poised=a.poiseUntil>B.t+atk.startup;
     // Phạt: PN kẹt đủ lâu để Băng nhận phát trước khi PN rảnh tay; hoặc PN đang chậm/khựng.
     // PN lộ ra đang vận hồi máu / bật hộ thể: lướt vào ép, buộc chọn chỗ an toàn mới dùng.
-    const exposed=seen&&ta.phase==='startup'&&(ta.s.kind==='heal'||ta.s.kind==='buff');
+    // Đang hấp thu nguyên thạch cũng là sơ hở công khai (thấy được bằng mắt, như vận hồi máu): áp sát để làm đứt.
+    const exposed=seen&&ta.phase==='startup'&&(ta.s.kind==='heal'||ta.s.kind==='buff')||(t.absorb&&B.t-(t.absorb.until-t.kit.skills.find(x=>x.id===t.absorb.id).dur)>=L.react);
     const punish=(locked&&left>=atk.startup+.05)||slowed||t.state==='hit'||exposed;
     if(punish){
       if(inRange){a.intent='melee';Sim.issue(B,a.id,{skill:'atk'});return}
@@ -106,6 +109,38 @@
     if(Math.abs(a.x-gx)<=70&&Math.abs(a.z-gz)<=60){if(a.state==='move')Sim.issue(B,a.id,{skill:'stop'});return}
     Sim.issue(B,a.id,{skill:'move',x:gx,z:gz});
   }
+  // ── Phong cách AI ──
+  // charge (thú lao húc, vd Heo rừng VN ch.70–71): canh thẳng hàng → lao theo đợt → lùi lấy đà; đổi hướng kém nên không
+  //   bám đuổi từng bước. Trọng thương (<30%) thì hung dữ hơn: bỏ pha lùi (ch.71 "càng điên cuồng").
+  // midrange (Phương Chính ch.83: áp sát còn sáu thước rồi mới bắn): giữ tầm trung, bật hộ thể trước khi vận chiêu
+  //   nếu đối thủ đã sát người, lộn người né đạn (nhánh Né chung đã lo phần đạn).
+  function styleAct(B,a,t,L,Sim,ok,dist,stand){
+    const {X0,X1,Z1}=B.arena,side=Math.sign(t.x-a.x)||a.face,clampX=x=>Math.max(X0,Math.min(X1,x)),clampZ=z=>Math.max(0,Math.min(Z1,z));
+    const st=a.style||(a.style={phase:'line',until:0}),style=a.kit.ai.style,dz=Math.abs(t.z-a.z);
+    const go=(x,z,intent)=>{a.intent=intent||'near';Sim.issue(B,a.id,{skill:'move',x:clampX(x),z:clampZ(z)});return true};
+    if(style==='charge'){
+      const R=Object.values(a.sk).find(s=>s.kind==='rush'),wounded=a.hp<a.maxHp*.3;
+      if(st.phase==='back'&&B.t<st.until&&!wounded){if(dist<240)return go(a.x-side*90,a.z);return false}
+      st.phase='line';
+      if(R&&ok(R.id)){
+        if(dist>=150&&dist<=R.dist*.9&&dz<R.depth*.6){a.intent='big';Sim.issue(B,a.id,{skill:R.id,x:t.x,z:t.z});
+          st.phase='back';st.until=B.t+R.startup+R.active+R.recovery+.9;return true}
+        if(dist<150)return go(a.x-side*120,t.z);                       // quá gần để lấy đà: lùi ra
+        return go(t.x-side*Math.min(R.dist*.7,Math.max(200,dist)),t.z);  // canh thẳng hàng theo chiều sâu
+      }
+      return false;                                                     // lao đang hồi: để nhánh chung đánh thường/giữ tầm
+    }
+    if(style==='midrange'){
+      const P=Object.values(a.sk).filter(s=>s.tags?.includes('poke')),G=Object.values(a.sk).find(s=>s.tags?.includes('guard'));
+      const readyP=P.find(s=>ok(s.id));
+      if(readyP&&dist<130&&G&&ok(G.id)&&!a.shield){a.intent='guard';Sim.issue(B,a.id,{skill:G.id});return true}
+      if(readyP&&dist>=120&&dist<=Math.min(340,readyP.range*.7)){a.intent='big';Sim.issue(B,a.id,{skill:readyP.id,x:t.x,z:t.z});return true}
+      if(dist>340)return go(t.x-side*stand,t.z);
+      if(dist<100&&!Sim.inMelee(a,t,a.sk.atk,true))return go(a.x-side*80,a.z);
+      return false;
+    }
+    return false;
+  }
   // Chiêu của roster mới khai báo tags (vai trò); BNB cũ không có tags nên không đi qua đây (giữ nguyên trace).
   // Mỗi tag một điều kiện dùng đơn giản; thứ tự theo thứ tự chiêu trong kit. Không đọc con trỏ/đích đi của đối thủ.
   function tagged(B,a,t,Sim,ok,dist,stand){
@@ -115,7 +150,8 @@
     for(const s of list){
       if(!ok(s.id))continue;
       const has=k=>s.tags.includes(k);let go=false;
-      if(has('heal'))go=a.hp<a.maxHp*.45&&dist>150;
+      if(s.kind==='absorb')go=!a.absorb&&a.ess<a.maxEss*.35&&dist>220;
+      else if(has('heal'))go=a.hp<a.maxHp*.45&&dist>150;
       else if(has('guard'))go=low&&!a.shield&&dist<220&&B.rng()<.5;
       else if(has('power'))go=!a.empower&&!a.transform&&dist<stand+60&&B.rng()<.3;
       else if(s.kind==='transform')go=!a.transform&&dist<stand+120&&B.rng()<.4;

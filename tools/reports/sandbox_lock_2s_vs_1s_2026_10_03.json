@@ -1,0 +1,113 @@
+{
+ "note": "Bench khóa chung 2s vs 1s (03/10/2026): bot giống người (react .3), 200 trận/kiểu, sân rộng, AI pressure, PN demo vs BNB Q1. SB_LOCK=… node tools/sandbox_bench.cjs 200 <lv> compare 20261003 wide pressure current human",
+ "rows": [
+  {
+   "lock": 2,
+   "level": "thuong",
+   "style": "stand",
+   "winPercent": 0,
+   "timeouts": 0,
+   "meanSeconds": 22.8,
+   "pnLowEss": 192
+  },
+  {
+   "lock": 2,
+   "level": "thuong",
+   "style": "spam",
+   "winPercent": 7,
+   "timeouts": 0,
+   "meanSeconds": 19.8,
+   "pnLowEss": 190
+  },
+  {
+   "lock": 2,
+   "level": "thuong",
+   "style": "move",
+   "winPercent": 38.5,
+   "timeouts": 122,
+   "meanSeconds": 111.3,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 2,
+   "level": "cao",
+   "style": "stand",
+   "winPercent": 0,
+   "timeouts": 0,
+   "meanSeconds": 22.2,
+   "pnLowEss": 177
+  },
+  {
+   "lock": 2,
+   "level": "cao",
+   "style": "spam",
+   "winPercent": 3,
+   "timeouts": 0,
+   "meanSeconds": 18.2,
+   "pnLowEss": 143
+  },
+  {
+   "lock": 2,
+   "level": "cao",
+   "style": "move",
+   "winPercent": 30,
+   "timeouts": 134,
+   "meanSeconds": 112.8,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 1,
+   "level": "thuong",
+   "style": "stand",
+   "winPercent": 0,
+   "timeouts": 0,
+   "meanSeconds": 24.1,
+   "pnLowEss": 199
+  },
+  {
+   "lock": 1,
+   "level": "thuong",
+   "style": "spam",
+   "winPercent": 43,
+   "timeouts": 0,
+   "meanSeconds": 23.1,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 1,
+   "level": "thuong",
+   "style": "move",
+   "winPercent": 35,
+   "timeouts": 130,
+   "meanSeconds": 111.9,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 1,
+   "level": "cao",
+   "style": "stand",
+   "winPercent": 2,
+   "timeouts": 0,
+   "meanSeconds": 23.2,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 1,
+   "level": "cao",
+   "style": "spam",
+   "winPercent": 23.5,
+   "timeouts": 0,
+   "meanSeconds": 22.5,
+   "pnLowEss": 200
+  },
+  {
+   "lock": 1,
+   "level": "cao",
+   "style": "move",
+   "winPercent": 35.5,
+   "timeouts": 127,
+   "meanSeconds": 113.5,
+   "pnLowEss": 200
+  }
+ ]
+}

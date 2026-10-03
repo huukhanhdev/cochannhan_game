@@ -16,7 +16,8 @@
       pilot_v1:{dir:'assets/chibi_v2/',note:'Roster mới theo pilot 03/10 (chưa có file).'},
     },
     use:{},                          // ghi đè từng visual: {visualId:'pilot_v1'}
-    alias:{},                        // visual id → tên thư mục khác trong set (nếu set đặt tên khác)
+    // visual id → tên thư mục khác trong set. Hai khôi tạm dùng chung sprite gộp cũ tới khi Blue tách hình.
+    alias:{tuu_khoi:'tuu_khoi_huyet_khoi',huyet_khoi:'tuu_khoi_huyet_khoi'},
     resolve(visual){
       const set=SB_SPRITES.use[visual]||SB_SPRITES.active,S=SB_SPRITES.sets[set];
       if(!S)throw new Error('Bộ hình không tồn tại: '+set);

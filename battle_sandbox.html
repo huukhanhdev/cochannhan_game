@@ -125,7 +125,9 @@
   // độ khó: nhân sát thương của bên máy (kit đã là bản sao)
   for(const [slot,k] of Object.entries(M.kits))if(slot==='p2'||auto)[k.atk,...k.skills].forEach(s=>{if(s.dmg)s.dmg=Math.round(s.dmg*dk)});
   const classic=q.get('arena')==='classic';
-  const B=SBSim.create(M.kits,{ids:M.ids,arena:classic?SBSim.ARENAS.classic:SBSim.ARENAS.wide});window.SB=B;
+  // ?lock=1 / ?lock=0: thử khóa chung sau khi phát cổ (mặc định 2s).
+  const lockQ=q.get('lock'),guLock=['0','1','2'].includes(lockQ)?+lockQ:undefined;
+  const B=SBSim.create(M.kits,{ids:M.ids,arena:classic?SBSim.ARENAS.classic:SBSim.ARENAS.wide,guLock});window.SB=B;
   if(auto){B.actors[B.ids.player].ai=true;document.body.classList.add('auto')}
   B.aiMode=q.get('ai')==='legacy'?'legacy':'pressure';
   const P=B.actors[B.ids.player],E=B.actors[B.ids.enemy];

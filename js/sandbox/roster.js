@@ -14,7 +14,7 @@
 
   // Lợn rừng Thanh Mao (dossier docs/roster/heo_rung.md, Orange validate G1 03/10). Không có cổ (ch.70–71).
   // Thú không có chân nguyên: ess 0, mọi đòn cost 0. Số liệu là game.
-  const HEO_RUNG={n:'Lợn rừng',hp:120,ess:0,essRegen:0,speed:240,
+  const HEO_RUNG={n:'Lợn rừng',hp:120,ess:0,essRegen:0,speed:240,ai:{style:'charge'},
     atk:{id:'atk',n:'Hất nanh',icon:'牙',kind:'melee',clip:['atk'],startup:.45,active:.10,recovery:.40,cd:0,cost:0,range:110,depth:44,dmg:14,
       src:'VN ch.71: trọng thương vẫn có thể hất tung, nanh đâm · số liệu game',d:'Hất nanh trắng về phía trước.'},
     skills:[
@@ -84,7 +84,7 @@
       {key:' ',id:'dash',n:'Long Hoàn Khúc Khúc',icon:'跳',kind:'dash',clip:['move'],startup:.05,active:.2,recovery:.15,cd:1.2,cost:4,dist:230,
         src:'VN ch.82–83: hai chân lóe đỏ cam, nhảy một cái lui mười thước; mỗi lần dùng tốn chân nguyên (ch.83) · số liệu game',d:'Nhảy xa né, tốn chân nguyên.'}],
     src:'Tư chất thật là Bính, biểu hiện giả Ất (VN ch.4); Nhất chuyển ch.82–83; dáng thấp bé mặt rỗ (ch.4)'});
-  const PHUONG_CHINH=()=>Object.assign({n:'Phương Chính',essRegen:0,speed:265,ai:{stand:150}},human(2,0,88),{
+  const PHUONG_CHINH=()=>Object.assign({n:'Phương Chính',essRegen:0,speed:265,ai:{stand:150,style:'midrange'}},human(2,0,88),{
     atk:fist({dmg:10,src:'VN ch.84: Phương Chính có kỹ năng cơ bản vững chắc · số liệu game'}),
     skills:[gu('nguyetquang',{key:'q',clip:['sk_nguyet','atk'],src:'VN ch.83: áp sát còn sáu thước rồi mới bắn Nguyệt Quang · số liệu game'}),
       gu('ngocbi',{key:'w',clip:['sk_nguyetnghe','idle'],src:'VN ch.76, 98: sở hữu Ngọc Bì (ch.84 hoảng nên quên dùng) · số liệu game'}),
@@ -115,15 +115,49 @@
     k.start={hp:Math.round(k.hp*.7),ess:k.ess,oneArm:true,detonated:true};
     k.src='VN ch.140: hi sinh Sương Yêu thì chỉ còn Lam Điểu Băng Quan (cổ tam chuyển); cụt tay phải ch.139; máu đầu trận 70% là game';
     return k};
+  // ── Nhân vật thiết kế game (người dùng chốt 03/10): không có trong truyện, theo sự kiện campaign. src:'game'. ──
+  // Chỉ số gốc lấy từ js/data.js (EN/EAI) để khớp campaign; nhịp/tầm đánh là số liệu sandbox.
+  // Tửu Khôi: động Hoa Tửu tầng 4 "Bể đá ngầm" (events.js hs_dong): hũ rượu vỡ tự đứng dậy, trận pháp thủ hộ.
+  const TUU_KHOI={n:'Tửu Khôi',hp:100,ess:0,essRegen:0,speed:170,regen:2,
+    atk:{id:'atk',n:'Vung tay vò',icon:'酒',kind:'melee',clip:['atk'],startup:.6,active:.1,recovery:.45,cd:0,cost:0,range:100,depth:46,dmg:10,
+      src:'game: EN.tuukhoi atk 9–15 (js/data.js), rối ghép từ vò rượu vỡ'},
+    skills:[
+      {key:'q',id:'manhvo',n:'Văng mảnh vò',icon:'瓮',kind:'proj',clip:['sk_regen','atk'],startup:.7,active:.05,recovery:.4,cd:5,cost:0,speed:360,range:300,dmg:6,count:3,spread:.15,fx:'fire',tags:['poke'],
+        src:'game: thiết kế cho rối vò rượu',d:'Văng ba mảnh vò vỡ.'},
+    ],
+    notes:'Tái tụ: EAI.tuukhoi regen .06 khí huyết/lượt → regen 2/s (game).'};
+  // Huyết Khôi: lăng mộ Nhất Đại (events.js c_huyetdong): máu dưới đáy hang ngưng thành hình người.
+  // Điểm yếu thiết kế sẵn trong campaign (js/rt.js RT_WEAK.huyetkhoi): đang chảy máu thì không tái tụ.
+  const HUYET_KHOI={n:'Huyết Khôi',hp:210,ess:0,essRegen:0,speed:200,regen:4,regenNoBleed:true,
+    atk:{id:'atk',n:'Huyết thủ',icon:'血',kind:'melee',clip:['atk'],startup:.6,active:.1,recovery:.45,cd:0,cost:0,range:120,depth:50,dmg:16,
+      src:'game: EN.huyetkhoi atk 13–21'},
+    skills:[
+      {key:'q',id:'huyettrieu',n:'Huyết triều',icon:'潮',kind:'aoe',clip:['sk_regen','atk'],startup:1,active:.15,recovery:.6,cd:7,cost:0,castRange:300,radius:100,dmg:26,armor:true,tags:['control'],
+        src:'game: máu đáy hang dâng lên tại chỗ đối thủ',d:'Vòng máu dâng lên sau 1 giây.'},
+    ],
+    notes:'Tái tụ 4/s (EAI regen .1), ngừng khi đang chảy máu: dùng đòn gây chảy máu (Cứ Xỉ, Huyết Nguyệt) để hạ.'};
+  // Huyết Thủ ma tu (EN.madutam): ma tu Tam chuyển áo đỏ thẫm, tay nhuộm máu tới khuỷu, sự kiện r_tukiep/d_huyetthu.
+  // Lối đánh hút máu (EAI.madutam sk:'drain'); điểm yếu: cổ trị liệu làm đòn hút trượt (RT_WEAK.madutam).
+  const MADUTAM=()=>Object.assign({n:'Huyết Thủ ma tu',essRegen:0,speed:270,ai:{stand:150}},human(3,1,50),{hp:380,
+    atk:{id:'atk',n:'Huyết trảo',icon:'爪',kind:'melee',clip:['atk'],startup:.45,active:.08,recovery:.4,cd:0,cost:0,range:100,depth:46,dmg:16,drain:.5,
+      src:'game: EN.madutam atk 22–32, hút máu (EAI drain)'},
+    skills:[
+      {key:'q',id:'lao',n:'Lao vồ',icon:'魔',kind:'rush',clip:['move','atk'],startup:.6,active:.3,recovery:.5,cd:5,cost:12,dist:320,hitR:64,depth:42,dmg:22,knock:30,drain:.5,tags:['gapclose'],
+        src:'game',d:'Lao tới vồ, hút máu.'},
+      {key:'w',id:'huyetthu',n:'Huyết thủ ấn',icon:'印',kind:'melee',clip:['sk_drain','atk'],startup:.8,active:.12,recovery:.5,cd:7,cost:20,range:130,depth:52,dmg:36,drain:.6,armor:true,tags:['burst'],
+        src:'game: tên theo "Huyết Thủ"; không phải Huyết Thủ Ấn của Thương Yến Phi (truyện)',d:'Bàn tay máu đánh mạnh, hút máu, không bị ngắt khi lấy đà.'},
+    ],
+    src:'game: Tam chuyển (EN.madutam), hp 380 theo data.js'});
+
   // Preset PN theo cảnh = save giả, dựng bằng cùng adapter với campaign (SB_GU.pnKitFromSave). Chỉ dùng trong sandbox.
   const PN_SCENE={
-    ch70:{chuyen:1,giai:2,tuchat:44,herbs:0,gu:['xuanthu','tuutrung','nguyetquang','tieuguang'],
+    ch70:{chuyen:1,giai:2,tuchat:44,herbs:0,stones:3,gu:['xuanthu','tuutrung','nguyetquang','tieuguang'],
       src:'VN ch.70: năm cổ (Xuân Thu Thiền, Tửu Trùng, Nguyệt Quang, Tiểu Quang, Bạch Thỉ chưa dùng), chưa có cổ phòng ngự, chân nguyên cao giai'},
-    ch79:{chuyen:1,giai:3,tuchat:44,herbs:0,gu:['xuanthu','tuutrung','nguyetquang','tieuguang','bachthi','ngocbi'],
+    ch79:{chuyen:1,giai:3,tuchat:44,herbs:0,stones:3,gu:['xuanthu','tuutrung','nguyetquang','tieuguang','bachthi','ngocbi'],
       src:'VN ch.79–80: Bạch Thỉ đã dùng (ch.70–71), Ngọc Bì (ch.63, 79); giai đỉnh phong là game'},
-    ch84:{chuyen:2,giai:0,tuchat:44,herbs:0,gu:['xuanthu','tuutrung','nguyetquang','tieuguang','bachthi','ngocbi'],
+    ch84:{chuyen:2,giai:0,tuchat:44,herbs:0,stones:3,gu:['xuanthu','tuutrung','nguyetquang','tieuguang','bachthi','ngocbi'],
       src:'VN ch.81 Nhị chuyển sơ giai; ch.82 PN có sáu cổ; ch.84 dùng Nguyệt Quang'},
-    ch130:{chuyen:2,giai:1,tuchat:44,herbs:1,gu:['xuanthu','tuvi','nguyetmang','bachngoc','bachthi','hacthi','anlan','cuudiep'],
+    ch130:{chuyen:2,giai:1,tuchat:44,herbs:1,stones:3,gu:['xuanthu','tuvi','nguyetmang','bachngoc','bachthi','hacthi','anlan','cuudiep'],
       src:'VN ch.130: Nhị chuyển trung giai, Bạch Ngọc, sức hai trư, Ẩn Lân; Nguyệt Mang (ch.106), Tứ Vị (ch.105), Cửu Diệp (ch.102); số lá là game'},
   };
   const pnScene=id=>()=>{const S=JSON.parse(JSON.stringify(PN_SCENE[id]));S.gu=S.gu.map(k=>({k,h:0}));S.hp=undefined;S.ess=undefined;
@@ -147,6 +181,9 @@
     xich_thanh_ch83:{char:'xich_thanh',kit:XICH_THANH,label:'Xích Thành · khảo hạch',ch:'82–83',vs:'phuong_chinh_ch83',status:'kit'},
     phuong_chinh_ch83:{char:'phuong_chinh',kit:PHUONG_CHINH,label:'Phương Chính · khảo hạch',ch:'83–84',vs:'pn_ch84',status:'kit',note:'Cặp truyện: thắng Mạc Bắc, Xích Thành (ch.83), thua PN (ch.84).'},
     thanh_thu_ch141:{char:'thanh_thu',kit:THANH_THU,label:'Thanh Thư · Mộc Mị',ch:'140–142',vs:'bnb_q1_ch140',status:'kit'},
+    tuu_khoi_game:{char:'tuu_khoi',kit:()=>TUU_KHOI,label:'Tửu Khôi (thiết kế game)',ch:'—',vs:'pn_ch84',status:'kit',note:'Động Hoa Tửu tầng 4; tái tụ.'},
+    huyet_khoi_game:{char:'huyet_khoi',kit:()=>HUYET_KHOI,label:'Huyết Khôi (thiết kế game)',ch:'—',vs:'pn_demo',status:'kit',note:'Lăng mộ Nhất Đại; chảy máu thì không tái tụ (PN demo có Cứ Xỉ gây chảy máu).'},
+    huyet_thu_game:{char:'huyet_thu_ma_tu',kit:MADUTAM,label:'Huyết Thủ ma tu (thiết kế game)',ch:'—',vs:'pn_ch70',status:'kit',note:'Tam chuyển gặp sớm: thường thua (đúng sự kiện). Cổ trị liệu làm đòn hút trượt.'},
     bnb_q1_ch140:{char:'bach_ngung_bang_nam',kit:BNB_CH140,label:'Bạch Ngưng Băng (Q1, sau nổ tay)',ch:'140–143',vs:'thanh_thu_ch141',status:'kit'},
   };
 
@@ -192,8 +229,10 @@
     thiet_mo_bach:C('Thiết Mộ Bạch',4,'462–464','cho_dossier','Điểm Kim, Kim Thang, Kim Châm'),
     vu_quy:C('Vu Quỷ',4,'462–474','cho_dossier','Ô Thất'),
     ba_quy_spirit:C('Bá Quy địa linh',0,'468–478','khong_dau','NPC'),
-    huyet_thu_ma_tu:C('Huyết thủ ma tu',0,'318–319','cho_quyet','Huyết Thủ Ấn là của Thương Yến Phi'),
-    tuu_khoi_huyet_khoi:C('Tửu Khôi / Huyết Khôi',0,'—','cho_quyet','Tách hai id hay bỏ'),
+    // Thiết kế game (batch 5), người dùng chốt 03/10. Hình tạm: sprite gộp cũ tuu_khoi_huyet_khoi cho cả hai khôi (alias ở SB_SPRITES).
+    huyet_thu_ma_tu:C('Huyết Thủ ma tu',5,'—','kit','Ma tu Tam chuyển hút máu (sự kiện r_tukiep); không phải Thương Yến Phi',{profiles:['huyet_thu_game']}),
+    tuu_khoi:C('Tửu Khôi',5,'—','kit','Rối vò rượu, tái tụ (động Hoa Tửu tầng 4)',{profiles:['tuu_khoi_game']}),
+    huyet_khoi:C('Huyết Khôi',5,'—','kit','Người máu, tái tụ, chảy máu thì không tái tụ (lăng mộ Nhất Đại)',{profiles:['huyet_khoi_game']}),
   };
   for(const [id,c] of Object.entries(characters))c.visual=c.visual||id;
 

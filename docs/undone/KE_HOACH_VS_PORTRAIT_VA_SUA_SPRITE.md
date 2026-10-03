@@ -113,3 +113,10 @@ phuong_nguyen, bach_ngung_bang_nam/nu, heo_rung, dien_lang, dian_lang_boss, hac_
    Không nghiệm thu bằng contact sheet.
 
 Thứ tự đề nghị: ưu tiên 1, làm Trần Thúy Hoa, Thạch Hầu, Thiết Huyết Lãnh trước (đi qua đủ các kiểu lỗi), rồi tới phần còn lại.
+
+
+## 6. Blue cập nhật base sau review v04 — 03/10/2026
+
+Đã sửa sáu ảnh người và tạo chín thú còn lại. Catalog v04 hiện có **38/40 base**, hai ID chưa quyết vẫn chờ. [Bàn giao và giới hạn](../../previews/roster-style-v04/README.md), [so sáu bản trước/sau](../../previews/roster-style-v04/compare_review_02.html), [prompt/input 15 job](../../previews/roster-style-v04/review_pass_02_jobs.json).
+
+Đây là base trong vùng review, chưa xuất `assets/vs`, chưa tạo clip sprite hoặc thay bộ đang chạy. Orange cần kiểm lại các bản sửa và lô thú mới trước khi chọn làm ref cho các bộ sprite ưu tiên 1. Ảnh cũ và catalog v03 giữ nguyên. Một số thú vẫn thiên góc nghiêng; palette/alpha cần chuẩn hóa ở importer, không gọi ảnh gốc là native pixel art.

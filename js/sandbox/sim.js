@@ -20,7 +20,8 @@
     if(ids.player===ids.enemy)throw new Error('Hai actor phải khác id');
     // Slot actor (ids) tách khỏi profile: cùng một profile có thể đứng hai bên (đấu gương) nếu kits trỏ hai bản sao.
     // sim giữ fallback cũ (kits.pn / kits.bnb) cho adapter/test legacy; profile sai được chặn ở SB_ROSTER.resolve(), không tới đây.
-    const B={arena,ids,t:0,events:[],seq:0,over:null,rng:opt.rng||Math.random,actors:{},projs:[],zones:[]};
+    // guLock: khóa chung sau khi phát cổ (mặc định GU_LOCK 2s; người dùng chốt thử 1s → truyền opt.guLock để so).
+    const B={arena,ids,t:0,events:[],seq:0,over:null,rng:opt.rng||Math.random,actors:{},projs:[],zones:[],guLock:Number.isFinite(opt.guLock)?opt.guLock:GU_LOCK};
     const mid=(arena.X0+arena.X1)/2;
     B.actors[ids.player]=actor(ids.player,kits[ids.player]||kits.pn,clamp(mid-200,arena.X0,arena.X1),arena.Z1*.55,1);
     B.actors[ids.enemy]=actor(ids.enemy,kits[ids.enemy]||kits.bnb,clamp(mid+180,arena.X0,arena.X1),arena.Z1*.45,-1);
@@ -62,6 +63,13 @@
     if((a.cd[s.id]||0)>0)return {ok:false,reason:s.n+' đang hồi, còn '+a.cd[s.id].toFixed(1)+'s'};
     if((s.cost||0)>a.ess)return {ok:false,reason:'Thiếu chân nguyên ('+s.cost+')'};
     if(s.kind==='heal'&&a.hp>=a.maxHp)return {ok:false,reason:'Khí huyết đang đầy'};
+    // Hấp thu nguyên thạch (người dùng chốt 03/10): không chiếm action, đi lại/ra chiêu vẫn được; một viên mỗi lần.
+    if(s.kind==='absorb'){
+      if(a.absorb)return {ok:false,reason:'Đang hấp thu nguyên thạch'};
+      if(a.ess>=a.maxEss-1e-9)return {ok:false,reason:'Chân nguyên đang đầy'};
+      if(a.state==='hit'||a.state==='shell')return {ok:false,reason:'Đang bị đánh, chưa vận được'};
+      return {ok:true};
+    }
     if(!free(a))return {ok:false,reason:'Đang ra chiêu',busy:true};
     return {ok:true};
   }
@@ -100,6 +108,7 @@
     const r=check(B,a,cmd);
     if(!r.ok){if(r.busy){a.buffer={cmd,until:B.t+busyLeft(a)};return {ok:true,queued:true}}return r}
     const s=a.sk[cmd.skill],t=other(B,a);
+    if(s.kind==='absorb'){startAbsorb(B,a,s);return {ok:true}}
     if(s.kind==='melee'&&!inMelee(a,t,s,true)){            // ngoài tầm cận chiến: đánh thường thì đuổi tới
       if(s.id!=='atk')return {ok:false,reason:'Ngoài tầm '+s.n};
       a.chase=true;a.move=null;if(a.state!=='move')setState(a,'move');return {ok:true,chasing:true};
@@ -107,6 +116,12 @@
     if(s.kind==='grab'&&(Math.abs(t.x-a.x)>s.range||Math.abs(t.z-a.z)>s.depth))return {ok:false,reason:'Ngoài tầm '+s.n};
     if(s.kind==='aoe'&&Math.hypot(t.x-a.x,t.z-a.z)>s.castRange+s.radius)return {ok:false,reason:'Ngoài tầm '+s.n};
     start(B,a,s,cmd);return {ok:true};
+  }
+  // Nguyên thạch: trừ một viên lúc bắt đầu, chân nguyên chảy vào đều trong s.dur giây (s.amt mỗi viên).
+  // Bị trúng đòn (không tính máu chảy) thì đứt: phần chưa hấp thu mất theo viên đá.
+  function startAbsorb(B,a,s){
+    a.uses[s.id]--;a.absorb={id:s.id,until:B.t+s.dur,rate:s.amt/s.dur,got:0,hid:++B.seq};
+    emit(B,{type:'absorb',who:a.id,skill:s.id,hid:a.absorb.hid});
   }
   function start(B,a,s,cmd){
     const {X0,X1,Z1}=B.arena;
@@ -155,7 +170,8 @@
       if(a.empower&&B.t>=a.empower.until)endEmpower(B,a);
       if(a.transform)stepTransform(B,a);
       // Cổ trị liệu ký sinh (vd Lôi Quan Đầu Lang, ch.164): hồi máu theo giây, không vượt tối đa.
-      if(a.kit.regen&&a.state!=='ko'&&a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+a.kit.regen*DT);
+      // regenNoBleed: đang chảy máu thì không tái tụ (Huyết Khôi, gợi ý RT_WEAK của campaign).
+      if(a.kit.regen&&a.state!=='ko'&&a.hp<a.maxHp&&!(a.kit.regenNoBleed&&a.bleed))a.hp=Math.min(a.maxHp,a.hp+a.kit.regen*DT);
       if(B.over)break;
       if(a.state==='shell')stepShell(B,a);
       else if(a.state==='move')stepMove(B,a);
@@ -187,6 +203,8 @@
       }
     }
     a.ess=Math.min(a.maxEss,a.ess+(a.kit.essRegen+(a.transform?.essRegen||0))*regenTime);
+    if(a.absorb){const A=a.absorb,dt=Math.min(DT,Math.max(0,A.until-(B.t-DT))),add=Math.min(a.maxEss-a.ess,A.rate*dt);a.ess+=add;A.got+=add;
+      if(B.t>=A.until-1e-9){a.absorb=null;emit(B,{type:'absorbEnd',who:a.id,skill:A.id,hid:A.hid,amount:+A.got.toFixed(2)})}}
   }
   // Sương Yêu hết hiệu lực: tự hại (khớp đông cứng) bằng làm chậm, ch137.
   function endEmpower(B,a){
@@ -268,12 +286,12 @@
     if(guAction(s))for(const next of Object.values(a.sk)){
       if(next.id===s.id||!guAction(next)||(next.uses&&!(a.uses[next.id]>0)))continue;
       // Chỉ cổ đang sẵn sàng nhận khóa; không kéo dài/rút ngắn cooldown đang chạy.
-      if(!(a.cd[next.id]>0))a.cd[next.id]=GU_LOCK;
+      if(!(a.cd[next.id]>0))a.cd[next.id]=B.guLock;
     }
     emit(B,{type:'release',who:a.id,skill:s.id,kind:s.kind,hid:A.hid});
     if(s.kind==='melee'){
       if(t.state!=='ko'&&inMelee(a,t,s,false)){
-        hurt(B,t,s.dmg,a,A.hid,{skill:s.id,light:!!s.light});
+        const dealt=hurt(B,t,s.dmg,a,A.hid,{skill:s.id,light:!!s.light});drainHit(B,a,t,s,dealt);
         if(s.slow&&t.state!=='shell'){t.slowUntil=B.t+s.slow.dur;t.slowF=s.slow.f}
         if(s.bleed&&t.state!=='ko'&&t.state!=='shell')t.bleed={dps:s.bleed.dps,until:B.t+s.bleed.dur,acc:0};
       }else emit(B,{type:'miss',who:a.id,skill:s.id});
@@ -315,7 +333,7 @@
   }
   // Trúng lao húc: một lần mỗi lần lao, đẩy lùi theo hướng lao (ch.80: PN đỡ bằng vai vẫn lùi ba bước).
   function rushHit(B,a,t,s,A){
-    hurt(B,t,s.dmg,a,A.hid,{skill:s.id});
+    drainHit(B,a,t,s,hurt(B,t,s.dmg,a,A.hid,{skill:s.id}));
     if(!B.over&&s.knock&&t.state!=='ko'&&t.state!=='shell'){t.x=clamp(t.x+Math.sign(A.vec.x||a.face)*s.knock,B.arena.X0,B.arena.X1);emit(B,{type:'knock',who:t.id,source:a.id,skill:s.id})}
   }
   // Pha truyện của boss: mỗi pha có id, chỉ kích hoạt một lần (t.phaseFired). Kit cũ BNB khai báo detonateAt → pha 'detonate'.
@@ -363,7 +381,7 @@
     }
   }
   function hurt(B,t,dmg,src,hid,o){
-    if(B.over||t.state==='ko'||(hid&&t.lastHid===hid))return;
+    if(B.over||t.state==='ko'||(hid&&t.lastHid===hid))return 0;
     if(hid)t.lastHid=hid;
     const E=!o.dot&&src?.empower,pierce=Math.max(o.pierce||0,E?E.pierce:0);
     let d=E?Math.round(dmg*E.mul):dmg;
@@ -376,7 +394,7 @@
     t.hp=Math.max(phase?.do==='detonate'?1:0,t.hp-d);t.flashAt=B.t;
     emit(B,{type:'dmg',who:t.id,source:src?.id,skill:o.skill,hid,contact:o.contact||{x:t.x,z:t.z},amount:d,dot:!!o.dot,blocked:t.shield&&!o.dot?dmg-d:0,shield:t.shield&&!o.dot?t.shield.id:null});
     if(blast){(t.phaseFired||(t.phaseFired={}))[phase.id]=B.t;
-      if(phase.do==='detonate'){detonate(B,t);return}
+      if(phase.do==='detonate'){detonate(B,t);return d}
       if(phase.do==='enrage'){t.enrage={speed:phase.speed||1,mul:phase.dmgMul||1};emit(B,{type:'phase',who:t.id,id:phase.id,n:phase.n||''})}
     }
     if(t.hp<=0){
@@ -385,9 +403,10 @@
       B.projs.length=0;B.zones.length=0;
       w.bleed=null;w.buffer=null;
       if(w.state==='act')w.winPending=true;else{w.move=null;w.chase=false;setState(w,'win')}
-      emit(B,{type:'ko',who:t.id});return;
+      emit(B,{type:'ko',who:t.id});return d;
     }
-    if(o.dot)return;
+    if(o.dot)return d;
+    if(t.absorb&&d>0){const A=t.absorb;t.absorb=null;emit(B,{type:'absorbBreak',who:t.id,skill:A.id,hid:A.hid,amount:+A.got.toFixed(2)})}
     // khựng: ngắt chiêu đang ra; sau đó "vững thế" 1,2 giây không bị khựng tiếp (vẫn mất máu).
     // Đang thoát thân (Sương Yêu) hoặc chiêu có armor (chiêu lớn) thì không bị ngắt.
     // Đòn nhẹ (light: đấm tay không) gây sát thương nhưng không làm khựng, tránh khóa cứng bằng spam đấm nhanh.
@@ -395,6 +414,14 @@
       if(t.act)emit(B,{type:'interrupt',who:t.id,skill:t.act.s.id,hid:t.act.hid});
       t.act=null;t.move=null;t.chase=false;setState(t,'hit');t.poiseUntil=B.t+.32+1.2;
     }
+    return d;
+  }
+  // Hút máu (s.drain = tỉ lệ sát thương thật đã gây). Mục tiêu có cổ trị liệu (kit.antiDrain) làm đòn hút trượt
+  // (RT_WEAK.madutam của campaign: "sinh cơ của cổ trị liệu làm đòn hút máu trượt đi").
+  function drainHit(B,a,t,s,d){
+    if(!s.drain||!d||a.state==='ko')return;
+    if(t.kit.antiDrain){emit(B,{type:'drainFail',who:a.id,target:t.id,skill:s.id});return}
+    const n=Math.min(a.maxHp-a.hp,Math.round(d*s.drain));if(n>0){a.hp+=n;emit(B,{type:'heal',who:a.id,skill:s.id,amount:n,drain:true})}
   }
   // Va chạm thân: hai người không đứng chồng lên nhau (đẩy ra theo trục x)
   function separate(B){
